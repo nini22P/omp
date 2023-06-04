@@ -11,9 +11,9 @@ import { MediaItem } from './type'
 
 const App = () => {
   const { instance, accounts } = useMsal()
-  const [accountId, setAccountId] = useState(0)
+  const accountId = 0
   const [folderTree, setFolderTree] = useState(['/'])
-  const [fileList, setFileList] = useState(null)
+  const [fileList, setFileList] = useState([])
   const [playList, setPlayList] = useState<MediaItem[] | null>(null)
 
   const path = useMemo(
@@ -25,7 +25,7 @@ const App = () => {
 
   useEffect(() => {
     if (accounts.length === 0) {
-      setFileList(null)
+      setFileList([])
     } else {
       getFilesData(path).then(
         fileList => setFileList(fileList)
@@ -36,9 +36,25 @@ const App = () => {
 
   // 点击列表
   const handleListClick = (index: number, name: string, type: string) => {
+    // 点击文件夹时打开列表
     if (type === 'folder') setFolderTree([...folderTree, name])
-    if (type === 'file' && fileList !== null) {
+    // 点击文件时将媒体文件添加到播放列表
+    if (type === 'file' && fileList !== null && name !== null) {
       console.log(index, name)
+      const list = fileList
+        .map((item: any) => {
+          return {
+            name: item.name,
+            size: item.size,
+            url: item['@microsoft.graph.downloadUrl']
+          }
+        })
+      if (isAudio(name)) {
+        setPlayList(list.filter(item => isAudio(item.name)))
+      }
+      if (isVideo(name)) {
+        setPlayList(list.filter(item => isVideo(item.name)))
+      }
     }
   }
 
@@ -52,6 +68,10 @@ const App = () => {
     const response = await getFiles(path, acquireToken.accessToken)
     return response.value
   }
+
+  const isAudio = (name: string) => (/.(wav|mp3|aac|ogg|flac|m4a|opus)$/i).test(name)
+
+  const isVideo = (name: string) => (/.(mp4|mkv|avi|mov|rmvb|webm|flv)$/i).test(name)
 
   return (
     <main className='main'>
