@@ -1,0 +1,9 @@
+@use "../../variables";
+
+.player {
+  position: fixed;
+  bottom: 0;
+  background-color: #0000003d;
+  width: 100vw;
+  // height: calc(100vh - variables.$navbar-height);
+}

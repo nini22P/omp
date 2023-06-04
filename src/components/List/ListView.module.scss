@@ -1,0 +1,24 @@
+@use "../../variables";
+
+.fileList {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem 0;
+  margin: 3rem 1rem;
+}
+
+.listNavContainer {
+  position: fixed;
+  left: 0rem;
+  top: variables.$navbar-height;
+  // width: 100vw;
+  // overflow-x: scroll;
+  padding: 0.5rem 0.5rem;
+  background-color: #fff;
+  border: 1px solid #00000015;
+  border-radius: 0 0 6px;
+  box-shadow: 1px 1px #00000010;
+}
