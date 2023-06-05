@@ -9,7 +9,25 @@ interface FileItem {
 interface MediaItem {
   name: string;
   size: number;
-  url: string;
+  path: string;
 }
 
-export type { FileItem, MediaItem }
+interface PlayList {
+  playList: MediaItem[] | null
+}
+
+interface PLayerStatus {
+  type: 'audio' | 'video' | null;
+  index: number;
+  total: number;
+  url: string;
+  playing: boolean;
+  loop: boolean;
+  light: boolean | string;
+  muted: boolean;
+  progress: number;
+  duration: number;
+  containerIsHiding: boolean;
+}
+
+export type { FileItem, MediaItem, PlayList, PLayerStatus }
