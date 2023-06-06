@@ -1,22 +1,25 @@
 import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from '@azure/msal-react'
 import { loginRequest } from './authConfig'
 import { getFile, getFiles } from './graph'
+import { useMemo, useState } from 'react'
+import useSWR from "swr"
 import SignInButton from './components/List/SignInButton'
 import Navbar from './components/Navbar/Navbar'
-import { useMemo, useState } from 'react'
-import './App.scss'
 import ListView from './components/List/ListView'
-import { MediaItem } from './type'
-import useSWR from "swr"
 import Player from './components/Player/Player'
+import usePlayerStore from './store'
+import './App.scss'
 
 const App = () => {
   const { instance, accounts } = useMsal()
   const accountId = 0
   const [folderTree, setFolderTree] = useState(['/'])
-  // const [fileList, setFileList] = useState([])
-  const [playList, setPlayList] = useState<MediaItem[] | null>(null)
-  const [currentTarckIndex, setCurrentTarckIndex] = useState(0)
+  const [updatePlayList, updateIndex] = usePlayerStore(
+    (state) => [
+      state.updatePlayList,
+      state.updateIndex,
+    ]
+  )
 
   /**
    * 实时获取当前路径
@@ -29,13 +32,7 @@ const App = () => {
   )
 
   const fileListFetcher = (path: string) => getFilesData(path).then((res) => res)
-  const { data, error, isLoading } = useSWR<any, Error, any>(path, fileListFetcher, {
-    // revalidateIfStale: true,
-    revalidateOnFocus: false,
-    // revalidateOnReconnect: false
-  })
-
-  console.log('获取数据', data)
+  const { data, error, isLoading } = useSWR<any, Error, any>(path, fileListFetcher, { revalidateOnFocus: false })
 
   const getfileList = () => {
     if (isLoading) return null
@@ -51,25 +48,6 @@ const App = () => {
   }
 
   const fileList = getfileList()
-
-  // useEffect(() => {
-  //   if (accounts.length === 0) {
-  //     setFileList([])
-  //   } else {
-  //     getFilesData(path).then(
-  //       res => {
-  //         setFileList(res.map((item: any) => {
-  //           return {
-  //             name: item.name,
-  //             size: item.size,
-  //             type: (item.file) ? 'file' : 'folder',
-  //           }
-  //         }))
-  //       }
-  //     )
-  //   }
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  // }, [accounts.length, path])
 
   /**
    * 点击列表项
@@ -94,8 +72,8 @@ const App = () => {
       if (isAudio(name)) {
         const lists = list.filter((item: { name: string }) => isAudio(item.name))
         const index = lists.findIndex((obj: { name: string }) => obj.name === name)
-        setCurrentTarckIndex(index)
-        setPlayList(lists)
+        updateIndex(index)
+        updatePlayList(lists)
       }
       // if (isVideo(name)) {
       //   const lists = list.filter((item: { name: string }) => isVideo(item.name))
@@ -139,15 +117,17 @@ const App = () => {
             fileList={fileList}
             handleListClick={handleListClick}
             handleListNavClick={handleListNavClick} />
+          <Player
+            getFileData={getFileData}
+          />
         </AuthenticatedTemplate>
         <UnauthenticatedTemplate>
-          <div className='center'>
+          <div className='login'>
             <h5 >Please sign-in to see your files.</h5>
             <SignInButton />
           </div>
         </UnauthenticatedTemplate>
       </div>
-      <Player playList={playList} getFileData={getFileData} currentTarckIndex={currentTarckIndex} />
     </main>
   )
 }

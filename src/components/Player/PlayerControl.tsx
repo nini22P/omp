@@ -1,37 +1,61 @@
+import usePlayerStore from '../../store'
 import styles from './PlayerControl.module.scss'
 
-const PlayerControl = ({ playList, playerStatus, setPlayerStatus, playerRef, handleClickNext, handleClickPrev }: any) => {
+const PlayerControl = ({ playerRef }: any) => {
+
+  const [playList, index, total, playing, updatePlaying, updateIndex] = usePlayerStore(
+    (state) => [
+      state.playList,
+      state.index,
+      state.total,
+      state.playing,
+      state.updatePlaying,
+      state.updateIndex,
+    ]
+  )
+
+  // 获取音频播放器实例
   const audioEl = (playerRef.current === null) ? null : playerRef.current.audioEl.current
 
+  /**
+   * 播放暂停
+   */
   const handleClickPlayPause = () => {
     if (audioEl.paused) {
       audioEl.play()
-      setPlayerStatus(
-        {
-          ...playerStatus,
-          playing: true,
-        }
-      )
+      updatePlaying(true)
     }
     else {
       audioEl.pause()
-      setPlayerStatus(
-        {
-          ...playerStatus,
-          playing: false,
-        }
-      )
+      updatePlaying(false)
+    }
+  }
+
+  /**
+ * 下一曲
+ */
+  const handleClickNext = () => {
+    if (index + 1 !== total) {
+      updateIndex(index + 1)
+    }
+  }
+
+  /**
+   * 上一曲
+   */
+  const handleClickPrev = () => {
+    if (index !== 0) {
+      updateIndex(index - 1)
     }
   }
 
   return (
     <div className={styles.control}>
-      <span>{!playList ? '0 / 0' : `${playerStatus.index + 1} / ${playerStatus.total}`}</span>
-      <span>{!playList ? 'Not playing' : playList[playerStatus.index].name}</span>
+      <span>{!playList ? '0 / 0' : `${index + 1} / ${total}`}</span>
+      <span>{!playList ? 'Not playing' : playList[index].name}</span>
       <button onClick={handleClickPrev}>Prev</button>
-      <button onClick={handleClickPlayPause}>{(playerStatus.playing) ? 'Paluse' : 'Play'}</button>
+      <button onClick={handleClickPlayPause}>{(playing) ? 'Pause' : 'Play'}</button>
       <button onClick={handleClickNext}>Next</button>
-
     </div>
   )
 }

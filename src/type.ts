@@ -18,6 +18,7 @@ interface PlayList {
 
 interface PLayerStatus {
   type: 'audio' | 'video' | null;
+  playList: MediaItem[] | null;
   index: number;
   total: number;
   url: string;
@@ -30,4 +31,13 @@ interface PLayerStatus {
   containerIsHiding: boolean;
 }
 
-export type { FileItem, MediaItem, PlayList, PLayerStatus }
+interface Action {
+  updatePlayList: (playList: PLayerStatus['playList']) => void;
+  updateIndex: (index: PLayerStatus['index']) => void;
+  updateTotal: (total: PLayerStatus['total']) => void;
+  updateUrl: (url: PLayerStatus['url']) => void;
+  updatePlaying: (playing: PLayerStatus['playing']) => void;
+  updateLoop: (playing: PLayerStatus['loop']) => void;
+}
+
+export type { FileItem, MediaItem, PlayList, PLayerStatus, Action }
