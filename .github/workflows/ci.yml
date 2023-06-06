@@ -12,6 +12,9 @@ jobs:
       - name: Checkout 🛎️
         uses: actions/checkout@v2
       - name: Build 🏗️
+        env:
+          VITE_CLIENT_ID: ${{ secrets.VITE_CLIENT_ID }}
+          VITE_REDIRECTURI: ${{ secrets.VITE_REDIRECTURI }}
         run: npm install && npm run build
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@4.1.0
