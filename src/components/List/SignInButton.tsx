@@ -5,7 +5,7 @@ const SignInButton = () => {
   const { instance } = useMsal()
 
   const handleLogin = () => {
-    instance.loginPopup(loginRequest)
+    instance.loginRedirect(loginRequest)
       .catch(e => {
         console.log(e)
       })

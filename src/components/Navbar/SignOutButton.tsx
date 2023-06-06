@@ -4,9 +4,8 @@ const SignOutButton = () => {
   const { instance } = useMsal()
 
   const handleLogout = () => {
-    instance.logoutPopup({
-      postLogoutRedirectUri: "/",
-      mainWindowRedirectUri: "/"
+    instance.logoutRedirect({
+      postLogoutRedirectUri: "/"
     })
   }
 
