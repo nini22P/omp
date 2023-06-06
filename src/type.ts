@@ -12,10 +12,6 @@ interface MediaItem {
   path: string;
 }
 
-interface PlayList {
-  playList: MediaItem[] | null
-}
-
 interface PLayerStatus {
   type: 'audio' | 'video' | null;
   playList: MediaItem[] | null;
@@ -26,18 +22,22 @@ interface PLayerStatus {
   loop: boolean;
   light: boolean | string;
   muted: boolean;
-  progress: number;
+  currentTime: number;
   duration: number;
   containerIsHiding: boolean;
 }
 
 interface Action {
+  updateType: (type: PLayerStatus['type']) => void,
   updatePlayList: (playList: PLayerStatus['playList']) => void;
   updateIndex: (index: PLayerStatus['index']) => void;
   updateTotal: (total: PLayerStatus['total']) => void;
   updateUrl: (url: PLayerStatus['url']) => void;
   updatePlaying: (playing: PLayerStatus['playing']) => void;
-  updateLoop: (playing: PLayerStatus['loop']) => void;
+  updateLoop: (loop: PLayerStatus['loop']) => void;
+  updateCurrentTime: (currentTime: PLayerStatus['currentTime']) => void;
+  updateDuration: (duration: PLayerStatus['duration']) => void;
+  updateContainerIsHiding: (containerIsHiding: PLayerStatus['containerIsHiding']) => void;
 }
 
-export type { FileItem, MediaItem, PlayList, PLayerStatus, Action }
+export type { FileItem, MediaItem, PLayerStatus, Action }

@@ -11,15 +11,19 @@ const usePlayerStore = create<PLayerStatus & Action>((set) => ({
   loop: false,
   light: true,
   muted: false,
-  progress: 0,
+  currentTime: 0,
   duration: 0,
-  containerIsHiding: false,
+  containerIsHiding: true,
+  updateType: (type) => set(() => ({ type: type })),
   updatePlayList: (playList) => set(() => ({ playList: playList })),
   updateIndex: (index) => set(() => ({ index: index })),
   updateTotal: (total) => set(() => ({ total: total })),
   updateUrl: (url) => set(() => ({ url: url })),
   updatePlaying: (playing) => set(() => ({ playing: playing })),
   updateLoop: (loop) => set(() => ({ loop: loop })),
+  updateCurrentTime: (currentTime) => set(() => ({ currentTime: currentTime })),
+  updateDuration: (duration) => set(() => ({ duration: duration })),
+  updateContainerIsHiding: (containerIsHiding) => set(() => ({ containerIsHiding: containerIsHiding }))
 }))
 
 export default usePlayerStore

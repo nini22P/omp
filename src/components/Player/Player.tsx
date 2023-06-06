@@ -1,62 +1,82 @@
-import { useEffect, useMemo, useRef } from 'react'
-import ReactAudioPlayer from 'react-audio-player'
+import { useMemo, useRef } from 'react'
 import PlayerControl from "./PlayerControl"
 import usePlayerStore from '../../store'
 import styles from './Player.module.scss'
 // import useSWR from 'swr'
 
 const Player = ({ getFileData }: any) => {
-  const [playList, index, total, url, loop, updatePlaying, updateIndex, updateTotal, updateUrl] = usePlayerStore(
+  const [type,
+    playList,
+    index,
+    total,
+    url,
+    loop,
+    containerIsHiding,
+    updatePlaying,
+    updateIndex,
+    updateTotal,
+    updateUrl,
+  ] = usePlayerStore(
     (state) => [
+      state.type,
       state.playList,
       state.index,
       state.total,
       state.url,
       state.loop,
+      state.containerIsHiding,
       state.updatePlaying,
       state.updateIndex,
       state.updateTotal,
-      state.updateUrl]
+      state.updateUrl,
+      state.updateContainerIsHiding
+    ]
   )
-  console.log('播放器获取到的播放列表', playList)
 
-  const playerRef = useRef<ReactAudioPlayer | null>(null)
-  const filePath = (playList === null) ? null : playList[index].path
+  const playerRef = useRef<any>(null)
 
   useMemo(() => {
-    if (filePath !== null) {
-      getFileData(filePath).then((res: any) => {
-        console.log('开始播放', filePath)
+    if (playList !== null) {
+      // 更新播放列表总数
+      updateTotal(playList ? playList.length : 0)
+      getFileData(playList[index].path).then((res: any) => {
+        console.log('开始播放', playList[index].path)
         updateUrl(res['@microsoft.graph.downloadUrl'])
         updatePlaying(true)
       })
     }
-  }, [filePath, index])
+  }, [playList, index])
 
-  useEffect(() => {
-    if (playList !== null) {
-      updateTotal(playList ? playList.length : 0)
-    }
-  }, [playList])
+  const onEnded = () => {
+    if (index + 1 === total) {
+      if (loop) updateIndex(0)
+      else
+        updatePlaying(false)
+    } else
+      updateIndex(index + 1)
+  }
 
   return (
     <div className={styles.player}>
-      <div className={styles.playerContainer}>
-        <ReactAudioPlayer
-          src={url}
-          autoPlay
-          controls
-          ref={playerRef}
-          onLoadedMetadata={res => console.log(res)}
-          onEnded={() => {
-            if (index + 1 === total) {
-              if (loop) updateIndex(0)
-              else
-                updatePlaying(false)
-            } else
-              updateIndex(index + 1)
-          }}
-        />
+      <div className={styles.playerContainer} style={(containerIsHiding) ? { height: 0 } : { height: '100%' }}>
+        {(type === 'audio') &&
+          <audio
+            src={url}
+            autoPlay
+            ref={playerRef}
+            onEnded={() => onEnded()}
+          />
+        }
+        {(type === 'video') &&
+          <video
+            width={'100%'}
+            height={'100%'}
+            src={url}
+            autoPlay
+            ref={playerRef}
+            onEnded={() => onEnded()}
+          />
+        }
       </div>
       <PlayerControl
         playerRef={playerRef}

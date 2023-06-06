@@ -14,10 +14,12 @@ const App = () => {
   const { instance, accounts } = useMsal()
   const accountId = 0
   const [folderTree, setFolderTree] = useState(['/'])
-  const [updatePlayList, updateIndex] = usePlayerStore(
+  const [updateType, updatePlayList, updateIndex, updateContainerIsHiding] = usePlayerStore(
     (state) => [
+      state.updateType,
       state.updatePlayList,
       state.updateIndex,
+      state.updateContainerIsHiding
     ]
   )
 
@@ -72,13 +74,18 @@ const App = () => {
       if (isAudio(name)) {
         const lists = list.filter((item: { name: string }) => isAudio(item.name))
         const index = lists.findIndex((obj: { name: string }) => obj.name === name)
+        updateType('audio')
         updateIndex(index)
         updatePlayList(lists)
       }
-      // if (isVideo(name)) {
-      //   const lists = list.filter((item: { name: string }) => isVideo(item.name))
-      //   setPlayList(lists)
-      // }
+      if (isVideo(name)) {
+        const lists = list.filter((item: { name: string }) => isVideo(item.name))
+        const index = lists.findIndex((obj: { name: string }) => obj.name === name)
+        updateType('video')
+        updateIndex(index)
+        updatePlayList(lists)
+        updateContainerIsHiding(false)
+      }
     }
   }
 
@@ -87,16 +94,25 @@ const App = () => {
    * @param index 
    */
   const handleListNavClick = (index: number) => {
-    console.log(index, folderTree.slice(0, index + 1))
     setFolderTree(folderTree.slice(0, index + 1))
   }
 
+  /**
+   * 获取文件夹数据
+   * @param path 
+   * @returns 
+   */
   const getFilesData = async (path: string) => {
     const acquireToken = await instance.acquireTokenSilent({ ...loginRequest, account: accounts[accountId] })
     const response = await getFiles(path, acquireToken.accessToken)
     return response.value
   }
 
+  /**
+   * 获取文件数据
+   * @param filePath 
+   * @returns 
+   */
   const getFileData = async (filePath: string) => {
     const acquireToken = await instance.acquireTokenSilent({ ...loginRequest, account: accounts[accountId] })
     const response = await getFile(filePath, acquireToken.accessToken)
@@ -105,7 +121,7 @@ const App = () => {
 
   const isAudio = (name: string) => (/.(wav|mp3|aac|ogg|flac|m4a|opus)$/i).test(name)
 
-  // const isVideo = (name: string) => (/.(mp4|mkv|avi|mov|rmvb|webm|flv)$/i).test(name)
+  const isVideo = (name: string) => (/.(mp4|mkv|avi|mov|rmvb|webm|flv)$/i).test(name)
 
   return (
     <main className='main'>
@@ -123,7 +139,7 @@ const App = () => {
         </AuthenticatedTemplate>
         <UnauthenticatedTemplate>
           <div className='login'>
-            <h5 >Please sign-in to see your files.</h5>
+            <h5 >Please sign in to see your files.</h5>
             <SignInButton />
           </div>
         </UnauthenticatedTemplate>
