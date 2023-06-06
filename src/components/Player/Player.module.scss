@@ -7,3 +7,12 @@
   width: 100vw;
   // height: calc(100vh - variables.$navbar-height);
 }
+
+.playerContainer {
+  width: 100%;
+  background-color: rgba(59, 201, 184, 0.414);
+  // height: calc(100vh - variables.$navbar-height - variables.$player-controller-height);
+  height: 0;
+  position: fixed;
+  bottom: calc(variables.$player-controller-height);
+}

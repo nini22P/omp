@@ -2,13 +2,15 @@ import { FileItem } from "../../type"
 import styles from './ListItem.module.scss'
 
 const ListItem = ({ index, name, size, type, handleListClick }: FileItem) => {
-  const fileSizeMB = (size / 1024 / 1024).toFixed(1)
-  const fileSizeGB = (size / 1024 / 1024 / 1024).toFixed(1)
-
   return (
-    <div className={styles.item} onClick={() => handleListClick(index, name, type)}>
+    <div title={name} className={styles.item} onClick={() => handleListClick(index, name, type)}>
       <span className={styles.name}>{name}</span>
-      <span>{(Number(fileSizeMB) < 1024) ? `${fileSizeMB} MB` : `${fileSizeGB} GB`}</span>
+      <span>{
+        ((size / 1024) < 1024)
+          ? `${(size / 1024).toFixed(2)} KB`
+          : ((size / 1024 / 1024) < 1024)
+            ? `${(size / 1024 / 1024).toFixed(2)} MB`
+            : `${(size / 1024 / 1024 / 1024).toFixed(2)} GB`}</span>
     </div>
   )
 }
