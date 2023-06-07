@@ -1,9 +1,7 @@
 interface FileItem {
-  index: number;
   name: string;
   size: number;
-  type: 'folder' | 'file';
-  handleListClick: (index: number, name: string, type: 'folder' | 'file') => void;
+  fileType: string;
 }
 
 interface MediaItem {

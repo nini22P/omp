@@ -59,7 +59,7 @@ const Player = ({ getFileData }: any) => {
   return (
     <div className={styles.player}>
       <div className={styles.playerContainer} style={(containerIsHiding) ? { height: 0 } : { height: '100%' }}>
-        {(type === 'audio') &&
+        {/* {(type === 'audio') &&
           <audio
             src={url}
             autoPlay
@@ -67,16 +67,16 @@ const Player = ({ getFileData }: any) => {
             onEnded={() => onEnded()}
           />
         }
-        {(type === 'video') &&
-          <video
-            width={'100%'}
-            height={'100%'}
-            src={url}
-            autoPlay
-            ref={playerRef}
-            onEnded={() => onEnded()}
-          />
-        }
+        {(type === 'video') && */}
+        <video
+          width={'100%'}
+          height={'100%'}
+          src={url}
+          autoPlay
+          ref={playerRef}
+          onEnded={() => onEnded()}
+        />
+        {/* } */}
       </div>
       <PlayerControl
         playerRef={playerRef}
