@@ -4,7 +4,7 @@ import App from './App.tsx'
 import { PublicClientApplication } from "@azure/msal-browser"
 import { MsalProvider } from '@azure/msal-react'
 import { msalConfig } from './authConfig.ts'
-import './index.css'
+import './index.scss'
 
 const msalInstance = new PublicClientApplication(msalConfig);
 

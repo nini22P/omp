@@ -68,6 +68,7 @@ const PlayerControl = ({ playerRef }: any) => {
  */
   const handleClickNext = () => {
     if (index + 1 !== total) {
+      player.pause()
       updateIndex(index + 1)
     }
   }
@@ -77,6 +78,7 @@ const PlayerControl = ({ playerRef }: any) => {
    */
   const handleClickPrev = () => {
     if (index !== 0) {
+      player.pause()
       updateIndex(index - 1)
     }
   }
