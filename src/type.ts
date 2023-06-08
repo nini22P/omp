@@ -1,20 +1,52 @@
-interface FileItem {
+import { IPicture } from "music-metadata-browser";
+
+type FileItem = {
   name: string;
   size: number;
   fileType: string;
 }
 
-interface MediaItem {
-  name: string;
+type playListItem = {
+  title: string;
   size: number;
   path: string;
 }
 
-interface PLayerStatus {
+type PlayListStatus = {
   type: 'audio' | 'video' | null;
-  playList: MediaItem[] | null;
+  playList: playListItem[] | null;
   index: number;
   total: number;
+}
+
+type PlayListAction = {
+  updateType: (type: PlayListStatus['type']) => void,
+  updatePlayList: (playList: PlayListStatus['playList']) => void;
+  updateIndex: (index: PlayListStatus['index']) => void;
+  updateTotal: (total: PlayListStatus['total']) => void;
+}
+
+type MetaData = {
+  path: string;
+  size?: number;
+  title: string;
+  artist?: string | undefined;
+  albumArtist?: string | undefined;
+  album?: string | undefined;
+  year?: number | undefined;
+  genre?: string[] | undefined;
+  cover?: IPicture[] | undefined;
+}
+
+type MetaDataListStatus = {
+  metaDataList: MetaData[] | [];
+}
+
+type MetaDataListAction = {
+  updateMetaDataList: (metaData: MetaDataListStatus['metaDataList']) => void
+}
+
+type PLayerStatus = {
   url: string;
   playing: boolean;
   loop: boolean;
@@ -25,11 +57,7 @@ interface PLayerStatus {
   containerIsHiding: boolean;
 }
 
-interface Action {
-  updateType: (type: PLayerStatus['type']) => void,
-  updatePlayList: (playList: PLayerStatus['playList']) => void;
-  updateIndex: (index: PLayerStatus['index']) => void;
-  updateTotal: (total: PLayerStatus['total']) => void;
+type PLayerAction = {
   updateUrl: (url: PLayerStatus['url']) => void;
   updatePlaying: (playing: PLayerStatus['playing']) => void;
   updateLoop: (loop: PLayerStatus['loop']) => void;
@@ -38,4 +66,14 @@ interface Action {
   updateContainerIsHiding: (containerIsHiding: PLayerStatus['containerIsHiding']) => void;
 }
 
-export type { FileItem, MediaItem, PLayerStatus, Action }
+export type {
+  FileItem,
+  playListItem,
+  MetaData,
+  MetaDataListStatus,
+  MetaDataListAction,
+  PlayListStatus,
+  PlayListAction,
+  PLayerStatus,
+  PLayerAction
+}
