@@ -1,5 +1,5 @@
 import { useMetaDataListStore, usePlayListStore, usePlayerStore } from '../../store'
-import { Container, Grid, IconButton, Typography } from '@mui/material'
+import { Box, Grid, IconButton, Typography } from '@mui/material'
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious'
 import SkipNextIcon from '@mui/icons-material/SkipNext'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
@@ -101,56 +101,62 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement }) => {
     ? "/logo.png"
     : URL.createObjectURL(new Blob([new Uint8Array(metaData.cover[0].data)], { type: 'image/png' }))
 
-
   return (
     <div>
       {
         (player) &&
-        <Container maxWidth={'xl'} >
-          <Grid container sx={{ justifyContent: 'space-between', alignItems: 'center', textAlign: 'center' }} >
-            {/* 播放进度 */}
-            <Grid item xs={12}>
-              <PlayGrogress player={player} />
-            </Grid>
+        <Grid container
+          sx={{ justifyContent: 'space-between', alignItems: 'center', textAlign: 'center', pl: { sm: 1, xs: 0.5 }, pr: { sm: 1, xs: 0.5 }, pb: { sm: 1, xs: 0.5 } }} >
+          {/* 播放进度 */}
+          <Grid item xs={12}>
+            <PlayGrogress player={player} />
+          </Grid>
+          <Grid container wrap={'nowrap'} sx={{ alignItems: 'center' }} >
             {/* 歌曲信息 */}
-            <Grid item sm={6} xs={8} zeroMinWidth textAlign={'left'}>
-              <Grid container>
-                <Grid item xs={4} textAlign={'center'}>
-                  <img
-                    style={{ width: 60 }}
-                    src={cover}
-                  />
+            <Grid item xs textAlign={'left'} zeroMinWidth>
+              {/* <ButtonBase sx={{ height: '100%' }} onClick={() => updateContainerIsHiding(false)}> */}
+              <Grid container sx={{ justifyContent: 'space-between', alignItems: 'center', textAlign: 'left', overflow: 'hidden' }} wrap={'nowrap'} >
+                <Grid item xs="auto" textAlign={'center'}>
+                  <Box sx={{ width: '4rem', height: '4rem' }}>
+                    <img style={{ maxWidth: '4rem', maxHeight: '4rem' }} src={cover} />
+                  </Box>
                 </Grid>
-                <Grid item xs={8} >
-                  <Typography component="div" variant="body1" noWrap>
+                <Grid item xs sx={{ pl: 1 }} zeroMinWidth>
+                  <Typography variant="body1" component="div" noWrap>
                     {(!playList || !metaData) ? 'Not playing' : metaData.title}
                   </Typography>
-                  <Typography variant="subtitle1" color="text.secondary" component="div">
+                  <Typography variant="subtitle1" color="text.secondary" component="div" noWrap>
                     {(!playList || !metaData) ? '0 / 0' : `${metaData.artist} ${index + 1} / ${total}`}
                   </Typography>
                 </Grid>
               </Grid>
+              {/* </ButtonBase> */}
             </Grid>
-            {/* 控制按钮 */}
-            <Grid item sm={6} xs={4} textAlign={'right'} >
+            {/* 基本控制按钮 */}
+            <Grid item sm={3} xs={5}>
               <IconButton aria-label="previous" onClick={handleClickPrev} >
                 <SkipPreviousIcon />
               </IconButton>
-              <IconButton aria-label="play/pause" onClick={() => handleClickPlayPause()}>
+              <IconButton aria-label="play/pause" onClick={handleClickPlayPause}>
                 {(playing) ? <PauseIcon sx={{ height: 38, width: 38 }} /> : <PlayArrowIcon sx={{ height: 38, width: 38 }} />}
               </IconButton>
               <IconButton aria-label="next" onClick={handleClickNext} >
                 <SkipNextIcon />
               </IconButton>
-              <IconButton >
+            </Grid>
+            {/* 其他按钮 */}
+            <Grid item xs textAlign={'right'} sx={{ display: { sm: 'block', xs: 'none' } }} >
+              <IconButton sx={{ display: { sm: 'inline-grid', xs: 'none' } }} >
                 <ListIcon />
               </IconButton>
-              <IconButton onClick={() => updateContainerIsHiding(!containerIsHiding)}>
+              <IconButton
+                sx={{ display: { sm: 'inline-grid', xs: 'none' } }}
+                onClick={() => updateContainerIsHiding(!containerIsHiding)}>
                 {containerIsHiding ? <ArrowDropUpIcon /> : <ArrowDropDownIcon />}
               </IconButton>
             </Grid>
           </Grid>
-        </Container>
+        </Grid>
       }
     </div>
   )

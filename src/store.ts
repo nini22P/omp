@@ -14,7 +14,8 @@ const usePlayListStore = create<PlayListStatus & PlayListAction>((set) => ({
 
 const useMetaDataListStore = create<MetaDataListStatus & MetaDataListAction>((set) => ({
   metaDataList: [],
-  updateMetaDataList: (metaDataList) => set(() => ({ metaDataList: metaDataList }))
+  updateMetaDataList: (metaDataList) => set(() => ({ metaDataList: metaDataList })),
+  insertMetaDataList: (metaData) => set((state) => ({ metaDataList: [...state.metaDataList, metaData] }))
 }))
 
 const usePlayerStore = create<PLayerStatus & PLayerAction>((set) => ({

@@ -43,7 +43,8 @@ type MetaDataListStatus = {
 }
 
 type MetaDataListAction = {
-  updateMetaDataList: (metaData: MetaDataListStatus['metaDataList']) => void
+  updateMetaDataList: (metaDataList: MetaDataListStatus['metaDataList']) => void
+  insertMetaDataList: (metaData: MetaData) => void
 }
 
 type PLayerStatus = {

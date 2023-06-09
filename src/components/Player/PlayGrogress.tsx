@@ -39,19 +39,19 @@ const PlayGrogress = ({ player }: { player: HTMLVideoElement }) => {
 
   return (
     <div>
-      <Grid container sx={{ justifyContent: 'space-between', alignItems: 'center', textAlign: 'center' }}>
-        <Grid item xs={2} >
+      <Grid container spacing={2} pl={1} pr={1} sx={{ justifyContent: 'space-between', alignItems: 'center', textAlign: 'center' }}>
+        <Grid item xs="auto" >
           <Typography component="div" color="text.secondary">
             {timeShift(currentTime)}
           </Typography>
         </Grid >
-        <Grid item sm={8} xs={6}>
+        <Grid item xs>
           <Slider
             min={0} max={1000} value={(!player.duration) ? 0 : player.currentTime / player.duration * 1000}
             onChange={(e) => handleTimeRangeOnInput(e)}
           />
         </Grid>
-        <Grid item xs={2}>
+        <Grid item xs="auto">
           <Typography component="div" color="text.secondary">
             {timeShift((player.duration) ? player.duration : 0)}
           </Typography>

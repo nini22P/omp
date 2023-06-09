@@ -2,6 +2,7 @@ import { useMemo, useRef } from 'react'
 import PlayerControl from "./PlayerControl"
 import { useMetaDataListStore, usePlayListStore, usePlayerStore } from '../../store'
 import * as mm from 'music-metadata-browser'
+import { Container, Paper } from '@mui/material'
 
 const Player = ({ getFileData }: any) => {
 
@@ -14,13 +15,13 @@ const Player = ({ getFileData }: any) => {
     state.updateTotal,
   ])
 
-  const [metaDataList, updateMetaDataList] = useMetaDataListStore(
+  const [metaDataList, insertMetaDataList] = useMetaDataListStore(
     (state) => [
       state.metaDataList,
-      state.updateMetaDataList,
+      state.insertMetaDataList,
     ]
   )
-
+  console.log('metaDataList', metaDataList)
   const [
     url,
     loop,
@@ -59,10 +60,10 @@ const Player = ({ getFileData }: any) => {
     if (playerRef.current !== null) {
       playerRef.current.onplay = () => {
         if (type === 'audio' && playList !== null) {
-          console.log('开始获取 metadata', 'path:', playList[index].path, 'url', url)
+          console.log('开始获取 metadata', 'path:', playList[index].path)
           const path = playList[index].path
           if (metaDataList.some(item => item.path === path)) {
-            console.log('跳过获取 metadata', 'path:', path, metaDataList)
+            console.log('跳过获取 metadata', 'path:', path)
           } else {
             mm.fetchFromUrl(url).then(metadata => {
               if (metadata) {
@@ -78,8 +79,7 @@ const Player = ({ getFileData }: any) => {
                     genre: metadata.common.genre,
                     cover: metadata.common.picture,
                   }
-                  updateMetaDataList([...metaDataList, metaData])
-                  console.log([...metaDataList, metaData])
+                  insertMetaDataList(metaData)
                 }
               }
               else {
@@ -90,7 +90,7 @@ const Player = ({ getFileData }: any) => {
         }
       }
     }
-  }, [type, playList, index, url, metaDataList, updateMetaDataList])
+  }, [type, playList, index, url, metaDataList, insertMetaDataList])
 
   const onEnded = () => {
     if (index + 1 === total) {
@@ -102,22 +102,40 @@ const Player = ({ getFileData }: any) => {
   }
 
   return (
-    <div >
-      <div style={
-        (containerIsHiding)
-          ? { height: 0 }
-          : { height: '100vh', width: '100vw', position: 'fixed', top: '0', left: '0', backgroundColor: 'white' }}>
+    <>
+      <Container
+        maxWidth={false}
+        disableGutters={true}
+        sx={{ width: '100%', height: '100vh', position: 'fixed', transition: 'all 0.5s' }}
+        style={(containerIsHiding) ? { bottom: '-100vh' } : { bottom: 0 }}
+      >
         <video
           width={'100%'}
           height={'100%'}
           src={url}
           autoPlay
           ref={playerRef}
+          style={(type === 'video') ? { backgroundColor: '#000' } : { backgroundColor: '#fff' }}
           onEnded={() => onEnded()}
         />
-      </div>
-      {playerRef.current && <PlayerControl player={playerRef.current} />}
-    </div>
+      </Container>
+      <Paper
+        elevation={0}
+        square={true}
+        sx={{ position: 'fixed', bottom: 0, width: '100%', boxShadow: '0px 4px 4px -2px rgba(0, 0, 0, 0.1), 0px -4px 4px -2px rgba(0, 0, 0, 0.1)' }}
+        style={(!containerIsHiding) ? { backgroundColor: '#ffffff9e' } : { backgroundColor: '#ffffff' }}
+      >
+        <Container
+          maxWidth='xl'
+          disableGutters={true}
+        >
+          {
+            playerRef.current &&
+            <PlayerControl player={playerRef.current} />
+          }
+        </Container>
+      </Paper >
+    </>
   )
 }
 

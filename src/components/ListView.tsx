@@ -1,8 +1,8 @@
-import { Breadcrumbs, Button, Grid, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from "@mui/material"
+import { Breadcrumbs, Button, CircularProgress, Grid, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from "@mui/material"
 import FolderIcon from '@mui/icons-material/Folder'
 import MusicNoteIcon from '@mui/icons-material/MusicNote'
 import MovieIcon from '@mui/icons-material/Movie'
-import { usePlayListStore } from "../store"
+import { usePlayListStore, usePlayerStore } from "../store"
 
 const ListView = ({ data, error, isLoading, folderTree, setFolderTree }: any) => {
   const [updateType, updatePlayList, updateIndex] = usePlayListStore(
@@ -13,6 +13,8 @@ const ListView = ({ data, error, isLoading, folderTree, setFolderTree }: any) =>
     ]
   )
 
+  const [updateContainerIsHiding] = usePlayerStore((state) => [state.updateContainerIsHiding])
+
   /**
    * 点击文件夹导航
    * @param index 
@@ -21,7 +23,7 @@ const ListView = ({ data, error, isLoading, folderTree, setFolderTree }: any) =>
     setFolderTree(folderTree.slice(0, index + 1))
   }
 
-  console.log(data)
+  console.log('获取文件数据', data)
 
   /**
  * 点击列表项
@@ -57,6 +59,7 @@ const ListView = ({ data, error, isLoading, folderTree, setFolderTree }: any) =>
         updateType('video')
         updateIndex(index)
         updatePlayList(lists)
+        updateContainerIsHiding(false)
       }
     }
   }
@@ -76,8 +79,12 @@ const ListView = ({ data, error, isLoading, folderTree, setFolderTree }: any) =>
           )
         }
       </Breadcrumbs>
-      {(error) && <div>Loading error</div>}
-      {(isLoading) ? <>Loading</> :
+      {(isLoading || !data || error)
+        ?
+        <div style={{ textAlign: 'center' }}>
+          <CircularProgress />
+        </div>
+        :
         <Grid container spacing={1}>
           {
             data.map((item: any, index: number) =>
