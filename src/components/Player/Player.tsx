@@ -1,11 +1,13 @@
 import { useMemo, useRef, useState } from 'react'
-import PlayerControl from "./PlayerControl"
-import { useMetaDataListStore, usePlayListStore, usePlayerStore } from '../../store'
 import * as mm from 'music-metadata-browser'
 import { Container, IconButton, Paper } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined'
 import AudioView from './AudioView'
+import PlayerControl from './PlayerControl'
+import useMetaDataListStore from '../../store/useMetaDataListStore'
+import usePlayListStore from '../../store/usePlayListStore'
+import usePlayerStore from '../../store/usePlayerStore'
 
 const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<any> }) => {
 

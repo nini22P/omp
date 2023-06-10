@@ -1,35 +1,42 @@
-import { Grid, Slider, Typography } from "@mui/material"
-import { timeShift } from "../../util"
+import { Slider, Typography } from '@mui/material'
+import Grid from '@mui/material/Unstable_Grid2'
+import { timeShift } from '../../util'
 
 const PlayerControlSlider = ({ handleTimeRangeOnInput, currentTime, duration }
-  : { handleTimeRangeOnInput: (e: any) => void, currentTime: number, duration: number }
+  : { handleTimeRangeOnInput: (e: Event) => void, currentTime: number, duration: number }
 ) => {
   return (
     <div>
-      <Grid container spacing={1} pl={1} pr={1} sx={{ justifyContent: 'space-between', alignItems: 'center', textAlign: 'center' }}>
-        <Grid item xs="auto" >
+      <Grid container
+        pl={{ xs: 0, sm: 1 }}
+        pr={{ xs: 0, sm: 1 }}
+        sx={{ justifyContent: 'space-between', alignItems: 'center', textAlign: 'center' }}>
+        <Grid xs='auto' >
           <Typography
-            component="div"
-            color="text.secondary"
+            component='div'
+            color='text.secondary'
             sx={{ display: { sm: 'inline-grid', xs: 'none' } }}
           >
             {timeShift(currentTime)}
           </Typography>
         </Grid >
-        <Grid item xs>
+        <Grid xs
+          pl={{ xs: 1, sm: 2 }}
+          pr={{ xs: 1, sm: 2 }}
+        >
           <Slider
-            size="small"
+            size='small'
             min={0}
             max={1000}
             value={(!duration) ? 0 : currentTime / duration * 1000}
             onChange={(e) => handleTimeRangeOnInput(e)}
-            sx={{ color: "#222" }}
+            sx={{ color: '#222' }}
           />
         </Grid>
-        <Grid item xs="auto">
+        <Grid xs='auto'>
           <Typography
-            component="div"
-            color="text.secondary"
+            component='div'
+            color='text.secondary'
             sx={{ display: { sm: 'inline-grid', xs: 'none' } }}
           >
             {timeShift((duration) ? duration : 0)}

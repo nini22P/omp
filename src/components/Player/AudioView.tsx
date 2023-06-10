@@ -1,15 +1,17 @@
-import { Box, Container, IconButton, Typography } from "@mui/material"
+import { Box, Container, IconButton, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
-import { useMetaDataListStore, usePlayListStore, usePlayerStore } from "../../store"
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined'
 import QueueMusicOutlinedIcon from '@mui/icons-material/QueueMusicOutlined'
 import PlayCircleOutlinedIcon from '@mui/icons-material/PlayCircleOutlined'
 import PauseCircleOutlinedIcon from '@mui/icons-material/PauseCircleOutlined'
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious'
 import SkipNextIcon from '@mui/icons-material/SkipNext'
-import { useMemo, useState } from "react"
-import { MetaData } from "../../type"
-import AudioViewSlider from "./AudioViewSlider"
+import { useMemo, useState } from 'react'
+import { MetaData } from '../../type'
+import AudioViewSlider from './AudioViewSlider'
+import useMetaDataListStore from '../../store/useMetaDataListStore'
+import usePlayListStore from '../../store/usePlayListStore'
+import usePlayerStore from '../../store/usePlayerStore'
 
 const AudioView = (
   { player, audioViewIsDisplay, setAudioViewIsDisplay }
@@ -98,7 +100,7 @@ const AudioView = (
  */
   const handleTimeRangeOnInput = (e: Event) => {
     const target = e.target as HTMLInputElement
-    if (target) {
+    if (target && !isNaN(player.duration)) {
       player.currentTime = player.duration / 1000 * Number(target.value)
       player.play()
       updatePlaying(true)
@@ -107,7 +109,7 @@ const AudioView = (
 
   const cover = useMemo(() => {
     return (!playList || !metaData || !metaData.cover)
-      ? "./logo.png"
+      ? './logo.png'
       : URL.createObjectURL(new Blob([new Uint8Array(metaData.cover[0].data)], { type: 'image/png' }))
   }, [playList, metaData])
 

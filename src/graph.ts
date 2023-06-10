@@ -1,23 +1,23 @@
-import { graphConfig } from "./authConfig";
+import { graphConfig } from './authConfig'
 
 /**
  * Attaches a given access token to a MS Graph API call. Returns information about the user
  * @param accessToken 
  */
 export async function callMsGraph(accessToken: string) {
-  const headers = new Headers();
-  const bearer = `Bearer ${accessToken}`;
+  const headers = new Headers()
+  const bearer = `Bearer ${accessToken}`
 
-  headers.append("Authorization", bearer);
+  headers.append('Authorization', bearer)
 
   const options = {
-    method: "GET",
+    method: 'GET',
     headers: headers
-  };
+  }
 
   return fetch(graphConfig.graphMeEndpoint, options)
     .then(response => response.json())
-    .catch(error => console.log(error));
+    .catch(error => console.log(error))
 }
 
 /**
@@ -27,19 +27,19 @@ export async function callMsGraph(accessToken: string) {
  * @returns 
  */
 export async function getFiles(path: string, accessToken: string) {
-  const headers = new Headers();
-  const bearer = `Bearer ${accessToken}`;
+  const headers = new Headers()
+  const bearer = `Bearer ${accessToken}`
 
-  headers.append("Authorization", bearer);
+  headers.append('Authorization', bearer)
 
   const options = {
-    method: "GET",
+    method: 'GET',
     headers: headers
-  };
+  }
 
   return fetch(`${graphConfig.graphMeEndpoint}/drive/root:/${encodeURI(path)}:/children?$top=2147483647`, options)
     .then(response => response.json())
-    .catch(error => console.log(error));
+    .catch(error => console.log(error))
 }
 
 /**
@@ -49,17 +49,17 @@ export async function getFiles(path: string, accessToken: string) {
  * @returns 
  */
 export async function getFile(path: string, accessToken: string) {
-  const headers = new Headers();
-  const bearer = `Bearer ${accessToken}`;
+  const headers = new Headers()
+  const bearer = `Bearer ${accessToken}`
 
-  headers.append("Authorization", bearer);
+  headers.append('Authorization', bearer)
 
   const options = {
-    method: "GET",
+    method: 'GET',
     headers: headers
-  };
+  }
 
   return fetch(`${graphConfig.graphMeEndpoint}/drive/root:/${encodeURI(path)}`, options)
     .then(response => response.json())
-    .catch(error => console.log(error));
+    .catch(error => console.log(error))
 }
