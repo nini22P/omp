@@ -127,7 +127,7 @@ const PlayerControl = ({ player, setAudioViewIsDisplay }: { player: HTMLVideoEle
 
   const cover = useMemo(() => {
     return (!playList || !metaData || !metaData.cover)
-      ? "/logo.png"
+      ? "./logo.png"
       : URL.createObjectURL(new Blob([new Uint8Array(metaData.cover[0].data)], { type: 'image/png' }))
   }, [playList, metaData])
 
