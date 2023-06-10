@@ -10,7 +10,6 @@ import SkipNextIcon from '@mui/icons-material/SkipNext'
 import { useMemo, useState } from "react"
 import { MetaData } from "../../type"
 import AudioViewSlider from "./AudioViewSlider"
-import vhCheck from 'vh-check'
 
 const AudioView = (
   { player, audioViewIsDisplay, setAudioViewIsDisplay }
