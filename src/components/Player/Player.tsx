@@ -1,66 +1,175 @@
-import { useEffect, useMemo, useRef } from 'react'
-import ReactAudioPlayer from 'react-audio-player'
+import { useMemo, useRef, useState } from 'react'
 import PlayerControl from "./PlayerControl"
-import usePlayerStore from '../../store'
-import styles from './Player.module.scss'
-// import useSWR from 'swr'
+import { useMetaDataListStore, usePlayListStore, usePlayerStore } from '../../store'
+import * as mm from 'music-metadata-browser'
+import { Container, IconButton, Paper } from '@mui/material'
+import Grid from '@mui/material/Unstable_Grid2'
+import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined'
+import AudioView from './AudioView'
 
-const Player = ({ getFileData }: any) => {
-  const [playList, index, total, url, loop, updatePlaying, updateIndex, updateTotal, updateUrl] = usePlayerStore(
+const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<any> }) => {
+
+  const [type, playList, index, total, updateIndex, updateTotal] = usePlayListStore((state) => [
+    state.type,
+    state.playList,
+    state.index,
+    state.total,
+    state.updateIndex,
+    state.updateTotal,
+  ])
+
+  const [metaDataList, insertMetaDataList] = useMetaDataListStore(
     (state) => [
-      state.playList,
-      state.index,
-      state.total,
+      state.metaDataList,
+      state.insertMetaDataList,
+    ]
+  )
+
+  const [
+    url,
+    loop,
+    containerIsHiding,
+    updatePlaying,
+    updateUrl,
+    updateContainerIsHiding,
+  ] = usePlayerStore(
+    (state) => [
       state.url,
       state.loop,
+      state.containerIsHiding,
       state.updatePlaying,
-      state.updateIndex,
-      state.updateTotal,
-      state.updateUrl]
+      state.updateUrl,
+      state.updateContainerIsHiding
+    ]
   )
-  console.log('播放器获取到的播放列表', playList)
 
-  const playerRef = useRef<ReactAudioPlayer | null>(null)
-  const filePath = (playList === null) ? null : playList[index].path
+  // 声明播放器对象
+  const playerRef = useRef<HTMLVideoElement>(null)
 
+  //音频界面是否显示
+  const [audioViewIsDisplay, setAudioViewIsDisplay] = useState(false)
+
+  // 更新播放列表总数
   useMemo(() => {
-    if (filePath !== null) {
-      getFileData(filePath).then((res: any) => {
-        console.log('开始播放', filePath)
+    if (playList !== null) {
+      updateTotal(playList ? playList.length : 0)
+      getFileData(playList[index].path).then((res: any) => {
+        console.log('开始播放', playList[index].path)
         updateUrl(res['@microsoft.graph.downloadUrl'])
         updatePlaying(true)
       })
-    }
-  }, [filePath, index])
 
-  useEffect(() => {
-    if (playList !== null) {
-      updateTotal(playList ? playList.length : 0)
     }
-  }, [playList])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playList, index])
+
+  // 获取 metadata
+  useMemo(() => {
+    if (playerRef.current !== null) {
+      playerRef.current.onplay = () => {
+        if (type === 'audio' && playList !== null) {
+          console.log('开始获取 metadata', 'path:', playList[index].path)
+          const path = playList[index].path
+          if (metaDataList.some(item => item.path === path)) {
+            console.log('跳过获取 metadata', 'path:', path)
+          } else {
+            mm.fetchFromUrl(url).then(metadata => {
+              if (metadata) {
+                if (metadata.common.title !== undefined) {
+                  console.log('获取 metadata', metadata)
+                  const metaData = {
+                    path: path,
+                    title: metadata.common.title,
+                    artist: metadata.common.artist,
+                    albumArtist: metadata.common.albumartist,
+                    album: metadata.common.album,
+                    year: metadata.common.year,
+                    genre: metadata.common.genre,
+                    cover: metadata.common.picture,
+                  }
+                  insertMetaDataList(metaData)
+                }
+              }
+              else {
+                console.log('未能获取 metadata')
+              }
+            })
+          }
+        }
+      }
+    }
+  }, [type, playList, index, url, metaDataList, insertMetaDataList])
+
+  const onEnded = () => {
+    if (index + 1 === total) {
+      if (loop) updateIndex(0)
+      else
+        updatePlaying(false)
+    } else
+      updateIndex(index + 1)
+  }
 
   return (
-    <div className={styles.player}>
-      <div className={styles.playerContainer}>
-        <ReactAudioPlayer
-          src={url}
-          autoPlay
-          controls
-          ref={playerRef}
-          onLoadedMetadata={res => console.log(res)}
-          onEnded={() => {
-            if (index + 1 === total) {
-              if (loop) updateIndex(0)
-              else
-                updatePlaying(false)
-            } else
-              updateIndex(index + 1)
-          }}
-        />
-      </div>
-      <PlayerControl
-        playerRef={playerRef}
-      />
+    <div>
+      <Container
+        maxWidth={false}
+        disableGutters={true}
+        sx={{ width: '100%', height: '100vh', position: 'fixed', transition: 'all 0.5s' }}
+        style={(containerIsHiding) ? { bottom: '-100vh' } : { bottom: '0' }}
+      >
+        <Grid container
+          sx={{
+            width: '100%',
+            height: '100%',
+            justifyContent: 'center',
+            alignItems: 'start',
+            backgroundColor: '#000'
+          }}>
+          <Grid xs={12}
+            sx={{ backgroundColor: '#ffffff9e' }}
+          >
+            <IconButton aria-label="close" onClick={() => updateContainerIsHiding(true)} >
+              <KeyboardArrowDownOutlinedIcon />
+            </IconButton>
+          </Grid>
+          <Grid xs={12} sx={{ width: '100%', height: '100%' }}>
+            <video
+              width={'100%'}
+              height={'100%'}
+              src={url}
+              autoPlay
+              ref={playerRef}
+              onEnded={() => onEnded()}
+            />
+          </Grid>
+
+        </Grid>
+
+      </Container>
+      <Paper
+        elevation={0}
+        square={true}
+        sx={{ position: 'fixed', bottom: '0', width: '100%', boxShadow: '0px 4px 4px -2px rgba(0, 0, 0, 0.1), 0px -4px 4px -2px rgba(0, 0, 0, 0.1)' }}
+        style={(!containerIsHiding) ? { backgroundColor: '#ffffff9e' } : { backgroundColor: '#ffffff' }}
+      >
+        <Container
+          maxWidth={false}
+          disableGutters={true}
+        >
+          {
+            playerRef.current && <div>
+              <PlayerControl
+                player={playerRef.current}
+                setAudioViewIsDisplay={setAudioViewIsDisplay} />
+              <AudioView
+                player={playerRef.current}
+                audioViewIsDisplay={audioViewIsDisplay}
+                setAudioViewIsDisplay={setAudioViewIsDisplay} />
+            </div>
+          }
+        </Container>
+      </Paper >
+
     </div>
   )
 }

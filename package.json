@@ -7,15 +7,24 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "start": "tsc && vite build && vite preview"
   },
   "dependencies": {
     "@azure/msal-browser": "^2.37.0",
     "@azure/msal-react": "^1.5.7",
+    "@emotion/react": "^11.11.0",
+    "@emotion/styled": "^11.11.0",
+    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
+    "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
+    "@fontsource/roboto": "^5.0.2",
+    "@mui/icons-material": "^5.11.16",
+    "@mui/material": "^5.13.4",
+    "buffer": "^6.0.3",
+    "music-metadata-browser": "^2.5.10",
     "react": "^18.2.0",
-    "react-audio-player": "^0.17.0",
     "react-dom": "^18.2.0",
-    "react-player": "^2.12.0",
+    "rollup-plugin-polyfill-node": "^0.12.0",
     "swr": "^2.1.5",
     "zustand": "^4.3.8"
   },

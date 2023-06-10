@@ -1,41 +1,103 @@
-import usePlayerStore from '../../store'
-import styles from './PlayerControl.module.scss'
+import { useMetaDataListStore, usePlayListStore, usePlayerStore } from '../../store'
+import { Box, ButtonBase, Grid, IconButton, Typography } from '@mui/material'
+import SkipPreviousIcon from '@mui/icons-material/SkipPrevious'
+import SkipNextIcon from '@mui/icons-material/SkipNext'
+import PlayCircleOutlinedIcon from '@mui/icons-material/PlayCircleOutlined'
+import PauseCircleOutlinedIcon from '@mui/icons-material/PauseCircleOutlined'
+import ListIcon from '@mui/icons-material/List'
+import PlayerControlSlider from './PlayerControlSlider'
+import { useEffect, useMemo, useState } from 'react'
+import { MetaData } from '../../type'
 
-const PlayerControl = ({ playerRef }: any) => {
+const PlayerControl = ({ player, setAudioViewIsDisplay }: { player: HTMLVideoElement, setAudioViewIsDisplay: (arg0: boolean) => void }) => {
 
-  const [playList, index, total, playing, updatePlaying, updateIndex] = usePlayerStore(
+  const [type, playList, index, total, updateIndex] = usePlayListStore((state) => [
+    state.type,
+    state.playList,
+    state.index,
+    state.total,
+    state.updateIndex,
+  ])
+
+  const [metaData, setMetaData] = useState<MetaData | null>(null)
+  const [metaDataList] = useMetaDataListStore((state) => [state.metaDataList])
+
+  const [
+    playing,
+    currentTime,
+    duration,
+    updatePlaying,
+    updateCurrentTime,
+    updateDuration,
+    updateContainerIsHiding
+  ] = usePlayerStore(
     (state) => [
-      state.playList,
-      state.index,
-      state.total,
       state.playing,
+      state.currentTime,
+      state.duration,
       state.updatePlaying,
-      state.updateIndex,
+      state.updateCurrentTime,
+      state.updateDuration,
+      state.updateContainerIsHiding,
     ]
   )
 
-  // 获取音频播放器实例
-  const audioEl = (playerRef.current === null) ? null : playerRef.current.audioEl.current
+  // 设置当前播放进度
+  useEffect(() => {
+    player.ontimeupdate = () => {
+      updateCurrentTime(player.currentTime)
+    }
+  }, [player, updateCurrentTime])
+
+  // 加载完毕后立即播放并更新总时长
+  useEffect(() => {
+    player.onloadedmetadata = () => {
+      player.play()
+      updateDuration(player.duration)
+      if (type === 'video')
+        updateContainerIsHiding(false)
+    }
+  }, [player, type, updateContainerIsHiding, updateDuration])
+
+  useEffect(() => {
+    if (playList) {
+      const test = metaDataList.filter(metaData => metaData.path === playList[index].path)
+      if (test.length === 1) {
+        setMetaData({
+          ...test[0],
+          size: playList[index].size
+        })
+      } else {
+        setMetaData({
+          title: playList[index].title,
+          artist: '',
+          path: playList[index].path,
+        })
+      }
+    }
+
+  }, [index, metaDataList, playList])
 
   /**
    * 播放暂停
    */
   const handleClickPlayPause = () => {
-    if (audioEl.paused) {
-      audioEl.play()
+    if (player.paused) {
+      player.play()
       updatePlaying(true)
     }
     else {
-      audioEl.pause()
+      player.pause()
       updatePlaying(false)
     }
   }
 
   /**
- * 下一曲
- */
+  * 下一曲
+  */
   const handleClickNext = () => {
     if (index + 1 !== total) {
+      player.pause()
       updateIndex(index + 1)
     }
   }
@@ -45,17 +107,94 @@ const PlayerControl = ({ playerRef }: any) => {
    */
   const handleClickPrev = () => {
     if (index !== 0) {
+      player.pause()
       updateIndex(index - 1)
     }
   }
 
+  /**
+* 点击进度条
+* @param e 
+*/
+  const handleTimeRangeOnInput = (e: Event) => {
+    const target = e.target as HTMLInputElement;
+    if (target) {
+      updateCurrentTime(player.duration / 1000 * Number(target.value))
+      player.play()
+      updatePlaying(true)
+    }
+  }
+
+  const cover = useMemo(() => {
+    return (!playList || !metaData || !metaData.cover)
+      ? "/logo.png"
+      : URL.createObjectURL(new Blob([new Uint8Array(metaData.cover[0].data)], { type: 'image/png' }))
+  }, [playList, metaData])
+
   return (
-    <div className={styles.control}>
-      <span>{!playList ? '0 / 0' : `${index + 1} / ${total}`}</span>
-      <span>{!playList ? 'Not playing' : playList[index].name}</span>
-      <button onClick={handleClickPrev}>Prev</button>
-      <button onClick={handleClickPlayPause}>{(playing) ? 'Pause' : 'Play'}</button>
-      <button onClick={handleClickNext}>Next</button>
+    <div>
+      {
+        (player) &&
+        <Grid container
+          sx={{ justifyContent: 'space-between', alignItems: 'center', textAlign: 'center', }} >
+          {/* 播放进度 */}
+          <Grid item xs={12}>
+            <PlayerControlSlider
+              handleTimeRangeOnInput={handleTimeRangeOnInput}
+              currentTime={currentTime}
+              duration={duration} />
+          </Grid>
+          <Grid container wrap={'nowrap'} sx={{ alignItems: 'center' }} >
+            {/* 歌曲信息 */}
+            <Grid item xs textAlign={'left'} zeroMinWidth>
+              <ButtonBase
+                sx={{ height: '100%', width: '100%' }}
+                onClick={() => {
+                  if (type === 'audio')
+                    setAudioViewIsDisplay(true)
+                  if (type === 'video')
+                    updateContainerIsHiding(false)
+                }}>
+                <Grid container sx={{ justifyContent: 'space-between', alignItems: 'center', textAlign: 'left', overflow: 'hidden' }} wrap={'nowrap'} >
+                  <Grid item xs="auto" textAlign={'center'}>
+                    <Box sx={{ width: '4rem', height: '4rem' }}>
+                      <img style={{ maxWidth: '4rem', maxHeight: '4rem' }} src={cover} />
+                    </Box>
+                  </Grid>
+                  <Grid item xs sx={{ pl: 1 }} zeroMinWidth>
+                    <Typography variant="body1" component="div" noWrap>
+                      {(!playList || !metaData) ? 'Not playing' : metaData.title}
+                    </Typography>
+                    <div>
+                      {(!playList || !metaData) || <Typography variant="subtitle1" color="text.secondary" component="div" noWrap>
+                        {(metaData.artist) && metaData.artist}{(metaData.album) && ` • ${metaData.album}`}
+                      </Typography>}
+                    </div>
+                  </Grid>
+                </Grid>
+              </ButtonBase>
+            </Grid>
+            {/* 基本控制按钮 */}
+            <Grid item sm={3} xs={5}>
+              <IconButton aria-label="previous" onClick={handleClickPrev} >
+                <SkipPreviousIcon />
+              </IconButton>
+              <IconButton aria-label="play/pause" onClick={handleClickPlayPause}>
+                {(playing) ? <PauseCircleOutlinedIcon sx={{ height: 38, width: 38 }} /> : <PlayCircleOutlinedIcon sx={{ height: 38, width: 38 }} />}
+              </IconButton>
+              <IconButton aria-label="next" onClick={handleClickNext} >
+                <SkipNextIcon />
+              </IconButton>
+            </Grid>
+            {/* 其他按钮 */}
+            <Grid item xs textAlign={'right'} sx={{ display: { sm: 'block', xs: 'none' } }} >
+              <IconButton sx={{ display: { sm: 'inline-grid', xs: 'none' } }} >
+                <ListIcon />
+              </IconButton>
+            </Grid>
+          </Grid>
+        </Grid>
+      }
     </div>
   )
 }
