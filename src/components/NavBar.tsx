@@ -8,7 +8,15 @@ const NavBar = ({ accounts, handleLogout }: any) => {
   return (
     <div>
       <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static">
+        <AppBar
+          position="static"
+          elevation={0}
+          sx={{
+            color: '#000',
+            backgroundColor: '#fff',
+            boxShadow: '0px 4px 4px -2px rgba(0, 0, 0, 0.1)'
+          }}
+        >
           <Toolbar>
             <img src='./logo.png' style={{ height: '3rem', marginRight: '1rem' }}></img>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>

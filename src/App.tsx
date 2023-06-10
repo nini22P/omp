@@ -55,7 +55,7 @@ const App = () => {
   }
 
   return (
-    <main className='main'>
+    <main>
       <NavBar accounts={accounts} handleLogout={handleLogout} />
       <AuthenticatedTemplate>
         <Container maxWidth="xl" sx={{ pb: 18 }} >

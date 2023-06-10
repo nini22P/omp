@@ -1,14 +1,14 @@
 # OMP - OneDrive Media Player
 Open your browser and play.
 
-[**!!!Now Play!!!**](https://nini22p.github.io/omp/)
+[**!!! Now Play !!!**](https://nini22p.github.io/omp/)
 
 
 ## Screenshots
-![2023_115727_localhost](https://github.com/nini22P/omp/assets/60903333/4a17dc51-210a-4e11-906c-6717a71e2fa3)
-
-![2023-06-10 115836](https://github.com/nini22P/omp/assets/60903333/8db3c24a-98d0-4f4a-bcd3-228c349d4c49)
-
+![2023_164136](https://github.com/nini22P/omp/assets/60903333/4ad7db6c-dfe0-46cf-b7ce-c2f9d77e4ad3)
+![2023-06-10 164206](https://github.com/nini22P/omp/assets/60903333/23c62b76-96d4-43d8-984a-9494df885f84)
+![2023-06-10 164253](https://github.com/nini22P/omp/assets/60903333/1880fa56-78a8-45f0-b63b-09b776ea7876)
+![2023-06-10 164405](https://github.com/nini22P/omp/assets/60903333/f85e2a13-4eec-45a8-b6cd-9acce4f7bb0f)
 
 ## Todo
 * PlayList

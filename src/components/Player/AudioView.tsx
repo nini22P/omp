@@ -30,14 +30,12 @@ const AudioView = (
     currentTime,
     duration,
     updatePlaying,
-    updateCurrentTime,
   ] = usePlayerStore(
     (state) => [
       state.playing,
       state.currentTime,
       state.duration,
       state.updatePlaying,
-      state.updateCurrentTime,
     ]
   )
 
@@ -99,9 +97,9 @@ const AudioView = (
  * @param e 
  */
   const handleTimeRangeOnInput = (e: Event) => {
-    const target = e.target as HTMLInputElement;
+    const target = e.target as HTMLInputElement
     if (target) {
-      updateCurrentTime(player.duration / 1000 * Number(target.value))
+      player.currentTime = player.duration / 1000 * Number(target.value)
       player.play()
       updatePlaying(true)
     }
@@ -120,26 +118,27 @@ const AudioView = (
         disableGutters={true}
         sx={{
           width: '100%',
-          height: '100vh',
+          height: 'calc(100vh - var(--vh-offset, 0px))',
           position: 'fixed',
           transition: 'all 0.5s',
-          background: `linear-gradient(rgba(200, 200, 200, .5), rgb(200, 200, 200, .5)), url(${cover})  no-repeat center`,
-          backgroundSize: '100% 100%',
+          background: `linear-gradient(rgba(180, 180, 180, .5), rgb(180, 180, 180, .5)), url(${cover})  no-repeat center`,
+          backgroundSize: 'cover',
+          color: '#fff'
         }}
         style={(audioViewIsDisplay) ? { bottom: '0' } : { bottom: '-100vh' }}
       >
         <Box
-          sx={{ backdropFilter: 'blur(20px)', }}
+          sx={{ backdropFilter: 'blur(25px)', }}
         >
           <Container
             maxWidth={'xl'}
             disableGutters={true}
           >
             <Grid container
-              p={2}
+              p={{ sm: 2, md: 4 }}
               sx={{
                 width: '100%',
-                height: '100vh',
+                height: 'calc(100vh - var(--vh-offset, 0px))',
                 justifyContent: 'center',
                 alignItems: 'start',
               }}
@@ -147,13 +146,13 @@ const AudioView = (
 
               <Grid xs={6} >
                 <IconButton aria-label="close" onClick={() => setAudioViewIsDisplay(false)} >
-                  <KeyboardArrowDownOutlinedIcon />
+                  <KeyboardArrowDownOutlinedIcon style={{ color: '#fff' }} />
                 </IconButton>
               </Grid>
 
               <Grid xs={6} textAlign={'right'}>
                 <IconButton aria-label="PlayList" >
-                  <QueueMusicOutlinedIcon />
+                  <QueueMusicOutlinedIcon style={{ color: '#fff' }} />
                 </IconButton>
               </Grid>
 
@@ -203,13 +202,18 @@ const AudioView = (
 
                   <Grid xs={12} >
                     <IconButton aria-label="previous" onClick={handleClickPrev} >
-                      <SkipPreviousIcon sx={{ height: 48, width: 48 }} />
+                      <SkipPreviousIcon sx={{ height: 48, width: 48 }} style={{ color: '#fff' }} />
                     </IconButton>
                     <IconButton aria-label="play/pause" onClick={handleClickPlayPause}>
-                      {(playing) ? <PauseCircleOutlinedIcon sx={{ height: 64, width: 64 }} /> : <PlayCircleOutlinedIcon sx={{ height: 64, width: 64 }} />}
+                      {
+                        (playing)
+                          ? <PauseCircleOutlinedIcon sx={{ height: 64, width: 64 }} style={{ color: '#fff' }} />
+                          : <PlayCircleOutlinedIcon sx={{ height: 64, width: 64 }} style={{ color: '#fff' }} />}
                     </IconButton>
                     <IconButton aria-label="next" onClick={handleClickNext} >
-                      <SkipNextIcon sx={{ height: 48, width: 48 }} />
+                      <SkipNextIcon
+                        sx={{ height: 48, width: 48 }}
+                        style={{ color: '#fff' }} />
                     </IconButton>
                   </Grid>
 

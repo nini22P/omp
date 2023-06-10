@@ -21,7 +21,7 @@ const ListView = ({ data, error, isLoading, folderTree, setFolderTree }: any) =>
     setFolderTree(folderTree.slice(0, index + 1))
   }
 
-  console.log('获取文件数据', data)
+  console.log('Get folder data')
 
   /**
  * 点击列表项

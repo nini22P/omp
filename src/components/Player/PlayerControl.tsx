@@ -119,7 +119,7 @@ const PlayerControl = ({ player, setAudioViewIsDisplay }: { player: HTMLVideoEle
   const handleTimeRangeOnInput = (e: Event) => {
     const target = e.target as HTMLInputElement;
     if (target) {
-      updateCurrentTime(player.duration / 1000 * Number(target.value))
+      player.currentTime = player.duration / 1000 * Number(target.value)
       player.play()
       updatePlaying(true)
     }
@@ -155,7 +155,9 @@ const PlayerControl = ({ player, setAudioViewIsDisplay }: { player: HTMLVideoEle
                   if (type === 'video')
                     updateContainerIsHiding(false)
                 }}>
-                <Grid container sx={{ justifyContent: 'space-between', alignItems: 'center', textAlign: 'left', overflow: 'hidden' }} wrap={'nowrap'} >
+                <Grid container
+                  sx={{ justifyContent: 'space-between', alignItems: 'center', textAlign: 'left', overflow: 'hidden' }}
+                  wrap={'nowrap'} >
                   <Grid item xs="auto" textAlign={'center'}>
                     <Box sx={{ width: '4rem', height: '4rem' }}>
                       <img style={{ maxWidth: '4rem', maxHeight: '4rem' }} src={cover} />
