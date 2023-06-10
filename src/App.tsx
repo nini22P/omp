@@ -1,13 +1,12 @@
 import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from '@azure/msal-react'
 import { loginRequest } from './authConfig'
 import { getFile, getFiles } from './graph'
+import { Button, Container } from '@mui/material'
+import { useState } from 'react'
+import useSWR from 'swr'
 import NavBar from './components/NavBar'
 import ListView from './components/ListView'
 import Player from './components/Player/Player'
-import './App.scss'
-import { Button, Container } from '@mui/material'
-import useSWR from 'swr'
-import { useState } from 'react'
 
 const App = () => {
   const { instance, accounts } = useMsal()
@@ -28,7 +27,7 @@ const App = () => {
   //登出
   const handleLogout = () => {
     instance.logoutRedirect({
-      postLogoutRedirectUri: "/"
+      postLogoutRedirectUri: '/'
     })
   }
 

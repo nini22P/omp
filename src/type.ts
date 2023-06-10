@@ -1,32 +1,32 @@
-import { IPicture } from "music-metadata-browser";
+import { IPicture } from 'music-metadata-browser'
 
-type FileItem = {
+interface FileItem {
   name: string;
   size: number;
   fileType: string;
 }
 
-type playListItem = {
+interface playListItem {
   title: string;
   size: number;
   path: string;
 }
 
-type PlayListStatus = {
+interface PlayListStatus {
   type: 'audio' | 'video' | null;
   playList: playListItem[] | null;
   index: number;
   total: number;
 }
 
-type PlayListAction = {
+interface PlayListAction {
   updateType: (type: PlayListStatus['type']) => void,
   updatePlayList: (playList: PlayListStatus['playList']) => void;
   updateIndex: (index: PlayListStatus['index']) => void;
   updateTotal: (total: PlayListStatus['total']) => void;
 }
 
-type MetaData = {
+interface MetaData {
   path: string;
   size?: number;
   title: string;
@@ -38,16 +38,16 @@ type MetaData = {
   cover?: IPicture[] | undefined;
 }
 
-type MetaDataListStatus = {
+interface MetaDataListStatus {
   metaDataList: MetaData[] | [];
 }
 
-type MetaDataListAction = {
+interface MetaDataListAction {
   updateMetaDataList: (metaDataList: MetaDataListStatus['metaDataList']) => void
   insertMetaDataList: (metaData: MetaData) => void
 }
 
-type PLayerStatus = {
+interface PLayerStatus {
   url: string;
   playing: boolean;
   loop: boolean;
@@ -58,7 +58,7 @@ type PLayerStatus = {
   containerIsHiding: boolean;
 }
 
-type PLayerAction = {
+interface PLayerAction {
   updateUrl: (url: PLayerStatus['url']) => void;
   updatePlaying: (playing: PLayerStatus['playing']) => void;
   updateLoop: (loop: PLayerStatus['loop']) => void;

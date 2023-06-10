@@ -1,6 +1,6 @@
-import { Slider, Typography } from "@mui/material"
+import { Slider, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
-import { timeShift } from "../../util"
+import { timeShift } from '../../util'
 
 const AudioViewSlider = (
   { handleTimeRangeOnInput, currentTime, duration }
@@ -9,7 +9,9 @@ const AudioViewSlider = (
   return (
     <div>
       <Grid container pl={1} pr={1} >
-        <Grid xs={12}>
+        <Grid xs={12}
+          p={0}
+        >
           <Slider
             size="small"
             min={0}

@@ -1,5 +1,5 @@
-import { useMetaDataListStore, usePlayListStore, usePlayerStore } from '../../store'
-import { Box, ButtonBase, Grid, IconButton, Typography } from '@mui/material'
+import { Box, ButtonBase, IconButton, Typography } from '@mui/material'
+import Grid from '@mui/material/Unstable_Grid2'
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious'
 import SkipNextIcon from '@mui/icons-material/SkipNext'
 import PlayCircleOutlinedIcon from '@mui/icons-material/PlayCircleOutlined'
@@ -8,6 +8,9 @@ import ListIcon from '@mui/icons-material/List'
 import PlayerControlSlider from './PlayerControlSlider'
 import { useEffect, useMemo, useState } from 'react'
 import { MetaData } from '../../type'
+import usePlayListStore from '../../store/usePlayListStore'
+import useMetaDataListStore from '../../store/useMetaDataListStore'
+import usePlayerStore from '../../store/usePlayerStore'
 
 const PlayerControl = ({ player, setAudioViewIsDisplay }: { player: HTMLVideoElement, setAudioViewIsDisplay: (arg0: boolean) => void }) => {
 
@@ -117,8 +120,8 @@ const PlayerControl = ({ player, setAudioViewIsDisplay }: { player: HTMLVideoEle
 * @param e 
 */
   const handleTimeRangeOnInput = (e: Event) => {
-    const target = e.target as HTMLInputElement;
-    if (target) {
+    const target = e.target as HTMLInputElement
+    if (target && !isNaN(player.duration)) {
       player.currentTime = player.duration / 1000 * Number(target.value)
       player.play()
       updatePlaying(true)
@@ -127,7 +130,7 @@ const PlayerControl = ({ player, setAudioViewIsDisplay }: { player: HTMLVideoEle
 
   const cover = useMemo(() => {
     return (!playList || !metaData || !metaData.cover)
-      ? "./logo.png"
+      ? './logo.png'
       : URL.createObjectURL(new Blob([new Uint8Array(metaData.cover[0].data)], { type: 'image/png' }))
   }, [playList, metaData])
 
@@ -136,17 +139,21 @@ const PlayerControl = ({ player, setAudioViewIsDisplay }: { player: HTMLVideoEle
       {
         (player) &&
         <Grid container
-          sx={{ justifyContent: 'space-between', alignItems: 'center', textAlign: 'center', }} >
+          sx={{ justifyContent: 'space-between', alignItems: 'center', textAlign: 'center', }}
+        >
           {/* 播放进度 */}
-          <Grid item xs={12}>
+          <Grid xs={12}>
             <PlayerControlSlider
               handleTimeRangeOnInput={handleTimeRangeOnInput}
               currentTime={currentTime}
               duration={duration} />
           </Grid>
-          <Grid container wrap={'nowrap'} sx={{ alignItems: 'center' }} >
+
+          <Grid container xs={12} wrap={'nowrap'} sx={{ alignItems: 'center' }} >
             {/* 歌曲信息 */}
-            <Grid item xs textAlign={'left'} zeroMinWidth>
+            <Grid container
+              xs
+              textAlign={'left'} minWidth={0}>
               <ButtonBase
                 sx={{ height: '100%', width: '100%' }}
                 onClick={() => {
@@ -156,14 +163,15 @@ const PlayerControl = ({ player, setAudioViewIsDisplay }: { player: HTMLVideoEle
                     updateContainerIsHiding(false)
                 }}>
                 <Grid container
+                  xs
                   sx={{ justifyContent: 'space-between', alignItems: 'center', textAlign: 'left', overflow: 'hidden' }}
                   wrap={'nowrap'} >
-                  <Grid item xs="auto" textAlign={'center'}>
+                  <Grid xs="auto" textAlign={'center'}>
                     <Box sx={{ width: '4rem', height: '4rem' }}>
                       <img style={{ maxWidth: '4rem', maxHeight: '4rem' }} src={cover} />
                     </Box>
                   </Grid>
-                  <Grid item xs sx={{ pl: 1 }} zeroMinWidth>
+                  <Grid xs sx={{ pl: 1 }} minWidth={0}>
                     <Typography variant="body1" component="div" noWrap>
                       {(!playList || !metaData) ? 'Not playing' : metaData.title}
                     </Typography>
@@ -176,8 +184,9 @@ const PlayerControl = ({ player, setAudioViewIsDisplay }: { player: HTMLVideoEle
                 </Grid>
               </ButtonBase>
             </Grid>
+
             {/* 基本控制按钮 */}
-            <Grid item sm={3} xs={5}>
+            <Grid sm={3} xs={5}>
               <IconButton aria-label="previous" onClick={handleClickPrev} >
                 <SkipPreviousIcon />
               </IconButton>
@@ -188,13 +197,20 @@ const PlayerControl = ({ player, setAudioViewIsDisplay }: { player: HTMLVideoEle
                 <SkipNextIcon />
               </IconButton>
             </Grid>
+
             {/* 其他按钮 */}
-            <Grid item xs textAlign={'right'} sx={{ display: { sm: 'block', xs: 'none' } }} >
+            <Grid
+              xs
+              textAlign={'right'}
+              sx={{ display: { sm: 'block', xs: 'none' } }}
+            >
               <IconButton sx={{ display: { sm: 'inline-grid', xs: 'none' } }} >
                 <ListIcon />
               </IconButton>
             </Grid>
+
           </Grid>
+
         </Grid>
       }
     </div>

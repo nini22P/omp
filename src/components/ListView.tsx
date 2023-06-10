@@ -1,8 +1,8 @@
-import { Breadcrumbs, Button, CircularProgress, Grid, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from "@mui/material"
+import { Breadcrumbs, Button, CircularProgress, Grid, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material'
 import FolderIcon from '@mui/icons-material/Folder'
 import MusicNoteIcon from '@mui/icons-material/MusicNote'
 import MovieIcon from '@mui/icons-material/Movie'
-import { usePlayListStore } from "../store"
+import usePlayListStore from '../store/usePlayListStore'
 
 const ListView = ({ data, error, isLoading, folderTree, setFolderTree }: any) => {
   const [updateType, updatePlayList, updateIndex] = usePlayListStore(

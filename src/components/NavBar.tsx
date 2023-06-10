@@ -4,7 +4,7 @@ import Toolbar from '@mui/material/Toolbar'
 import Typography from '@mui/material/Typography'
 import Button from '@mui/material/Button'
 
-const NavBar = ({ accounts, handleLogout }: any) => {
+const NavBar = ({ accounts, handleLogout }: { accounts: any, handleLogout: () => void }) => {
   return (
     <div>
       <Box sx={{ flexGrow: 1 }}>
