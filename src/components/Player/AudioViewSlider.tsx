@@ -14,18 +14,18 @@ const AudioViewSlider = (
             size="small"
             min={0}
             max={1000}
-            color={'secondary'}
             value={(!duration) ? 0 : currentTime / duration * 1000}
             onChange={(e) => handleTimeRangeOnInput(e)}
+            style={{ color: '#fff' }}
           />
         </Grid>
         <Grid xs={6} textAlign={'left'} >
-          <Typography color="text.secondary">
+          <Typography style={{ color: '#fff' }} >
             {timeShift(currentTime)}
           </Typography>
         </Grid >
         <Grid xs={6} textAlign={'right'}>
-          <Typography color="text.secondary">
+          <Typography style={{ color: '#fff' }} >
             {timeShift((duration) ? duration : 0)}
           </Typography>
         </Grid>

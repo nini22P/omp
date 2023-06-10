@@ -23,6 +23,7 @@ const PlayerControlSlider = ({ handleTimeRangeOnInput, currentTime, duration }
             max={1000}
             value={(!duration) ? 0 : currentTime / duration * 1000}
             onChange={(e) => handleTimeRangeOnInput(e)}
+            sx={{ color: "#222" }}
           />
         </Grid>
         <Grid item xs="auto">
