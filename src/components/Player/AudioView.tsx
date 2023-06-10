@@ -135,7 +135,10 @@ const AudioView = (
             disableGutters={true}
           >
             <Grid container
-              p={{ sm: 2, md: 4 }}
+              pt={{ xs: 1, sm: 2 }}
+              pb={{ xs: 1, sm: 2 }}
+              pl={{ xs: 0, sm: 2 }}
+              pr={{ xs: 0, sm: 2 }}
               sx={{
                 width: '100%',
                 height: 'calc(100vh - var(--vh-offset, 0px))',
@@ -144,19 +147,19 @@ const AudioView = (
               }}
             >
 
-              <Grid xs={6} >
+              <Grid xs={6} pl={{ xs: 1, sm: 0 }} >
                 <IconButton aria-label="close" onClick={() => setAudioViewIsDisplay(false)} >
                   <KeyboardArrowDownOutlinedIcon style={{ color: '#fff' }} />
                 </IconButton>
               </Grid>
 
-              <Grid xs={6} textAlign={'right'}>
+              <Grid xs={6} pr={{ xs: 1, sm: 0 }} textAlign={'right'}>
                 <IconButton aria-label="PlayList" >
                   <QueueMusicOutlinedIcon style={{ color: '#fff' }} />
                 </IconButton>
               </Grid>
 
-              {/* 封面和专辑信息 */}
+              {/* 封面和音频信息 */}
               <Grid container
                 maxWidth={'lg'}
                 xs={12}
@@ -173,13 +176,13 @@ const AudioView = (
                   </Box>
                 </Grid>
 
-                {/* 专辑信息 */}
+                {/* 音频信息 */}
                 <Grid
                   sm={8}
                   xs={12}
                   textAlign={'center'}
                 >
-                  <Grid xs={12}>
+                  <Grid xs={12} pl={4} pr={4} >
                     <Typography variant="h6" component="div" textAlign={'center'} noWrap>
                       {(!playList || !metaData) ? 'Not playing' : metaData.title}
                     </Typography>
@@ -192,7 +195,11 @@ const AudioView = (
                   </Grid>
 
                   {/* 播放进度条 */}
-                  <Grid xs={12}  >
+                  <Grid
+                    xs={12}
+                    pl={2}
+                    pr={2}
+                  >
                     <AudioViewSlider
                       handleTimeRangeOnInput={handleTimeRangeOnInput}
                       currentTime={currentTime}

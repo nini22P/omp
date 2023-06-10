@@ -64,7 +64,7 @@ const App = () => {
         <Player getFileData={getFileData} />
       </AuthenticatedTemplate>
       <UnauthenticatedTemplate>
-        <div style={{ height: '100%', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '2rem' }}>
+        <div style={{ height: '20rem', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '2rem' }}>
           <h4 >Please sign in to see your files.</h4>
           <Button size="large" onClick={() => handleLogin()}>Sign in</Button>
         </div>
