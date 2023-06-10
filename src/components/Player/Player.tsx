@@ -1,10 +1,13 @@
-import { useMemo, useRef } from 'react'
+import { useMemo, useRef, useState } from 'react'
 import PlayerControl from "./PlayerControl"
 import { useMetaDataListStore, usePlayListStore, usePlayerStore } from '../../store'
 import * as mm from 'music-metadata-browser'
-import { Container, Paper } from '@mui/material'
+import { Container, IconButton, Paper } from '@mui/material'
+import Grid from '@mui/material/Unstable_Grid2'
+import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined'
+import AudioView from './AudioView'
 
-const Player = ({ getFileData }: any) => {
+const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<any> }) => {
 
   const [type, playList, index, total, updateIndex, updateTotal] = usePlayListStore((state) => [
     state.type,
@@ -21,25 +24,30 @@ const Player = ({ getFileData }: any) => {
       state.insertMetaDataList,
     ]
   )
-  console.log('metaDataList', metaDataList)
+
   const [
     url,
     loop,
     containerIsHiding,
     updatePlaying,
     updateUrl,
+    updateContainerIsHiding,
   ] = usePlayerStore(
     (state) => [
       state.url,
       state.loop,
       state.containerIsHiding,
       state.updatePlaying,
-      state.updateUrl
+      state.updateUrl,
+      state.updateContainerIsHiding
     ]
   )
 
   // 声明播放器对象
   const playerRef = useRef<HTMLVideoElement>(null)
+
+  //音频界面是否显示
+  const [audioViewIsDisplay, setAudioViewIsDisplay] = useState(false)
 
   // 更新播放列表总数
   useMemo(() => {
@@ -102,40 +110,67 @@ const Player = ({ getFileData }: any) => {
   }
 
   return (
-    <>
+    <div>
       <Container
         maxWidth={false}
         disableGutters={true}
         sx={{ width: '100%', height: '100vh', position: 'fixed', transition: 'all 0.5s' }}
-        style={(containerIsHiding) ? { bottom: '-100vh' } : { bottom: 0 }}
+        style={(containerIsHiding) ? { bottom: '-100vh' } : { bottom: '0' }}
       >
-        <video
-          width={'100%'}
-          height={'100%'}
-          src={url}
-          autoPlay
-          ref={playerRef}
-          style={(type === 'video') ? { backgroundColor: '#000' } : { backgroundColor: '#fff' }}
-          onEnded={() => onEnded()}
-        />
+        <Grid container
+          sx={{
+            width: '100%',
+            height: '100%',
+            justifyContent: 'center',
+            alignItems: 'start',
+            backgroundColor: '#000'
+          }}>
+          <Grid xs={12}
+            sx={{ backgroundColor: '#ffffff9e' }}
+          >
+            <IconButton aria-label="close" onClick={() => updateContainerIsHiding(true)} >
+              <KeyboardArrowDownOutlinedIcon />
+            </IconButton>
+          </Grid>
+          <Grid xs={12} sx={{ width: '100%', height: '100%' }}>
+            <video
+              width={'100%'}
+              height={'100%'}
+              src={url}
+              autoPlay
+              ref={playerRef}
+              onEnded={() => onEnded()}
+            />
+          </Grid>
+
+        </Grid>
+
       </Container>
       <Paper
         elevation={0}
         square={true}
-        sx={{ position: 'fixed', bottom: 0, width: '100%', boxShadow: '0px 4px 4px -2px rgba(0, 0, 0, 0.1), 0px -4px 4px -2px rgba(0, 0, 0, 0.1)' }}
+        sx={{ position: 'fixed', bottom: '0', width: '100%', boxShadow: '0px 4px 4px -2px rgba(0, 0, 0, 0.1), 0px -4px 4px -2px rgba(0, 0, 0, 0.1)' }}
         style={(!containerIsHiding) ? { backgroundColor: '#ffffff9e' } : { backgroundColor: '#ffffff' }}
       >
         <Container
-          maxWidth='xl'
+          maxWidth={false}
           disableGutters={true}
         >
           {
-            playerRef.current &&
-            <PlayerControl player={playerRef.current} />
+            playerRef.current && <div>
+              <PlayerControl
+                player={playerRef.current}
+                setAudioViewIsDisplay={setAudioViewIsDisplay} />
+              <AudioView
+                player={playerRef.current}
+                audioViewIsDisplay={audioViewIsDisplay}
+                setAudioViewIsDisplay={setAudioViewIsDisplay} />
+            </div>
           }
         </Container>
       </Paper >
-    </>
+
+    </div>
   )
 }
 

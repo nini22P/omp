@@ -2,7 +2,7 @@ import { Breadcrumbs, Button, CircularProgress, Grid, ListItem, ListItemButton, 
 import FolderIcon from '@mui/icons-material/Folder'
 import MusicNoteIcon from '@mui/icons-material/MusicNote'
 import MovieIcon from '@mui/icons-material/Movie'
-import { usePlayListStore, usePlayerStore } from "../store"
+import { usePlayListStore } from "../store"
 
 const ListView = ({ data, error, isLoading, folderTree, setFolderTree }: any) => {
   const [updateType, updatePlayList, updateIndex] = usePlayListStore(
@@ -12,8 +12,6 @@ const ListView = ({ data, error, isLoading, folderTree, setFolderTree }: any) =>
       state.updateIndex,
     ]
   )
-
-  const [updateContainerIsHiding] = usePlayerStore((state) => [state.updateContainerIsHiding])
 
   /**
    * 点击文件夹导航
@@ -59,7 +57,6 @@ const ListView = ({ data, error, isLoading, folderTree, setFolderTree }: any) =>
         updateType('video')
         updateIndex(index)
         updatePlayList(lists)
-        updateContainerIsHiding(false)
       }
     }
   }
