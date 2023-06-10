@@ -10,6 +10,7 @@ import SkipNextIcon from '@mui/icons-material/SkipNext'
 import { useMemo, useState } from "react"
 import { MetaData } from "../../type"
 import AudioViewSlider from "./AudioViewSlider"
+import vhCheck from 'vh-check'
 
 const AudioView = (
   { player, audioViewIsDisplay, setAudioViewIsDisplay }
@@ -118,11 +119,11 @@ const AudioView = (
         disableGutters={true}
         sx={{
           width: '100%',
-          height: '100vh',
+          height: 'calc(100vh - var(--vh-offset, 0px))',
           position: 'fixed',
           transition: 'all 0.5s',
           background: `linear-gradient(rgba(180, 180, 180, .5), rgb(180, 180, 180, .5)), url(${cover})  no-repeat center`,
-          backgroundSize: '100% 100%',
+          backgroundSize: 'cover',
           color: '#fff'
         }}
         style={(audioViewIsDisplay) ? { bottom: '0' } : { bottom: '-100vh' }}
@@ -138,7 +139,7 @@ const AudioView = (
               p={{ sm: 2, md: 4 }}
               sx={{
                 width: '100%',
-                height: '100vh',
+                height: 'calc(100vh - var(--vh-offset, 0px))',
                 justifyContent: 'center',
                 alignItems: 'start',
               }}
