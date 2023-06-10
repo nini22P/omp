@@ -10,7 +10,7 @@ const NavBar = ({ accounts, handleLogout }: any) => {
       <Box sx={{ flexGrow: 1 }}>
         <AppBar position="static">
           <Toolbar>
-            <img src='/logo.png' style={{ height: '3rem', marginRight: '1rem' }}></img>
+            <img src='./logo.png' style={{ height: '3rem', marginRight: '1rem' }}></img>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               OMP
             </Typography>
