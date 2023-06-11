@@ -120,7 +120,7 @@ const AudioView = (
         disableGutters={true}
         sx={{
           width: '100%',
-          height: 'calc(100vh - var(--vh-offset, 0px))',
+          height: '100dvh',
           position: 'fixed',
           transition: 'all 0.5s',
           background: `linear-gradient(rgba(180, 180, 180, .5), rgb(180, 180, 180, .5)), url(${cover})  no-repeat center`,
@@ -143,7 +143,7 @@ const AudioView = (
               pr={{ xs: 0, sm: 2 }}
               sx={{
                 width: '100%',
-                height: 'calc(100vh - var(--vh-offset, 0px))',
+                height: '100dvh',
                 justifyContent: 'center',
                 alignItems: 'start',
               }}

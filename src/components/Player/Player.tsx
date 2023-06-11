@@ -116,7 +116,7 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
       <Container
         maxWidth={false}
         disableGutters={true}
-        sx={{ width: '100%', height: 'calc(100vh - var(--vh-offset, 0px))', position: 'fixed', transition: 'all 0.5s' }}
+        sx={{ width: '100%', height: '100dvh', position: 'fixed', transition: 'all 0.5s' }}
         style={(containerIsHiding) ? { bottom: '-100vh' } : { bottom: '0' }}
       >
         <Grid container
