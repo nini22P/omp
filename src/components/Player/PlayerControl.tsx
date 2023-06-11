@@ -85,13 +85,15 @@ const PlayerControl = ({ player, setAudioViewIsDisplay }: { player: HTMLVideoEle
    * 播放暂停
    */
   const handleClickPlayPause = () => {
-    if (player.paused) {
-      player.play()
-      updatePlaying(true)
-    }
-    else {
-      player.pause()
-      updatePlaying(false)
+    if (!isNaN(player.duration)) {
+      if (player.paused) {
+        player.play()
+        updatePlaying(true)
+      }
+      else {
+        player.pause()
+        updatePlaying(false)
+      }
     }
   }
 
@@ -130,7 +132,7 @@ const PlayerControl = ({ player, setAudioViewIsDisplay }: { player: HTMLVideoEle
 
   const cover = useMemo(() => {
     return (!playList || !metaData || !metaData.cover)
-      ? './logo.png'
+      ? './cd.png'
       : URL.createObjectURL(new Blob([new Uint8Array(metaData.cover[0].data)], { type: 'image/png' }))
   }, [playList, metaData])
 

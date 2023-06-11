@@ -18,7 +18,7 @@ const NavBar = ({ accounts, handleLogout }: { accounts: any, handleLogout: () =>
           }}
         >
           <Toolbar>
-            <img src='./logo.png' style={{ height: '3rem', marginRight: '1rem' }}></img>
+            <img src='./logo.svg' style={{ height: '2rem', marginRight: '1rem' }}></img>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               OMP
             </Typography>
