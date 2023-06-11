@@ -16,5 +16,5 @@ Add `.env.development`
 VITE_CLIENT_ID=<clientId>
 VITE_REDIRECTURI=http://localhost:5173/
 ```
-## license
+## License
 [AGPL-3.0](https://github.com/nini22P/omp/blob/main/LICENSE)
