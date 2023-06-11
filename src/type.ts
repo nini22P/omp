@@ -17,6 +17,7 @@ interface PlayListStatus {
   playList: playListItem[] | null;
   index: number;
   total: number;
+  playListIsShow: boolean;
 }
 
 interface PlayListAction {
@@ -24,6 +25,7 @@ interface PlayListAction {
   updatePlayList: (playList: PlayListStatus['playList']) => void;
   updateIndex: (index: PlayListStatus['index']) => void;
   updateTotal: (total: PlayListStatus['total']) => void;
+  updatePlayListIsShow: (playListIsShow: PlayListStatus['playListIsShow']) => void;
 }
 
 interface MetaData {

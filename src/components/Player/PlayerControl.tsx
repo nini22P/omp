@@ -14,12 +14,14 @@ import usePlayerStore from '../../store/usePlayerStore'
 
 const PlayerControl = ({ player, setAudioViewIsDisplay }: { player: HTMLVideoElement, setAudioViewIsDisplay: (arg0: boolean) => void }) => {
 
-  const [type, playList, index, total, updateIndex] = usePlayListStore((state) => [
+  const [type, playList, index, total, playListIsShow, updateIndex, updatePlayListIsShow] = usePlayListStore((state) => [
     state.type,
     state.playList,
     state.index,
     state.total,
+    state.playListIsShow,
     state.updateIndex,
+    state.updatePlayListIsShow,
   ])
 
   const [metaData, setMetaData] = useState<MetaData | null>(null)
@@ -206,7 +208,10 @@ const PlayerControl = ({ player, setAudioViewIsDisplay }: { player: HTMLVideoEle
               textAlign={'right'}
               sx={{ display: { sm: 'block', xs: 'none' } }}
             >
-              <IconButton sx={{ display: { sm: 'inline-grid', xs: 'none' } }} >
+              <IconButton
+                sx={{ display: { sm: 'inline-grid', xs: 'none' } }}
+                onClick={() => updatePlayListIsShow(!playListIsShow)}
+              >
                 <ListIcon />
               </IconButton>
             </Grid>
