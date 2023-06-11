@@ -17,11 +17,12 @@ const AudioView = (
   { player, audioViewIsDisplay, setAudioViewIsDisplay }
     : { player: HTMLVideoElement, audioViewIsDisplay: boolean, setAudioViewIsDisplay: (arg0: boolean) => void }
 ) => {
-  const [playList, index, total, updateIndex] = usePlayListStore((state) => [
+  const [playList, index, total, updateIndex, updatePlayListIsShow] = usePlayListStore((state) => [
     state.playList,
     state.index,
     state.total,
     state.updateIndex,
+    state.updatePlayListIsShow,
   ])
 
   const [metaData, setMetaData] = useState<MetaData | null>(null)
@@ -146,7 +147,7 @@ const AudioView = (
               sx={{
                 width: '100%',
                 height: '100dvh',
-                justifyContent: 'center',
+                justifyContent: 'space-evenly',
                 alignItems: 'start',
               }}
             >
@@ -158,7 +159,7 @@ const AudioView = (
               </Grid>
 
               <Grid xs={6} pr={{ xs: 1, sm: 0 }} textAlign={'right'}>
-                <IconButton aria-label="PlayList" >
+                <IconButton aria-label="PlayList" onClick={() => updatePlayListIsShow(true)} >
                   <QueueMusicOutlinedIcon style={{ color: '#fff' }} />
                 </IconButton>
               </Grid>
@@ -186,6 +187,7 @@ const AudioView = (
                 <Grid
                   sm={8}
                   xs={12}
+                  pl={{ xs: 0, lg: 5 }}
                   textAlign={'center'}
                 >
                   <Grid xs={12} pl={4} pr={4} >

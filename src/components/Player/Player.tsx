@@ -8,6 +8,7 @@ import PlayerControl from './PlayerControl'
 import useMetaDataListStore from '../../store/useMetaDataListStore'
 import usePlayListStore from '../../store/usePlayListStore'
 import usePlayerStore from '../../store/usePlayerStore'
+import PlayList from '../PlayList'
 
 const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<any> }) => {
 
@@ -162,11 +163,14 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
             playerRef.current && <div>
               <PlayerControl
                 player={playerRef.current}
-                setAudioViewIsDisplay={setAudioViewIsDisplay} />
+                setAudioViewIsDisplay={setAudioViewIsDisplay}
+              />
               <AudioView
                 player={playerRef.current}
                 audioViewIsDisplay={audioViewIsDisplay}
-                setAudioViewIsDisplay={setAudioViewIsDisplay} />
+                setAudioViewIsDisplay={setAudioViewIsDisplay}
+              />
+              <PlayList />
             </div>
           }
         </Container>
