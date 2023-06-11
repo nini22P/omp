@@ -8,7 +8,7 @@ const AudioViewSlider = (
 ) => {
   return (
     <div>
-      <Grid container pl={1} pr={1} >
+      <Grid container pl={1} pr={1}>
         <Grid xs={12}
           p={0}
         >
@@ -21,7 +21,7 @@ const AudioViewSlider = (
             style={{ color: '#fff' }}
           />
         </Grid>
-        <Grid xs={6} textAlign={'left'} >
+        <Grid xs={6} textAlign={'left'}>
           <Typography style={{ color: '#fff' }} >
             {timeShift(currentTime)}
           </Typography>

@@ -64,13 +64,15 @@ const AudioView = (
  * 播放暂停
  */
   const handleClickPlayPause = () => {
-    if (player.paused) {
-      player.play()
-      updatePlaying(true)
-    }
-    else {
-      player.pause()
-      updatePlaying(false)
+    if (!isNaN(player.duration)) {
+      if (player.paused) {
+        player.play()
+        updatePlaying(true)
+      }
+      else {
+        player.pause()
+        updatePlaying(false)
+      }
     }
   }
 
@@ -109,7 +111,7 @@ const AudioView = (
 
   const cover = useMemo(() => {
     return (!playList || !metaData || !metaData.cover)
-      ? './logo.png'
+      ? './cd.png'
       : URL.createObjectURL(new Blob([new Uint8Array(metaData.cover[0].data)], { type: 'image/png' }))
   }, [playList, metaData])
 
@@ -164,16 +166,18 @@ const AudioView = (
               {/* 封面和音频信息 */}
               <Grid container
                 maxWidth={'lg'}
+                height={{ xs: 'calc(100dvh - 4rem)', sm: 'auto' }}
+                flexDirection={{ xs: 'column', sm: 'row' }}
+                wrap='nowrap'
                 xs={12}
-                spacing={1}
                 sx={{
-                  justifyContent: 'center',
+                  justifyContent: 'space-evenly',
                   alignItems: 'center',
                 }}
               >
                 {/* 封面 */}
-                <Grid sm={4} xs={12}>
-                  <Box sx={{ height: '100%', width: '100%' }}>
+                <Grid sm={4} xs={12} pl={{ xs: 0, sm: 1 }}>
+                  <Box sx={{ maxHeight: '100%', maxWidth: '100%' }}>
                     <img style={{ height: '100%', width: '100%' }} src={cover} />
                   </Box>
                 </Grid>
