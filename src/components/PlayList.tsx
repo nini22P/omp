@@ -16,7 +16,7 @@ const PlayList = () => {
         position={'fixed'}
         height={'100dvh'}
         right={playListIsShow ? 0 : '-100vw'}
-        width={'100vw'}
+        maxWidth={'100vw'}
         bottom={0}
         sx={{
           transition: 'all 0.25s',
