@@ -1,9 +1,9 @@
+import { useState } from 'react'
+import { Button, Container, Link, Typography } from '@mui/material'
 import { AuthenticatedTemplate, UnauthenticatedTemplate, useMsal } from '@azure/msal-react'
+import useSWR from 'swr'
 import { loginRequest } from './authConfig'
 import { getFile, getFiles } from './graph'
-import { Button, Container } from '@mui/material'
-import { useState } from 'react'
-import useSWR from 'swr'
 import NavBar from './components/NavBar'
 import ListView from './components/ListView'
 import Player from './components/Player/Player'
@@ -63,10 +63,30 @@ const App = () => {
         <Player getFileData={getFileData} />
       </AuthenticatedTemplate>
       <UnauthenticatedTemplate>
-        <div style={{ height: '20rem', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', gap: '2rem' }}>
-          <h4 >Please sign in to see your files.</h4>
-          <Button size="large" onClick={() => handleLogin()}>Sign in</Button>
-        </div>
+        <Container
+          style={{
+            height: 'calc(100dvh - 4rem)',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            padding: '1rem',
+            textAlign: 'center',
+          }}>
+          <div>
+          </div>
+          <div>
+            <Typography variant="h5" pb={2} >
+              Please sign in to see your files
+            </Typography>
+            <Button size="large" onClick={() => handleLogin()}>Sign in</Button>
+          </div>
+
+          <footer>
+            Made with ❤ from <Link underline='none' href='https://github.com/nini22P'>22</Link>
+          </footer>
+        </Container>
+
       </UnauthenticatedTemplate>
     </main>
   )

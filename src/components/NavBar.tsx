@@ -1,8 +1,5 @@
-import AppBar from '@mui/material/AppBar'
-import Box from '@mui/material/Box'
-import Toolbar from '@mui/material/Toolbar'
-import Typography from '@mui/material/Typography'
-import Button from '@mui/material/Button'
+import { AppBar, Box, Toolbar, Typography, Button, Link } from '@mui/material'
+import GitHubIcon from '@mui/icons-material/GitHub'
 
 const NavBar = ({ accounts, handleLogout }: { accounts: any, handleLogout: () => void }) => {
   return (
@@ -23,7 +20,13 @@ const NavBar = ({ accounts, handleLogout }: { accounts: any, handleLogout: () =>
               OMP
             </Typography>
             {
-              (accounts.length !== 0) && <Button color="inherit" onClick={() => handleLogout()}>sign out</Button>
+              (accounts.length !== 0)
+                ?
+                <Button onClick={() => handleLogout()}>sign out</Button>
+                :
+                <Link href='https://github.com/nini22P/omp'>
+                  <GitHubIcon sx={{ color: '#000' }} />
+                </Link>
             }
           </Toolbar>
         </AppBar>
