@@ -12,16 +12,19 @@ import AudioViewSlider from './AudioViewSlider'
 import useMetaDataListStore from '../../store/useMetaDataListStore'
 import usePlayListStore from '../../store/usePlayListStore'
 import usePlayerStore from '../../store/usePlayerStore'
+import useUiStore from '../../store/useUiStore'
 
-const AudioView = (
-  { player, audioViewIsDisplay, setAudioViewIsDisplay }
-    : { player: HTMLVideoElement, audioViewIsDisplay: boolean, setAudioViewIsDisplay: (arg0: boolean) => void }
+const AudioView = ({ player }: { player: HTMLVideoElement }
 ) => {
-  const [playList, index, total, updateIndex, updatePlayListIsShow] = usePlayListStore((state) => [
+  const [playList, index, updateIndex] = usePlayListStore((state) => [
     state.playList,
     state.index,
-    state.total,
     state.updateIndex,
+  ])
+
+  const [audioViewIsShow, updateAudioViewIsShow, updatePlayListIsShow] = useUiStore((state) => [
+    state.audioViewIsShow,
+    state.updateAudioViewIsShow,
     state.updatePlayListIsShow,
   ])
 
@@ -58,7 +61,6 @@ const AudioView = (
         })
       }
     }
-
   }, [index, metaDataList, playList])
 
   /**
@@ -81,7 +83,7 @@ const AudioView = (
   * 下一曲
   */
   const handleClickNext = () => {
-    if (index + 1 !== total) {
+    if (index + 1 !== playList?.length) {
       player.pause()
       updateIndex(index + 1)
     }
@@ -134,6 +136,7 @@ const AudioView = (
       navigator.mediaSession.setActionHandler('nexttrack', null)
       navigator.mediaSession.setActionHandler('previoustrack', null)
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cover, metaData?.album, metaData?.artist, metaData?.title])
 
   return (
@@ -150,7 +153,7 @@ const AudioView = (
           backgroundSize: 'cover',
           color: '#fff'
         }}
-        style={(audioViewIsDisplay) ? { bottom: '0' } : { bottom: '-100vh' }}
+        style={(audioViewIsShow) ? { bottom: '0' } : { bottom: '-100vh' }}
       >
         <Box
           sx={{ backdropFilter: 'blur(25px)', }}
@@ -173,7 +176,7 @@ const AudioView = (
             >
 
               <Grid xs={6} pl={{ xs: 1, sm: 0 }} >
-                <IconButton aria-label="close" onClick={() => setAudioViewIsDisplay(false)} >
+                <IconButton aria-label="close" onClick={() => updateAudioViewIsShow(false)} >
                   <KeyboardArrowDownOutlinedIcon style={{ color: '#fff' }} />
                 </IconButton>
               </Grid>

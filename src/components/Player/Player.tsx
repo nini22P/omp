@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from 'react'
+import { useMemo, useRef } from 'react'
 import { Container, IconButton, Paper } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined'
@@ -9,59 +9,46 @@ import useMetaDataListStore from '../../store/useMetaDataListStore'
 import usePlayListStore from '../../store/usePlayListStore'
 import usePlayerStore from '../../store/usePlayerStore'
 import PlayList from '../PlayList'
+import useUiStore from '../../store/useUiStore'
 
 const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<any> }) => {
 
-  const [type, playList, index, total, updateIndex, updateTotal] = usePlayListStore((state) => [
+  const [type, playList, index, updateIndex] = usePlayListStore((state) => [
     state.type,
     state.playList,
     state.index,
-    state.total,
     state.updateIndex,
-    state.updateTotal,
   ])
 
   const [metaDataList, insertMetaDataList] = useMetaDataListStore(
     (state) => [
       state.metaDataList,
       state.insertMetaDataList,
-    ]
-  )
+    ])
 
-  const [
-    url,
-    loop,
-    containerIsHiding,
-    updatePlaying,
-    updateUrl,
-    updateContainerIsHiding,
-  ] = usePlayerStore(
-    (state) => [
-      state.url,
-      state.loop,
-      state.containerIsHiding,
-      state.updatePlaying,
-      state.updateUrl,
-      state.updateContainerIsHiding
-    ]
-  )
+  const [url, loop, updatePlaying, updateUrl,] = usePlayerStore((state) => [
+    state.url,
+    state.loop,
+    state.updatePlaying,
+    state.updateUrl,
+  ])
+
+  const [videoViewIsShow, updateVideoViewIsShow] = useUiStore((state) => [
+    state.videoViewIsShow,
+    state.updateVideoViewIsShow,
+  ])
 
   // 声明播放器对象
   const playerRef = useRef<HTMLVideoElement>(null)
 
-  //音频界面是否显示
-  const [audioViewIsDisplay, setAudioViewIsDisplay] = useState(false)
-
-  // 更新播放列表总数
+  // 获取当前播放文件链接并开始播放
   useMemo(() => {
     if (playList !== null) {
-      updateTotal(playList ? playList.length : 0)
-      getFileData(playList[index].path).then((res: any) => {
+      getFileData(playList[index].path).then((res) => {
         console.log('开始播放', playList[index].path)
         updateUrl(res['@microsoft.graph.downloadUrl'])
         updatePlaying(true)
       })
-
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playList, index])
@@ -103,8 +90,9 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
     }
   }, [type, playList, index, url, metaDataList, insertMetaDataList])
 
+  // 播放结束
   const onEnded = () => {
-    if (index + 1 === total) {
+    if (index + 1 === playList?.length) {
       if (loop) updateIndex(0)
       else
         updatePlaying(false)
@@ -118,7 +106,7 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
         maxWidth={false}
         disableGutters={true}
         sx={{ width: '100%', height: '100dvh', position: 'fixed', transition: 'all 0.5s' }}
-        style={(containerIsHiding) ? { bottom: '-100vh' } : { bottom: '0' }}
+        style={(videoViewIsShow) ? { bottom: '0' } : { bottom: '-100vh' }}
       >
         <Grid container
           sx={{
@@ -144,7 +132,7 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
             top={0}
             sx={{ backgroundColor: '#ffffff9e' }}
           >
-            <IconButton aria-label="close" onClick={() => updateContainerIsHiding(true)} >
+            <IconButton aria-label="close" onClick={() => updateVideoViewIsShow(false)} >
               <KeyboardArrowDownOutlinedIcon />
             </IconButton>
           </Grid>
@@ -156,7 +144,7 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
         elevation={0}
         square={true}
         sx={{ position: 'fixed', bottom: '0', width: '100%', boxShadow: '0px 4px 4px -2px rgba(0, 0, 0, 0.1), 0px -4px 4px -2px rgba(0, 0, 0, 0.1)' }}
-        style={(!containerIsHiding) ? { backgroundColor: '#ffffff9e' } : { backgroundColor: '#ffffff' }}
+        style={(videoViewIsShow) ? { backgroundColor: '#ffffff9e' } : { backgroundColor: '#ffffff' }}
       >
         <Container
           maxWidth={false}
@@ -166,12 +154,9 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
             playerRef.current && <div>
               <PlayerControl
                 player={playerRef.current}
-                setAudioViewIsDisplay={setAudioViewIsDisplay}
               />
               <AudioView
                 player={playerRef.current}
-                audioViewIsDisplay={audioViewIsDisplay}
-                setAudioViewIsDisplay={setAudioViewIsDisplay}
               />
               <PlayList />
             </div>

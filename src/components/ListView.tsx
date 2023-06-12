@@ -4,7 +4,9 @@ import MusicNoteIcon from '@mui/icons-material/MusicNote'
 import MovieIcon from '@mui/icons-material/Movie'
 import usePlayListStore from '../store/usePlayListStore'
 
-const ListView = ({ data, error, isLoading, folderTree, setFolderTree }: any) => {
+const ListView = ({ data, error, isLoading, folderTree, setFolderTree }
+  : { data: any, error: Error | undefined, isLoading: boolean, folderTree: string[], setFolderTree: (arg0: string[]) => void }
+) => {
   const [updateType, updatePlayList, updateIndex] = usePlayListStore(
     (state) => [
       state.updateType,
@@ -15,7 +17,7 @@ const ListView = ({ data, error, isLoading, folderTree, setFolderTree }: any) =>
 
   /**
    * 点击文件夹导航
-   * @param index 
+   * @param index
    */
   const handleListNavClick = (index: number) => {
     setFolderTree(folderTree.slice(0, index + 1))
@@ -44,6 +46,7 @@ const ListView = ({ data, error, isLoading, folderTree, setFolderTree }: any) =>
           path: (folderTree.join('/') === 'Home') ? '/' : folderTree.slice(1).join('/').concat(`/${item.name}`),
         }
       })
+
       if (isAudio(name)) {
         const lists = list.filter((item: { title: string }) => isAudio(item.title))
         const index = lists.findIndex((obj: { title: string }) => obj.title === name)

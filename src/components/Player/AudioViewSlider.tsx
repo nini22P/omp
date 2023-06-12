@@ -4,7 +4,8 @@ import { timeShift } from '../../util'
 
 const AudioViewSlider = (
   { handleTimeRangeOnInput, currentTime, duration }
-    : { handleTimeRangeOnInput: (e: any) => void, currentTime: number, duration: number }
+    :
+    { handleTimeRangeOnInput: (e: Event) => void, currentTime: number, duration: number }
 ) => {
   return (
     <div>

@@ -9,13 +9,11 @@ const usePlayerStore = create<PLayerStatus & PLayerAction>((set) => ({
   muted: false,
   currentTime: 0,
   duration: 0,
-  containerIsHiding: true,
   updateUrl: (url) => set(() => ({ url: url })),
   updatePlaying: (playing) => set(() => ({ playing: playing })),
   updateLoop: (loop) => set(() => ({ loop: loop })),
   updateCurrentTime: (currentTime) => set(() => ({ currentTime: currentTime })),
   updateDuration: (duration) => set(() => ({ duration: duration })),
-  updateContainerIsHiding: (containerIsHiding) => set(() => ({ containerIsHiding: containerIsHiding }))
 }))
 
 export default usePlayerStore

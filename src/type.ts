@@ -13,19 +13,15 @@ interface playListItem {
 }
 
 interface PlayListStatus {
-  type: 'audio' | 'video' | null;
+  type: 'audio' | 'video' | string;
   playList: playListItem[] | null;
   index: number;
-  total: number;
-  playListIsShow: boolean;
 }
 
 interface PlayListAction {
   updateType: (type: PlayListStatus['type']) => void,
   updatePlayList: (playList: PlayListStatus['playList']) => void;
   updateIndex: (index: PlayListStatus['index']) => void;
-  updateTotal: (total: PlayListStatus['total']) => void;
-  updatePlayListIsShow: (playListIsShow: PlayListStatus['playListIsShow']) => void;
 }
 
 interface MetaData {
@@ -57,7 +53,6 @@ interface PLayerStatus {
   muted: boolean;
   currentTime: number;
   duration: number;
-  containerIsHiding: boolean;
 }
 
 interface PLayerAction {
@@ -66,7 +61,18 @@ interface PLayerAction {
   updateLoop: (loop: PLayerStatus['loop']) => void;
   updateCurrentTime: (currentTime: PLayerStatus['currentTime']) => void;
   updateDuration: (duration: PLayerStatus['duration']) => void;
-  updateContainerIsHiding: (containerIsHiding: PLayerStatus['containerIsHiding']) => void;
+}
+
+interface UiStatus {
+  audioViewIsShow: boolean;
+  videoViewIsShow: boolean;
+  playListIsShow: boolean;
+}
+
+interface UiAction {
+  updateAudioViewIsShow: (audioViewIsShow: UiStatus['audioViewIsShow']) => void;
+  updateVideoViewIsShow: (videoViewIsShow: UiStatus['videoViewIsShow']) => void;
+  updatePlayListIsShow: (playListIsShow: UiStatus['playListIsShow']) => void;
 }
 
 export type {
@@ -78,5 +84,7 @@ export type {
   PlayListStatus,
   PlayListAction,
   PLayerStatus,
-  PLayerAction
+  PLayerAction,
+  UiStatus,
+  UiAction,
 }

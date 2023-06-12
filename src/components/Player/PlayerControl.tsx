@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import { Box, ButtonBase, IconButton, Typography } from '@mui/material'
+import { ButtonBase, IconButton, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious'
 import SkipNextIcon from '@mui/icons-material/SkipNext'
@@ -11,16 +11,21 @@ import PlayerControlSlider from './PlayerControlSlider'
 import usePlayListStore from '../../store/usePlayListStore'
 import useMetaDataListStore from '../../store/useMetaDataListStore'
 import usePlayerStore from '../../store/usePlayerStore'
+import useUiStore from '../../store/useUiStore'
 
-const PlayerControl = ({ player, setAudioViewIsDisplay }: { player: HTMLVideoElement, setAudioViewIsDisplay: (arg0: boolean) => void }) => {
+const PlayerControl = ({ player }: { player: HTMLVideoElement }) => {
 
-  const [type, playList, index, total, playListIsShow, updateIndex, updatePlayListIsShow] = usePlayListStore((state) => [
+  const [type, playList, index, updateIndex] = usePlayListStore((state) => [
     state.type,
     state.playList,
     state.index,
-    state.total,
-    state.playListIsShow,
     state.updateIndex,
+  ])
+
+  const [playListIsShow, updateAudioViewIsShow, updateVideoViewIsShow, updatePlayListIsShow] = useUiStore((state) => [
+    state.playListIsShow,
+    state.updateAudioViewIsShow,
+    state.updateVideoViewIsShow,
     state.updatePlayListIsShow,
   ])
 
@@ -34,7 +39,6 @@ const PlayerControl = ({ player, setAudioViewIsDisplay }: { player: HTMLVideoEle
     updatePlaying,
     updateCurrentTime,
     updateDuration,
-    updateContainerIsHiding
   ] = usePlayerStore(
     (state) => [
       state.playing,
@@ -43,7 +47,6 @@ const PlayerControl = ({ player, setAudioViewIsDisplay }: { player: HTMLVideoEle
       state.updatePlaying,
       state.updateCurrentTime,
       state.updateDuration,
-      state.updateContainerIsHiding,
     ]
   )
 
@@ -60,10 +63,11 @@ const PlayerControl = ({ player, setAudioViewIsDisplay }: { player: HTMLVideoEle
       player.play()
       updateDuration(player.duration)
       if (type === 'video')
-        updateContainerIsHiding(false)
+        updateVideoViewIsShow(true)
     }
-  }, [player, type, updateContainerIsHiding, updateDuration])
+  }, [player, type, updateVideoViewIsShow, updateDuration])
 
+  // 根据播放列表和元数据列表更新当前播放音频元数据
   useEffect(() => {
     if (playList) {
       const test = metaDataList.filter(metaData => metaData.path === playList[index].path)
@@ -80,7 +84,6 @@ const PlayerControl = ({ player, setAudioViewIsDisplay }: { player: HTMLVideoEle
         })
       }
     }
-
   }, [index, metaDataList, playList])
 
   /**
@@ -103,7 +106,7 @@ const PlayerControl = ({ player, setAudioViewIsDisplay }: { player: HTMLVideoEle
   * 下一曲
   */
   const handleClickNext = () => {
-    if (index + 1 !== total) {
+    if (index + 1 !== playList?.length) {
       player.pause()
       updateIndex(index + 1)
     }
@@ -162,9 +165,9 @@ const PlayerControl = ({ player, setAudioViewIsDisplay }: { player: HTMLVideoEle
                 sx={{ height: '100%', width: '100%' }}
                 onClick={() => {
                   if (type === 'audio')
-                    setAudioViewIsDisplay(true)
+                    updateAudioViewIsShow(true)
                   if (type === 'video')
-                    updateContainerIsHiding(false)
+                    updateVideoViewIsShow(true)
                 }}>
                 <Grid container
                   xs
@@ -172,9 +175,7 @@ const PlayerControl = ({ player, setAudioViewIsDisplay }: { player: HTMLVideoEle
                   wrap={'nowrap'} >
                   {(type === 'audio') &&
                     <Grid xs="auto" textAlign={'center'}>
-                      <Box sx={{ width: '4rem', height: '4rem' }}>
-                        <img style={{ maxWidth: '4rem', maxHeight: '4rem', objectFit: 'contain' }} src={cover} />
-                      </Box>
+                      <img style={{ width: '4rem', height: '4rem', objectFit: 'contain' }} src={cover} />
                     </Grid>}
                   <Grid xs sx={{ pl: 1 }} minWidth={0}>
                     <Typography variant="body1" component="div" noWrap>
