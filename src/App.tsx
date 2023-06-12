@@ -12,9 +12,8 @@ const App = () => {
   const { instance, accounts } = useMsal()
   const [folderTree, setFolderTree] = useState(['Home'])
 
-  const fileListFetcher = (path: string) => getFilesData(path).then((res: any) => res)
-  const { data, error, isLoading } = useSWR<any, Error, any>((folderTree.join('/') === 'Home') ? '/' : folderTree.slice(1).join('/'), fileListFetcher, { revalidateOnFocus: false })
-
+  const fileListFetcher = (path: string) => getFilesData(path).then((res) => res)
+  const { data, error, isLoading } = useSWR((folderTree.join('/') === 'Home') ? '/' : folderTree.slice(1).join('/'), fileListFetcher, { revalidateOnFocus: false })
 
   // 登入
   const handleLogin = () => {
