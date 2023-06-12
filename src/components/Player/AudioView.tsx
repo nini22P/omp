@@ -1,4 +1,3 @@
-import { useMemo, useState } from 'react'
 import { Box, Container, IconButton, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined'
@@ -9,17 +8,22 @@ import SkipPreviousIcon from '@mui/icons-material/SkipPrevious'
 import SkipNextIcon from '@mui/icons-material/SkipNext'
 import { MetaData } from '../../type'
 import AudioViewSlider from './AudioViewSlider'
-import useMetaDataListStore from '../../store/useMetaDataListStore'
 import usePlayListStore from '../../store/usePlayListStore'
 import usePlayerStore from '../../store/usePlayerStore'
 import useUiStore from '../../store/useUiStore'
 
-const AudioView = ({ player }: { player: HTMLVideoElement }
+const AudioView = ({ metaData, cover, handleClickPlayPause, handleClickNext, handleClickPrev, handleTimeRangeOnInput }
+  : {
+    metaData: MetaData | null,
+    cover: string,
+    handleClickPlayPause: () => void,
+    handleClickNext: () => void,
+    handleClickPrev: () => void,
+    handleTimeRangeOnInput: (e: Event) => void,
+  }
 ) => {
-  const [playList, index, updateIndex] = usePlayListStore((state) => [
+  const [playList] = usePlayListStore((state) => [
     state.playList,
-    state.index,
-    state.updateIndex,
   ])
 
   const [audioViewIsShow, updateAudioViewIsShow, updatePlayListIsShow] = useUiStore((state) => [
@@ -28,116 +32,17 @@ const AudioView = ({ player }: { player: HTMLVideoElement }
     state.updatePlayListIsShow,
   ])
 
-  const [metaData, setMetaData] = useState<MetaData | null>(null)
-  const [metaDataList] = useMetaDataListStore((state) => [state.metaDataList])
-
   const [
     playing,
     currentTime,
     duration,
-    updatePlaying,
   ] = usePlayerStore(
     (state) => [
       state.playing,
       state.currentTime,
       state.duration,
-      state.updatePlaying,
     ]
   )
-
-  useMemo(() => {
-    if (playList) {
-      const test = metaDataList.filter(metaData => metaData.path === playList[index].path)
-      if (test.length === 1) {
-        setMetaData({
-          ...test[0],
-          size: playList[index].size
-        })
-      } else {
-        setMetaData({
-          title: playList[index].title,
-          artist: '',
-          path: playList[index].path,
-        })
-      }
-    }
-  }, [index, metaDataList, playList])
-
-  /**
- * 播放暂停
- */
-  const handleClickPlayPause = () => {
-    if (!isNaN(player.duration)) {
-      if (player.paused) {
-        player.play()
-        updatePlaying(true)
-      }
-      else {
-        player.pause()
-        updatePlaying(false)
-      }
-    }
-  }
-
-  /**
-  * 下一曲
-  */
-  const handleClickNext = () => {
-    if (index + 1 !== playList?.length) {
-      player.pause()
-      updateIndex(index + 1)
-    }
-  }
-
-  /**
-   * 上一曲
-   */
-  const handleClickPrev = () => {
-    if (index !== 0) {
-      player.pause()
-      updateIndex(index - 1)
-    }
-  }
-
-  /**
- * 点击进度条
- * @param e 
- */
-  const handleTimeRangeOnInput = (e: Event) => {
-    const target = e.target as HTMLInputElement
-    if (target && !isNaN(player.duration)) {
-      player.currentTime = player.duration / 1000 * Number(target.value)
-      player.play()
-      updatePlaying(true)
-    }
-  }
-
-  const cover = useMemo(() => {
-    return (!playList || !metaData || !metaData.cover)
-      ? './cd.png'
-      : URL.createObjectURL(new Blob([new Uint8Array(metaData.cover[0].data)], { type: 'image/png' }))
-  }, [playList, metaData])
-
-  // 添加 mediaSession
-  useMemo(() => {
-    navigator.mediaSession.metadata = new MediaMetadata({
-      title: metaData?.title,
-      artist: metaData?.artist,
-      album: metaData?.album,
-      artwork: [{ src: cover }]
-    })
-    navigator.mediaSession.setActionHandler('play', () => handleClickPlayPause())
-    navigator.mediaSession.setActionHandler('pause', () => handleClickPlayPause())
-    navigator.mediaSession.setActionHandler('nexttrack', () => handleClickNext())
-    navigator.mediaSession.setActionHandler('previoustrack', () => handleClickPrev())
-    return () => {
-      navigator.mediaSession.setActionHandler('play', null)
-      navigator.mediaSession.setActionHandler('pause', null)
-      navigator.mediaSession.setActionHandler('nexttrack', null)
-      navigator.mediaSession.setActionHandler('previoustrack', null)
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cover, metaData?.album, metaData?.artist, metaData?.title])
 
   return (
     <div>
@@ -149,14 +54,14 @@ const AudioView = ({ player }: { player: HTMLVideoElement }
           height: '100dvh',
           position: 'fixed',
           transition: 'all 0.5s',
-          background: `linear-gradient(rgba(180, 180, 180, .5), rgb(180, 180, 180, .5)), url(${cover})  no-repeat center`,
+          background: `linear-gradient(rgba(150, 150, 150, .5), rgb(150, 150, 150, .5)), url(${cover})  no-repeat center`,
           backgroundSize: 'cover',
           color: '#fff'
         }}
         style={(audioViewIsShow) ? { bottom: '0' } : { bottom: '-100vh' }}
       >
         <Box
-          sx={{ backdropFilter: 'blur(25px)', }}
+          sx={{ backdropFilter: 'blur(20px)', }}
         >
           <Container
             maxWidth={'xl'}
