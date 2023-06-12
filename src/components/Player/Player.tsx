@@ -128,13 +128,6 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
             alignItems: 'start',
             backgroundColor: '#000'
           }}>
-          <Grid xs={12}
-            sx={{ backgroundColor: '#ffffff9e' }}
-          >
-            <IconButton aria-label="close" onClick={() => updateContainerIsHiding(true)} >
-              <KeyboardArrowDownOutlinedIcon />
-            </IconButton>
-          </Grid>
           <Grid xs={12} sx={{ width: '100%', height: '100%' }}>
             <video
               width={'100%'}
@@ -144,6 +137,16 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
               ref={playerRef}
               onEnded={() => onEnded()}
             />
+          </Grid>
+
+          <Grid xs={12}
+            position={'absolute'}
+            top={0}
+            sx={{ backgroundColor: '#ffffff9e' }}
+          >
+            <IconButton aria-label="close" onClick={() => updateContainerIsHiding(true)} >
+              <KeyboardArrowDownOutlinedIcon />
+            </IconButton>
           </Grid>
 
         </Grid>

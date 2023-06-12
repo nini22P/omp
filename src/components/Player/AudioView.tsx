@@ -178,9 +178,7 @@ const AudioView = (
               >
                 {/* 封面 */}
                 <Grid sm={4} xs={12} pl={{ xs: 0, sm: 1 }}>
-                  <Box sx={{ maxHeight: '100%', maxWidth: '100%' }}>
-                    <img style={{ height: '100%', width: '100%' }} src={cover} />
-                  </Box>
+                  <img style={{ maxHeight: '100vw', width: '100%', objectFit: 'contain' }} src={cover} />
                 </Grid>
 
                 {/* 音频信息 */}

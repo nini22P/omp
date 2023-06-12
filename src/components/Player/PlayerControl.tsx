@@ -170,11 +170,12 @@ const PlayerControl = ({ player, setAudioViewIsDisplay }: { player: HTMLVideoEle
                   xs
                   sx={{ justifyContent: 'space-between', alignItems: 'center', textAlign: 'left', overflow: 'hidden' }}
                   wrap={'nowrap'} >
-                  <Grid xs="auto" textAlign={'center'}>
-                    <Box sx={{ width: '4rem', height: '4rem' }}>
-                      <img style={{ maxWidth: '4rem', maxHeight: '4rem' }} src={cover} />
-                    </Box>
-                  </Grid>
+                  {(type === 'audio') &&
+                    <Grid xs="auto" textAlign={'center'}>
+                      <Box sx={{ width: '4rem', height: '4rem' }}>
+                        <img style={{ maxWidth: '4rem', maxHeight: '4rem', objectFit: 'contain' }} src={cover} />
+                      </Box>
+                    </Grid>}
                   <Grid xs sx={{ pl: 1 }} minWidth={0}>
                     <Typography variant="body1" component="div" noWrap>
                       {(!playList || !metaData) ? 'Not playing' : metaData.title}
