@@ -116,6 +116,26 @@ const AudioView = (
       : URL.createObjectURL(new Blob([new Uint8Array(metaData.cover[0].data)], { type: 'image/png' }))
   }, [playList, metaData])
 
+  // 添加 mediaSession
+  useMemo(() => {
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: metaData?.title,
+      artist: metaData?.artist,
+      album: metaData?.album,
+      artwork: [{ src: cover }]
+    })
+    navigator.mediaSession.setActionHandler('play', () => handleClickPlayPause())
+    navigator.mediaSession.setActionHandler('pause', () => handleClickPlayPause())
+    navigator.mediaSession.setActionHandler('nexttrack', () => handleClickNext())
+    navigator.mediaSession.setActionHandler('previoustrack', () => handleClickPrev())
+    return () => {
+      navigator.mediaSession.setActionHandler('play', null)
+      navigator.mediaSession.setActionHandler('pause', null)
+      navigator.mediaSession.setActionHandler('nexttrack', null)
+      navigator.mediaSession.setActionHandler('previoustrack', null)
+    }
+  }, [cover, metaData?.album, metaData?.artist, metaData?.title])
+
   return (
     <div>
       <Container
