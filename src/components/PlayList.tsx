@@ -30,7 +30,7 @@ const PlayList = () => {
       }}
       BackdropProps={{
         sx: {
-          backgroundColor: 'rgb(250, 250, 250, .25)'
+          backgroundColor: 'rgb(150, 150, 150, .25)'
         }
       }}
     >

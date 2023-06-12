@@ -1,4 +1,3 @@
-import { useEffect, useMemo, useState } from 'react'
 import { ButtonBase, IconButton, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious'
@@ -9,17 +8,23 @@ import ListIcon from '@mui/icons-material/List'
 import { MetaData } from '../../type'
 import PlayerControlSlider from './PlayerControlSlider'
 import usePlayListStore from '../../store/usePlayListStore'
-import useMetaDataListStore from '../../store/useMetaDataListStore'
 import usePlayerStore from '../../store/usePlayerStore'
 import useUiStore from '../../store/useUiStore'
 
-const PlayerControl = ({ player }: { player: HTMLVideoElement }) => {
+const PlayerControl = ({ player, metaData, cover, handleClickPlayPause, handleClickNext, handleClickPrev, handleTimeRangeOnInput }
+  : {
+    player: HTMLVideoElement,
+    metaData: MetaData | null,
+    cover: string,
+    handleClickPlayPause: () => void,
+    handleClickNext: () => void,
+    handleClickPrev: () => void,
+    handleTimeRangeOnInput: (e: Event) => void,
+  }) => {
 
-  const [type, playList, index, updateIndex] = usePlayListStore((state) => [
+  const [type, playList] = usePlayListStore((state) => [
     state.type,
     state.playList,
-    state.index,
-    state.updateIndex,
   ])
 
   const [playListIsShow, updateAudioViewIsShow, updateVideoViewIsShow, updatePlayListIsShow] = useUiStore((state) => [
@@ -29,117 +34,7 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement }) => {
     state.updatePlayListIsShow,
   ])
 
-  const [metaData, setMetaData] = useState<MetaData | null>(null)
-  const [metaDataList] = useMetaDataListStore((state) => [state.metaDataList])
-
-  const [
-    playing,
-    currentTime,
-    duration,
-    updatePlaying,
-    updateCurrentTime,
-    updateDuration,
-  ] = usePlayerStore(
-    (state) => [
-      state.playing,
-      state.currentTime,
-      state.duration,
-      state.updatePlaying,
-      state.updateCurrentTime,
-      state.updateDuration,
-    ]
-  )
-
-  // 设置当前播放进度
-  useEffect(() => {
-    player.ontimeupdate = () => {
-      updateCurrentTime(player.currentTime)
-    }
-  }, [player, updateCurrentTime])
-
-  // 加载完毕后立即播放并更新总时长
-  useEffect(() => {
-    player.onloadedmetadata = () => {
-      player.play()
-      updateDuration(player.duration)
-      if (type === 'video')
-        updateVideoViewIsShow(true)
-    }
-  }, [player, type, updateVideoViewIsShow, updateDuration])
-
-  // 根据播放列表和元数据列表更新当前播放音频元数据
-  useEffect(() => {
-    if (playList) {
-      const test = metaDataList.filter(metaData => metaData.path === playList[index].path)
-      if (test.length === 1) {
-        setMetaData({
-          ...test[0],
-          size: playList[index].size
-        })
-      } else {
-        setMetaData({
-          title: playList[index].title,
-          artist: '',
-          path: playList[index].path,
-        })
-      }
-    }
-  }, [index, metaDataList, playList])
-
-  /**
-   * 播放暂停
-   */
-  const handleClickPlayPause = () => {
-    if (!isNaN(player.duration)) {
-      if (player.paused) {
-        player.play()
-        updatePlaying(true)
-      }
-      else {
-        player.pause()
-        updatePlaying(false)
-      }
-    }
-  }
-
-  /**
-  * 下一曲
-  */
-  const handleClickNext = () => {
-    if (index + 1 !== playList?.length) {
-      player.pause()
-      updateIndex(index + 1)
-    }
-  }
-
-  /**
-   * 上一曲
-   */
-  const handleClickPrev = () => {
-    if (index !== 0) {
-      player.pause()
-      updateIndex(index - 1)
-    }
-  }
-
-  /**
-* 点击进度条
-* @param e 
-*/
-  const handleTimeRangeOnInput = (e: Event) => {
-    const target = e.target as HTMLInputElement
-    if (target && !isNaN(player.duration)) {
-      player.currentTime = player.duration / 1000 * Number(target.value)
-      player.play()
-      updatePlaying(true)
-    }
-  }
-
-  const cover = useMemo(() => {
-    return (!playList || !metaData || !metaData.cover)
-      ? './cd.png'
-      : URL.createObjectURL(new Blob([new Uint8Array(metaData.cover[0].data)], { type: 'image/png' }))
-  }, [playList, metaData])
+  const [playing, currentTime, duration] = usePlayerStore((state) => [state.playing, state.currentTime, state.duration])
 
   return (
     <div>
