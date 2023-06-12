@@ -30,7 +30,7 @@ const PlayList = () => {
           }
         }}
       >
-        <Grid container >
+        <Grid container wrap='nowrap' >
           <Grid height={'100dvh'}>
             <Button sx={{ height: '100dvh', color: '#000' }} onClick={() => updatePlayListIsShow(false)}>
               <KeyboardArrowRightOutlinedIcon />
@@ -39,16 +39,12 @@ const PlayList = () => {
           <Grid>
             <List>
               {
-                (!playList)
-                  ?
-                  <ListItemText primary='PlayList No Item' sx={{ p: 2 }} />
-                  :
-                  <div>
-                    {playList.map((playListItem, index) =>
-                      <ListItemButton key={index} onClick={() => updateIndex(index)} >
-                        <ListItemText primary={playListItem.title} />
-                      </ListItemButton>)}
-                  </div>
+                <div style={{ height: '100dvh', overflowY: 'auto' }}>
+                  {playList?.map((playListItem, index) =>
+                    <ListItemButton key={index} onClick={() => updateIndex(index)} >
+                      <ListItemText primary={playListItem.title} />
+                    </ListItemButton>)}
+                </div>
               }
             </List>
           </Grid>
