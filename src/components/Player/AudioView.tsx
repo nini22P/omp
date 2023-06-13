@@ -1,4 +1,4 @@
-import { Box, Container, IconButton, Typography } from '@mui/material'
+import { Box, Container, IconButton, Slider, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined'
 import QueueMusicOutlinedIcon from '@mui/icons-material/QueueMusicOutlined'
@@ -7,20 +7,22 @@ import PauseCircleOutlinedIcon from '@mui/icons-material/PauseCircleOutlined'
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious'
 import SkipNextIcon from '@mui/icons-material/SkipNext'
 import { MetaData } from '../../type'
-import AudioViewSlider from './AudioViewSlider'
 import usePlayListStore from '../../store/usePlayListStore'
 import usePlayerStore from '../../store/usePlayerStore'
 import useUiStore from '../../store/useUiStore'
+import { timeShift } from '../../util'
 
-const AudioView = ({ metaData, cover, handleClickPlayPause, handleClickNext, handleClickPrev, handleTimeRangeOnInput }
-  : {
-    metaData: MetaData | null,
-    cover: string,
-    handleClickPlayPause: () => void,
-    handleClickNext: () => void,
-    handleClickPrev: () => void,
-    handleTimeRangeOnInput: (e: Event) => void,
-  }
+const AudioView = (
+  { player, metaData, cover, handleClickPlayPause, handleClickNext, handleClickPrev, handleTimeRangeonChange }
+    : {
+      player: HTMLVideoElement,
+      metaData: MetaData | null,
+      cover: string,
+      handleClickPlayPause: () => void,
+      handleClickNext: () => void,
+      handleClickPrev: () => void,
+      handleTimeRangeonChange: (current: number | number[]) => void,
+    }
 ) => {
   const [playList] = usePlayListStore((state) => [
     state.playList,
@@ -32,20 +34,12 @@ const AudioView = ({ metaData, cover, handleClickPlayPause, handleClickNext, han
     state.updatePlayListIsShow,
   ])
 
-  const [
-    playing,
-    currentTime,
-    duration,
-  ] = usePlayerStore(
-    (state) => [
-      state.playing,
-      state.currentTime,
-      state.duration,
-    ]
-  )
+  const [currentTime, duration] = usePlayerStore((state) => [state.currentTime, state.duration])
 
   return (
-    <div>
+    <div style={{
+      transform: 'translateZ(0)' // blur 性能优化
+    }}>
       <Container
         maxWidth={false}
         disableGutters={true}
@@ -60,13 +54,8 @@ const AudioView = ({ metaData, cover, handleClickPlayPause, handleClickNext, han
         }}
         style={(audioViewIsShow) ? { bottom: '0' } : { bottom: '-100vh' }}
       >
-        <Box
-          sx={{ backdropFilter: 'blur(20px)', }}
-        >
-          <Container
-            maxWidth={'xl'}
-            disableGutters={true}
-          >
+        <Box sx={{ backdropFilter: 'blur(20px)', }}>
+          <Container maxWidth={'xl'} disableGutters={true}>
             <Grid container
               pt={{ xs: 1, sm: 2 }}
               pb={{ xs: 1, sm: 2 }}
@@ -110,12 +99,7 @@ const AudioView = ({ metaData, cover, handleClickPlayPause, handleClickNext, han
                 </Grid>
 
                 {/* 音频信息 */}
-                <Grid
-                  sm={8}
-                  xs={12}
-                  pl={{ xs: 0, lg: 5 }}
-                  textAlign={'center'}
-                >
+                <Grid sm={8} xs={12} pl={{ xs: 0, lg: 5 }} textAlign={'center'}>
                   <Grid xs={12} pl={4} pr={4} >
                     <Typography variant="h6" component="div" textAlign={'center'} noWrap>
                       {(!playList || !metaData) ? 'Not playing' : metaData.title}
@@ -129,16 +113,19 @@ const AudioView = ({ metaData, cover, handleClickPlayPause, handleClickNext, han
                   </Grid>
 
                   {/* 播放进度条 */}
-                  <Grid
-                    xs={12}
-                    pl={2}
-                    pr={2}
-                  >
-                    <AudioViewSlider
-                      handleTimeRangeOnInput={handleTimeRangeOnInput}
-                      currentTime={currentTime}
-                      duration={duration}
+                  <Grid xs={12} pl={3} pr={3} >
+                    <Slider
+                      size="small"
+                      min={0}
+                      max={1000}
+                      value={(!duration) ? 0 : currentTime / duration * 1000}
+                      onChange={(_, current) => handleTimeRangeonChange(current)}
+                      style={{ color: '#fff', width: '100%' }}
                     />
+                    <Typography style={{ color: '#fff' }} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }} >
+                      <span>{timeShift(currentTime)}</span>
+                      <span>{timeShift((duration) ? duration : 0)}</span>
+                    </Typography>
                   </Grid>
 
                   <Grid xs={12} >
@@ -147,7 +134,7 @@ const AudioView = ({ metaData, cover, handleClickPlayPause, handleClickNext, han
                     </IconButton>
                     <IconButton aria-label="play/pause" onClick={handleClickPlayPause}>
                       {
-                        (playing)
+                        (!player.paused)
                           ? <PauseCircleOutlinedIcon sx={{ height: 64, width: 64 }} style={{ color: '#fff' }} />
                           : <PlayCircleOutlinedIcon sx={{ height: 64, width: 64 }} style={{ color: '#fff' }} />}
                     </IconButton>

@@ -14,53 +14,99 @@ import { MetaData } from '../../type'
 
 const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<any> }) => {
 
-  const [type, playList, index, updateIndex] = usePlayListStore((state) => [
-    state.type,
-    state.playList,
-    state.index,
-    state.updateIndex,
-  ])
-
+  const [type, playList, index, updateIndex] = usePlayListStore((state) => [state.type, state.playList, state.index, state.updateIndex])
   const [metaData, setMetaData] = useState<MetaData | null>(null)
-  const [metaDataList, insertMetaDataList] = useMetaDataListStore(
-    (state) => [
-      state.metaDataList,
-      state.insertMetaDataList,
-    ])
-
-  const [
-    url,
-    loop,
-    updatePlaying,
-    updateUrl,
-    updateCurrentTime,
-    updateDuration,
-  ] = usePlayerStore((state) => [
-    state.url,
-    state.loop,
-    state.updatePlaying,
-    state.updateUrl,
-    state.updateCurrentTime,
-    state.updateDuration,
-  ])
-
+  const [metaDataList, insertMetaDataList] = useMetaDataListStore((state) => [state.metaDataList, state.insertMetaDataList])
+  const [loop, updateCurrentTime, updateDuration] = usePlayerStore((state) => [state.loop, state.updateCurrentTime, state.updateDuration])
   const [videoViewIsShow, updateVideoViewIsShow] = useUiStore((state) => [state.videoViewIsShow, state.updateVideoViewIsShow,])
 
-  // 声明播放器对象
-  const playerRef = useRef<HTMLVideoElement>(null)
-  const player = playerRef.current
+  const playerRef = (useRef<HTMLVideoElement>(null))
+  const player = playerRef.current   // 声明播放器对象
+  const [url, setUrl] = useState('')
 
-  // 获取当前播放文件链接并开始播放
+  // 获取当前播放文件链接
   useMemo(() => {
     if (playList !== null) {
       getFileData(playList[index].path).then((res) => {
         console.log('开始播放', playList[index].path)
-        updateUrl(res['@microsoft.graph.downloadUrl'])
-        updatePlaying(true)
+        setUrl(res['@microsoft.graph.downloadUrl'])
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playList, index])
+
+  // 预载完毕后立即播放并更新总时长
+  useMemo(() => {
+    if (player)
+      player.onloadedmetadata = () => {
+        player.play()
+        updateDuration(player.duration)
+        if (type === 'video')
+          updateVideoViewIsShow(true)
+      }
+  }, [player, type, updateVideoViewIsShow, updateDuration])
+
+  // 设置当前播放进度
+  useEffect(() => {
+    if (player)
+      player.ontimeupdate = () => {
+        updateCurrentTime(player.currentTime)
+      }
+  }, [player, updateCurrentTime])
+
+  /**
+* 播放开始暂停
+*/
+  const handleClickPlayPause = () => {
+    if (player && !isNaN(player.duration)) {
+      if (player.paused) {
+        player.play()
+      }
+      else {
+        player.pause()
+      }
+    }
+  }
+
+  /**
+  * 下一曲
+  */
+  const handleClickNext = () => {
+    if (player && index + 1 !== playList?.length) {
+      player.pause()
+      updateIndex(index + 1)
+    }
+  }
+
+  /**
+   * 上一曲
+   */
+  const handleClickPrev = () => {
+    if (player && index !== 0) {
+      player.pause()
+      updateIndex(index - 1)
+    }
+  }
+
+  /**
+ * 点击进度条时
+ * @param current 
+ */
+  const handleTimeRangeonChange = (current: number | number[]) => {
+    if (player && !isNaN(player.duration) && typeof (current) === 'number') {
+      updateCurrentTime(player.duration / 1000 * Number(current))
+      player.currentTime = player.duration / 1000 * Number(current)
+      player.play()
+    }
+  }
+
+  // 播放结束
+  const onEnded = () => {
+    if (index + 1 === playList?.length) {
+      if (loop) updateIndex(0)
+    } else
+      updateIndex(index + 1)
+  }
 
   // 获取 metadata
   useMemo(() => {
@@ -99,65 +145,7 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
     }
   }, [type, playList, index, url, metaDataList, insertMetaDataList])
 
-  /**
-* 播放开始暂停
-*/
-  const handleClickPlayPause = () => {
-    if (player && !isNaN(player.duration)) {
-      if (player.paused) {
-        player.play()
-        updatePlaying(true)
-      }
-      else {
-        player.pause()
-        updatePlaying(false)
-      }
-    }
-  }
-
-  /**
-  * 下一曲
-  */
-  const handleClickNext = () => {
-    if (player && index + 1 !== playList?.length) {
-      player.pause()
-      updateIndex(index + 1)
-    }
-  }
-
-  /**
-   * 上一曲
-   */
-  const handleClickPrev = () => {
-    if (player && index !== 0) {
-      player.pause()
-      updateIndex(index - 1)
-    }
-  }
-
-  /**
- * 点击进度条
- * @param e 
- */
-  const handleTimeRangeOnInput = (e: Event) => {
-    const target = e.target as HTMLInputElement
-    if (player && target && !isNaN(player.duration)) {
-      player.currentTime = player.duration / 1000 * Number(target.value)
-      player.play()
-      updatePlaying(true)
-    }
-  }
-
-  // 播放结束
-  const onEnded = () => {
-    if (index + 1 === playList?.length) {
-      if (loop) updateIndex(0)
-      else
-        updatePlaying(false)
-    } else
-      updateIndex(index + 1)
-  }
-
+  // 根据播放列表和元数据列表更新当前音频元数据
   useEffect(() => {
     if (playList) {
       const test = metaDataList.filter(metaData => metaData.path === playList[index].path)
@@ -204,25 +192,6 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cover, metaData?.album, metaData?.artist, metaData?.title])
-
-  // 设置当前播放进度
-  useEffect(() => {
-    if (player)
-      player.ontimeupdate = () => {
-        updateCurrentTime(player.currentTime)
-      }
-  }, [player, updateCurrentTime])
-
-  // 加载完毕后立即播放并更新总时长
-  useEffect(() => {
-    if (player)
-      player.onloadedmetadata = () => {
-        player.play()
-        updateDuration(player.duration)
-        if (type === 'video')
-          updateVideoViewIsShow(true)
-      }
-  }, [player, type, updateVideoViewIsShow, updateDuration])
 
   return (
     <div>
@@ -283,15 +252,16 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
                 handleClickPlayPause={handleClickPlayPause}
                 handleClickNext={handleClickNext}
                 handleClickPrev={handleClickPrev}
-                handleTimeRangeOnInput={handleTimeRangeOnInput}
+                handleTimeRangeonChange={handleTimeRangeonChange}
               />
               <AudioView
+                player={playerRef.current}
                 metaData={metaData}
                 cover={cover}
                 handleClickPlayPause={handleClickPlayPause}
                 handleClickNext={handleClickNext}
                 handleClickPrev={handleClickPrev}
-                handleTimeRangeOnInput={handleTimeRangeOnInput}
+                handleTimeRangeonChange={handleTimeRangeonChange}
               />
               <PlayList />
             </div>

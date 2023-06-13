@@ -22,6 +22,7 @@ const PlayList = () => {
       open={playListIsShow}
       onClose={() => updatePlayListIsShow(false)}
       elevation={0}
+      sx={{ transform: 'translateZ(0)' }}  // blur 性能优化
       PaperProps={{
         sx: {
           backgroundColor: 'rgb(250, 250, 250, .25)',

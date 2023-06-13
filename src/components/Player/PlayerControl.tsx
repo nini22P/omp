@@ -1,4 +1,4 @@
-import { ButtonBase, IconButton, Typography } from '@mui/material'
+import { ButtonBase, IconButton, Slider, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious'
 import SkipNextIcon from '@mui/icons-material/SkipNext'
@@ -6,12 +6,12 @@ import PlayCircleOutlinedIcon from '@mui/icons-material/PlayCircleOutlined'
 import PauseCircleOutlinedIcon from '@mui/icons-material/PauseCircleOutlined'
 import ListIcon from '@mui/icons-material/List'
 import { MetaData } from '../../type'
-import PlayerControlSlider from './PlayerControlSlider'
 import usePlayListStore from '../../store/usePlayListStore'
 import usePlayerStore from '../../store/usePlayerStore'
 import useUiStore from '../../store/useUiStore'
+import { timeShift } from '../../util'
 
-const PlayerControl = ({ player, metaData, cover, handleClickPlayPause, handleClickNext, handleClickPrev, handleTimeRangeOnInput }
+const PlayerControl = ({ player, metaData, cover, handleClickPlayPause, handleClickNext, handleClickPrev, handleTimeRangeonChange }
   : {
     player: HTMLVideoElement,
     metaData: MetaData | null,
@@ -19,7 +19,7 @@ const PlayerControl = ({ player, metaData, cover, handleClickPlayPause, handleCl
     handleClickPlayPause: () => void,
     handleClickNext: () => void,
     handleClickPrev: () => void,
-    handleTimeRangeOnInput: (e: Event) => void,
+    handleTimeRangeonChange: (current: number | number[]) => void,
   }) => {
 
   const [type, playList] = usePlayListStore((state) => [
@@ -34,7 +34,7 @@ const PlayerControl = ({ player, metaData, cover, handleClickPlayPause, handleCl
     state.updatePlayListIsShow,
   ])
 
-  const [playing, currentTime, duration] = usePlayerStore((state) => [state.playing, state.currentTime, state.duration])
+  const [currentTime, duration] = usePlayerStore((state) => [state.currentTime, state.duration])
 
   return (
     <div>
@@ -44,11 +44,43 @@ const PlayerControl = ({ player, metaData, cover, handleClickPlayPause, handleCl
           sx={{ justifyContent: 'space-between', alignItems: 'center', textAlign: 'center', }}
         >
           {/* 播放进度 */}
-          <Grid xs={12}>
-            <PlayerControlSlider
-              handleTimeRangeOnInput={handleTimeRangeOnInput}
-              currentTime={currentTime}
-              duration={duration} />
+          {/* <Grid xs={12}> */}
+          <Grid container xs={12}
+            pl={{ xs: 0, sm: 1 }}
+            pr={{ xs: 0, sm: 1 }}
+            sx={{ justifyContent: 'space-between', alignItems: 'center', textAlign: 'center' }}>
+            <Grid xs='auto' >
+              <Typography
+                component='div'
+                color='text.secondary'
+                sx={{ display: { sm: 'inline-grid', xs: 'none' } }}
+              >
+                {timeShift(currentTime)}
+              </Typography>
+            </Grid >
+            <Grid xs
+              pl={{ xs: 1, sm: 2 }}
+              pr={{ xs: 1, sm: 2 }}
+            >
+              <Slider
+                size='small'
+                min={0}
+                max={1000}
+                value={(!duration) ? 0 : currentTime / duration * 1000}
+                onChange={(_, current) => handleTimeRangeonChange(current)}
+                sx={{ color: '#222' }}
+              />
+            </Grid>
+            <Grid xs='auto'>
+              <Typography
+                component='div'
+                color='text.secondary'
+                sx={{ display: { sm: 'inline-grid', xs: 'none' } }}
+              >
+                {timeShift((duration) ? duration : 0)}
+              </Typography>
+            </Grid>
+            {/* </Grid> */}
           </Grid>
 
           <Grid container xs={12} wrap={'nowrap'} sx={{ alignItems: 'center' }} >
@@ -92,7 +124,7 @@ const PlayerControl = ({ player, metaData, cover, handleClickPlayPause, handleCl
                 <SkipPreviousIcon />
               </IconButton>
               <IconButton aria-label="play/pause" onClick={handleClickPlayPause}>
-                {(playing) ? <PauseCircleOutlinedIcon sx={{ height: 38, width: 38 }} /> : <PlayCircleOutlinedIcon sx={{ height: 38, width: 38 }} />}
+                {(!player.paused) ? <PauseCircleOutlinedIcon sx={{ height: 38, width: 38 }} /> : <PlayCircleOutlinedIcon sx={{ height: 38, width: 38 }} />}
               </IconButton>
               <IconButton aria-label="next" onClick={handleClickNext} >
                 <SkipNextIcon />
