@@ -5,22 +5,47 @@ import SkipNextIcon from '@mui/icons-material/SkipNext'
 import PlayCircleOutlinedIcon from '@mui/icons-material/PlayCircleOutlined'
 import PauseCircleOutlinedIcon from '@mui/icons-material/PauseCircleOutlined'
 import ListIcon from '@mui/icons-material/List'
+import FastForwardIcon from '@mui/icons-material/FastForward'
+import FastRewindIcon from '@mui/icons-material/FastRewind'
+import ShuffleIcon from '@mui/icons-material/Shuffle'
+import RepeatIcon from '@mui/icons-material/Repeat'
+import RepeatOneIcon from '@mui/icons-material/RepeatOne'
+// import OpenInFullIcon from '@mui/icons-material/OpenInFull'
+// import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen'
+// import PictureInPictureIcon from '@mui/icons-material/PictureInPicture'
 import { MetaData } from '../../type'
 import usePlayListStore from '../../store/usePlayListStore'
 import usePlayerStore from '../../store/usePlayerStore'
 import useUiStore from '../../store/useUiStore'
 import { timeShift } from '../../util'
 
-const PlayerControl = ({ player, metaData, cover, handleClickPlayPause, handleClickNext, handleClickPrev, handleTimeRangeonChange }
-  : {
-    player: HTMLVideoElement,
-    metaData: MetaData | null,
-    cover: string,
-    handleClickPlayPause: () => void,
-    handleClickNext: () => void,
-    handleClickPrev: () => void,
-    handleTimeRangeonChange: (current: number | number[]) => void,
-  }) => {
+const PlayerControl = (
+  {
+    player,
+    metaData,
+    cover,
+    handleClickPlay,
+    handleClickPause,
+    handleClickNext,
+    handleClickPrev,
+    handleClickSeekforward,
+    handleClickSeekbackward,
+    handleTimeRangeonChange,
+    handleClickRepeat,
+  }
+    : {
+      player: HTMLVideoElement,
+      metaData: MetaData | null,
+      cover: string,
+      handleClickPlay: () => void,
+      handleClickPause: () => void,
+      handleClickNext: () => void,
+      handleClickPrev: () => void,
+      handleClickSeekforward: (skipTime: number) => void,
+      handleClickSeekbackward: (skipTime: number) => void,
+      handleTimeRangeonChange: (current: number | number[]) => void,
+      handleClickRepeat: () => void,
+    }) => {
 
   const [type, playList] = usePlayListStore((state) => [
     state.type,
@@ -34,7 +59,7 @@ const PlayerControl = ({ player, metaData, cover, handleClickPlayPause, handleCl
     state.updatePlayListIsShow,
   ])
 
-  const [currentTime, duration] = usePlayerStore((state) => [state.currentTime, state.duration])
+  const [currentTime, duration, shuffle, repeat, updateShuffle] = usePlayerStore((state) => [state.currentTime, state.duration, state.shuffle, state.repeat, state.updateShuffle])
 
   return (
     <div>
@@ -119,15 +144,45 @@ const PlayerControl = ({ player, metaData, cover, handleClickPlayPause, handleCl
             </Grid>
 
             {/* 基本控制按钮 */}
-            <Grid sm={3} xs={5}>
+            <Grid container lg={3} md={4} sm={5} xs={5} wrap='nowrap' sx={{ justifyContent: 'center', alignItems: 'center', }} >
+              <IconButton aria-label="shuffle" onClick={() => updateShuffle(!shuffle)}>
+                <ShuffleIcon sx={{ height: 20, width: 20, display: { sm: 'inline-grid', xs: 'none' } }} style={(shuffle) ? {} : { color: '#bbb' }} />
+              </IconButton>
               <IconButton aria-label="previous" onClick={handleClickPrev} >
                 <SkipPreviousIcon />
               </IconButton>
-              <IconButton aria-label="play/pause" onClick={handleClickPlayPause}>
-                {(!player.paused) ? <PauseCircleOutlinedIcon sx={{ height: 38, width: 38 }} /> : <PlayCircleOutlinedIcon sx={{ height: 38, width: 38 }} />}
+              <IconButton sx={{ display: { sm: 'inline-grid', xs: 'none' } }} aria-label="backward" onClick={() => handleClickSeekbackward(10)} >
+                <FastRewindIcon />
+              </IconButton>
+              {
+                (player.paused)
+                  ?
+                  <IconButton aria-label="play" onClick={() => handleClickPlay()}>
+                    <PlayCircleOutlinedIcon sx={{ height: 38, width: 38 }} />
+                  </IconButton>
+                  :
+                  <IconButton aria-label="pause" onClick={() => handleClickPause()}>
+                    <PauseCircleOutlinedIcon sx={{ height: 38, width: 38 }} />
+                  </IconButton>
+              }
+              <IconButton sx={{ display: { sm: 'inline-grid', xs: 'none' } }} aria-label="forward" onClick={() => handleClickSeekforward(10)} >
+                <FastForwardIcon />
               </IconButton>
               <IconButton aria-label="next" onClick={handleClickNext} >
                 <SkipNextIcon />
+              </IconButton>
+              <IconButton aria-label="repeat" onClick={() => handleClickRepeat()} >
+                {
+                  (repeat === 'one')
+                    ?
+                    <RepeatOneIcon sx={{ height: 20, width: 20, display: { sm: 'inline-grid', xs: 'none' } }} />
+                    :
+                    <RepeatIcon
+                      sx={{ height: 20, width: 20, display: { sm: 'inline-grid', xs: 'none' } }}
+                      style={(repeat === 'off') ? { color: '#bbb' } : {}}
+                    />
+                }
+
               </IconButton>
             </Grid>
 
@@ -136,20 +191,24 @@ const PlayerControl = ({ player, metaData, cover, handleClickPlayPause, handleCl
               xs
               textAlign={'right'}
               sx={{ display: { sm: 'block', xs: 'none' } }}
+              pr={1}
             >
-              <IconButton
-                sx={{ display: { sm: 'inline-grid', xs: 'none' } }}
-                onClick={() => updatePlayListIsShow(!playListIsShow)}
-              >
-                <ListIcon />
+              <IconButton onClick={() => updatePlayListIsShow(!playListIsShow)}>
+                <ListIcon sx={{ display: { sm: 'inline-grid', xs: 'none' } }} />
               </IconButton>
+              {/* <IconButton  >
+                <OpenInFullIcon sx={{ height: 18, width: 18, display: { sm: 'inline-grid', xs: 'none' } }} />
+              </IconButton> */}
+              {/* <IconButton  >
+                <PictureInPictureIcon sx={{ height: 18, width: 18, display: { sm: 'inline-grid', xs: 'none' } }} />
+              </IconButton> */}
             </Grid>
 
           </Grid>
 
         </Grid>
       }
-    </div>
+    </div >
   )
 }
 

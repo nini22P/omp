@@ -7,6 +7,7 @@ interface FileItem {
 }
 
 interface playListItem {
+  index: number;
   title: string;
   size: number;
   path: string;
@@ -15,13 +16,13 @@ interface playListItem {
 interface PlayListStatus {
   type: 'audio' | 'video' | string;
   playList: playListItem[] | null;
-  index: number;
+  current: number;
 }
 
 interface PlayListAction {
   updateType: (type: PlayListStatus['type']) => void,
   updatePlayList: (playList: PlayListStatus['playList']) => void;
-  updateIndex: (index: PlayListStatus['index']) => void;
+  updateCurrent: (index: PlayListStatus['current']) => void;
 }
 
 interface MetaData {
@@ -46,15 +47,17 @@ interface MetaDataListAction {
 }
 
 interface PLayerStatus {
-  loop: boolean;
   currentTime: number;
   duration: number;
+  shuffle: boolean;
+  repeat: 'off' | 'all' | 'one';
 }
 
 interface PLayerAction {
-  updateLoop: (loop: PLayerStatus['loop']) => void;
   updateCurrentTime: (currentTime: PLayerStatus['currentTime']) => void;
   updateDuration: (duration: PLayerStatus['duration']) => void;
+  updateShuffle: (shuffle: PLayerStatus['shuffle']) => void;
+  updateRepeat: (loop: PLayerStatus['repeat']) => void;
 }
 
 interface UiStatus {

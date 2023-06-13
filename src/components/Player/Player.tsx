@@ -14,10 +14,10 @@ import { MetaData } from '../../type'
 
 const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<any> }) => {
 
-  const [type, playList, index, updateIndex] = usePlayListStore((state) => [state.type, state.playList, state.index, state.updateIndex])
+  const [type, playList, current, updateCurrent] = usePlayListStore((state) => [state.type, state.playList, state.current, state.updateCurrent])
   const [metaData, setMetaData] = useState<MetaData | null>(null)
   const [metaDataList, insertMetaDataList] = useMetaDataListStore((state) => [state.metaDataList, state.insertMetaDataList])
-  const [loop, updateCurrentTime, updateDuration] = usePlayerStore((state) => [state.loop, state.updateCurrentTime, state.updateDuration])
+  const [shuffle, repeat, updateCurrentTime, updateDuration, updateRepeat] = usePlayerStore((state) => [state.shuffle, state.repeat, state.updateCurrentTime, state.updateDuration, state.updateRepeat])
   const [videoViewIsShow, updateVideoViewIsShow] = useUiStore((state) => [state.videoViewIsShow, state.updateVideoViewIsShow,])
 
   const playerRef = (useRef<HTMLVideoElement>(null))
@@ -27,23 +27,27 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
   // 获取当前播放文件链接
   useMemo(() => {
     if (playList !== null) {
-      getFileData(playList[index].path).then((res) => {
-        console.log('开始播放', playList[index].path)
+      getFileData(playList[current].path).then((res) => {
+        console.log('开始播放', playList[current].path)
         setUrl(res['@microsoft.graph.downloadUrl'])
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playList, index])
+  }, [playList, current])
 
   // 预载完毕后立即播放并更新总时长
   useMemo(() => {
-    if (player)
+    if (player !== null) {
+      updateDuration(0)
+      player.load()
       player.onloadedmetadata = () => {
         player.play()
         updateDuration(player.duration)
         if (type === 'video')
           updateVideoViewIsShow(true)
       }
+    }
+
   }, [player, type, updateVideoViewIsShow, updateDuration])
 
   // 设置当前播放进度
@@ -54,42 +58,61 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
       }
   }, [player, updateCurrentTime])
 
-  /**
-* 播放开始暂停
-*/
-  const handleClickPlayPause = () => {
+  // 播放开始
+  const handleClickPlay = () => {
     if (player && !isNaN(player.duration)) {
-      if (player.paused) {
-        player.play()
-      }
-      else {
-        player.pause()
-      }
+      player.play()
     }
   }
 
-  /**
-  * 下一曲
-  */
+  // 播放暂停
+  const handleClickPause = () => {
+    if (player && !isNaN(player.duration)) {
+      player.pause()
+    }
+  }
+
+  // 下一曲
   const handleClickNext = () => {
-    if (player && index + 1 !== playList?.length) {
+    if (player && current + 1 !== playList?.length && playList) {
       player.pause()
-      updateIndex(index + 1)
+      if (shuffle)
+        updateCurrent(Math.floor(Math.random() * (playList.length)))
+      else
+        updateCurrent(current + 1)
     }
   }
 
-  /**
-   * 上一曲
-   */
+  // 上一曲
   const handleClickPrev = () => {
-    if (player && index !== 0) {
+    if (player && current !== 0 && playList) {
       player.pause()
-      updateIndex(index - 1)
+      if (shuffle)
+        updateCurrent(Math.floor(Math.random() * (playList.length)))
+      else
+        updateCurrent(current - 1)
+    }
+  }
+
+  // 默认快进时长
+  const defaultSkipTime = 10
+
+  // 快进
+  const handleClickSeekbackward = (skipTime: number) => {
+    if (player && !isNaN(player.duration)) {
+      player.currentTime = Math.max(player.currentTime - skipTime, 0)
+    }
+  }
+
+  // 快退
+  const handleClickSeekforward = (skipTime: number) => {
+    if (player && !isNaN(player.duration)) {
+      player.currentTime = Math.min(player.currentTime + skipTime, player.duration)
     }
   }
 
   /**
- * 点击进度条时
+ * 点击进度条
  * @param current 
  */
   const handleTimeRangeonChange = (current: number | number[]) => {
@@ -100,12 +123,38 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
     }
   }
 
+  // 重复
+  const handleClickRepeat = () => {
+    if (repeat === 'off')
+      updateRepeat('all')
+    if (repeat === 'all')
+      updateRepeat('one')
+    if (repeat === 'one')
+      updateRepeat('off')
+  }
+
   // 播放结束
   const onEnded = () => {
-    if (index + 1 === playList?.length) {
-      if (loop) updateIndex(0)
-    } else
-      updateIndex(index + 1)
+    if (playList) {
+      if (current + 1 === playList?.length) {
+        if (repeat === 'all')
+          if (shuffle)
+            updateCurrent(Math.floor(Math.random() * (playList.length)))
+          else
+            updateCurrent(0)
+        if (repeat === 'one')
+          player?.play()
+      } else {
+        if (repeat === 'off')
+          if (shuffle)
+            updateCurrent(Math.floor(Math.random() * (playList.length)))
+          else
+            updateCurrent(current + 1)
+        if (repeat === 'one')
+          player?.play()
+      }
+    }
+
   }
 
   // 获取 metadata
@@ -113,8 +162,8 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
     if (playerRef.current !== null) {
       playerRef.current.onplay = () => {
         if (type === 'audio' && playList !== null) {
-          console.log('开始获取 metadata', 'path:', playList[index].path)
-          const path = playList[index].path
+          console.log('开始获取 metadata', 'path:', playList[current].path)
+          const path = playList[current].path
           if (metaDataList.some(item => item.path === path)) {
             console.log('跳过获取 metadata', 'path:', path)
           } else {
@@ -143,27 +192,27 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
         }
       }
     }
-  }, [type, playList, index, url, metaDataList, insertMetaDataList])
+  }, [type, playList, current, url, metaDataList, insertMetaDataList])
 
   // 根据播放列表和元数据列表更新当前音频元数据
   useEffect(() => {
     if (playList) {
-      const test = metaDataList.filter(metaData => metaData.path === playList[index].path)
+      const test = metaDataList.filter(metaData => metaData.path === playList[current].path)
       console.log('设定当前音频元数据')
       if (test.length === 1) {
         setMetaData({
           ...test[0],
-          size: playList[index].size
+          size: playList[current].size
         })
       } else {
         setMetaData({
-          title: playList[index].title,
+          title: playList[current].title,
           artist: '',
-          path: playList[index].path,
+          path: playList[current].path,
         })
       }
     }
-  }, [index, metaDataList, playList])
+  }, [current, metaDataList, playList])
 
   // 设定封面
   const cover = useMemo(() => {
@@ -173,25 +222,62 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
   }, [playList, metaData])
 
   // 添加 mediaSession
-  useMemo(() => {
-    navigator.mediaSession.metadata = new MediaMetadata({
-      title: metaData?.title,
-      artist: metaData?.artist,
-      album: metaData?.album,
-      artwork: [{ src: cover }]
-    })
-    navigator.mediaSession.setActionHandler('play', () => handleClickPlayPause())
-    navigator.mediaSession.setActionHandler('pause', () => handleClickPlayPause())
-    navigator.mediaSession.setActionHandler('nexttrack', () => handleClickNext())
-    navigator.mediaSession.setActionHandler('previoustrack', () => handleClickPrev())
-    return () => {
-      navigator.mediaSession.setActionHandler('play', null)
-      navigator.mediaSession.setActionHandler('pause', null)
-      navigator.mediaSession.setActionHandler('nexttrack', null)
-      navigator.mediaSession.setActionHandler('previoustrack', null)
+  function updatePositionState() {
+    if ('setPositionState' in navigator.mediaSession && player && !isNaN(player.duration)) {
+      navigator.mediaSession.setPositionState({
+        duration: player.duration,
+        playbackRate: player.playbackRate,
+        position: player.currentTime,
+      })
     }
+  }
+  updatePositionState()
+  // console.log(navigator.mediaSession)
+  useMemo(() => {
+    if ('mediaSession' in navigator && player) {
+      navigator.mediaSession.metadata = new MediaMetadata({
+        title: metaData?.title,
+        artist: metaData?.artist,
+        album: metaData?.album,
+        artwork: [{ src: cover }]
+      })
+      navigator.mediaSession.setActionHandler('play', () => handleClickPlay())
+      navigator.mediaSession.setActionHandler('pause', () => handleClickPause())
+      navigator.mediaSession.setActionHandler('nexttrack', () => handleClickNext())
+      navigator.mediaSession.setActionHandler('previoustrack', () => handleClickPrev())
+      navigator.mediaSession.setActionHandler('seekbackward', (details) => {
+        const skipTime = details.seekOffset || defaultSkipTime
+        handleClickSeekbackward(skipTime)
+        updatePositionState()
+      })
+      navigator.mediaSession.setActionHandler('seekforward', (details) => {
+        const skipTime = details.seekOffset || defaultSkipTime
+        handleClickSeekforward(skipTime)
+        updatePositionState()
+      })
+      navigator.mediaSession.setActionHandler('seekto', (details) => {
+        if (details.seekTime) {
+          if (details.fastSeek && 'fastSeek' in player) {
+            player.fastSeek(details.seekTime)
+            return
+          }
+          player.currentTime = details.seekTime
+        }
+        updatePositionState()
+      })
+      return () => {
+        navigator.mediaSession.setActionHandler('play', null)
+        navigator.mediaSession.setActionHandler('pause', null)
+        navigator.mediaSession.setActionHandler('nexttrack', null)
+        navigator.mediaSession.setActionHandler('previoustrack', null)
+        navigator.mediaSession.setActionHandler('seekbackward', null)
+        navigator.mediaSession.setActionHandler('seekforward', null)
+        navigator.mediaSession.setActionHandler('seekto', null)
+      }
+    }
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cover, metaData?.album, metaData?.artist, metaData?.title])
+  }, [player, cover, metaData?.album, metaData?.artist, metaData?.title])
 
   return (
     <div>
@@ -199,7 +285,7 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
         maxWidth={false}
         disableGutters={true}
         sx={{ width: '100%', height: '100dvh', position: 'fixed', transition: 'all 0.5s' }}
-        style={(videoViewIsShow) ? { bottom: '0' } : { bottom: '-100vh' }}
+        style={(videoViewIsShow) ? { top: '0' } : { top: '100vh' }}
       >
         <Grid container
           sx={{
@@ -249,19 +335,27 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
                 player={playerRef.current}
                 metaData={metaData}
                 cover={cover}
-                handleClickPlayPause={handleClickPlayPause}
+                handleClickPlay={handleClickPlay}
+                handleClickPause={handleClickPause}
                 handleClickNext={handleClickNext}
                 handleClickPrev={handleClickPrev}
+                handleClickSeekforward={handleClickSeekforward}
+                handleClickSeekbackward={handleClickSeekbackward}
                 handleTimeRangeonChange={handleTimeRangeonChange}
+                handleClickRepeat={handleClickRepeat}
               />
               <AudioView
                 player={playerRef.current}
                 metaData={metaData}
                 cover={cover}
-                handleClickPlayPause={handleClickPlayPause}
+                handleClickPlay={handleClickPlay}
+                handleClickPause={handleClickPause}
                 handleClickNext={handleClickNext}
                 handleClickPrev={handleClickPrev}
+                handleClickSeekforward={handleClickSeekforward}
+                handleClickSeekbackward={handleClickSeekbackward}
                 handleTimeRangeonChange={handleTimeRangeonChange}
+                handleClickRepeat={handleClickRepeat}
               />
               <PlayList />
             </div>
