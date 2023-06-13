@@ -6,9 +6,10 @@ import useUiStore from '../store/useUiStore'
 
 const PlayList = () => {
 
-  const [playList, updateIndex] = usePlayListStore((state) => [
+  const [playList, current, updateCurrent] = usePlayListStore((state) => [
     state.playList,
-    state.updateIndex,
+    state.current,
+    state.updateCurrent,
   ])
 
   const [playListIsShow, updatePlayListIsShow] = useUiStore((state) => [
@@ -22,13 +23,14 @@ const PlayList = () => {
       open={playListIsShow}
       onClose={() => updatePlayListIsShow(false)}
       elevation={0}
-      sx={{ transform: 'translateZ(0)' }}  // blur 性能优化
+      // sx={{ transform: 'translateZ(0)' }}  // blur 性能优化
       PaperProps={{
         sx: {
-          backgroundColor: 'rgb(250, 250, 250, .25)',
-          backdropFilter: 'blur(10px)',
+          backgroundColor: 'rgb(250, 250, 250, 0.9)',
+          // backdropFilter: 'blur(10px)',
         }
       }}
+
       BackdropProps={{
         sx: {
           backgroundColor: 'rgb(150, 150, 150, .25)'
@@ -48,7 +50,7 @@ const PlayList = () => {
             {
               <div style={{ height: '100dvh', overflowY: 'auto' }}>
                 {playList?.map((playListItem, index) =>
-                  <ListItemButton key={index} onClick={() => updateIndex(index)} >
+                  <ListItemButton key={index} onClick={() => updateCurrent(index)} style={(index === current) ? { backgroundColor: 'rgb(190, 190, 190, .25)', borderLeft: 'solid' } : { color: '#333' }} >
                     <ListItemText primary={playListItem.title} />
                   </ListItemButton>)}
               </div>
