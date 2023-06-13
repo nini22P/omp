@@ -46,18 +46,12 @@ interface MetaDataListAction {
 }
 
 interface PLayerStatus {
-  url: string;
-  playing: boolean;
   loop: boolean;
-  light: boolean | string;
-  muted: boolean;
   currentTime: number;
   duration: number;
 }
 
 interface PLayerAction {
-  updateUrl: (url: PLayerStatus['url']) => void;
-  updatePlaying: (playing: PLayerStatus['playing']) => void;
   updateLoop: (loop: PLayerStatus['loop']) => void;
   updateCurrentTime: (currentTime: PLayerStatus['currentTime']) => void;
   updateDuration: (duration: PLayerStatus['duration']) => void;

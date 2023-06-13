@@ -13,7 +13,7 @@ import { LogLevel } from '@azure/msal-browser'
 export const msalConfig = {
   auth: {
     clientId: import.meta.env.VITE_CLIENT_ID,
-    authority: 'https://login.microsoftonline.com/consumers',
+    authority: 'https://login.microsoftonline.com/common',
     redirectUri: import.meta.env.VITE_REDIRECTURI
   },
   cache: {
