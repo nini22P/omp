@@ -5,7 +5,6 @@ const usePlayListStore = create<PlayListStatus & PlayListAction>((set) => ({
   type: 'audio',
   playList: null,
   current: 0,
-  playListIsShow: false,
   updateType: (type) => set(() => ({ type: type })),
   updatePlayList: (playList) => set(() => ({ playList: playList })),
   updateCurrent: (current) => set(() => ({ current: current })),

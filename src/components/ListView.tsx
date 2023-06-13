@@ -49,6 +49,8 @@ const ListView = ({ data, error, isLoading, folderTree, setFolderTree }
           return false
         })
         .map((item: { name: string; size: number }, index: number) => {
+          if (name === item.name)
+            updateCurrent(index)
           return {
             index: index,
             title: item.name,
@@ -57,7 +59,6 @@ const ListView = ({ data, error, isLoading, folderTree, setFolderTree }
           }
         })
       updateType(checkFileType(name))
-      updateCurrent(index)
       updatePlayList(lists)
     }
   }
