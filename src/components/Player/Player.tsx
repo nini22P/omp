@@ -41,10 +41,11 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
       updateDuration(0)
       player.load()
       player.onloadedmetadata = () => {
-        player.play()
-        updateDuration(player.duration)
         if (type === 'video')
           updateVideoViewIsShow(true)
+        player.play()
+        updateDuration(player.duration)
+
       }
     }
 
