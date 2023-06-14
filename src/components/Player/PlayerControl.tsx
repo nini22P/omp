@@ -18,6 +18,7 @@ import usePlayListStore from '../../store/usePlayListStore'
 import usePlayerStore from '../../store/usePlayerStore'
 import useUiStore from '../../store/useUiStore'
 import { timeShift } from '../../util'
+import { shallow } from 'zustand/shallow'
 
 const PlayerControl = (
   {
@@ -49,20 +50,13 @@ const PlayerControl = (
       handleClickFullscreen: () => void,
     }) => {
 
-  const [type, playList] = usePlayListStore((state) => [
-    state.type,
-    state.playList,
-  ])
+  const [type, playList] = usePlayListStore((state) => [state.type, state.playList], shallow)
 
-  const [playListIsShow, fullscreen, updateAudioViewIsShow, updateVideoViewIsShow, updatePlayListIsShow] = useUiStore((state) => [
-    state.playListIsShow,
-    state.fullscreen,
-    state.updateAudioViewIsShow,
-    state.updateVideoViewIsShow,
-    state.updatePlayListIsShow,
-  ])
+  const [playListIsShow, fullscreen, updateAudioViewIsShow, updateVideoViewIsShow, updatePlayListIsShow] = useUiStore(
+    (state) => [state.playListIsShow, state.fullscreen, state.updateAudioViewIsShow, state.updateVideoViewIsShow, state.updatePlayListIsShow], shallow)
 
-  const [currentTime, duration, shuffle, repeat, updateShuffle] = usePlayerStore((state) => [state.currentTime, state.duration, state.shuffle, state.repeat, state.updateShuffle])
+  const [currentTime, duration, shuffle, repeat, updateShuffle] = usePlayerStore(
+    (state) => [state.currentTime, state.duration, state.shuffle, state.repeat, state.updateShuffle], shallow)
 
   return (
     <div>

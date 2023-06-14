@@ -11,15 +11,22 @@ import usePlayerStore from '../../store/usePlayerStore'
 import PlayList from '../PlayList'
 import useUiStore from '../../store/useUiStore'
 import { MetaData } from '../../type'
+import { shallow } from 'zustand/shallow'
 
 const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<any> }) => {
 
-  const [type, playList, current, updateCurrent] = usePlayListStore((state) => [state.type, state.playList, state.current, state.updateCurrent])
+  const [type, playList, current, updateCurrent] = usePlayListStore(
+    (state) => [state.type, state.playList, state.current, state.updateCurrent], shallow)
+
   const [metaData, setMetaData] = useState<MetaData | null>(null)
-  const [metaDataList, insertMetaDataList] = useMetaDataListStore((state) => [state.metaDataList, state.insertMetaDataList])
-  const [shuffle, repeat, updateCurrentTime, updateDuration, updateRepeat] = usePlayerStore((state) => [state.shuffle, state.repeat, state.updateCurrentTime, state.updateDuration, state.updateRepeat])
-  const [videoViewIsShow, controlIsShow, updateVideoViewIsShow, updateControlIsShow, updateFullscreen]
-    = useUiStore((state) => [state.videoViewIsShow, state.controlIsShow, state.updateVideoViewIsShow, state.updateControlIsShow, state.updateFullscreen])
+
+  const [metaDataList, insertMetaDataList] = useMetaDataListStore((state) => [state.metaDataList, state.insertMetaDataList], shallow)
+
+  const [shuffle, repeat, updateCurrentTime, updateDuration, updateRepeat] = usePlayerStore(
+    (state) => [state.shuffle, state.repeat, state.updateCurrentTime, state.updateDuration, state.updateRepeat], shallow)
+
+  const [videoViewIsShow, controlIsShow, updateVideoViewIsShow, updateControlIsShow, updateFullscreen] = useUiStore(
+    (state) => [state.videoViewIsShow, state.controlIsShow, state.updateVideoViewIsShow, state.updateControlIsShow, state.updateFullscreen], shallow)
 
   const playerRef = (useRef<HTMLVideoElement>(null))
   const player = playerRef.current   // 声明播放器对象
@@ -221,7 +228,7 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
       : URL.createObjectURL(new Blob([new Uint8Array(metaData.cover[0].data)], { type: 'image/png' }))
   }, [playList, metaData])
 
-  // 添加 mediaSession
+  // 向 mediaSession 发送当前播放进度
   function updatePositionState() {
     if ('setPositionState' in navigator.mediaSession && player && !isNaN(player.duration)) {
       navigator.mediaSession.setPositionState({
@@ -231,9 +238,10 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
       })
     }
   }
-  if (!player?.paused) {
+  if (!player?.paused)
     updatePositionState()
-  }
+
+  // 添加 mediaSession
   useEffect(() => {
     if ('mediaSession' in navigator && player) {
       navigator.mediaSession.metadata = new MediaMetadata({
