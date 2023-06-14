@@ -2,19 +2,15 @@ import { Breadcrumbs, Button, CircularProgress, Grid, ListItem, ListItemButton, 
 import FolderIcon from '@mui/icons-material/Folder'
 import MusicNoteIcon from '@mui/icons-material/MusicNote'
 import MovieIcon from '@mui/icons-material/Movie'
+import { shallow } from 'zustand/shallow'
 import usePlayListStore from '../store/usePlayListStore'
 import { checkFileType } from '../util'
 
 const ListView = ({ data, error, isLoading, folderTree, setFolderTree }
-  : { data: any, error: Error | undefined, isLoading: boolean, folderTree: string[], setFolderTree: (arg0: string[]) => void }
-) => {
+  : { data: any, error: Error | undefined, isLoading: boolean, folderTree: string[], setFolderTree: (arg0: string[]) => void }) => {
+
   const [updateType, updatePlayList, updateCurrent] = usePlayListStore(
-    (state) => [
-      state.updateType,
-      state.updatePlayList,
-      state.updateCurrent,
-    ]
-  )
+    (state) => [state.updateType, state.updatePlayList, state.updateCurrent], shallow)
 
   /**
    * 点击文件夹导航

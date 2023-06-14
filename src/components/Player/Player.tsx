@@ -12,6 +12,8 @@ import PlayList from '../PlayList'
 import useUiStore from '../../store/useUiStore'
 import { MetaData } from '../../type'
 import { shallow } from 'zustand/shallow'
+import { useControlHide } from '../../hooks/useControlHide'
+import { useMediaSession } from '../../hooks/useMediaSession'
 
 const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<any> }) => {
 
@@ -25,8 +27,8 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
   const [shuffle, repeat, updateCurrentTime, updateDuration, updateRepeat] = usePlayerStore(
     (state) => [state.shuffle, state.repeat, state.updateCurrentTime, state.updateDuration, state.updateRepeat], shallow)
 
-  const [videoViewIsShow, controlIsShow, updateVideoViewIsShow, updateControlIsShow, updateFullscreen] = useUiStore(
-    (state) => [state.videoViewIsShow, state.controlIsShow, state.updateVideoViewIsShow, state.updateControlIsShow, state.updateFullscreen], shallow)
+  const [videoViewIsShow, controlIsShow, updateVideoViewIsShow, updateControlIsShow] = useUiStore(
+    (state) => [state.videoViewIsShow, state.controlIsShow, state.updateVideoViewIsShow, state.updateControlIsShow], shallow)
 
   const playerRef = (useRef<HTMLVideoElement>(null))
   const player = playerRef.current   // 声明播放器对象
@@ -66,6 +68,9 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
       }
   }, [player, updateCurrentTime])
 
+  // 播放视频时自动隐藏ui
+  useControlHide(type, videoViewIsShow)
+
   // 播放开始
   const handleClickPlay = () => {
     if (player && !isNaN(player.duration)) {
@@ -101,9 +106,6 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
         updateCurrent(current - 1)
     }
   }
-
-  // 默认快进时长
-  const defaultSkipTime = 10
 
   // 快进
   const handleClickSeekbackward = (skipTime: number) => {
@@ -229,98 +231,8 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
   }, [playList, metaData])
 
   // 向 mediaSession 发送当前播放进度
-  function updatePositionState() {
-    if ('setPositionState' in navigator.mediaSession && player && !isNaN(player.duration)) {
-      navigator.mediaSession.setPositionState({
-        duration: player.duration,
-        playbackRate: player.playbackRate,
-        position: player.currentTime,
-      })
-    }
-  }
-  if (!player?.paused)
-    updatePositionState()
-
-  // 添加 mediaSession
-  useEffect(() => {
-    if ('mediaSession' in navigator && player) {
-      navigator.mediaSession.metadata = new MediaMetadata({
-        title: metaData?.title,
-        artist: metaData?.artist,
-        album: metaData?.album,
-        artwork: [{ src: cover }]
-      })
-      navigator.mediaSession.setActionHandler('play', () => handleClickPlay())
-      navigator.mediaSession.setActionHandler('pause', () => handleClickPause())
-      navigator.mediaSession.setActionHandler('nexttrack', () => handleClickNext())
-      navigator.mediaSession.setActionHandler('previoustrack', () => handleClickPrev())
-      navigator.mediaSession.setActionHandler('seekbackward', (details) => {
-        const skipTime = details.seekOffset || defaultSkipTime
-        handleClickSeekbackward(skipTime)
-        updatePositionState()
-      })
-      navigator.mediaSession.setActionHandler('seekforward', (details) => {
-        const skipTime = details.seekOffset || defaultSkipTime
-        handleClickSeekforward(skipTime)
-        updatePositionState()
-      })
-      navigator.mediaSession.setActionHandler('seekto', (details) => {
-        if (details.seekTime) {
-          if (details.fastSeek && 'fastSeek' in player) {
-            player.fastSeek(details.seekTime)
-            return
-          }
-          player.currentTime = details.seekTime
-        }
-        updatePositionState()
-      })
-      return () => {
-        navigator.mediaSession.setActionHandler('play', null)
-        navigator.mediaSession.setActionHandler('pause', null)
-        navigator.mediaSession.setActionHandler('nexttrack', null)
-        navigator.mediaSession.setActionHandler('previoustrack', null)
-        navigator.mediaSession.setActionHandler('seekbackward', null)
-        navigator.mediaSession.setActionHandler('seekforward', null)
-        navigator.mediaSession.setActionHandler('seekto', null)
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [player, player?.paused, cover, metaData?.album, metaData?.artist, metaData?.title])
-
-  // 播放视频时自动隐藏ui
-  useEffect(() => {
-    if (type === 'video' && videoViewIsShow) {
-      let timer: number | undefined
-      const resetTimer = () => {
-        updateControlIsShow(true)
-        clearTimeout(timer)
-        timer = (setTimeout(() => updateControlIsShow(false), 3000))
-      }
-      resetTimer()
-      window.addEventListener('mousemove', resetTimer)
-      window.addEventListener('mousedown', resetTimer)
-      window.addEventListener('keydown', resetTimer)
-      return () => {
-        window.removeEventListener('mousemove', resetTimer)
-        window.removeEventListener('mousedown', resetTimer)
-        window.removeEventListener('keydown', resetTimer)
-        clearTimeout(timer)
-      }
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [type, videoViewIsShow])
-
-  // 检测全屏
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      console.log('全屏状态改变')
-      updateFullscreen(!!document.fullscreenElement)
-    }
-    document.addEventListener('fullscreenchange', handleFullscreenChange)
-    return () => {
-      document.removeEventListener('fullscreenchange', handleFullscreenChange)
-    }
-  })
+  useMediaSession(player, cover, metaData?.album, metaData?.artist, metaData?.title,
+    handleClickPlay, handleClickPause, handleClickNext, handleClickPrev, handleClickSeekbackward, handleClickSeekforward)
 
   const handleClickFullscreen = () => {
     if (!document.fullscreenElement) {

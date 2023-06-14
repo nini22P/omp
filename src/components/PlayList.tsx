@@ -1,21 +1,15 @@
 import { Button, Drawer, List, ListItemButton, ListItemText } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
+import { shallow } from 'zustand/shallow'
 import usePlayListStore from '../store/usePlayListStore'
 import KeyboardArrowRightOutlinedIcon from '@mui/icons-material/KeyboardArrowRightOutlined'
 import useUiStore from '../store/useUiStore'
 
 const PlayList = () => {
 
-  const [playList, current, updateCurrent] = usePlayListStore((state) => [
-    state.playList,
-    state.current,
-    state.updateCurrent,
-  ])
+  const [playList, current, updateCurrent] = usePlayListStore((state) => [state.playList, state.current, state.updateCurrent], shallow)
 
-  const [playListIsShow, updatePlayListIsShow] = useUiStore((state) => [
-    state.playListIsShow,
-    state.updatePlayListIsShow,
-  ])
+  const [playListIsShow, updatePlayListIsShow] = useUiStore((state) => [state.playListIsShow, state.updatePlayListIsShow], shallow)
 
   return (
     <Drawer
