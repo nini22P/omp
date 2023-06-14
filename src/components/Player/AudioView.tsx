@@ -11,8 +11,8 @@ import FastRewindIcon from '@mui/icons-material/FastRewind'
 import ShuffleIcon from '@mui/icons-material/Shuffle'
 import RepeatIcon from '@mui/icons-material/Repeat'
 import RepeatOneIcon from '@mui/icons-material/RepeatOne'
-// import OpenInFullIcon from '@mui/icons-material/OpenInFull'
-// import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen'
+import OpenInFullIcon from '@mui/icons-material/OpenInFull'
+import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen'
 // import PictureInPictureIcon from '@mui/icons-material/PictureInPicture'
 import { MetaData } from '../../type'
 import usePlayListStore from '../../store/usePlayListStore'
@@ -33,6 +33,7 @@ const AudioView = (
     handleClickSeekbackward,
     handleTimeRangeonChange,
     handleClickRepeat,
+    handleClickFullscreen,
   }
     :
     {
@@ -47,14 +48,16 @@ const AudioView = (
       handleClickSeekbackward: (skipTime: number) => void,
       handleTimeRangeonChange: (current: number | number[]) => void,
       handleClickRepeat: () => void,
+      handleClickFullscreen: () => void,
     }
 ) => {
   const [playList] = usePlayListStore((state) => [
     state.playList,
   ])
 
-  const [audioViewIsShow, updateAudioViewIsShow, updatePlayListIsShow] = useUiStore((state) => [
+  const [audioViewIsShow, fullscreen, updateAudioViewIsShow, updatePlayListIsShow] = useUiStore((state) => [
     state.audioViewIsShow,
+    state.fullscreen,
     state.updateAudioViewIsShow,
     state.updatePlayListIsShow,
   ])
@@ -106,9 +109,13 @@ const AudioView = (
                 <IconButton aria-label="PlayList" onClick={() => updatePlayListIsShow(true)} >
                   <QueueMusicOutlinedIcon style={{ color: '#fff' }} />
                 </IconButton>
-                {/* <IconButton aria-label="Full" >
-                  <OpenInFullIcon style={{ height: 20, width: 20, color: '#fff' }} />
-                </IconButton> */}
+                <IconButton aria-label="Full" onClick={() => handleClickFullscreen()}>
+                  {
+                    fullscreen
+                      ? <CloseFullscreenIcon style={{ height: 20, width: 20, color: '#fff' }} />
+                      : <OpenInFullIcon style={{ height: 20, width: 20, color: '#fff' }} />
+                  }
+                </IconButton>
                 {/* <IconButton aria-label="PictureInPicture" >
                   <PictureInPictureIcon style={{ height: 20, width: 20, color: '#fff' }} />
                 </IconButton> */}
@@ -163,7 +170,7 @@ const AudioView = (
 
                   <Grid xs={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', wrap: 'nowrap' }}>
                     <IconButton aria-label="shuffle" onClick={() => updateShuffle(!shuffle)}>
-                      <ShuffleIcon sx={{ height: 24, width: 24 }} style={(shuffle) ? { color: '#fff' } : { color: '#ddd' }} />
+                      <ShuffleIcon sx={{ height: 28, width: 28 }} style={(shuffle) ? { color: '#fff' } : { color: '#ddd' }} />
                     </IconButton>
                     <IconButton aria-label="previous" onClick={() => handleClickPrev()} >
                       <SkipPreviousIcon sx={{ height: 48, width: 48 }} style={{ color: '#fff' }} />
@@ -192,9 +199,9 @@ const AudioView = (
                       {
                         (repeat === 'one')
                           ?
-                          < RepeatOneIcon sx={{ height: 24, width: 24 }} style={{ color: '#fff' }} />
+                          < RepeatOneIcon sx={{ height: 28, width: 28 }} style={{ color: '#fff' }} />
                           :
-                          <RepeatIcon sx={{ height: 24, width: 24 }} style={(repeat === 'off') ? { color: '#ddd' } : { color: '#fff' }} />
+                          <RepeatIcon sx={{ height: 28, width: 28 }} style={(repeat === 'off') ? { color: '#ddd' } : { color: '#fff' }} />
                       }
 
                     </IconButton>

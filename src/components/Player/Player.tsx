@@ -18,7 +18,8 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
   const [metaData, setMetaData] = useState<MetaData | null>(null)
   const [metaDataList, insertMetaDataList] = useMetaDataListStore((state) => [state.metaDataList, state.insertMetaDataList])
   const [shuffle, repeat, updateCurrentTime, updateDuration, updateRepeat] = usePlayerStore((state) => [state.shuffle, state.repeat, state.updateCurrentTime, state.updateDuration, state.updateRepeat])
-  const [videoViewIsShow, updateVideoViewIsShow] = useUiStore((state) => [state.videoViewIsShow, state.updateVideoViewIsShow,])
+  const [videoViewIsShow, controlIsShow, updateVideoViewIsShow, updateControlIsShow, updateFullscreen]
+    = useUiStore((state) => [state.videoViewIsShow, state.controlIsShow, state.updateVideoViewIsShow, state.updateControlIsShow, state.updateFullscreen])
 
   const playerRef = (useRef<HTMLVideoElement>(null))
   const player = playerRef.current   // 声明播放器对象
@@ -41,14 +42,13 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
       updateDuration(0)
       player.load()
       player.onloadedmetadata = () => {
-        if (type === 'video')
+        if (type === 'video') {
           updateVideoViewIsShow(true)
+        }
         player.play()
         updateDuration(player.duration)
-
       }
     }
-
   }, [player, type, updateVideoViewIsShow, updateDuration])
 
   // 设置当前播放进度
@@ -155,7 +155,6 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
           player?.play()
       }
     }
-
   }
 
   // 获取 metadata
@@ -232,9 +231,10 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
       })
     }
   }
-  updatePositionState()
-  // console.log(navigator.mediaSession)
-  useMemo(() => {
+  if (!player?.paused) {
+    updatePositionState()
+  }
+  useEffect(() => {
     if ('mediaSession' in navigator && player) {
       navigator.mediaSession.metadata = new MediaMetadata({
         title: metaData?.title,
@@ -276,9 +276,51 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
         navigator.mediaSession.setActionHandler('seekto', null)
       }
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [player, cover, metaData?.album, metaData?.artist, metaData?.title])
+  }, [player, player?.paused, cover, metaData?.album, metaData?.artist, metaData?.title])
+
+  // 播放视频时自动隐藏ui
+  useEffect(() => {
+    if (type === 'video' && videoViewIsShow) {
+      let timer: number | undefined
+      const resetTimer = () => {
+        updateControlIsShow(true)
+        clearTimeout(timer)
+        timer = (setTimeout(() => updateControlIsShow(false), 3000))
+      }
+      resetTimer()
+      window.addEventListener('mousemove', resetTimer)
+      window.addEventListener('mousedown', resetTimer)
+      window.addEventListener('keydown', resetTimer)
+      return () => {
+        window.removeEventListener('mousemove', resetTimer)
+        window.removeEventListener('mousedown', resetTimer)
+        window.removeEventListener('keydown', resetTimer)
+        clearTimeout(timer)
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [type, videoViewIsShow])
+
+  // 检测全屏
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      console.log('全屏状态改变')
+      updateFullscreen(!!document.fullscreenElement)
+    }
+    document.addEventListener('fullscreenchange', handleFullscreenChange)
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange)
+    }
+  })
+
+  const handleClickFullscreen = () => {
+    if (!document.fullscreenElement) {
+      document.documentElement.requestFullscreen()
+    } else {
+      document.exitFullscreen()
+    }
+  }
 
   return (
     <div>
@@ -304,15 +346,19 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
               autoPlay
               ref={playerRef}
               onEnded={() => onEnded()}
+              onDoubleClick={() => handleClickFullscreen()}
             />
           </Grid>
 
+          {/* 视频播放顶栏 */}
           <Grid xs={12}
             position={'absolute'}
-            top={0}
-            sx={{ backgroundColor: '#ffffff9e' }}
+            sx={controlIsShow ? { top: 0, left: 0, borderRadius: '0 0 5px 0', backgroundColor: '#ffffffee', width: 'auto' } : { display: 'none' }}
           >
-            <IconButton aria-label="close" onClick={() => updateVideoViewIsShow(false)} >
+            <IconButton aria-label="close" onClick={() => {
+              updateVideoViewIsShow(false)
+              updateControlIsShow(true)
+            }} >
               <KeyboardArrowDownOutlinedIcon />
             </IconButton>
           </Grid>
@@ -324,7 +370,7 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
         elevation={0}
         square={true}
         sx={{ position: 'fixed', bottom: '0', width: '100%', boxShadow: '0px 4px 4px -2px rgba(0, 0, 0, 0.1), 0px -4px 4px -2px rgba(0, 0, 0, 0.1)' }}
-        style={(videoViewIsShow) ? { backgroundColor: '#ffffff9e' } : { backgroundColor: '#ffffff' }}
+        style={(videoViewIsShow) ? { backgroundColor: '#ffffffee' } : { backgroundColor: '#ffffff' }}
       >
         <Container
           maxWidth={false}
@@ -332,19 +378,22 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
         >
           {
             playerRef.current && <div>
-              <PlayerControl
-                player={playerRef.current}
-                metaData={metaData}
-                cover={cover}
-                handleClickPlay={handleClickPlay}
-                handleClickPause={handleClickPause}
-                handleClickNext={handleClickNext}
-                handleClickPrev={handleClickPrev}
-                handleClickSeekforward={handleClickSeekforward}
-                handleClickSeekbackward={handleClickSeekbackward}
-                handleTimeRangeonChange={handleTimeRangeonChange}
-                handleClickRepeat={handleClickRepeat}
-              />
+              <div style={(controlIsShow) ? {} : { display: 'none' }}>
+                <PlayerControl
+                  player={playerRef.current}
+                  metaData={metaData}
+                  cover={cover}
+                  handleClickPlay={handleClickPlay}
+                  handleClickPause={handleClickPause}
+                  handleClickNext={handleClickNext}
+                  handleClickPrev={handleClickPrev}
+                  handleClickSeekforward={handleClickSeekforward}
+                  handleClickSeekbackward={handleClickSeekbackward}
+                  handleTimeRangeonChange={handleTimeRangeonChange}
+                  handleClickRepeat={handleClickRepeat}
+                  handleClickFullscreen={handleClickFullscreen}
+                />
+              </div>
               <AudioView
                 player={playerRef.current}
                 metaData={metaData}
@@ -357,6 +406,7 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
                 handleClickSeekbackward={handleClickSeekbackward}
                 handleTimeRangeonChange={handleTimeRangeonChange}
                 handleClickRepeat={handleClickRepeat}
+                handleClickFullscreen={handleClickFullscreen}
               />
               <PlayList />
             </div>

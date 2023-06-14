@@ -10,8 +10,8 @@ import FastRewindIcon from '@mui/icons-material/FastRewind'
 import ShuffleIcon from '@mui/icons-material/Shuffle'
 import RepeatIcon from '@mui/icons-material/Repeat'
 import RepeatOneIcon from '@mui/icons-material/RepeatOne'
-// import OpenInFullIcon from '@mui/icons-material/OpenInFull'
-// import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen'
+import OpenInFullIcon from '@mui/icons-material/OpenInFull'
+import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen'
 // import PictureInPictureIcon from '@mui/icons-material/PictureInPicture'
 import { MetaData } from '../../type'
 import usePlayListStore from '../../store/usePlayListStore'
@@ -32,6 +32,7 @@ const PlayerControl = (
     handleClickSeekbackward,
     handleTimeRangeonChange,
     handleClickRepeat,
+    handleClickFullscreen,
   }
     : {
       player: HTMLVideoElement,
@@ -45,6 +46,7 @@ const PlayerControl = (
       handleClickSeekbackward: (skipTime: number) => void,
       handleTimeRangeonChange: (current: number | number[]) => void,
       handleClickRepeat: () => void,
+      handleClickFullscreen: () => void,
     }) => {
 
   const [type, playList] = usePlayListStore((state) => [
@@ -52,8 +54,9 @@ const PlayerControl = (
     state.playList,
   ])
 
-  const [playListIsShow, updateAudioViewIsShow, updateVideoViewIsShow, updatePlayListIsShow] = useUiStore((state) => [
+  const [playListIsShow, fullscreen, updateAudioViewIsShow, updateVideoViewIsShow, updatePlayListIsShow] = useUiStore((state) => [
     state.playListIsShow,
+    state.fullscreen,
     state.updateAudioViewIsShow,
     state.updateVideoViewIsShow,
     state.updatePlayListIsShow,
@@ -196,9 +199,13 @@ const PlayerControl = (
               <IconButton onClick={() => updatePlayListIsShow(!playListIsShow)}>
                 <ListIcon sx={{ display: { sm: 'inline-grid', xs: 'none' } }} />
               </IconButton>
-              {/* <IconButton  >
-                <OpenInFullIcon sx={{ height: 18, width: 18, display: { sm: 'inline-grid', xs: 'none' } }} />
-              </IconButton> */}
+              <IconButton onClick={() => handleClickFullscreen()} >
+                {
+                  fullscreen
+                    ? <CloseFullscreenIcon sx={{ height: 18, width: 18, display: { sm: 'inline-grid', xs: 'none' } }} />
+                    : <OpenInFullIcon sx={{ height: 18, width: 18, display: { sm: 'inline-grid', xs: 'none' } }} />
+                }
+              </IconButton>
               {/* <IconButton  >
                 <PictureInPictureIcon sx={{ height: 18, width: 18, display: { sm: 'inline-grid', xs: 'none' } }} />
               </IconButton> */}
