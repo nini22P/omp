@@ -19,6 +19,7 @@ import usePlayListStore from '../../store/usePlayListStore'
 import usePlayerStore from '../../store/usePlayerStore'
 import useUiStore from '../../store/useUiStore'
 import { timeShift } from '../../util'
+import { shallow } from 'zustand/shallow'
 
 const AudioView = (
   {
@@ -51,23 +52,17 @@ const AudioView = (
       handleClickFullscreen: () => void,
     }
 ) => {
-  const [playList] = usePlayListStore((state) => [
-    state.playList,
-  ])
+  const [playList] = usePlayListStore((state) => [state.playList])
 
-  const [audioViewIsShow, fullscreen, updateAudioViewIsShow, updatePlayListIsShow] = useUiStore((state) => [
-    state.audioViewIsShow,
-    state.fullscreen,
-    state.updateAudioViewIsShow,
-    state.updatePlayListIsShow,
-  ])
+  const [audioViewIsShow, fullscreen, updateAudioViewIsShow, updatePlayListIsShow] = useUiStore(
+    (state) => [state.audioViewIsShow, state.fullscreen, state.updateAudioViewIsShow, state.updatePlayListIsShow], shallow)
 
-  const [currentTime, duration, shuffle, repeat, updateShuffle] = usePlayerStore((state) => [state.currentTime, state.duration, state.shuffle, state.repeat, state.updateShuffle])
+  const [currentTime, duration, shuffle, repeat, updateShuffle] = usePlayerStore(
+    (state) => [state.currentTime, state.duration, state.shuffle, state.repeat, state.updateShuffle], shallow)
 
   return (
     <div style={{
       transform: 'translateZ(0)', // blur 性能优化
-
     }}>
       <Container
         maxWidth={false}
