@@ -63,13 +63,17 @@ interface PLayerAction {
 interface UiStatus {
   audioViewIsShow: boolean;
   videoViewIsShow: boolean;
+  controlIsShow: boolean;
   playListIsShow: boolean;
+  fullscreen: boolean;
 }
 
 interface UiAction {
   updateAudioViewIsShow: (audioViewIsShow: UiStatus['audioViewIsShow']) => void;
   updateVideoViewIsShow: (videoViewIsShow: UiStatus['videoViewIsShow']) => void;
+  updateControlIsShow: (controlIsShow: UiStatus['controlIsShow']) => void;
   updatePlayListIsShow: (playListIsShow: UiStatus['playListIsShow']) => void;
+  updateFullscreen: (fullscreen: UiStatus['fullscreen']) => void;
 }
 
 export type {
