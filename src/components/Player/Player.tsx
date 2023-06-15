@@ -246,7 +246,7 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
   }, [playList, metaData])
 
   // 向 mediaSession 发送当前播放进度
-  useMediaSession(cover, metaData?.album, metaData?.artist, metaData?.title, player?.currentTime, player?.duration, player?.playbackRate,
+  useMediaSession(player, cover, metaData?.album, metaData?.artist, metaData?.title,
     handleClickPlay, handleClickPause, handleClickNext, handleClickPrev, handleClickSeekbackward, handleClickSeekforward, SeekTo)
 
   // 检测全屏
