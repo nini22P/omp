@@ -1,35 +1,36 @@
 import { useEffect } from 'react'
 
 export const useMediaSession = (
-  player: HTMLVideoElement | null,
   cover: string,
   album: string | undefined,
   artist: string | undefined,
   title: string | undefined,
+  currentTime: number | undefined,
+  duration: number | undefined,
+  playbackRate: number | undefined,
   handleClickPlay: () => void,
   handleClickPause: () => void,
   handleClickNext: () => void,
   handleClickPrev: () => void,
-  handleClickSeekforward: (skipTime: number) => void,
   handleClickSeekbackward: (skipTime: number) => void,
+  handleClickSeekforward: (skipTime: number) => void,
+  SeekTo: (seekTime: number) => void,
 ) => {
   const defaultSkipTime = 10
   // 向 mediaSession 发送当前播放进度
   function updatePositionState() {
-    if ('setPositionState' in navigator.mediaSession && player && !isNaN(player.duration)) {
+    if ('setPositionState' in navigator.mediaSession && duration && !isNaN(duration)) {
       navigator.mediaSession.setPositionState({
-        duration: player.duration,
-        playbackRate: player.playbackRate,
-        position: player.currentTime,
+        duration: duration,
+        playbackRate: playbackRate,
+        position: currentTime,
       })
     }
   }
-  if (!player?.paused)
-    updatePositionState()
-
+  updatePositionState()
   // 添加 mediaSession
   useEffect(() => {
-    if ('mediaSession' in navigator && player) {
+    if ('mediaSession' in navigator) {
       navigator.mediaSession.metadata = new MediaMetadata({
         title: title,
         artist: artist,
@@ -52,11 +53,7 @@ export const useMediaSession = (
       })
       navigator.mediaSession.setActionHandler('seekto', (details) => {
         if (details.seekTime) {
-          if (details.fastSeek && 'fastSeek' in player) {
-            player.fastSeek(details.seekTime)
-            return
-          }
-          player.currentTime = details.seekTime
+          SeekTo(details.seekTime)
         }
         updatePositionState()
       })
@@ -71,5 +68,5 @@ export const useMediaSession = (
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [player, cover, album, artist, title])
+  }, [cover, album, artist, title])
 }
