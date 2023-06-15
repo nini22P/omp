@@ -1,13 +1,11 @@
 import { useEffect } from 'react'
 
 export const useMediaSession = (
+  player: HTMLVideoElement | null,
   cover: string,
   album: string | undefined,
   artist: string | undefined,
   title: string | undefined,
-  currentTime: number | undefined,
-  duration: number | undefined,
-  playbackRate: number | undefined,
   handleClickPlay: () => void,
   handleClickPause: () => void,
   handleClickNext: () => void,
@@ -19,15 +17,18 @@ export const useMediaSession = (
   const defaultSkipTime = 10
   // 向 mediaSession 发送当前播放进度
   function updatePositionState() {
-    if ('setPositionState' in navigator.mediaSession && duration && !isNaN(duration)) {
+    if ('setPositionState' in navigator.mediaSession && player && !isNaN(player.duration)) {
       navigator.mediaSession.setPositionState({
-        duration: duration,
-        playbackRate: playbackRate,
-        position: currentTime,
+        duration: player.duration,
+        playbackRate: player.playbackRate,
+        position: player.currentTime,
       })
     }
   }
-  updatePositionState()
+  if (player)
+    player.onplaying = () => {
+      updatePositionState()
+    }
   // 添加 mediaSession
   useEffect(() => {
     if ('mediaSession' in navigator) {
@@ -44,18 +45,15 @@ export const useMediaSession = (
       navigator.mediaSession.setActionHandler('seekbackward', (details) => {
         const skipTime = details.seekOffset || defaultSkipTime
         handleClickSeekbackward(skipTime)
-        updatePositionState()
       })
       navigator.mediaSession.setActionHandler('seekforward', (details) => {
         const skipTime = details.seekOffset || defaultSkipTime
         handleClickSeekforward(skipTime)
-        updatePositionState()
       })
       navigator.mediaSession.setActionHandler('seekto', (details) => {
         if (details.seekTime) {
           SeekTo(details.seekTime)
         }
-        updatePositionState()
       })
       return () => {
         navigator.mediaSession.setActionHandler('play', null)
@@ -67,6 +65,5 @@ export const useMediaSession = (
         navigator.mediaSession.setActionHandler('seekto', null)
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [cover, album, artist, title])
+  }, [cover, album, artist, title, handleClickPlay, handleClickPause, handleClickNext, handleClickPrev, handleClickSeekbackward, handleClickSeekforward, SeekTo])
 }
