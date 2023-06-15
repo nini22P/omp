@@ -1,3 +1,5 @@
+import { playListItem } from './type'
+
 /**
  * 将时间转换为分钟
  * @param time 
@@ -19,4 +21,19 @@ const checkFileType = (name: string) => {
   return 'other'
 }
 
-export { timeShift, checkFileType }
+/**
+ * 创建随机播放列表，当前播放id歌曲会排到第一
+ * @param playList 播放列表
+ * @param current 当前播放id
+ * @returns 
+ */
+const shufflePlayList = (playList: playListItem[], current: number) => {
+  const randomPlayList = [...playList]
+  for (let i = randomPlayList.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [randomPlayList[i], randomPlayList[j]] = [randomPlayList[j], randomPlayList[i]]
+  }
+  return randomPlayList.filter(item => item.index === current).concat(randomPlayList.filter(item => item.index !== current))
+}
+
+export { timeShift, checkFileType, shufflePlayList }

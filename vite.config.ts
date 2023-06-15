@@ -10,7 +10,7 @@ export default defineConfig({
     host: '0.0.0.0',
   },
   plugins: [react()],
-  base: "./",
+  base: './',
   optimizeDeps: {
     esbuildOptions: {
       // Node.js global to browser globalThis
