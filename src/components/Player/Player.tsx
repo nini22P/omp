@@ -14,11 +14,12 @@ import { MetaData } from '../../type'
 import { shallow } from 'zustand/shallow'
 import { useControlHide } from '../../hooks/useControlHide'
 import { useMediaSession } from '../../hooks/useMediaSession'
+import { shufflePlayList } from '../../util'
 
 const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<any> }) => {
 
-  const [type, playList, current, updateCurrent] = usePlayListStore(
-    (state) => [state.type, state.playList, state.current, state.updateCurrent], shallow)
+  const [type, playList, current, updateCurrent, updatePlayList] = usePlayListStore(
+    (state) => [state.type, state.playList, state.current, state.updateCurrent, state.updatePlayList], shallow)
 
   const [metaData, setMetaData] = useState<MetaData | null>(null)
 
@@ -37,13 +38,13 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
   // 获取当前播放文件链接
   useMemo(() => {
     if (playList !== null) {
-      getFileData(playList[current].path).then((res) => {
-        console.log('开始播放', playList[current].path)
+      getFileData(playList.filter(item => item.index === current)[0].path).then((res) => {
+        console.log('开始播放', playList.filter(item => item.index === current)[0].path)
         setUrl(res['@microsoft.graph.downloadUrl'])
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playList, current])
+  }, [playList?.filter(item => item.index === current)[0].path])
 
   // 预载完毕后立即播放并更新总时长
   useMemo(() => {
@@ -59,6 +60,18 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
       }
     }
   }, [player, type, updateVideoViewIsShow, updateDuration])
+
+  // 随机
+  useEffect(() => {
+    if (shuffle && playList) {
+      const randomPlayList = shufflePlayList(playList, current)
+      updatePlayList(randomPlayList)
+    }
+    if (!shuffle && playList) {
+      updatePlayList([...playList].sort((a, b) => a.index - b.index))
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [shuffle])
 
   // 设置当前播放进度
   useEffect(() => {
@@ -87,22 +100,26 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
 
   // 下一曲
   const handleClickNext = () => {
-    if (player && current + 1 !== playList?.length && playList) {
+    if (player && playList) {
+      const next = playList[(playList.findIndex(item => item.index === current) + 1)]
       // player.pause()
-      if (shuffle)
-        updateCurrent(Math.floor(Math.random() * (playList.length)))
-      else
+      if (shuffle && next) {
+        updateCurrent(next.index)
+      }
+      if (!shuffle && current + 1 < playList?.length)
         updateCurrent(current + 1)
     }
   }
 
   // 上一曲
   const handleClickPrev = () => {
-    if (player && current !== 0 && playList) {
+    if (player && playList) {
+      const prev = playList[(playList.findIndex(item => item.index === current) - 1)]
       // player.pause()
-      if (shuffle)
-        updateCurrent(Math.floor(Math.random() * (playList.length)))
-      else
+      if (shuffle && prev) {
+        updateCurrent(prev.index)
+      }
+      if (!shuffle && current > 0)
         updateCurrent(current - 1)
     }
   }
@@ -161,23 +178,20 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
   // 播放结束
   const onEnded = () => {
     if (playList) {
-      if (current + 1 === playList?.length) {
+      const next = playList[(playList.findIndex(item => item.index === current) + 1)]
+      if (repeat === 'one') {
+        player?.play()
+      } else if (current + 1 === playList?.length || !next) {
         if (repeat === 'all')
           if (shuffle)
-            updateCurrent(Math.floor(Math.random() * (playList.length)))
+            updateCurrent(playList[playList.findIndex(item => item.index === playList[0].index)].index)
           else
             updateCurrent(0)
-        if (repeat === 'one')
-          player?.play()
-      } else {
-        if (repeat === 'off')
-          if (shuffle)
-            updateCurrent(Math.floor(Math.random() * (playList.length)))
-          else
-            updateCurrent(current + 1)
-        if (repeat === 'one')
-          player?.play()
-      }
+      } else if (repeat === 'off' || repeat === 'all')
+        if (shuffle)
+          updateCurrent(next.index)
+        else
+          updateCurrent(current + 1)
     }
   }
 
@@ -186,8 +200,8 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
     if (playerRef.current !== null) {
       playerRef.current.onplay = () => {
         if (type === 'audio' && playList !== null) {
-          console.log('开始获取 metadata', 'path:', playList[current].path)
-          const path = playList[current].path
+          console.log('开始获取 metadata', 'path:', playList.filter(item => item.index === current)[0].path)
+          const path = playList.filter(item => item.index === current)[0].path
           if (metaDataList.some(item => item.path === path)) {
             console.log('跳过获取 metadata', 'path:', path)
           } else {
@@ -216,34 +230,37 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
         }
       }
     }
-  }, [type, playList, current, url, metaDataList, insertMetaDataList])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [url])
 
   // 根据播放列表和元数据列表更新当前音频元数据
   useEffect(() => {
     if (playList) {
-      const test = metaDataList.filter(metaData => metaData.path === playList[current].path)
+      const test = metaDataList.filter(metaData => metaData.path === playList.filter(item => item.index === current)[0].path)
       console.log('设定当前音频元数据')
       if (test.length === 1) {
         setMetaData({
           ...test[0],
-          size: playList[current].size
+          size: playList.filter(item => item.index === current)[0].size
         })
       } else {
         setMetaData({
-          title: playList[current].title,
+          title: playList.filter(item => item.index === current)[0].title,
           artist: '',
-          path: playList[current].path,
+          path: playList.filter(item => item.index === current)[0].path,
         })
       }
     }
-  }, [current, metaDataList, playList])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playList?.filter(item => item.index === current)[0].path, metaDataList])
 
   // 设定封面
   const cover = useMemo(() => {
     return (!playList || !metaData || !metaData.cover)
       ? './cd.png'
       : URL.createObjectURL(new Blob([new Uint8Array(metaData.cover[0].data)], { type: 'image/png' }))
-  }, [playList, metaData])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [metaData])
 
   // 向 mediaSession 发送当前播放进度
   useMediaSession(player, cover, metaData?.album, metaData?.artist, metaData?.title,

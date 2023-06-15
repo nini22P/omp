@@ -44,7 +44,7 @@ const PlayList = () => {
             {
               <div style={{ height: '100dvh', overflowY: 'auto' }}>
                 {playList?.map((playListItem, index) =>
-                  <ListItemButton key={index} onClick={() => updateCurrent(index)} style={(index === current) ? { backgroundColor: 'rgb(190, 190, 190, .25)', borderLeft: 'solid' } : { color: '#333' }} >
+                  <ListItemButton key={index} onClick={() => updateCurrent(playListItem.index)} style={(playListItem.index === current) ? { backgroundColor: 'rgb(190, 190, 190, .25)', borderLeft: 'solid' } : { color: '#333' }} >
                     <ListItemText primary={playListItem.title} />
                   </ListItemButton>)}
               </div>

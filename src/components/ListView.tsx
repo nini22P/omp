@@ -4,13 +4,15 @@ import MusicNoteIcon from '@mui/icons-material/MusicNote'
 import MovieIcon from '@mui/icons-material/Movie'
 import { shallow } from 'zustand/shallow'
 import usePlayListStore from '../store/usePlayListStore'
-import { checkFileType } from '../util'
+import { checkFileType, shufflePlayList } from '../util'
+import usePlayerStore from '../store/usePlayerStore'
 
 const ListView = ({ data, error, isLoading, folderTree, setFolderTree }
   : { data: any, error: Error | undefined, isLoading: boolean, folderTree: string[], setFolderTree: (arg0: string[]) => void }) => {
 
   const [updateType, updatePlayList, updateCurrent] = usePlayListStore(
     (state) => [state.updateType, state.updatePlayList, state.updateCurrent], shallow)
+  const shuffle = usePlayerStore(state => state.shuffle)
 
   /**
    * 点击文件夹导航
@@ -36,6 +38,7 @@ const ListView = ({ data, error, isLoading, folderTree, setFolderTree }
     }
     // 点击文件时将媒体文件添加到播放列表
     if (data[index].file && name !== null) {
+      let current = 0
       const lists = data
         .filter((item: { name: string }) => {
           if (checkFileType(name) === 'audio')
@@ -46,7 +49,7 @@ const ListView = ({ data, error, isLoading, folderTree, setFolderTree }
         })
         .map((item: { name: string; size: number }, index: number) => {
           if (name === item.name)
-            updateCurrent(index)
+            current = index
           return {
             index: index,
             title: item.name,
@@ -54,8 +57,12 @@ const ListView = ({ data, error, isLoading, folderTree, setFolderTree }
             path: (folderTree.join('/') === 'Home') ? '/' : folderTree.slice(1).join('/').concat(`/${item.name}`),
           }
         })
+      updateCurrent(current)
       updateType(checkFileType(name))
-      updatePlayList(lists)
+      if (shuffle)
+        updatePlayList(shufflePlayList(lists, current))
+      else
+        updatePlayList(lists)
     }
   }
 
