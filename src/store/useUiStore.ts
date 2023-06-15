@@ -11,7 +11,7 @@ const useUiStore = create<UiStatus & UiAction>((set) => ({
   updateVideoViewIsShow: (videoViewIsShow) => set(() => ({ videoViewIsShow: videoViewIsShow })),
   updateControlIsShow: (controlIsShow) => set(() => ({ controlIsShow: controlIsShow })),
   updatePlayListIsShow: (playListIsShow) => set(() => ({ playListIsShow: playListIsShow })),
-  updateFullscreen: () => set(() => ({ fullscreen: !!document.fullscreenElement })),
+  updateFullscreen: (fullscreen) => set(() => ({ fullscreen: fullscreen })),
 }))
 
 export default useUiStore

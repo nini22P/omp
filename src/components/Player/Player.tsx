@@ -27,8 +27,8 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
   const [shuffle, repeat, updateCurrentTime, updateDuration, updateRepeat] = usePlayerStore(
     (state) => [state.shuffle, state.repeat, state.updateCurrentTime, state.updateDuration, state.updateRepeat], shallow)
 
-  const [videoViewIsShow, controlIsShow, updateVideoViewIsShow, updateControlIsShow] = useUiStore(
-    (state) => [state.videoViewIsShow, state.controlIsShow, state.updateVideoViewIsShow, state.updateControlIsShow], shallow)
+  const [videoViewIsShow, controlIsShow, updateVideoViewIsShow, updateControlIsShow, updateFullscreen] = useUiStore(
+    (state) => [state.videoViewIsShow, state.controlIsShow, state.updateVideoViewIsShow, state.updateControlIsShow, state.updateFullscreen], shallow)
 
   const playerRef = (useRef<HTMLVideoElement>(null))
   const player = playerRef.current   // 声明播放器对象
@@ -88,7 +88,7 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
   // 下一曲
   const handleClickNext = () => {
     if (player && current + 1 !== playList?.length && playList) {
-      player.pause()
+      // player.pause()
       if (shuffle)
         updateCurrent(Math.floor(Math.random() * (playList.length)))
       else
@@ -99,7 +99,7 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
   // 上一曲
   const handleClickPrev = () => {
     if (player && current !== 0 && playList) {
-      player.pause()
+      // player.pause()
       if (shuffle)
         updateCurrent(Math.floor(Math.random() * (playList.length)))
       else
@@ -107,17 +107,33 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
     }
   }
 
-  // 快进
+  /**
+   * 快进
+   * @param skipTime 
+   */
   const handleClickSeekbackward = (skipTime: number) => {
     if (player && !isNaN(player.duration)) {
       player.currentTime = Math.max(player.currentTime - skipTime, 0)
     }
   }
 
-  // 快退
+  /**
+   * 快退
+   * @param skipTime 
+   */
   const handleClickSeekforward = (skipTime: number) => {
     if (player && !isNaN(player.duration)) {
       player.currentTime = Math.min(player.currentTime + skipTime, player.duration)
+    }
+  }
+
+  /**
+   * 跳到指定位置
+   * @param seekTime 
+   */
+  const SeekTo = (seekTime: number) => {
+    if (player && !isNaN(player.duration)) {
+      player.currentTime = seekTime
     }
   }
 
@@ -128,8 +144,7 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
   const handleTimeRangeonChange = (current: number | number[]) => {
     if (player && !isNaN(player.duration) && typeof (current) === 'number') {
       updateCurrentTime(player.duration / 1000 * Number(current))
-      player.currentTime = player.duration / 1000 * Number(current)
-      player.play()
+      SeekTo(player.duration / 1000 * Number(current))
     }
   }
 
@@ -231,8 +246,20 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
   }, [playList, metaData])
 
   // 向 mediaSession 发送当前播放进度
-  useMediaSession(player, cover, metaData?.album, metaData?.artist, metaData?.title,
-    handleClickPlay, handleClickPause, handleClickNext, handleClickPrev, handleClickSeekbackward, handleClickSeekforward)
+  useMediaSession(cover, metaData?.album, metaData?.artist, metaData?.title, player?.currentTime, player?.duration, player?.playbackRate,
+    handleClickPlay, handleClickPause, handleClickNext, handleClickPrev, handleClickSeekbackward, handleClickSeekforward, SeekTo)
+
+  // 检测全屏
+  useEffect(() => {
+    const handleFullscreenChange = () => {
+      console.log('全屏状态改变')
+      updateFullscreen(!!document.fullscreenElement)
+    }
+    document.addEventListener('fullscreenchange', handleFullscreenChange)
+    return () => {
+      document.removeEventListener('fullscreenchange', handleFullscreenChange)
+    }
+  })
 
   const handleClickFullscreen = () => {
     if (!document.fullscreenElement) {
@@ -289,7 +316,7 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
       <Paper
         elevation={0}
         square={true}
-        sx={{ position: 'fixed', bottom: '0', width: '100%', boxShadow: '0px 4px 4px -2px rgba(0, 0, 0, 0.1), 0px -4px 4px -2px rgba(0, 0, 0, 0.1)' }}
+        sx={{ position: 'fixed', bottom: '0', width: '100%', boxShadow: '0px -4px 4px -2px rgba(0, 0, 0, 0.1)' }}
         style={(videoViewIsShow) ? { backgroundColor: '#ffffffee' } : { backgroundColor: '#ffffff' }}
       >
         <Container
