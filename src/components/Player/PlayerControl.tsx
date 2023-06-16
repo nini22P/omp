@@ -121,8 +121,8 @@ const PlayerControl = (
                   sx={{ justifyContent: 'space-between', alignItems: 'center', textAlign: 'left', overflow: 'hidden' }}
                   wrap={'nowrap'} >
                   {(type === 'audio') &&
-                    <Grid xs="auto" textAlign={'center'}>
-                      <img style={{ width: '4rem', height: '4rem', objectFit: 'contain' }} src={cover} />
+                    <Grid xs="auto" textAlign={'center'} width={'4rem'} height={'4rem'}>
+                      <img style={{ width: '4rem', height: '4rem', objectFit: 'cover' }} src={cover} />
                     </Grid>}
                   <Grid xs sx={{ pl: 1 }} minWidth={0}>
                     <Typography variant="body1" component="div" noWrap>

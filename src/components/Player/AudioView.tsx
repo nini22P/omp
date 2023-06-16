@@ -13,6 +13,9 @@ import RepeatIcon from '@mui/icons-material/Repeat'
 import RepeatOneIcon from '@mui/icons-material/RepeatOne'
 import OpenInFullIcon from '@mui/icons-material/OpenInFull'
 import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen'
+import PanoramaOutlinedIcon from '@mui/icons-material/PanoramaOutlined'
+import { extractColors } from 'extract-colors'
+
 // import PictureInPictureIcon from '@mui/icons-material/PictureInPicture'
 import { MetaData } from '../../type'
 import usePlayListStore from '../../store/usePlayListStore'
@@ -20,6 +23,7 @@ import usePlayerStore from '../../store/usePlayerStore'
 import useUiStore from '../../store/useUiStore'
 import { timeShift } from '../../util'
 import { shallow } from 'zustand/shallow'
+import { useMemo, useState } from 'react'
 
 const AudioView = (
   {
@@ -58,6 +62,15 @@ const AudioView = (
   const [isPlaying, currentTime, duration, shuffle, repeat, updateShuffle] = usePlayerStore(
     (state) => [state.isPlaying, state.currentTime, state.duration, state.shuffle, state.repeat, state.updateShuffle], shallow)
 
+  const [noBackgound, setNoBackground] = useState(false)
+  const [color, setColor] = useState('#666')
+
+  useMemo(() => {
+    extractColors(cover)
+      .then(color => setColor(color[0].hex))
+      .catch(console.error)
+  }, [cover])
+
   return (
     <div style={{
       transform: 'translateZ(0)', // blur 性能优化
@@ -69,11 +82,11 @@ const AudioView = (
           width: '100%',
           height: '100dvh',
           position: 'fixed',
-          transition: 'all 0.5s',
+          transition: 'top 0.5s',
           background:
-            (cover === './cd.png')
-              ? 'linear-gradient(#999 , #aaa , #ccc )'
-              : `linear-gradient(rgba(150, 150, 150, .65), rgb(160, 160, 160, .5), rgb(175, 175, 175, .5)), url(${cover})  no-repeat center`,
+            (noBackgound || cover === './cd.png')
+              ? `linear-gradient(rgb(50, 50, 50, 0.6), ${color}bb ), #000`
+              : `linear-gradient(rgb(50, 50, 50, 0.6), ${color}22 ), url(${cover})  no-repeat center`,
           backgroundSize: 'cover',
           color: '#fff',
           overflow: 'hidden'
@@ -104,6 +117,9 @@ const AudioView = (
               <Grid xs={6} pr={{ xs: 1, sm: 0 }} textAlign={'right'}>
                 <IconButton aria-label="PlayList" onClick={() => updatePlayListIsShow(true)} >
                   <QueueMusicOutlinedIcon style={{ color: '#fff' }} />
+                </IconButton>
+                <IconButton aria-label="NoBackground" onClick={() => setNoBackground(!noBackgound)} >
+                  <PanoramaOutlinedIcon style={noBackgound ? { color: '#aaa' } : { color: '#fff' }} />
                 </IconButton>
                 <IconButton aria-label="Full" onClick={() => handleClickFullscreen()}>
                   {
