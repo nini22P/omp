@@ -93,7 +93,7 @@ const AudioView = (
         }}
         style={(audioViewIsShow) ? { top: '-100dvh' } : { top: '0' }}
       >
-        <Box sx={{ backdropFilter: (cover === './cd.png') ? '' : 'blur(10px)' }}>
+        <Box sx={{ backdropFilter: (noBackgound || cover === './cd.png') ? '' : 'blur(10px)' }}>
           <Container maxWidth={'xl'} disableGutters={true}>
             <Grid container
               pt={{ xs: 1, sm: 2 }}
@@ -182,7 +182,7 @@ const AudioView = (
 
                   <Grid xs={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', wrap: 'nowrap' }}>
                     <IconButton aria-label="shuffle" onClick={() => updateShuffle(!shuffle)}>
-                      <ShuffleIcon sx={{ height: 28, width: 28 }} style={(shuffle) ? { color: '#fff' } : { color: '#ddd' }} />
+                      <ShuffleIcon sx={{ height: 28, width: 28 }} style={(shuffle) ? { color: '#fff' } : { color: '#ccc' }} />
                     </IconButton>
                     <IconButton aria-label="previous" onClick={() => handleClickPrev()} >
                       <SkipPreviousIcon sx={{ height: 48, width: 48 }} style={{ color: '#fff' }} />
@@ -213,7 +213,7 @@ const AudioView = (
                           ?
                           < RepeatOneIcon sx={{ height: 28, width: 28 }} style={{ color: '#fff' }} />
                           :
-                          <RepeatIcon sx={{ height: 28, width: 28 }} style={(repeat === 'off') ? { color: '#ddd' } : { color: '#fff' }} />
+                          <RepeatIcon sx={{ height: 28, width: 28 }} style={(repeat === 'off') ? { color: '#ccc' } : { color: '#fff' }} />
                       }
 
                     </IconButton>
