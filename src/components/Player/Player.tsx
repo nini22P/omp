@@ -25,8 +25,8 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
 
   const [metaDataList, insertMetaDataList] = useMetaDataListStore((state) => [state.metaDataList, state.insertMetaDataList], shallow)
 
-  const [shuffle, repeat, updateCurrentTime, updateDuration, updateRepeat] = usePlayerStore(
-    (state) => [state.shuffle, state.repeat, state.updateCurrentTime, state.updateDuration, state.updateRepeat], shallow)
+  const [isPlaying, shuffle, repeat, updateIsPlaying, updateCurrentTime, updateDuration, updateRepeat] = usePlayerStore(
+    (state) => [state.isPlaying, state.shuffle, state.repeat, state.updateIsPlaying, state.updateCurrentTime, state.updateDuration, state.updateRepeat], shallow)
 
   const [videoViewIsShow, controlIsShow, updateVideoViewIsShow, updateControlIsShow, updateFullscreen] = useUiStore(
     (state) => [state.videoViewIsShow, state.controlIsShow, state.updateVideoViewIsShow, state.updateControlIsShow, state.updateFullscreen], shallow)
@@ -39,7 +39,6 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
   useMemo(() => {
     if (playList !== null) {
       getFileData(playList.filter(item => item.index === current)[0].path).then((res) => {
-        console.log('开始播放', playList.filter(item => item.index === current)[0].path)
         setUrl(res['@microsoft.graph.downloadUrl'])
       })
     }
@@ -53,13 +52,30 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
       player.load()
       player.onloadedmetadata = () => {
         if (type === 'video') {
-          updateVideoViewIsShow(true)
+          updateVideoViewIsShow(true) //类型是视频时打开视频播放
         }
-        player.play()
+        // player.play()
+        updateIsPlaying(true)
         updateDuration(player.duration)
       }
     }
-  }, [player, type, updateVideoViewIsShow, updateDuration])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [player, type])
+
+  // 播放开始暂停
+  useEffect(() => {
+    if (isPlaying) {
+      console.log('开始播放', playList?.filter(item => item.index === current)[0].path)
+      if (playList?.filter(item => item.index === current)[0].path)
+        player?.play()
+      else {
+        updateIsPlaying(false)
+      }
+    }
+    else
+      player?.pause()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isPlaying])
 
   // 随机
   useEffect(() => {
@@ -86,16 +102,12 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
 
   // 播放开始
   const handleClickPlay = () => {
-    if (player && !isNaN(player.duration)) {
-      player.play()
-    }
+    updateIsPlaying(true)
   }
 
   // 播放暂停
   const handleClickPause = () => {
-    if (player && !isNaN(player.duration)) {
-      player.pause()
-    }
+    updateIsPlaying(false)
   }
 
   // 下一曲
@@ -175,7 +187,7 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
       updateRepeat('off')
   }
 
-  // 播放结束
+  // 播放结束时
   const onEnded = () => {
     if (playList) {
       const next = playList[(playList.findIndex(item => item.index === current) + 1)]
@@ -196,37 +208,34 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
   }
 
   // 获取 metadata
-  useMemo(() => {
-    if (playerRef.current !== null) {
-      playerRef.current.onplay = () => {
-        if (type === 'audio' && playList !== null) {
-          console.log('开始获取 metadata', 'path:', playList.filter(item => item.index === current)[0].path)
-          const path = playList.filter(item => item.index === current)[0].path
-          if (metaDataList.some(item => item.path === path)) {
-            console.log('跳过获取 metadata', 'path:', path)
-          } else {
-            mm.fetchFromUrl(url).then(metadata => {
-              if (metadata) {
-                if (metadata.common.title !== undefined) {
-                  console.log('获取 metadata', metadata)
-                  const metaData = {
-                    path: path,
-                    title: metadata.common.title,
-                    artist: metadata.common.artist,
-                    albumArtist: metadata.common.albumartist,
-                    album: metadata.common.album,
-                    year: metadata.common.year,
-                    genre: metadata.common.genre,
-                    cover: metadata.common.picture,
-                  }
-                  insertMetaDataList(metaData)
+  useEffect(() => {
+    if (type === 'audio' && playList !== null) {
+      console.log('开始获取 metadata', 'path:', playList.filter(item => item.index === current)[0].path)
+      const path = playList.filter(item => item.index === current)[0].path
+      if (metaDataList.some(item => item.path === path)) {
+        console.log('跳过获取 metadata', 'path:', path)
+      } else {
+        try {
+          mm.fetchFromUrl(url).then(metadata => {
+            if (metadata) {
+              if (metadata.common.title !== undefined) {
+                console.log('获取 metadata', metadata)
+                const metaData = {
+                  path: path,
+                  title: metadata.common.title,
+                  artist: metadata.common.artist,
+                  albumArtist: metadata.common.albumartist,
+                  album: metadata.common.album,
+                  year: metadata.common.year,
+                  genre: metadata.common.genre,
+                  cover: metadata.common.picture,
                 }
+                insertMetaDataList(metaData)
               }
-              else {
-                console.log('未能获取 metadata')
-              }
-            })
-          }
+            }
+          })
+        } catch (error) {
+          console.log('未能获取 metadata', error)
         }
       }
     }
@@ -238,7 +247,7 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
     if (playList) {
       const test = metaDataList.filter(metaData => metaData.path === playList.filter(item => item.index === current)[0].path)
       console.log('设定当前音频元数据')
-      if (test.length === 1) {
+      if (test.length !== 0) {
         setMetaData({
           ...test[0],
           size: playList.filter(item => item.index === current)[0].size
@@ -336,48 +345,38 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
         sx={{ position: 'fixed', bottom: '0', width: '100%', boxShadow: '0px -4px 4px -2px rgba(0, 0, 0, 0.1)' }}
         style={(videoViewIsShow) ? { backgroundColor: '#ffffffee' } : { backgroundColor: '#ffffff' }}
       >
-        <Container
-          maxWidth={false}
-          disableGutters={true}
-        >
-          {
-            playerRef.current && <div>
-              <div style={(controlIsShow) ? {} : { display: 'none' }}>
-                <PlayerControl
-                  player={playerRef.current}
-                  metaData={metaData}
-                  cover={cover}
-                  handleClickPlay={handleClickPlay}
-                  handleClickPause={handleClickPause}
-                  handleClickNext={handleClickNext}
-                  handleClickPrev={handleClickPrev}
-                  handleClickSeekforward={handleClickSeekforward}
-                  handleClickSeekbackward={handleClickSeekbackward}
-                  handleTimeRangeonChange={handleTimeRangeonChange}
-                  handleClickRepeat={handleClickRepeat}
-                  handleClickFullscreen={handleClickFullscreen}
-                />
-              </div>
-              <AudioView
-                player={playerRef.current}
-                metaData={metaData}
-                cover={cover}
-                handleClickPlay={handleClickPlay}
-                handleClickPause={handleClickPause}
-                handleClickNext={handleClickNext}
-                handleClickPrev={handleClickPrev}
-                handleClickSeekforward={handleClickSeekforward}
-                handleClickSeekbackward={handleClickSeekbackward}
-                handleTimeRangeonChange={handleTimeRangeonChange}
-                handleClickRepeat={handleClickRepeat}
-                handleClickFullscreen={handleClickFullscreen}
-              />
-              <PlayList />
-            </div>
-          }
+        <Container maxWidth={false} disableGutters={true}>
+          <div style={(controlIsShow) ? {} : { display: 'none' }}>
+            <PlayerControl
+              metaData={metaData}
+              cover={cover}
+              handleClickPlay={handleClickPlay}
+              handleClickPause={handleClickPause}
+              handleClickNext={handleClickNext}
+              handleClickPrev={handleClickPrev}
+              handleClickSeekforward={handleClickSeekforward}
+              handleClickSeekbackward={handleClickSeekbackward}
+              handleTimeRangeonChange={handleTimeRangeonChange}
+              handleClickRepeat={handleClickRepeat}
+              handleClickFullscreen={handleClickFullscreen}
+            />
+          </div>
+          <AudioView
+            metaData={metaData}
+            cover={cover}
+            handleClickPlay={handleClickPlay}
+            handleClickPause={handleClickPause}
+            handleClickNext={handleClickNext}
+            handleClickPrev={handleClickPrev}
+            handleClickSeekforward={handleClickSeekforward}
+            handleClickSeekbackward={handleClickSeekbackward}
+            handleTimeRangeonChange={handleTimeRangeonChange}
+            handleClickRepeat={handleClickRepeat}
+            handleClickFullscreen={handleClickFullscreen}
+          />
+          <PlayList />
         </Container>
       </Paper >
-
     </div>
   )
 }

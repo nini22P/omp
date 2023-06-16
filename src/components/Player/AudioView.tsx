@@ -23,7 +23,6 @@ import { shallow } from 'zustand/shallow'
 
 const AudioView = (
   {
-    player,
     metaData,
     cover,
     handleClickPlay,
@@ -38,7 +37,6 @@ const AudioView = (
   }
     :
     {
-      player: HTMLVideoElement,
       metaData: MetaData | null,
       cover: string,
       handleClickPlay: () => void,
@@ -57,8 +55,8 @@ const AudioView = (
   const [audioViewIsShow, fullscreen, updateAudioViewIsShow, updatePlayListIsShow] = useUiStore(
     (state) => [state.audioViewIsShow, state.fullscreen, state.updateAudioViewIsShow, state.updatePlayListIsShow], shallow)
 
-  const [currentTime, duration, shuffle, repeat, updateShuffle] = usePlayerStore(
-    (state) => [state.currentTime, state.duration, state.shuffle, state.repeat, state.updateShuffle], shallow)
+  const [isPlaying, currentTime, duration, shuffle, repeat, updateShuffle] = usePlayerStore(
+    (state) => [state.isPlaying, state.currentTime, state.duration, state.shuffle, state.repeat, state.updateShuffle], shallow)
 
   return (
     <div style={{
@@ -72,14 +70,17 @@ const AudioView = (
           height: '100dvh',
           position: 'fixed',
           transition: 'all 0.5s',
-          background: `linear-gradient(rgba(160, 160, 160, .5), rgb(160, 160, 160, .5)), url(${cover})  no-repeat center`,
+          background:
+            (cover === './cd.png')
+              ? 'linear-gradient(#999 , #aaa , #ccc )'
+              : `linear-gradient(rgba(150, 150, 150, .65), rgb(160, 160, 160, .5), rgb(175, 175, 175, .5)), url(${cover})  no-repeat center`,
           backgroundSize: 'cover',
           color: '#fff',
           overflow: 'hidden'
         }}
         style={(audioViewIsShow) ? { top: '-100dvh' } : { top: '0' }}
       >
-        <Box sx={{ backdropFilter: 'blur(10px)', }}>
+        <Box sx={{ backdropFilter: (cover === './cd.png') ? '' : 'blur(10px)' }}>
           <Container maxWidth={'xl'} disableGutters={true}>
             <Grid container
               pt={{ xs: 1, sm: 2 }}
@@ -174,7 +175,7 @@ const AudioView = (
                       <FastRewindIcon sx={{ height: 32, width: 32 }} style={{ color: '#fff' }} />
                     </IconButton>
                     {
-                      (player.paused)
+                      (!isPlaying)
                         ?
                         <IconButton aria-label="play" onClick={() => handleClickPlay()}>
                           <PlayCircleOutlinedIcon sx={{ height: 64, width: 64 }} style={{ color: '#fff' }} />

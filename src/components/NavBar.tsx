@@ -2,8 +2,9 @@ import { AppBar, Box, Toolbar, Typography, Button, Link } from '@mui/material'
 import GitHubIcon from '@mui/icons-material/GitHub'
 
 const NavBar = ({ accounts, handleLogout }: { accounts: any, handleLogout: () => void }) => {
+
   return (
-    <div>
+    <div style={{ position: 'fixed', top: 0, left: 0, width: '100%' }}>
       <Box sx={{ flexGrow: 1 }}>
         <AppBar
           position="static"
@@ -19,15 +20,17 @@ const NavBar = ({ accounts, handleLogout }: { accounts: any, handleLogout: () =>
             <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
               OMP
             </Typography>
-            {
-              (accounts.length !== 0)
-                ?
-                <Button onClick={() => handleLogout()}>sign out</Button>
-                :
-                <Link href='https://github.com/nini22P/omp'>
-                  <GitHubIcon sx={{ color: '#000' }} />
-                </Link>
-            }
+            <div className='nodrag'>
+              {
+                (accounts.length !== 0)
+                  ?
+                  <Button onClick={() => handleLogout()}>sign out</Button>
+                  :
+                  <Link href='https://github.com/nini22P/omp'>
+                    <GitHubIcon sx={{ color: '#000' }} />
+                  </Link>
+              }
+            </div>
           </Toolbar>
         </AppBar>
       </Box>

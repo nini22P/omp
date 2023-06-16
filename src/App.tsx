@@ -56,9 +56,11 @@ const App = () => {
     <main>
       <NavBar accounts={accounts} handleLogout={handleLogout} />
       <AuthenticatedTemplate>
-        <Container maxWidth="xl" sx={{ pb: 18 }} >
-          <ListView data={data} error={error} isLoading={isLoading} folderTree={folderTree} setFolderTree={setFolderTree} />
-        </Container>
+        <div style={{ position: 'absolute', height: 'calc(100dvh - 6.4rem - 4rem)', width: '100%', top: '4rem', overflowY: 'auto' }}>
+          <Container maxWidth="xl" sx={{ pb: 3 }} >
+            <ListView data={data} error={error} isLoading={isLoading} folderTree={folderTree} setFolderTree={setFolderTree} />
+          </Container>
+        </div>
         <Player getFileData={getFileData} />
       </AuthenticatedTemplate>
       <UnauthenticatedTemplate>

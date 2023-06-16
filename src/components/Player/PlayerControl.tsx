@@ -22,7 +22,6 @@ import { shallow } from 'zustand/shallow'
 
 const PlayerControl = (
   {
-    player,
     metaData,
     cover,
     handleClickPlay,
@@ -36,7 +35,6 @@ const PlayerControl = (
     handleClickFullscreen,
   }
     : {
-      player: HTMLVideoElement,
       metaData: MetaData | null,
       cover: string,
       handleClickPlay: () => void,
@@ -55,13 +53,13 @@ const PlayerControl = (
   const [playListIsShow, fullscreen, updateAudioViewIsShow, updateVideoViewIsShow, updatePlayListIsShow] = useUiStore(
     (state) => [state.playListIsShow, state.fullscreen, state.updateAudioViewIsShow, state.updateVideoViewIsShow, state.updatePlayListIsShow], shallow)
 
-  const [currentTime, duration, shuffle, repeat, updateShuffle] = usePlayerStore(
-    (state) => [state.currentTime, state.duration, state.shuffle, state.repeat, state.updateShuffle], shallow)
+  const [isPlaying, currentTime, duration, shuffle, repeat, updateShuffle] = usePlayerStore(
+    (state) => [state.isPlaying, state.currentTime, state.duration, state.shuffle, state.repeat, state.updateShuffle], shallow)
 
   return (
     <div>
       {
-        (player) &&
+        // (player) &&
         <Grid container
           sx={{ justifyContent: 'space-between', alignItems: 'center', textAlign: 'center', }}
         >
@@ -152,7 +150,7 @@ const PlayerControl = (
                 <FastRewindIcon />
               </IconButton>
               {
-                (player.paused)
+                (!isPlaying)
                   ?
                   <IconButton aria-label="play" onClick={() => handleClickPlay()}>
                     <PlayCircleOutlinedIcon sx={{ height: 38, width: 38 }} />
