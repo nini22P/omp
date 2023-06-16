@@ -20,20 +20,20 @@ const PlayList = () => {
       // sx={{ transform: 'translateZ(0)' }}  // blur 性能优化
       PaperProps={{
         sx: {
-          backgroundColor: 'rgb(250, 250, 250, 0.9)',
+          // backgroundColor: 'rgb(250, 250, 250, 0.9)',
           // backdropFilter: 'blur(10px)',
         }
       }}
 
       BackdropProps={{
         sx: {
-          backgroundColor: 'rgb(150, 150, 150, .25)'
+          // backgroundColor: 'rgb(150, 150, 150, .25)'
         }
       }}
     >
       <Grid container wrap='nowrap' height={'100dvh'} >
         <Grid height={'100dvh'}>
-          <Button sx={{ height: '100dvh', color: '#000' }} onClick={() => updatePlayListIsShow(false)}>
+          <Button sx={{ height: '100dvh' }} onClick={() => updatePlayListIsShow(false)}>
             <KeyboardArrowRightOutlinedIcon />
           </Button>
         </Grid>
@@ -44,7 +44,11 @@ const PlayList = () => {
             {
               <div style={{ height: '100dvh', overflowY: 'auto' }}>
                 {playList?.map((playListItem, index) =>
-                  <ListItemButton key={index} onClick={() => updateCurrent(playListItem.index)} style={(playListItem.index === current) ? { backgroundColor: 'rgb(190, 190, 190, .25)', borderLeft: 'solid' } : { color: '#333' }} >
+                  <ListItemButton
+                    key={index}
+                    onClick={() => updateCurrent(playListItem.index)}
+                    style={(playListItem.index === current) ? { borderLeft: 'solid' } : {}}
+                  >
                     <ListItemText primary={playListItem.title} />
                   </ListItemButton>)}
               </div>

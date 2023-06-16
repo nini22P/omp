@@ -343,7 +343,7 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
         elevation={0}
         square={true}
         sx={{ position: 'fixed', bottom: '0', width: '100%', boxShadow: '0px -4px 4px -2px rgba(0, 0, 0, 0.1)' }}
-        style={(videoViewIsShow) ? { backgroundColor: '#ffffffee' } : { backgroundColor: '#ffffff' }}
+      // style={(videoViewIsShow) ? { backgroundColor: '#ffffffee' } : { backgroundColor: '#ffffff' }}
       >
         <Container maxWidth={false} disableGutters={true}>
           <div style={(controlIsShow) ? {} : { display: 'none' }}>

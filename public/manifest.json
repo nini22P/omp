@@ -6,6 +6,7 @@
   "description": "OneDrive Media Player",
   "dir": "auto",
   "orientation": "any",
+  "theme_color": "#1e1e1e",
   "icons": [
     {
       "src": "./favicon.ico",
