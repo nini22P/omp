@@ -86,7 +86,6 @@ const PlayerControl = (
               max={1000}
               value={(!duration) ? 0 : currentTime / duration * 1000}
               onChange={(_, current) => handleTimeRangeonChange(current)}
-              sx={{ color: '#222' }}
             />
           </Grid>
           <Grid xs='auto'>
@@ -139,7 +138,7 @@ const PlayerControl = (
           {/* 基本控制按钮 */}
           <Grid container lg={3} md={4} sm={5} xs={5} wrap='nowrap' sx={{ justifyContent: 'center', alignItems: 'center', }} >
             <IconButton aria-label="shuffle" onClick={() => updateShuffle(!shuffle)}>
-              <ShuffleIcon sx={{ height: 20, width: 20, display: { sm: 'inline-grid', xs: 'none' } }} style={(shuffle) ? {} : { color: '#bbb' }} />
+              <ShuffleIcon sx={{ height: 20, width: 20, display: { sm: 'inline-grid', xs: 'none' } }} style={(shuffle) ? {} : { color: '#aaa' }} />
             </IconButton>
             <IconButton aria-label="previous" onClick={handleClickPrev} >
               <SkipPreviousIcon />
@@ -172,7 +171,7 @@ const PlayerControl = (
                   :
                   <RepeatIcon
                     sx={{ height: 20, width: 20, display: { sm: 'inline-grid', xs: 'none' } }}
-                    style={(repeat === 'off') ? { color: '#bbb' } : {}}
+                    style={(repeat === 'off') ? { color: '#aaa' } : {}}
                   />
               }
 

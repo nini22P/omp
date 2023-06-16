@@ -13,9 +13,7 @@ const NavBar = ({ accounts, handleLogout }: { accounts: any, handleLogout: () =>
 
   return (
     <Box sx={{
-      position: 'fixed', top: 0, left: 0, width: '100%', color: '#000',
-      backgroundColor: '#fff',
-      boxShadow: '0px 4px 4px -2px rgba(0, 0, 0, 0.1)'
+      position: 'fixed', top: 0, left: 0, width: '100%', boxShadow: '0px 4px 4px -2px rgba(0, 0, 0, 0.1)'
     }}>
       <Container maxWidth={'xl'} disableGutters={true}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pl: 2, pr: 2, height: '3rem' }}>
@@ -45,7 +43,7 @@ const NavBar = ({ accounts, handleLogout }: { accounts: any, handleLogout: () =>
                 <Button onClick={() => handleLogout()}>sign out</Button>
                 :
                 <Link href='https://github.com/nini22P/omp'>
-                  <GitHubIcon sx={{ color: '#000' }} />
+                  <GitHubIcon />
                 </Link>
             }
           </div>
