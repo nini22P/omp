@@ -56,15 +56,17 @@ const App = () => {
     <main>
       <NavBar accounts={accounts} handleLogout={handleLogout} />
       <AuthenticatedTemplate>
-        <Container maxWidth="xl" sx={{ pb: 18 }} >
-          <ListView data={data} error={error} isLoading={isLoading} folderTree={folderTree} setFolderTree={setFolderTree} />
-        </Container>
+        <div style={{ position: 'absolute', height: 'calc(100dvh - 6rem - 3rem)', width: '100%', top: '3rem', overflowY: 'auto' }}>
+          <Container maxWidth="xl" sx={{ pb: 3 }} >
+            <ListView data={data} error={error} isLoading={isLoading} folderTree={folderTree} setFolderTree={setFolderTree} />
+          </Container>
+        </div>
         <Player getFileData={getFileData} />
       </AuthenticatedTemplate>
       <UnauthenticatedTemplate>
         <Container
           style={{
-            height: 'calc(100dvh - 4rem)',
+            height: 'calc(100dvh)',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
@@ -80,12 +82,10 @@ const App = () => {
             </Typography>
             <Button size="large" onClick={() => handleLogin()}>Sign in</Button>
           </div>
-
           <footer>
             Made with ❤ from <Link underline='none' href='https://github.com/nini22P'>22</Link>
           </footer>
         </Container>
-
       </UnauthenticatedTemplate>
     </main>
   )
