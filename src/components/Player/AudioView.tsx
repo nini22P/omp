@@ -28,7 +28,6 @@ import { useMemo, useState } from 'react'
 const AudioView = (
   {
     metaData,
-    cover,
     handleClickPlay,
     handleClickPause,
     handleClickNext,
@@ -42,7 +41,6 @@ const AudioView = (
     :
     {
       metaData: MetaData | null,
-      cover: string,
       handleClickPlay: () => void,
       handleClickPause: () => void,
       handleClickNext: () => void,
@@ -59,16 +57,17 @@ const AudioView = (
   const [audioViewIsShow, fullscreen, updateAudioViewIsShow, updatePlayListIsShow] = useUiStore(
     (state) => [state.audioViewIsShow, state.fullscreen, state.updateAudioViewIsShow, state.updatePlayListIsShow], shallow)
 
-  const [isPlaying, currentTime, duration, shuffle, repeat, updateShuffle] = usePlayerStore(
-    (state) => [state.isPlaying, state.currentTime, state.duration, state.shuffle, state.repeat, state.updateShuffle], shallow)
+  const [isPlaying, cover, currentTime, duration, shuffle, repeat, updateShuffle] = usePlayerStore(
+    (state) => [state.isPlaying, state.cover, state.currentTime, state.duration, state.shuffle, state.repeat, state.updateShuffle], shallow)
 
   const [noBackgound, setNoBackground] = useState(false)
-  const [color, setColor] = useState('#666')
+  const [color, setColor] = useState('#ffffff')
 
   useMemo(() => {
-    extractColors(cover)
-      .then(color => setColor(color[0].hex))
-      .catch(console.error)
+    if (cover !== './cd.png')
+      extractColors(cover)
+        .then(color => setColor(color[0].hex))
+        .catch(console.error)
   }, [cover])
 
   return (
@@ -82,18 +81,18 @@ const AudioView = (
           width: '100%',
           height: '100dvh',
           position: 'fixed',
-          transition: 'top 0.5s',
+          transition: 'top 0.35s ease-in-out, background 0.5s ease-out',
           background:
             (noBackgound || cover === './cd.png')
-              ? `linear-gradient(rgb(50, 50, 50, 0.6), ${color}bb ), #000`
-              : `linear-gradient(rgb(50, 50, 50, 0.6), ${color}22 ), url(${cover})  no-repeat center`,
+              ? `linear-gradient(rgba(50, 50, 50, 0.6), ${color}bb), #000`
+              : `linear-gradient(rgba(50, 50, 50, 0.2), ${color}11 ), url(${cover})  no-repeat center, #000`,
           backgroundSize: 'cover',
           color: '#fff',
           overflow: 'hidden'
         }}
         style={(audioViewIsShow) ? { top: '-100dvh' } : { top: '0' }}
       >
-        <Box sx={{ backdropFilter: (noBackgound || cover === './cd.png') ? '' : 'blur(10px)' }}>
+        <Box sx={{ backdropFilter: (noBackgound || cover === './cd.png') ? '' : 'blur(25px)' }}>
           <Container maxWidth={'xl'} disableGutters={true}>
             <Grid container
               pt={{ xs: 1, sm: 2 }}
@@ -144,9 +143,12 @@ const AudioView = (
                   justifyContent: 'space-evenly',
                   alignItems: 'center',
                 }}
+                pl={{ xs: 0, sm: 1 }}
+                pr={{ xs: 0, sm: 1 }}
+                gap={{ xs: 0, sm: 3 }}
               >
                 {/* 封面 */}
-                <Grid sm={4} xs={12} pl={{ xs: 0, sm: 1 }}>
+                <Grid sm={4} xs={12} >
                   <img style={{ maxHeight: '100vw', width: '100%', objectFit: 'contain' }} src={cover} />
                 </Grid>
 
@@ -165,7 +167,7 @@ const AudioView = (
                   </Grid>
 
                   {/* 播放进度条 */}
-                  <Grid xs={12} pl={3} pr={3} >
+                  <Grid xs={12} pl={{ xs: 3, sm: 0 }} pr={{ xs: 3, sm: 0 }} >
                     <Slider
                       size="small"
                       min={0}
