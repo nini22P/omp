@@ -70,6 +70,7 @@ interface UiStatus {
   controlIsShow: boolean;
   playListIsShow: boolean;
   fullscreen: boolean;
+  mobileSideBarOpen: boolean;
 }
 
 interface UiAction {
@@ -78,6 +79,7 @@ interface UiAction {
   updateControlIsShow: (controlIsShow: UiStatus['controlIsShow']) => void;
   updatePlayListIsShow: (playListIsShow: UiStatus['playListIsShow']) => void;
   updateFullscreen: (fullscreen: UiStatus['fullscreen']) => void;
+  updateMobileSideBarOpen: (mobileSideBarOpen: UiStatus['mobileSideBarOpen']) => void,
 }
 
 export type {

@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Container, IconButton, Paper } from '@mui/material'
+import { Container, IconButton, Paper, useTheme } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined'
 import * as mm from 'music-metadata-browser'
@@ -17,6 +17,8 @@ import { useMediaSession } from '../../hooks/useMediaSession'
 import { shufflePlayList } from '../../util'
 
 const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<any> }) => {
+
+  const theme = useTheme()
 
   const [type, playList, current, updateCurrent, updatePlayList] = usePlayListStore(
     (state) => [state.type, state.playList, state.current, state.updateCurrent, state.updatePlayList], shallow)
@@ -342,7 +344,7 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
       <Paper
         elevation={0}
         square={true}
-        sx={{ position: 'fixed', bottom: '0', width: '100%', boxShadow: '0px -4px 4px -2px rgba(0, 0, 0, 0.1)' }}
+        sx={{ position: 'fixed', bottom: '0', width: '100%', boxShadow: `0px -4px 4px -2px ${theme.palette.divider}` }}
       // style={(videoViewIsShow) ? { backgroundColor: '#ffffffee' } : { backgroundColor: '#ffffff' }}
       >
         <Container maxWidth={false} disableGutters={true}>

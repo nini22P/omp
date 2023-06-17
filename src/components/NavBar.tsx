@@ -1,50 +1,39 @@
-import { Box, Typography, Button, Link, Container } from '@mui/material'
+import { Box, Typography, Link, Container, IconButton, useTheme } from '@mui/material'
 import GitHubIcon from '@mui/icons-material/GitHub'
-// import { useState } from 'react'
-
+import LogoutIcon from '@mui/icons-material/Logout'
+import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
+import useUiStore from '../store/useUiStore'
+import { shallow } from 'zustand/shallow'
 
 const NavBar = ({ accounts, handleLogout }: { accounts: any, handleLogout: () => void }) => {
-
-  // const [value, setValue] = useState(0)
-
-  // const handleChange = (event: React.SyntheticEvent, newValue: number) => {
-  //   setValue(newValue)
-  // }
-
+  const theme = useTheme()
+  const [mobileSideBarOpen, updateMobileSideBarOpen] = useUiStore((state) => [state.mobileSideBarOpen, state.updateMobileSideBarOpen], shallow)
   return (
     <Box sx={{
-      position: 'fixed', top: 0, left: 0, width: '100%', boxShadow: '0px 4px 4px -2px rgba(0, 0, 0, 0.1)'
+      position: 'fixed', top: 0, left: 0, width: '100%', boxShadow: `0px 4px 4px -2px ${theme.palette.divider} `
     }}>
       <Container maxWidth={'xl'} disableGutters={true}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', pl: 2, pr: 2, height: '3rem' }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '4rem', pl: 1, pr: 1 }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} >
-            <img src='./logo.svg' style={{ height: '1.5rem', marginRight: '0.5rem' }}></img>
+            <IconButton onClick={() => updateMobileSideBarOpen(!mobileSideBarOpen)} sx={{ display: { xs: '', sm: 'none' } }}>
+              <MenuOutlinedIcon />
+            </IconButton>
+            <img src='./logo.svg' style={{ height: '1.5rem', marginLeft: '0.5rem', marginRight: '0.5rem' }}></img>
             <Typography variant="h6" component="div" >
               OMP
             </Typography>
           </Box>
-          {/* <div >
-            {
-              (accounts.length !== 0) &&
-              <Tabs
-                value={value}
-                onChange={handleChange}
-                aria-label="nav"
-              >
-                <Tab label="HOME" />
-                <Tab label="PLAYLIST" />
-              </Tabs>
-            }
-          </div> */}
           <div >
             {
               (accounts.length !== 0)
                 ?
-                <Button onClick={() => handleLogout()}>sign out</Button>
+                <IconButton onClick={() => handleLogout()}>
+                  <LogoutIcon />
+                </IconButton>
                 :
-                <Link href='https://github.com/nini22P/omp'>
+                <IconButton component={Link} href='https://github.com/nini22P/omp'>
                   <GitHubIcon />
-                </Link>
+                </IconButton>
             }
           </div>
         </Box>
