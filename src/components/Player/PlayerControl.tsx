@@ -23,7 +23,6 @@ import { shallow } from 'zustand/shallow'
 const PlayerControl = (
   {
     metaData,
-    cover,
     handleClickPlay,
     handleClickPause,
     handleClickNext,
@@ -36,7 +35,6 @@ const PlayerControl = (
   }
     : {
       metaData: MetaData | null,
-      cover: string,
       handleClickPlay: () => void,
       handleClickPause: () => void,
       handleClickNext: () => void,
@@ -53,8 +51,8 @@ const PlayerControl = (
   const [playListIsShow, fullscreen, updateAudioViewIsShow, updateVideoViewIsShow, updatePlayListIsShow] = useUiStore(
     (state) => [state.playListIsShow, state.fullscreen, state.updateAudioViewIsShow, state.updateVideoViewIsShow, state.updatePlayListIsShow], shallow)
 
-  const [isPlaying, currentTime, duration, shuffle, repeat, updateShuffle] = usePlayerStore(
-    (state) => [state.isPlaying, state.currentTime, state.duration, state.shuffle, state.repeat, state.updateShuffle], shallow)
+  const [isPlaying, cover, currentTime, duration, shuffle, repeat, updateShuffle] = usePlayerStore(
+    (state) => [state.isPlaying, state.cover, state.currentTime, state.duration, state.shuffle, state.repeat, state.updateShuffle], shallow)
 
   return (
     <Container maxWidth={'xl'} disableGutters={true}>

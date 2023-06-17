@@ -48,6 +48,7 @@ interface MetaDataListAction {
 
 interface PLayerStatus {
   isPlaying: boolean;
+  cover: string;
   currentTime: number;
   duration: number;
   shuffle: boolean;
@@ -56,6 +57,7 @@ interface PLayerStatus {
 
 interface PLayerAction {
   updateIsPlaying: (isPlaying: PLayerStatus['isPlaying']) => void;
+  updateCover: (cover: PLayerStatus['cover']) => void;
   updateCurrentTime: (currentTime: PLayerStatus['currentTime']) => void;
   updateDuration: (duration: PLayerStatus['duration']) => void;
   updateShuffle: (shuffle: PLayerStatus['shuffle']) => void;

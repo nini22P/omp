@@ -25,8 +25,8 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
 
   const [metaDataList, insertMetaDataList] = useMetaDataListStore((state) => [state.metaDataList, state.insertMetaDataList], shallow)
 
-  const [isPlaying, shuffle, repeat, updateIsPlaying, updateCurrentTime, updateDuration, updateRepeat] = usePlayerStore(
-    (state) => [state.isPlaying, state.shuffle, state.repeat, state.updateIsPlaying, state.updateCurrentTime, state.updateDuration, state.updateRepeat], shallow)
+  const [isPlaying, cover, shuffle, repeat, updateIsPlaying, updateCover, updateCurrentTime, updateDuration, updateRepeat] = usePlayerStore(
+    (state) => [state.isPlaying, state.cover, state.shuffle, state.repeat, state.updateIsPlaying, state.updateCover, state.updateCurrentTime, state.updateDuration, state.updateRepeat], shallow)
 
   const [videoViewIsShow, controlIsShow, updateVideoViewIsShow, updateControlIsShow, updateFullscreen] = useUiStore(
     (state) => [state.videoViewIsShow, state.controlIsShow, state.updateVideoViewIsShow, state.updateControlIsShow, state.updateFullscreen], shallow)
@@ -264,12 +264,12 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
   }, [playList?.filter(item => item.index === current)[0].path, metaDataList])
 
   // 设定封面
-  const cover = useMemo(() => {
-    return (!playList || !metaData || !metaData.cover)
-      ? './cd.png'
-      : URL.createObjectURL(new Blob([new Uint8Array(metaData.cover[0].data)], { type: 'image/png' }))
+  useMemo(() => {
+    (!playList || !metaData || !metaData.cover)
+      ? updateCover('./cd.png')
+      : updateCover(URL.createObjectURL(new Blob([new Uint8Array(metaData.cover[0].data)], { type: 'image/png' })))
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [metaData])
+  }, [metaData?.cover])
 
   // 向 mediaSession 发送当前播放进度
   useMediaSession(player, cover, metaData?.album, metaData?.artist, metaData?.title,
@@ -300,7 +300,7 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
       <Container
         maxWidth={false}
         disableGutters={true}
-        sx={{ width: '100%', height: '100dvh', position: 'fixed', transition: 'all 0.5s' }}
+        sx={{ width: '100%', height: '100dvh', position: 'fixed', transition: 'top 0.35s' }}
         style={(videoViewIsShow) ? { top: '0' } : { top: '100vh' }}
       >
         <Grid container
@@ -326,13 +326,13 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
           {/* 视频播放顶栏 */}
           <Grid xs={12}
             position={'absolute'}
-            sx={controlIsShow ? { top: 0, left: 0, borderRadius: '0 0 5px 0', backgroundColor: '#ffffffee', width: 'auto' } : { display: 'none' }}
+            sx={controlIsShow ? { top: 0, left: 0, borderRadius: '0 0 5px 0', width: 'auto' } : { display: 'none' }}
           >
             <IconButton aria-label="close" onClick={() => {
               updateVideoViewIsShow(false)
               updateControlIsShow(true)
             }} >
-              <KeyboardArrowDownOutlinedIcon />
+              <KeyboardArrowDownOutlinedIcon sx={{ color: '#fff' }} />
             </IconButton>
           </Grid>
 
@@ -349,7 +349,6 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
           <div style={(controlIsShow) ? {} : { display: 'none' }}>
             <PlayerControl
               metaData={metaData}
-              cover={cover}
               handleClickPlay={handleClickPlay}
               handleClickPause={handleClickPause}
               handleClickNext={handleClickNext}
@@ -363,7 +362,6 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
           </div>
           <AudioView
             metaData={metaData}
-            cover={cover}
             handleClickPlay={handleClickPlay}
             handleClickPause={handleClickPause}
             handleClickNext={handleClickNext}
