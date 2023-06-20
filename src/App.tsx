@@ -88,11 +88,11 @@ const App = () => {
               <Container maxWidth="xl" disableGutters={true} sx={{ height: '100%' }}>
                 <MobileSideBar />
                 <Grid container flexDirection={'row'} height={'100%'}  >
-                  <Grid xs={0} sm={4} md={4} lg={3} height={'100%'} sx={{ overflowY: 'auto', display: { xs: 'none', sm: 'block' }, }} pb={1} borderRight={`1px solid ${theme.palette.divider}`} >
+                  <Grid xs={0} sm={4} md={3} lg={2} height={'100%'} sx={{ overflowY: 'auto', display: { xs: 'none', sm: 'block' }, }} pb={1} borderRight={`1px solid ${theme.palette.divider}`} borderLeft={`1px solid ${theme.palette.divider}`} >
                     <SideBar />
                     <Divider orientation="vertical" flexItem />
                   </Grid>
-                  <Grid xs={12} sm={8} md={8} lg={9} height={'100%'} sx={{ overflowY: 'auto' }} pt={1} pb={3} pl={1} pr={1} >
+                  <Grid xs={12} sm={8} md={9} lg={10} height={'100%'} sx={{ overflowY: 'auto' }} pt={1} pb={3} pl={1} pr={1} borderRight={`1px solid ${theme.palette.divider}`} >
                     <Routes>
                       <Route path='/' element={<ListView data={data} error={error} isLoading={isLoading} folderTree={folderTree} setFolderTree={setFolderTree} />} />
                       <Route path='/history' element={<History />} />

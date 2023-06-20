@@ -195,12 +195,13 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
       const next = playList[(playList.findIndex(item => item.index === current) + 1)]
       if (repeat === 'one') {
         player?.play()
-      } else if (current + 1 === playList?.length || !next) {
+      } else if (current + 1 === playList?.length || !next) { // 播放到队列结束时
         if (repeat === 'all')
           if (shuffle)
             updateCurrent(playList[playList.findIndex(item => item.index === playList[0].index)].index)
           else
             updateCurrent(0)
+        else updateIsPlaying(false)
       } else if (repeat === 'off' || repeat === 'all')
         if (shuffle)
           updateCurrent(next.index)

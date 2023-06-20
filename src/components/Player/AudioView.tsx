@@ -81,7 +81,7 @@ const AudioView = (
           width: '100%',
           height: '100dvh',
           position: 'fixed',
-          transition: 'top 0.35s ease-in-out, background 0.5s ease-out',
+          transition: 'top 0.35s ease-in-out',
           background:
             (noBackgound || cover === './cd.png')
               ? `linear-gradient(rgba(50, 50, 50, 0.6), ${color}bb), #000`
