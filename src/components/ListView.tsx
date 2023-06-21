@@ -1,10 +1,10 @@
-import { Breadcrumbs, Button, CircularProgress, Grid, ListItem, ListItemButton, ListItemIcon, ListItemText, Typography } from '@mui/material'
+import { Breadcrumbs, Button, CircularProgress, Grid, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import FolderIcon from '@mui/icons-material/Folder'
 import MusicNoteIcon from '@mui/icons-material/MusicNote'
 import MovieIcon from '@mui/icons-material/Movie'
 import { shallow } from 'zustand/shallow'
 import usePlayListStore from '../store/usePlayListStore'
-import { checkFileType, shufflePlayList } from '../util'
+import { checkFileType, fileSizeConvert, shufflePlayList } from '../util'
 import usePlayerStore from '../store/usePlayerStore'
 
 const ListView = ({ data, error, isLoading, folderTree, setFolderTree }
@@ -57,12 +57,14 @@ const ListView = ({ data, error, isLoading, folderTree, setFolderTree }
             path: (folderTree.join('/') === 'Home') ? '/' : folderTree.slice(1).join('/').concat(`/${item.name}`),
           }
         })
-      updateCurrent(current)
-      updateType(checkFileType(name))
-      if (shuffle)
-        updatePlayList(shufflePlayList(lists, current))
-      else
-        updatePlayList(lists)
+      if (lists.length !== 0) {
+        updateCurrent(current)
+        updateType(checkFileType(name))
+        if (shuffle)
+          updatePlayList(shufflePlayList(lists, current))
+        else
+          updatePlayList(lists)
+      }
     }
   }
 
@@ -91,30 +93,30 @@ const ListView = ({ data, error, isLoading, folderTree, setFolderTree }
                 <ListItem disablePadding >
                   <ListItemButton>
                     <ListItemIcon>
-                      {(item.folder) && <FolderIcon />}
-                      {(checkFileType(item.name) === 'audio' && <MusicNoteIcon />)}
-                      {(checkFileType(item.name) === 'video') && <MovieIcon />}
+                      {item.folder && <FolderIcon />}
+                      {checkFileType(item.name) === 'audio' && <MusicNoteIcon />}
+                      {checkFileType(item.name) === 'video' && <MovieIcon />}
                     </ListItemIcon>
                     <Grid container spacing={2} sx={{ overflow: 'hidden' }} wrap={'nowrap'}>
                       <Grid item xs zeroMinWidth>
-                        <ListItemText >
-                          <Typography noWrap >
-                            {item.name}
-                          </Typography>
-                        </ListItemText>
-                      </Grid>
-                      <Grid item>
-                        <ListItemText>
-                          <Typography variant="body2" color="text.secondary">
-                            {
-                              ((item.size / 1024) < 1024)
-                                ? `${(item.size / 1024).toFixed(2)} KB`
-                                : ((item.size / 1024 / 1024) < 1024)
-                                  ? `${(item.size / 1024 / 1024).toFixed(2)} MB`
-                                  : `${(item.size / 1024 / 1024 / 1024).toFixed(2)} GB`
+                        <ListItemText
+                          primary={item.name}
+                          secondary={fileSizeConvert(item.size)}
+                          primaryTypographyProps={{
+                            style: {
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis'
                             }
-                          </Typography>
-                        </ListItemText>
+                          }}
+                          secondaryTypographyProps={{
+                            style: {
+                              whiteSpace: 'nowrap',
+                              overflow: 'hidden',
+                              textOverflow: 'ellipsis'
+                            }
+                          }}
+                        />
                       </Grid>
                     </Grid>
                   </ListItemButton>

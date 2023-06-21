@@ -15,6 +15,7 @@ import { shallow } from 'zustand/shallow'
 import { useControlHide } from '../../hooks/useControlHide'
 import { useMediaSession } from '../../hooks/useMediaSession'
 import { shufflePlayList } from '../../util'
+import useHistoryStore from '../../store/useHistoryStore'
 
 const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<any> }) => {
 
@@ -33,23 +34,25 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
   const [videoViewIsShow, controlIsShow, updateVideoViewIsShow, updateControlIsShow, updateFullscreen] = useUiStore(
     (state) => [state.videoViewIsShow, state.controlIsShow, state.updateVideoViewIsShow, state.updateControlIsShow, state.updateFullscreen], shallow)
 
+  const [insertHistoryitem] = useHistoryStore((state) => [state.insertHistoryItem], shallow)
+
   const playerRef = (useRef<HTMLVideoElement>(null))
   const player = playerRef.current   // 声明播放器对象
   const [url, setUrl] = useState('')
 
   // 获取当前播放文件链接
   useMemo(() => {
-    if (playList !== null) {
+    if (playList !== null && playList.length !== 0) {
       getFileData(playList.filter(item => item.index === current)[0].path).then((res) => {
         setUrl(res['@microsoft.graph.downloadUrl'])
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playList?.filter(item => item.index === current)[0].path])
+  }, [playList, current])
 
   // 预载完毕后立即播放并更新总时长
   useMemo(() => {
-    if (player !== null) {
+    if (player !== null && playList) {
       updateDuration(0)
       player.load()
       player.onloadedmetadata = () => {
@@ -59,10 +62,17 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
         // player.play()
         updateIsPlaying(true)
         updateDuration(player.duration)
+        insertHistoryitem({
+          filePath: playList.filter(item => item.index === current)[0].path,
+          fileType: type,
+          fileName: playList.filter(item => item.index === current)[0].title,
+          fileSize: playList.filter(item => item.index === current)[0].size,
+          lastTime: (new Date()).toISOString().replace('T', ' ').split('.')[0]
+        })
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [player, type])
+  }, [player, playList, current, type])
 
   // 播放开始暂停
   useEffect(() => {
@@ -201,7 +211,10 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
             updateCurrent(playList[playList.findIndex(item => item.index === playList[0].index)].index)
           else
             updateCurrent(0)
-        else updateIsPlaying(false)
+        else {
+          updateIsPlaying(false)
+          updateCurrentTime(0)
+        }
       } else if (repeat === 'off' || repeat === 'all')
         if (shuffle)
           updateCurrent(next.index)
@@ -247,7 +260,7 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
 
   // 根据播放列表和元数据列表更新当前音频元数据
   useEffect(() => {
-    if (playList) {
+    if (playList && playList.length !== 0) {
       const test = metaDataList.filter(metaData => metaData.path === playList.filter(item => item.index === current)[0].path)
       console.log('设定当前音频元数据')
       if (test.length !== 0) {
@@ -263,8 +276,7 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
         })
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playList?.filter(item => item.index === current)[0].path, metaDataList])
+  }, [playList, current, metaDataList])
 
   // 设定封面
   useMemo(() => {

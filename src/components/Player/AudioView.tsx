@@ -85,14 +85,14 @@ const AudioView = (
           background:
             (noBackgound || cover === './cd.png')
               ? `linear-gradient(rgba(50, 50, 50, 0.6), ${color}bb), #000`
-              : `linear-gradient(rgba(50, 50, 50, 0.2), ${color}11 ), url(${cover})  no-repeat center, #000`,
+              : `linear-gradient(rgba(50, 50, 50, 0.3), rgba(50, 50, 50, 0.3) ), url(${cover})  no-repeat center, #000`,
           backgroundSize: 'cover',
           color: '#fff',
           overflow: 'hidden'
         }}
         style={(audioViewIsShow) ? { top: '-100dvh' } : { top: '0' }}
       >
-        <Box sx={{ backdropFilter: (noBackgound || cover === './cd.png') ? '' : 'blur(25px)' }}>
+        <Box sx={{ backdropFilter: (noBackgound || cover === './cd.png') ? '' : 'blur(30px)' }}>
           <Container maxWidth={'xl'} disableGutters={true}>
             <Grid container
               pt={{ xs: 1, sm: 2 }}

@@ -1,31 +1,31 @@
 import { IPicture } from 'music-metadata-browser'
 
-interface FileItem {
+export interface FileItem {
   name: string;
   size: number;
   fileType: string;
 }
 
-interface playListItem {
+export interface playListItem {
   index: number;
   title: string;
   size: number;
   path: string;
 }
 
-interface PlayListStatus {
+export interface PlayListStatus {
   type: 'audio' | 'video' | string;
   playList: playListItem[] | null;
   current: number;
 }
 
-interface PlayListAction {
+export interface PlayListAction {
   updateType: (type: PlayListStatus['type']) => void,
   updatePlayList: (playList: PlayListStatus['playList']) => void;
   updateCurrent: (index: PlayListStatus['current']) => void;
 }
 
-interface MetaData {
+export interface MetaData {
   path: string;
   size?: number;
   title: string;
@@ -37,16 +37,16 @@ interface MetaData {
   cover?: IPicture[] | undefined;
 }
 
-interface MetaDataListStatus {
+export interface MetaDataListStatus {
   metaDataList: MetaData[] | [];
 }
 
-interface MetaDataListAction {
+export interface MetaDataListAction {
   updateMetaDataList: (metaDataList: MetaDataListStatus['metaDataList']) => void
   insertMetaDataList: (metaData: MetaData) => void
 }
 
-interface PLayerStatus {
+export interface PLayerStatus {
   isPlaying: boolean;
   cover: string;
   currentTime: number;
@@ -55,7 +55,7 @@ interface PLayerStatus {
   repeat: 'off' | 'all' | 'one';
 }
 
-interface PLayerAction {
+export interface PLayerAction {
   updateIsPlaying: (isPlaying: PLayerStatus['isPlaying']) => void;
   updateCover: (cover: PLayerStatus['cover']) => void;
   updateCurrentTime: (currentTime: PLayerStatus['currentTime']) => void;
@@ -64,7 +64,7 @@ interface PLayerAction {
   updateRepeat: (loop: PLayerStatus['repeat']) => void;
 }
 
-interface UiStatus {
+export interface UiStatus {
   audioViewIsShow: boolean;
   videoViewIsShow: boolean;
   controlIsShow: boolean;
@@ -73,7 +73,7 @@ interface UiStatus {
   mobileSideBarOpen: boolean;
 }
 
-interface UiAction {
+export interface UiAction {
   updateAudioViewIsShow: (audioViewIsShow: UiStatus['audioViewIsShow']) => void;
   updateVideoViewIsShow: (videoViewIsShow: UiStatus['videoViewIsShow']) => void;
   updateControlIsShow: (controlIsShow: UiStatus['controlIsShow']) => void;
@@ -82,16 +82,21 @@ interface UiAction {
   updateMobileSideBarOpen: (mobileSideBarOpen: UiStatus['mobileSideBarOpen']) => void,
 }
 
-export type {
-  FileItem,
-  playListItem,
-  MetaData,
-  MetaDataListStatus,
-  MetaDataListAction,
-  PlayListStatus,
-  PlayListAction,
-  PLayerStatus,
-  PLayerAction,
-  UiStatus,
-  UiAction,
+export interface HistoryItem {
+  filePath: string;
+  fileType: PlayListStatus['type'];
+  fileName: string;
+  fileSize: number;
+  lastTime: string;
+}
+
+export interface HistoryStatus {
+  historyList: HistoryItem[];
+}
+
+export interface HistoryAction {
+  updateHistoryList: (historyList: HistoryStatus['historyList']) => void;
+  insertHistoryItem: (historyItem: HistoryItem) => void;
+  removeHistoryItem: (path: HistoryItem['filePath']) => void;
+  clearHistoryList: () => void;
 }

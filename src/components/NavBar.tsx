@@ -1,7 +1,7 @@
 import { Box, Typography, Link, Container, IconButton, useTheme } from '@mui/material'
 import GitHubIcon from '@mui/icons-material/GitHub'
 import LogoutIcon from '@mui/icons-material/Logout'
-import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined';
+import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined'
 import useUiStore from '../store/useUiStore'
 import { shallow } from 'zustand/shallow'
 

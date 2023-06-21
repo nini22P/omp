@@ -36,4 +36,17 @@ const shufflePlayList = (playList: playListItem[], current: number) => {
   return randomPlayList.filter(item => item.index === current).concat(randomPlayList.filter(item => item.index !== current))
 }
 
-export { timeShift, checkFileType, shufflePlayList }
+const nowTime = () => {
+  const dateTime = new Date()
+  return `${dateTime.getFullYear}-${dateTime.getMonth}-${dateTime.getDay} ${dateTime.getHours}:${dateTime.getMinutes}`
+}
+
+const fileSizeConvert = (fileSize: number) => {
+  return ((fileSize / 1024) < 1024)
+    ? `${(fileSize / 1024).toFixed(2)} KB`
+    : ((fileSize / 1024 / 1024) < 1024)
+      ? `${(fileSize / 1024 / 1024).toFixed(2)} MB`
+      : `${(fileSize / 1024 / 1024 / 1024).toFixed(2)} GB`
+}
+
+export { timeShift, checkFileType, shufflePlayList, nowTime, fileSizeConvert }
