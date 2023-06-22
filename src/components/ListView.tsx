@@ -6,13 +6,18 @@ import { shallow } from 'zustand/shallow'
 import usePlayListStore from '../store/usePlayListStore'
 import { checkFileType, fileSizeConvert, shufflePlayList } from '../util'
 import usePlayerStore from '../store/usePlayerStore'
+import { useState } from 'react'
+import useFilesData from '../hooks/useFilesData'
+import useSWR from 'swr'
 
-const ListView = ({ data, error, isLoading, folderTree, setFolderTree }
-  : { data: any, error: Error | undefined, isLoading: boolean, folderTree: string[], setFolderTree: (arg0: string[]) => void }) => {
+const ListView = () => {
 
-  const [updateType, updatePlayList, updateCurrent] = usePlayListStore(
-    (state) => [state.updateType, state.updatePlayList, state.updateCurrent], shallow)
+  const [folderTree, setFolderTree] = useState(['Home'])
+  const { getFilesData } = useFilesData()
+  const [updateType, updatePlayList, updateCurrent] = usePlayListStore((state) => [state.updateType, state.updatePlayList, state.updateCurrent], shallow)
   const shuffle = usePlayerStore(state => state.shuffle)
+  const fileListFetcher = (path: string) => getFilesData(path).then((res) => res)
+  const { data, error, isLoading } = useSWR((folderTree.join('/') === 'Home') ? '/' : folderTree.slice(1).join('/'), fileListFetcher, { revalidateOnFocus: false })
 
   /**
    * 点击文件夹导航

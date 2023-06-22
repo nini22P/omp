@@ -63,3 +63,37 @@ export async function getFile(path: string, accessToken: string) {
     .then(response => response.json())
     .catch(error => console.log(error))
 }
+
+export const getAppRootFiles = async (path: string, accessToken: string) => {
+  const headers = new Headers()
+  const bearer = `Bearer ${accessToken}`
+
+  headers.append('Authorization', bearer)
+
+  const options = {
+    method: 'GET',
+    headers: headers
+  }
+
+  return fetch(`${graphConfig.graphMeEndpoint}/drive/special/approot/${encodeURI(path)}/children`, options)
+    .then(response => response.json())
+    .catch(error => console.log(error))
+}
+
+export const uploadAppRootJson = async (fileName: string, fileContent: any, accessToken: string) => {
+  const headers = new Headers()
+  const bearer = `Bearer ${accessToken}`
+
+  headers.append('Authorization', bearer)
+  headers.append('Content-Type', 'application/json')
+
+  const options = {
+    method: 'put',
+    headers: headers,
+    body: fileContent,
+  }
+
+  return fetch(`${graphConfig.graphMeEndpoint}/drive/special/approot:/${fileName}:/content`, options)
+    .then(response => response.json())
+    .catch(error => console.log(error))
+}

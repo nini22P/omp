@@ -16,10 +16,14 @@ import { useControlHide } from '../../hooks/useControlHide'
 import { useMediaSession } from '../../hooks/useMediaSession'
 import { shufflePlayList } from '../../util'
 import useHistoryStore from '../../store/useHistoryStore'
+import useFilesData from '../../hooks/useFilesData'
+import useSync from '../../hooks/useSync'
 
-const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<any> }) => {
+const Player = () => {
 
   const theme = useTheme()
+
+  const { getFileData } = useFilesData()
 
   const [type, playList, current, updateCurrent, updatePlayList] = usePlayListStore(
     (state) => [state.type, state.playList, state.current, state.updateCurrent, state.updatePlayList], shallow)
@@ -35,6 +39,8 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
     (state) => [state.videoViewIsShow, state.controlIsShow, state.updateVideoViewIsShow, state.updateControlIsShow, state.updateFullscreen], shallow)
 
   const [insertHistoryitem] = useHistoryStore((state) => [state.insertHistoryItem], shallow)
+
+  useSync()
 
   const playerRef = (useRef<HTMLVideoElement>(null))
   const player = playerRef.current   // 声明播放器对象
@@ -72,7 +78,7 @@ const Player = ({ getFileData }: { getFileData: (filePath: string) => Promise<an
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [player, playList, current, type])
+  }, [player?.src])
 
   // 播放开始暂停
   useEffect(() => {

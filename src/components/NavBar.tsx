@@ -4,10 +4,15 @@ import LogoutIcon from '@mui/icons-material/Logout'
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined'
 import useUiStore from '../store/useUiStore'
 import { shallow } from 'zustand/shallow'
+import { useMsal } from '@azure/msal-react'
+import useUser from '../hooks/useUser'
 
-const NavBar = ({ accounts, handleLogout }: { accounts: any, handleLogout: () => void }) => {
+const NavBar = () => {
   const theme = useTheme()
   const [mobileSideBarOpen, updateMobileSideBarOpen] = useUiStore((state) => [state.mobileSideBarOpen, state.updateMobileSideBarOpen], shallow)
+  const { accounts } = useMsal()
+  const { logout } = useUser()
+
   return (
     <Box sx={{
       position: 'fixed', top: 0, left: 0, width: '100%', boxShadow: `0px 4px 4px -2px ${theme.palette.divider} `
@@ -27,7 +32,7 @@ const NavBar = ({ accounts, handleLogout }: { accounts: any, handleLogout: () =>
             {
               (accounts.length !== 0)
                 ?
-                <IconButton onClick={() => handleLogout()}>
+                <IconButton onClick={() => logout()}>
                   <LogoutIcon />
                 </IconButton>
                 :

@@ -12,23 +12,29 @@ const History = () => {
   const [historyList, removeHistoryItem] = useHistoryStore((state) => [state.historyList, state.removeHistoryItem], shallow)
   const [updateType, updatePlayList, updateCurrent] = usePlayListStore((state) => [state.updateType, state.updatePlayList, state.updateCurrent], shallow)
   const handleClickListItem = (fileType: HistoryItem['fileType'], filePath: HistoryItem['filePath']) => {
-    let current = 0
-    const list = historyList
-      .filter((item) => item.fileType === fileType)
-      .map((item, index) => {
-        if (filePath === item.filePath)
-          current = index
-        return {
-          index: index,
-          title: item.fileName,
-          size: item.fileSize,
-          path: item.filePath,
-        }
-      })
-    updatePlayList(list)
-    updateType(fileType)
-    updateCurrent(current)
+    if (historyList) {
+      let current = 0
+      const list = historyList
+        .filter((item) => item.fileType === fileType)
+        .map((item, index) => {
+          if (filePath === item.filePath)
+            current = index
+          return {
+            index: index,
+            title: item.fileName,
+            size: item.fileSize,
+            path: item.filePath,
+          }
+        })
+      updatePlayList(list)
+      updateType(fileType)
+      updateCurrent(current)
+    }
   }
+
+  // const { getAppRootData, uploadAppRootData } = useFilesData()
+  // getAppRootData('/').then(res => console.log(res))
+  // uploadAppRootData('history.json', JSON.stringify(historyList))
   return (
     <div>
       <List>

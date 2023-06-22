@@ -91,7 +91,7 @@ export interface HistoryItem {
 }
 
 export interface HistoryStatus {
-  historyList: HistoryItem[];
+  historyList: HistoryItem[] | null;
 }
 
 export interface HistoryAction {
