@@ -1,5 +1,4 @@
-import { useMemo } from 'react'
-import { Button, Container, Divider, Link, ThemeProvider, Typography, createTheme, useMediaQuery } from '@mui/material'
+import { Button, Container, Divider, Link, ThemeProvider, Typography } from '@mui/material'
 import { AuthenticatedTemplate, UnauthenticatedTemplate } from '@azure/msal-react'
 import NavBar from './components/NavBar'
 import Player from './components/Player/Player'
@@ -8,30 +7,13 @@ import SideBar from './components/SideBar'
 import Grid from '@mui/material/Unstable_Grid2'
 import MobileSideBar from './components/MobileSideBar'
 import useUser from './hooks/useUser'
+import useTheme from './hooks/useTheme'
+import useSync from './hooks/useSync'
 
 const App = () => {
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
-  const theme = useMemo(
-    () =>
-      createTheme({
-        palette: {
-          mode: prefersDarkMode ? 'dark' : 'light',
-          primary: {
-            main: '#8e24aa',
-          },
-          secondary: {
-            main: '#ff3d00',
-          },
-          error: {
-            main: '#ff1744',
-          },
-        },
-      }),
-    [prefersDarkMode],
-  )
-
   const { login } = useUser()
-
+  const { theme } = useTheme()
+  useSync()
   return (
     <main>
       <ThemeProvider theme={theme}>

@@ -17,7 +17,6 @@ import { useMediaSession } from '../../hooks/useMediaSession'
 import { shufflePlayList } from '../../util'
 import useHistoryStore from '../../store/useHistoryStore'
 import useFilesData from '../../hooks/useFilesData'
-import useSync from '../../hooks/useSync'
 
 const Player = () => {
 
@@ -39,8 +38,6 @@ const Player = () => {
     (state) => [state.videoViewIsShow, state.controlIsShow, state.updateVideoViewIsShow, state.updateControlIsShow, state.updateFullscreen], shallow)
 
   const [insertHistoryitem] = useHistoryStore((state) => [state.insertHistoryItem], shallow)
-
-  useSync()
 
   const playerRef = (useRef<HTMLVideoElement>(null))
   const player = playerRef.current   // 声明播放器对象

@@ -16,8 +16,9 @@ const ListView = () => {
   const { getFilesData } = useFilesData()
   const [updateType, updatePlayList, updateCurrent] = usePlayListStore((state) => [state.updateType, state.updatePlayList, state.updateCurrent], shallow)
   const shuffle = usePlayerStore(state => state.shuffle)
-  const fileListFetcher = (path: string) => getFilesData(path).then((res) => res)
-  const { data, error, isLoading } = useSWR((folderTree.join('/') === 'Home') ? '/' : folderTree.slice(1).join('/'), fileListFetcher, { revalidateOnFocus: false })
+
+  const fileListFetcher = (path: string) => getFilesData(path).then(res => res)
+  const { data: fileListData, error: fileListError, isLoading: fileListIsLoading } = useSWR((folderTree.join('/') === 'Home') ? '/' : folderTree.slice(1).join('/'), fileListFetcher, { revalidateOnFocus: false })
 
   /**
    * 点击文件夹导航
@@ -38,13 +39,13 @@ const ListView = () => {
   const handleListClick = (index: number, name: string) => {
     console.log('点击的项目', index, name)
     // 点击文件夹时打开列表
-    if (data[index].folder) {
+    if (fileListData[index].folder) {
       setFolderTree([...folderTree, name])
     }
     // 点击文件时将媒体文件添加到播放列表
-    if (data[index].file && name !== null) {
+    if (fileListData[index].file && name !== null) {
       let current = 0
-      const lists = data
+      const lists = fileListData
         .filter((item: { name: string }) => {
           if (checkFileType(name) === 'audio')
             return checkFileType(item.name) === 'audio'
@@ -85,7 +86,7 @@ const ListView = () => {
           )
         }
       </Breadcrumbs>
-      {(isLoading || !data || error)
+      {(fileListIsLoading || !fileListData || fileListError)
         ?
         <div style={{ textAlign: 'center' }}>
           <CircularProgress />
@@ -93,7 +94,7 @@ const ListView = () => {
         :
         <Grid container spacing={1}>
           {
-            data.map((item: any, index: number) =>
+            fileListData.map((item: any, index: number) =>
               <Grid key={index} item lg={4} md={6} sm={12} xs={12} onClick={() => handleListClick(index, item.name)} >
                 <ListItem disablePadding >
                   <ListItemButton>
