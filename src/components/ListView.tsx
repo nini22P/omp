@@ -3,8 +3,8 @@ import FolderIcon from '@mui/icons-material/Folder'
 import MusicNoteIcon from '@mui/icons-material/MusicNote'
 import MovieIcon from '@mui/icons-material/Movie'
 import { shallow } from 'zustand/shallow'
-import usePlayListStore from '../store/usePlayListStore'
-import { checkFileType, fileSizeConvert, shufflePlayList } from '../util'
+import usePlayQueueStore from '../store/usePlayQueueStore'
+import { checkFileType, fileSizeConvert, shufflePlayQueue } from '../util'
 import usePlayerStore from '../store/usePlayerStore'
 import { useState } from 'react'
 import useFilesData from '../hooks/useFilesData'
@@ -14,7 +14,7 @@ const ListView = () => {
 
   const [folderTree, setFolderTree] = useState(['Home'])
   const { getFilesData } = useFilesData()
-  const [updateType, updatePlayList, updateCurrent] = usePlayListStore((state) => [state.updateType, state.updatePlayList, state.updateCurrent], shallow)
+  const [updateType, updatePlayQueue, updateCurrent] = usePlayQueueStore((state) => [state.updateType, state.updatePlayQueue, state.updateCurrent], shallow)
   const shuffle = usePlayerStore(state => state.shuffle)
 
   const fileListFetcher = (path: string) => getFilesData(path).then(res => res)
@@ -42,7 +42,7 @@ const ListView = () => {
     if (fileListData[index].folder) {
       setFolderTree([...folderTree, name])
     }
-    // 点击文件时将媒体文件添加到播放列表
+    // 点击文件时将媒体文件添加到播放队列
     if (fileListData[index].file && name !== null) {
       let current = 0
       const lists = fileListData
@@ -67,9 +67,9 @@ const ListView = () => {
         updateCurrent(current)
         updateType(checkFileType(name))
         if (shuffle)
-          updatePlayList(shufflePlayList(lists, current))
+          updatePlayQueue(shufflePlayQueue(lists, current))
         else
-          updatePlayList(lists)
+          updatePlayQueue(lists)
       }
     }
   }

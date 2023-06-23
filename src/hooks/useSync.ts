@@ -1,7 +1,7 @@
 import { useMemo } from 'react'
 import useHistoryStore from '../store/useHistoryStore'
 import useFilesData from './useFilesData'
-import { fetchJson } from '../service'
+import { fetchJson } from '../services'
 import { shallow } from 'zustand/shallow'
 import useSWR from 'swr'
 

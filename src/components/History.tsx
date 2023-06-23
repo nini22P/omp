@@ -5,12 +5,12 @@ import MovieIcon from '@mui/icons-material/Movie'
 import useHistoryStore from '../store/useHistoryStore'
 import { shallow } from 'zustand/shallow'
 import { fileSizeConvert } from '../util'
-import usePlayListStore from '../store/usePlayListStore'
+import usePlayQueueStore from '../store/usePlayQueueStore'
 import { HistoryItem } from '../type'
 
 const History = () => {
   const [historyList, removeHistoryItem] = useHistoryStore((state) => [state.historyList, state.removeHistoryItem], shallow)
-  const [updateType, updatePlayList, updateCurrent] = usePlayListStore((state) => [state.updateType, state.updatePlayList, state.updateCurrent], shallow)
+  const [updateType, updatePlayQueue, updateCurrent] = usePlayQueueStore((state) => [state.updateType, state.updatePlayQueue, state.updateCurrent], shallow)
   const handleClickListItem = (fileType: HistoryItem['fileType'], filePath: HistoryItem['filePath']) => {
     if (historyList) {
       let current = 0
@@ -26,7 +26,7 @@ const History = () => {
             path: item.filePath,
           }
         })
-      updatePlayList(list)
+      updatePlayQueue(list)
       updateType(fileType)
       updateCurrent(current)
     }

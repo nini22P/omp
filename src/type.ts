@@ -6,23 +6,23 @@ export interface FileItem {
   fileType: string;
 }
 
-export interface playListItem {
+export interface PlayQueueItem {
   index: number;
   title: string;
   size: number;
   path: string;
 }
 
-export interface PlayListStatus {
+export interface PlayQueueStatus {
   type: 'audio' | 'video' | string;
-  playList: playListItem[] | null;
+  playQueue: PlayQueueItem[] | null;
   current: number;
 }
 
-export interface PlayListAction {
-  updateType: (type: PlayListStatus['type']) => void,
-  updatePlayList: (playList: PlayListStatus['playList']) => void;
-  updateCurrent: (index: PlayListStatus['current']) => void;
+export interface PlayQueueAction {
+  updateType: (type: PlayQueueStatus['type']) => void,
+  updatePlayQueue: (PlayQueue: PlayQueueStatus['playQueue']) => void;
+  updateCurrent: (index: PlayQueueStatus['current']) => void;
 }
 
 export interface MetaData {
@@ -68,7 +68,7 @@ export interface UiStatus {
   audioViewIsShow: boolean;
   videoViewIsShow: boolean;
   controlIsShow: boolean;
-  playListIsShow: boolean;
+  playQueueIsShow: boolean;
   fullscreen: boolean;
   mobileSideBarOpen: boolean;
 }
@@ -77,14 +77,14 @@ export interface UiAction {
   updateAudioViewIsShow: (audioViewIsShow: UiStatus['audioViewIsShow']) => void;
   updateVideoViewIsShow: (videoViewIsShow: UiStatus['videoViewIsShow']) => void;
   updateControlIsShow: (controlIsShow: UiStatus['controlIsShow']) => void;
-  updatePlayListIsShow: (playListIsShow: UiStatus['playListIsShow']) => void;
+  updatePlayQueueIsShow: (PlayQueueIsShow: UiStatus['playQueueIsShow']) => void;
   updateFullscreen: (fullscreen: UiStatus['fullscreen']) => void;
   updateMobileSideBarOpen: (mobileSideBarOpen: UiStatus['mobileSideBarOpen']) => void,
 }
 
 export interface HistoryItem {
   filePath: string;
-  fileType: PlayListStatus['type'];
+  fileType: PlayQueueStatus['type'];
   fileName: string;
   fileSize: number;
   lastTime: string;

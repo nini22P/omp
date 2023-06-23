@@ -14,7 +14,7 @@ import OpenInFullIcon from '@mui/icons-material/OpenInFull'
 import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen'
 // import PictureInPictureIcon from '@mui/icons-material/PictureInPicture'
 import { MetaData } from '../../type'
-import usePlayListStore from '../../store/usePlayListStore'
+import usePlayQueueStore from '../../store/usePlayQueueStore'
 import usePlayerStore from '../../store/usePlayerStore'
 import useUiStore from '../../store/useUiStore'
 import { timeShift } from '../../util'
@@ -46,10 +46,10 @@ const PlayerControl = (
       handleClickFullscreen: () => void,
     }) => {
 
-  const [type, playList] = usePlayListStore((state) => [state.type, state.playList], shallow)
+  const [type, playQueue] = usePlayQueueStore((state) => [state.type, state.playQueue], shallow)
 
-  const [playListIsShow, fullscreen, updateAudioViewIsShow, updateVideoViewIsShow, updatePlayListIsShow] = useUiStore(
-    (state) => [state.playListIsShow, state.fullscreen, state.updateAudioViewIsShow, state.updateVideoViewIsShow, state.updatePlayListIsShow], shallow)
+  const [playQueueIsShow, fullscreen, updateAudioViewIsShow, updateVideoViewIsShow, updatePlayQueueIsShow] = useUiStore(
+    (state) => [state.playQueueIsShow, state.fullscreen, state.updateAudioViewIsShow, state.updateVideoViewIsShow, state.updatePlayQueueIsShow], shallow)
 
   const [isPlaying, cover, currentTime, duration, shuffle, repeat, updateShuffle] = usePlayerStore(
     (state) => [state.isPlaying, state.cover, state.currentTime, state.duration, state.shuffle, state.repeat, state.updateShuffle], shallow)
@@ -121,10 +121,10 @@ const PlayerControl = (
                   </Grid>}
                 <Grid xs sx={{ pl: 1 }} minWidth={0}>
                   <Typography variant="body1" component="div" noWrap>
-                    {(!playList || !metaData) ? 'Not playing' : metaData.title}
+                    {(!playQueue || !metaData) ? 'Not playing' : metaData.title}
                   </Typography>
                   <div>
-                    {(!playList || !metaData) || <Typography variant="subtitle1" color="text.secondary" component="div" noWrap>
+                    {(!playQueue || !metaData) || <Typography variant="subtitle1" color="text.secondary" component="div" noWrap>
                       {(metaData.artist) && metaData.artist}{(metaData.album) && ` • ${metaData.album}`}
                     </Typography>}
                   </div>
@@ -183,7 +183,7 @@ const PlayerControl = (
             sx={{ display: { sm: 'block', xs: 'none' } }}
             pr={1}
           >
-            <IconButton onClick={() => updatePlayListIsShow(!playListIsShow)}>
+            <IconButton onClick={() => updatePlayQueueIsShow(!playQueueIsShow)}>
               <ListIcon sx={{ display: { sm: 'inline-grid', xs: 'none' } }} />
             </IconButton>
             <IconButton onClick={() => handleClickFullscreen()} >
