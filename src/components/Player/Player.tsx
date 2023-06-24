@@ -65,11 +65,11 @@ const Player = () => {
         // player.play()
         updateIsPlaying(true)
         updateDuration(player.duration)
+        const currentItem = playQueue.filter(item => item.index === current)[0]
         insertHistoryitem({
-          filePath: playQueue.filter(item => item.index === current)[0].path,
-          fileType: type,
-          fileName: playQueue.filter(item => item.index === current)[0].title,
-          fileSize: playQueue.filter(item => item.index === current)[0].size,
+          fileName: currentItem.title,
+          filePath: currentItem.path,
+          fileSize: currentItem.size,
           lastTime: (new Date()).toISOString().replace('T', ' ').split('.')[0]
         })
       }

@@ -1,4 +1,4 @@
-<img height="100px" alt="logo" src="https://github.com/nini22P/omp/assets/60903333/4c4ac2b7-1002-478a-bb15-a5756e352fec"/>
+<img height="100px" width="100px" alt="logo" src="https://github.com/nini22P/omp/assets/60903333/4c4ac2b7-1002-478a-bb15-a5756e352fec"/>
 
 # OMP - OneDrive 媒体播放器
 
@@ -7,6 +7,7 @@
 **[立即播放](https://nini22p.github.io/omp/)**
 
 ## 功能
+
 - [x] OneDrive 文件查看
 - [x] 音乐播放
 - [x] 音乐元数据
@@ -19,6 +20,7 @@
 - [ ] 播放列表同步
 
 ## 截图
+
 ![omp](https://github.com/nini22P/omp/assets/60903333/f74801dc-8f12-42db-9d83-814c0289093a)
 
 ## 开发

@@ -1,11 +1,5 @@
 import { IPicture } from 'music-metadata-browser'
 
-export interface FileItem {
-  name: string;
-  size: number;
-  fileType: string;
-}
-
 export interface PlayQueueItem {
   index: number;
   title: string;
@@ -38,7 +32,7 @@ export interface MetaData {
 }
 
 export interface MetaDataListStatus {
-  metaDataList: MetaData[] | [];
+  metaDataList: MetaData[];
 }
 
 export interface MetaDataListAction {
@@ -83,9 +77,8 @@ export interface UiAction {
 }
 
 export interface HistoryItem {
-  filePath: string;
-  fileType: PlayQueueStatus['type'];
   fileName: string;
+  filePath: string;
   fileSize: number;
   lastTime: string;
 }
@@ -99,4 +92,28 @@ export interface HistoryAction {
   insertHistoryItem: (historyItem: HistoryItem) => void;
   removeHistoryItem: (path: HistoryItem['filePath']) => void;
   clearHistoryList: () => void;
+}
+
+export interface PlayListItem {
+  fileName: string;
+  filePath: string;
+  fileSize: number;
+  fileType: 'audio' | 'video' | string;
+}
+
+export interface PlayListsItem {
+  id: string;
+  title: string;
+  playList: PlayListItem[];
+}
+
+export interface PlayListsStatus {
+  playLists: PlayListsItem[] | null;
+}
+
+export interface PlayListsAction {
+  updatePlayLists: (playLists: PlayListsStatus['playLists']) => void;
+  insertPlayListsItem: (playListsItem: PlayListsItem) => void;
+  updatePlayListsItem: (playListsItem: PlayListsItem) => void;
+  removePlayListsItem: (id: PlayListsItem['id']) => void;
 }

@@ -1,4 +1,4 @@
-import { Button, Drawer, List, ListItemButton, ListItemText } from '@mui/material'
+import { Button, Drawer, List, ListItemButton, ListItemText, useTheme } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { shallow } from 'zustand/shallow'
 import usePlayQueueStore from '../store/usePlayQueueStore'
@@ -6,9 +6,8 @@ import KeyboardArrowRightOutlinedIcon from '@mui/icons-material/KeyboardArrowRig
 import useUiStore from '../store/useUiStore'
 
 const PlayQueue = () => {
-
+  const theme = useTheme()
   const [playQueue, current, updateCurrent] = usePlayQueueStore((state) => [state.playQueue, state.current, state.updateCurrent], shallow)
-
   const [playQueueIsShow, updatePlayQueueIsShow] = useUiStore((state) => [state.playQueueIsShow, state.updatePlayQueueIsShow], shallow)
 
   return (
@@ -47,7 +46,7 @@ const PlayQueue = () => {
                   <ListItemButton
                     key={index}
                     onClick={() => updateCurrent(playQueueItem.index)}
-                    style={(playQueueItem.index === current) ? { borderLeft: 'solid' } : {}}
+                    style={(playQueueItem.index === current) ? { color: theme.palette.primary.main } : {}}
                   >
                     <ListItemText primary={playQueueItem.title} />
                   </ListItemButton>)}

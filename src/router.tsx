@@ -3,6 +3,7 @@ import App from './App'
 import ListView from './components/ListView'
 import NotFound from './components/NotFound'
 import History from './components/History'
+import PlayList from './components/PlayList'
 
 const router = createHashRouter([
   {
@@ -15,9 +16,13 @@ const router = createHashRouter([
         element: <ListView />
       },
       {
-        path: 'history',
+        path: '/history',
         element: <History />
-      }
+      },
+      {
+        path: '/playlist/:id',
+        element: <PlayList />
+      },
     ]
   },
 ])

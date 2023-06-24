@@ -4,18 +4,19 @@ import DeleteIcon from '@mui/icons-material/Delete'
 import MovieIcon from '@mui/icons-material/Movie'
 import useHistoryStore from '../store/useHistoryStore'
 import { shallow } from 'zustand/shallow'
-import { fileSizeConvert } from '../util'
+import { checkFileType, fileSizeConvert } from '../util'
 import usePlayQueueStore from '../store/usePlayQueueStore'
 import { HistoryItem } from '../type'
 
 const History = () => {
   const [historyList, removeHistoryItem] = useHistoryStore((state) => [state.historyList, state.removeHistoryItem], shallow)
   const [updateType, updatePlayQueue, updateCurrent] = usePlayQueueStore((state) => [state.updateType, state.updatePlayQueue, state.updateCurrent], shallow)
-  const handleClickListItem = (fileType: HistoryItem['fileType'], filePath: HistoryItem['filePath']) => {
+  const handleClickListItem = (fileName: HistoryItem['fileName'], filePath: HistoryItem['filePath']) => {
     if (historyList) {
       let current = 0
+      const fileType = checkFileType(fileName)
       const list = historyList
-        .filter((item) => item.fileType === fileType)
+        .filter((item) => checkFileType(item.fileName) === fileType)
         .map((item, index) => {
           if (filePath === item.filePath)
             current = index
@@ -32,9 +33,6 @@ const History = () => {
     }
   }
 
-  // const { getAppRootData, uploadAppRootData } = useFilesData()
-  // getAppRootData('/').then(res => console.log(res))
-  // uploadAppRootData('history.json', JSON.stringify(historyList))
   return (
     <div>
       <List>
@@ -51,11 +49,11 @@ const History = () => {
               disablePadding
             >
               <ListItemButton
-                onClick={() => handleClickListItem(historyListItem.fileType, historyListItem.filePath)}
+                onClick={() => handleClickListItem(historyListItem.fileName, historyListItem.filePath)}
               >
                 <ListItemIcon>
-                  {historyListItem.fileType === 'audio' && <MusicNoteIcon />}
-                  {historyListItem.fileType === 'video' && <MovieIcon />}
+                  {checkFileType(historyListItem.fileName) === 'audio' && <MusicNoteIcon />}
+                  {checkFileType(historyListItem.fileName) === 'video' && <MovieIcon />}
                 </ListItemIcon>
                 <ListItemText
                   primary={historyListItem.fileName}
