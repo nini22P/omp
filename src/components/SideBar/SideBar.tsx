@@ -52,7 +52,7 @@ const SideBar = () => {
         </ListItem>
       </List>
       <Divider />
-      <PlayLists />
+      <PlayLists closeSideBar={closeSideBar} />
     </div>
   )
 }

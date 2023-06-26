@@ -1,4 +1,4 @@
-import { PlayQueueItem } from './type'
+import { FileItem, PlayQueueItem } from './type'
 
 /**
  * 将时间转换为分钟
@@ -13,7 +13,7 @@ const timeShift = (time: number) => {
 
 const isAudio = (name: string) => (/.(wav|mp3|aac|ogg|flac|m4a|opus)$/i).test(name)
 const isVideo = (name: string) => (/.(mp4|mkv|avi|mov|rmvb|webm|flv)$/i).test(name)
-const checkFileType = (name: string) => {
+const checkFileType = (name: string): FileItem['fileType'] => {
   if (isAudio(name))
     return 'audio'
   if (isVideo(name))

@@ -4,7 +4,6 @@ import SkipPreviousIcon from '@mui/icons-material/SkipPrevious'
 import SkipNextIcon from '@mui/icons-material/SkipNext'
 import PlayCircleOutlinedIcon from '@mui/icons-material/PlayCircleOutlined'
 import PauseCircleOutlinedIcon from '@mui/icons-material/PauseCircleOutlined'
-import ListIcon from '@mui/icons-material/List'
 import FastForwardIcon from '@mui/icons-material/FastForward'
 import FastRewindIcon from '@mui/icons-material/FastRewind'
 import ShuffleIcon from '@mui/icons-material/Shuffle'
@@ -12,6 +11,7 @@ import RepeatIcon from '@mui/icons-material/Repeat'
 import RepeatOneIcon from '@mui/icons-material/RepeatOne'
 import OpenInFullIcon from '@mui/icons-material/OpenInFull'
 import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen'
+import QueueMusicIcon from '@mui/icons-material/QueueMusic'
 // import PictureInPictureIcon from '@mui/icons-material/PictureInPicture'
 import { MetaData } from '../../type'
 import usePlayQueueStore from '../../store/usePlayQueueStore'
@@ -184,7 +184,7 @@ const PlayerControl = (
             pr={1}
           >
             <IconButton onClick={() => updatePlayQueueIsShow(!playQueueIsShow)}>
-              <ListIcon sx={{ display: { sm: 'inline-grid', xs: 'none' } }} />
+              <QueueMusicIcon sx={{ display: { sm: 'inline-grid', xs: 'none' } }} />
             </IconButton>
             <IconButton onClick={() => handleClickFullscreen()} >
               {

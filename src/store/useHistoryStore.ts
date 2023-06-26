@@ -6,12 +6,12 @@ const useHistoryStore = create<HistoryStatus & HistoryAction>((set) => ({
   updateHistoryList: (historyList) => set(() => ({ historyList: historyList })),
   insertHistoryItem: (historyItem) => set((state) => (
     (state.historyList !== null)
-      ? { historyList: [historyItem, ...state.historyList.filter((item) => item.filePath !== historyItem.filePath)].slice(0, 100) }
+      ? { historyList: [historyItem, ...state.historyList.filter((item) => item.filePath !== historyItem.filePath)].slice(0, 50) }
       : { historyList: [historyItem] }
   )),
-  removeHistoryItem: (path) => set((state) => (
+  removeHistoryItem: (filePathArray) => set((state) => (
     (state.historyList !== null)
-      ? { historyList: state.historyList.filter((item) => item.filePath !== path) }
+      ? { historyList: state.historyList.filter((item) => filePathArray.find(filePath => filePath !== item.filePath)) }
       : {}
   )),
   clearHistoryList: () => set({ historyList: [] }),

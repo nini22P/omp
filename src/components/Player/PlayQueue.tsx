@@ -1,9 +1,9 @@
 import { Button, Drawer, List, ListItemButton, ListItemText, useTheme } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import { shallow } from 'zustand/shallow'
-import usePlayQueueStore from '../store/usePlayQueueStore'
+import usePlayQueueStore from '../../store/usePlayQueueStore'
 import KeyboardArrowRightOutlinedIcon from '@mui/icons-material/KeyboardArrowRightOutlined'
-import useUiStore from '../store/useUiStore'
+import useUiStore from '../../store/useUiStore'
 
 const PlayQueue = () => {
   const theme = useTheme()

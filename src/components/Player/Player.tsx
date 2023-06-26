@@ -8,7 +8,7 @@ import PlayerControl from './PlayerControl'
 import useMetaDataListStore from '../../store/useMetaDataListStore'
 import usePlayQueueStore from '../../store/usePlayQueueStore'
 import usePlayerStore from '../../store/usePlayerStore'
-import PlayQueue from '../PlayQueue'
+import PlayQueue from './PlayQueue'
 import useUiStore from '../../store/useUiStore'
 import { MetaData } from '../../type'
 import { shallow } from 'zustand/shallow'
@@ -70,7 +70,7 @@ const Player = () => {
           fileName: currentItem.title,
           filePath: currentItem.path,
           fileSize: currentItem.size,
-          lastTime: (new Date()).toISOString().replace('T', ' ').split('.')[0]
+          fileType: type,
         })
       }
     }

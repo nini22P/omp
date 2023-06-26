@@ -5,7 +5,7 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import usePlayListsStore from '../../store/usePlayListsStore'
 import { shallow } from 'zustand/shallow'
 import shortUUID from 'short-uuid'
-const PlayLists = () => {
+const PlayLists = ({ closeSideBar }: { closeSideBar: () => void }) => {
   const theme = useTheme()
   const styles = {
     active: {
@@ -29,11 +29,12 @@ const PlayLists = () => {
     <List>
       {
         playLists?.map((playListsItem) =>
-          <ListItem disablePadding={true}>
+          <ListItem disablePadding>
             <ListItemButton
               component={NavLink}
               sx={styles.active}
               to={`/playlist/${playListsItem.id}`}
+              onClick={closeSideBar}
             >
               <ListItemIcon>
                 <ListOutlinedIcon />
