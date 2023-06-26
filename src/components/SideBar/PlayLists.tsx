@@ -22,14 +22,17 @@ const PlayLists = ({ closeSideBar }: { closeSideBar: () => void }) => {
 
   const addPlayList = () => {
     const id = shortUUID().generate()
-    insertPlayListsItem({ id, title: 'New PlayList', playList: [] })
+    insertPlayListsItem({ id, title: 'New Playlist', playList: [] })
     return navigate(`/playlist/${id}`)
   }
   return (
     <List>
       {
-        playLists?.map((playListsItem) =>
-          <ListItem disablePadding>
+        playLists?.map((playListsItem, index) =>
+          <ListItem
+            disablePadding
+            key={index}
+          >
             <ListItemButton
               component={NavLink}
               sx={styles.active}
