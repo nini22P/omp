@@ -15,7 +15,7 @@ export interface PlayQueueItem {
 }
 
 export interface PlayQueueStatus {
-  type: FileItem['fileType'];
+  type: 'audio' | 'video';
   playQueue: PlayQueueItem[] | null;
   current: number;
 }

@@ -25,7 +25,7 @@ import { timeShift } from '../../util'
 import { shallow } from 'zustand/shallow'
 import { useMemo, useState } from 'react'
 
-const AudioView = (
+const Audio = (
   {
     metaData,
     handleClickPlay,
@@ -233,4 +233,4 @@ const AudioView = (
   )
 }
 
-export default AudioView
+export default Audio

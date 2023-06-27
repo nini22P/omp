@@ -4,13 +4,15 @@ import MoreVertOutlined from '@mui/icons-material/MoreVertOutlined'
 import { useNavigate, useParams } from 'react-router-dom'
 import { shallow } from 'zustand/shallow'
 import usePlayListsStore from '../../store/usePlayListsStore'
-import FileList from './FileList'
+import FileList from '../List/FileList'
 import { useState } from 'react'
 import Loading from '../Loading'
 import { filePathConvert } from '../../util'
+import { useTranslation } from 'react-i18next'
 
 
 const PlayList = () => {
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const { id } = useParams()
   const [playLists, updatePlayListsItem, removePlayListsItem] = usePlayListsStore((state) => [state.playLists, state.updatePlayListsItem, state.removePlayListsItem], shallow)
@@ -64,27 +66,28 @@ const PlayList = () => {
               container
               sx={{ pt: 3, pl: 2, pr: 2, pb: 2 }}
               alignItems={'baseline'}
-            // gap={1}
+              gap={1}
             >
               <Grid xs={12}>
                 <Typography variant='h4' noWrap>
                   {playListItem.title}
                 </Typography>
               </Grid>
-              <Grid xs={'auto'}>
+              {/* <Grid xs={'auto'}>
                 <Typography variant='body1' noWrap >
-                  {playListItem.playList.length} song
+                  {playListItem.playList.length} 媒体
                 </Typography>
-              </Grid>
-              <Grid xs pl={3}>
+              </Grid> */}
+              <Grid xs={'auto'}>
                 <Button
-                  startIcon={<MoreVertOutlined />}
+                  variant='contained'
+                  size='small'
+                  // startIcon={<MoreVertOutlined />}
                   onClick={handleClickMenu}
                 >
-                  More
+                  {t('general.more')}
                 </Button>
               </Grid>
-
             </Grid>
 
             {/* 菜单 */}
@@ -97,13 +100,13 @@ const PlayList = () => {
                 setRenameDialogOpen(true)
                 handleCloseMenu()
               }}>
-                <ListItemText primary='Rename' />
+                <ListItemText primary={t('general.rename')} />
               </MenuItem>
               <MenuItem onClick={() => {
                 setDeleteDiaLogOpen(true)
                 handleCloseMenu()
               }}>
-                <ListItemText primary='Delete' />
+                <ListItemText primary={t('general.delete')} />
               </MenuItem>
             </Menu>
 
@@ -114,7 +117,7 @@ const PlayList = () => {
               fullWidth
               maxWidth='xs'
             >
-              <DialogTitle>Name</DialogTitle>
+              <DialogTitle>{t('general.rename')}</DialogTitle>
               <DialogContent>
                 <TextField
                   autoFocus
@@ -126,8 +129,8 @@ const PlayList = () => {
                 />
               </DialogContent>
               <DialogActions>
-                <Button onClick={() => setRenameDialogOpen(false)}>CANCEL</Button>
-                <Button onClick={() => renamePlayListItem()} >OK</Button>
+                <Button onClick={() => setRenameDialogOpen(false)}>{t('general.cancel')}</Button>
+                <Button onClick={() => renamePlayListItem()} >{t('general.ok')}</Button>
               </DialogActions>
             </Dialog>
 
@@ -139,11 +142,11 @@ const PlayList = () => {
               maxWidth='xs'
             >
               <DialogContent>
-                The playlist will be deleted
+                {t('playlist.playlistWillBeDeleted')}
               </DialogContent>
               <DialogActions>
-                <Button onClick={() => setDeleteDiaLogOpen(false)}>Cancal</Button>
-                <Button onClick={deletePlayListItem} >OK</Button>
+                <Button onClick={() => setDeleteDiaLogOpen(false)}>{t('general.cancel')}</Button>
+                <Button onClick={deletePlayListItem} >{t('general.ok')}</Button>
               </DialogActions>
             </Dialog>
 

@@ -8,12 +8,12 @@ import Grid from '@mui/material/Unstable_Grid2'
 import MobileSideBar from './components/SideBar/MobileSideBar'
 import useUser from './hooks/useUser'
 import useTheme from './hooks/useTheme'
-import useSync from './hooks/useSync'
+import { useTranslation } from 'react-i18next'
 
 const App = () => {
+  const { t } = useTranslation()
   const { login } = useUser()
   const { theme } = useTheme()
-  useSync()
   return (
     <main>
       <ThemeProvider theme={theme}>
@@ -50,9 +50,9 @@ const App = () => {
             </div>
             <div>
               <Typography variant="h5" pb={2} >
-                Please sign in to see your files
+                {t('account.signInAlert')}
               </Typography>
-              <Button size="large" onClick={() => login()}>Sign in</Button>
+              <Button size="large" onClick={() => login()}>{t('account.signIn')}</Button>
             </div>
             <footer>
               Made with ❤ from <Link underline='none' href='https://github.com/nini22P'>22</Link>

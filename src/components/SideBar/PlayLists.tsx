@@ -5,7 +5,9 @@ import { NavLink, useNavigate } from 'react-router-dom'
 import usePlayListsStore from '../../store/usePlayListsStore'
 import { shallow } from 'zustand/shallow'
 import shortUUID from 'short-uuid'
+import { useTranslation } from 'react-i18next'
 const PlayLists = ({ closeSideBar }: { closeSideBar: () => void }) => {
+  const { t } = useTranslation()
   const theme = useTheme()
   const styles = {
     active: {
@@ -22,7 +24,7 @@ const PlayLists = ({ closeSideBar }: { closeSideBar: () => void }) => {
 
   const addPlayList = () => {
     const id = shortUUID().generate()
-    insertPlayListsItem({ id, title: 'New Playlist', playList: [] })
+    insertPlayListsItem({ id, title: t('playlist.newPlaylist'), playList: [] })
     return navigate(`/playlist/${id}`)
   }
   return (
@@ -62,7 +64,7 @@ const PlayLists = ({ closeSideBar }: { closeSideBar: () => void }) => {
             startIcon={<PlaylistAddOutlinedIcon />}
             onClick={addPlayList}
           >
-            Add PlayList
+            {t('playlist.addPlaylist')}
           </Button>
         </ListItemText>
       </ListItem >

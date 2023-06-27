@@ -10,6 +10,7 @@ import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 import router from './router.tsx'
+import './i18n.ts'
 
 const msalInstance = new PublicClientApplication(msalConfig)
 

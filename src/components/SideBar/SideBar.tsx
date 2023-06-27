@@ -5,8 +5,10 @@ import HistoryOutlinedIcon from '@mui/icons-material/HistoryOutlined'
 import { shallow } from 'zustand/shallow'
 import useUiStore from '../../store/useUiStore'
 import PlayLists from './PlayLists'
+import { useTranslation } from 'react-i18next'
 
 const SideBar = () => {
+  const { t } = useTranslation()
   const theme = useTheme()
   const [mobileSideBarOpen, updateMobileSideBarOpen] = useUiStore((state) => [state.mobileSideBarOpen, state.updateMobileSideBarOpen], shallow)
   const closeSideBar = () => {
@@ -35,7 +37,7 @@ const SideBar = () => {
             <ListItemIcon>
               <HomeOutlinedIcon />
             </ListItemIcon>
-            <ListItemText primary={'HOME'} />
+            <ListItemText primary={t('nav.home')} />
           </ListItemButton>
         </ListItem>
         <ListItem disablePadding={true}>
@@ -47,7 +49,7 @@ const SideBar = () => {
             <ListItemIcon >
               <HistoryOutlinedIcon />
             </ListItemIcon>
-            <ListItemText primary={'HISTORY'} />
+            <ListItemText primary={t('nav.history')} />
           </ListItemButton>
         </ListItem>
       </List>

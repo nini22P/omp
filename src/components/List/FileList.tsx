@@ -17,11 +17,13 @@ import usePlayerStore from '../../store/usePlayerStore'
 import shortUUID from 'short-uuid'
 import useUiStore from '../../store/useUiStore'
 import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 const FileList = (
   { fileList, handleClickRemove }
     : { fileList: FileItem[], handleClickRemove?: (filePathArray: string[][], id?: string) => void }) => {
 
+  const { t } = useTranslation()
   const navigate = useNavigate()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [current, setCurrent] = useState(0)
@@ -98,7 +100,7 @@ const FileList = (
   // 新建播放列表
   const addNewPlayList = () => {
     const id = shortUUID().generate()
-    insertPlayListsItem({ id, title: 'New Playlist', playList: [] })
+    insertPlayListsItem({ id, title: t('playlist.newPlaylist'), playList: [] })
   }
 
   // 添加到播放列表
@@ -114,8 +116,12 @@ const FileList = (
   // 添加到播放队列
   const handleClickAddToPlayQueue = () => {
     setMenuOpen(false)
-    if (playQueue && type === fileList[current].fileType)
-      updatePlayQueue([...playQueue, { index: playQueue.length, title: fileList[current].fileName, size: fileList[current].fileSize, path: fileList[current].filePath }])
+    if (type === fileList[current].fileType) {
+      playQueue
+        ? updatePlayQueue([...playQueue, { index: playQueue.length, title: fileList[current].fileName, size: fileList[current].fileSize, path: fileList[current].filePath }])
+        : updatePlayQueue([{ index: 0, title: fileList[current].fileName, size: fileList[current].fileSize, path: fileList[current].filePath }])
+    }
+
   }
 
   // 在文件夹中打开
@@ -139,13 +145,13 @@ const FileList = (
           setDialogOpen(true)
           handleCloseMenu()
         }}>
-          <ListItemText primary='Add to playlist' />
+          <ListItemText primary={t('playlist.addToPlaylist')} />
         </MenuItem>
         <MenuItem onClick={handleClickAddToPlayQueue}>
-          <ListItemText primary='Add to play queue' />
+          <ListItemText primary={t('playlist.addToPlayQueue')} />
         </MenuItem>
         <MenuItem onClick={handleClickOpenInFolder}>
-          <ListItemText primary='Open in folder' />
+          <ListItemText primary={t('playlist.openInFolder')} />
         </MenuItem>
         {
           handleClickRemove &&
@@ -153,7 +159,7 @@ const FileList = (
             handleClickRemove([fileList[current].filePath],)
             handleCloseMenu()
           }}>
-            <ListItemText primary='Remove' />
+            <ListItemText primary={t('general.remove')} />
           </MenuItem>
         }
       </Menu>
@@ -164,7 +170,7 @@ const FileList = (
         fullWidth
         maxWidth='xs'
       >
-        <DialogTitle>Add to playlist</DialogTitle>
+        <DialogTitle>{t('playlist.addToPlaylist')}</DialogTitle>
         <List>
           {
             playLists?.map((item, index) =>
@@ -201,13 +207,12 @@ const FileList = (
               <ListItemIcon>
                 <PlaylistAddOutlinedIcon />
               </ListItemIcon>
-              <ListItemText primary='Add new playlist' />
+              <ListItemText primary={t('playlist.addPlaylist')} />
             </ListItemButton>
           </ListItem>
         </List>
-
         <DialogActions>
-          <Button onClick={() => setDialogOpen(false)}>Cancal</Button>
+          <Button onClick={() => setDialogOpen(false)}>{t('general.cancel')}</Button>
         </DialogActions>
       </Dialog>
 
@@ -221,7 +226,7 @@ const FileList = (
                 <ListItemIcon>
                   <ShuffleOutlinedIcon />
                 </ListItemIcon>
-                <ListItemText primary='Shuffle all' />
+                <ListItemText primary={t('playlist.shuffleAll')} />
               </ListItemButton>
             </ListItem>
           </Grid>
@@ -235,7 +240,7 @@ const FileList = (
                   (item.fileType === 'audio' || item.fileType === 'video') &&
                   <div>
                     <IconButton
-                      aria-label="more"
+                      aria-label={t('general.more')}
                       onClick={(event) => handleClickMenu(event, index)}
                     >
                       <MoreVertOutlined />

@@ -3,7 +3,7 @@ import { Container, IconButton, Paper, useTheme } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined'
 import * as mm from 'music-metadata-browser'
-import AudioView from './AudioView'
+import Audio from './Audio'
 import PlayerControl from './PlayerControl'
 import useMetaDataListStore from '../../store/useMetaDataListStore'
 import usePlayQueueStore from '../../store/usePlayQueueStore'
@@ -17,8 +17,11 @@ import { useMediaSession } from '../../hooks/useMediaSession'
 import { filePathConvert, shufflePlayQueue } from '../../util'
 import useHistoryStore from '../../store/useHistoryStore'
 import useFilesData from '../../hooks/useFilesData'
+import useSync from '../../hooks/useSync'
 
 const Player = () => {
+
+  useSync()
 
   const theme = useTheme()
 
@@ -379,7 +382,7 @@ const Player = () => {
               handleClickFullscreen={handleClickFullscreen}
             />
           </div>
-          <AudioView
+          <Audio
             metaData={metaData}
             handleClickPlay={handleClickPlay}
             handleClickPause={handleClickPause}
