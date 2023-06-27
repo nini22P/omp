@@ -5,6 +5,7 @@ import { fetchJson } from '../services'
 import { shallow } from 'zustand/shallow'
 import useSWR from 'swr'
 import usePlayListsStore from '../store/usePlayListsStore'
+import { HistoryItem, PlayListsItem } from '../type'
 
 const useSync = () => {
   const [historyList, updateHistoryList] = useHistoryStore((state) => [state.historyList, state.updateHistoryList], shallow)
@@ -25,16 +26,16 @@ const useSync = () => {
       playLists = await fetchJson(playListsFile['@microsoft.graph.downloadUrl'])
     }
     return {
-      history: history.filter((item: { filePath: string }) => item.filePath),
-      playLists: playLists.filter((item: { id: string }) => item.id)
+      history: history.filter((item: HistoryItem) => typeof item.filePath === 'object'),
+      playLists: playLists.filter((item: PlayListsItem) => item.id)
     }
   }
-  const { data: appConfigData, error: appConfigError, isLoading: appConfigIsLoading } = useSWR('appConfig', appConfigfetcher)
-  console.log('Get appConfigData', appConfigData)
+  const { data: appConfigData, error: appConfigError, isLoading: appConfigIsLoading } = useSWR<{ history: HistoryItem[], playLists: PlayListsItem[] }>('appConfig', appConfigfetcher)
+  console.log('Get appConfigData')
 
   // 自动更新播放历史
   useMemo(() => {
-    if (!appConfigIsLoading && !appConfigError && appConfigData && appConfigData?.history !== '[]')
+    if (!appConfigIsLoading && !appConfigError && appConfigData)
       updateHistoryList(appConfigData.history)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appConfigData])
@@ -49,7 +50,7 @@ const useSync = () => {
 
   // 自动更新播放列表
   useMemo(() => {
-    if (!appConfigIsLoading && !appConfigError && appConfigData && appConfigData?.playLists !== '[]')
+    if (!appConfigIsLoading && !appConfigError && appConfigData)
       updatePlayLists(appConfigData.playLists)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appConfigData])

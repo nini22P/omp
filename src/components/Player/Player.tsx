@@ -14,7 +14,7 @@ import { MetaData } from '../../type'
 import { shallow } from 'zustand/shallow'
 import { useControlHide } from '../../hooks/useControlHide'
 import { useMediaSession } from '../../hooks/useMediaSession'
-import { shufflePlayQueue } from '../../util'
+import { filePathConvert, shufflePlayQueue } from '../../util'
 import useHistoryStore from '../../store/useHistoryStore'
 import useFilesData from '../../hooks/useFilesData'
 
@@ -46,12 +46,12 @@ const Player = () => {
   // 获取当前播放文件链接
   useMemo(() => {
     if (playQueue !== null && playQueue.length !== 0) {
-      getFileData(playQueue.filter(item => item.index === current)[0].path).then((res) => {
+      getFileData(filePathConvert(playQueue.filter(item => item.index === current)[0].path)).then((res) => {
         setUrl(res['@microsoft.graph.downloadUrl'])
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playQueue, current])
+  }, [playQueue?.find(item => item.index === current)?.path, current])
 
   // 预载完毕后立即播放并更新总时长
   useMemo(() => {
@@ -279,7 +279,8 @@ const Player = () => {
         })
       }
     }
-  }, [playQueue, current, metaDataList])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playQueue?.find(item => item.index === current)?.path, current, metaDataList])
 
   // 设定封面
   useMemo(() => {

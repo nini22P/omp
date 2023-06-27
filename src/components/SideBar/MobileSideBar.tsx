@@ -15,7 +15,7 @@ const MobileSideBar = () => {
       }}
       sx={{
         display: { xs: 'block', sm: 'none' },
-        '& .MuiDrawer-paper': { boxSizing: 'border-box', minWidth: 260, maxWidth: '100%' },
+        '& .MuiDrawer-paper': { boxSizing: 'border-box', minWidth: 260, maxWidth: 280 },
       }}
     >
       <SideBar />

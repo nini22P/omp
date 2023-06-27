@@ -22,18 +22,20 @@ const checkFileType = (name: string): FileItem['fileType'] => {
 }
 
 /**
- * 创建随机播放队列，当前播放id歌曲会排到第一
+ * 创建随机播放队列，如果传入当前播放id时歌曲会排到第一
  * @param playQueue 播放队列
  * @param current 当前播放id
  * @returns 
  */
-const shufflePlayQueue = (playQueue: PlayQueueItem[], current: number) => {
+const shufflePlayQueue = (playQueue: PlayQueueItem[], current?: number) => {
   const randomPlayQueue = [...playQueue]
   for (let i = randomPlayQueue.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [randomPlayQueue[i], randomPlayQueue[j]] = [randomPlayQueue[j], randomPlayQueue[i]]
   }
-  return randomPlayQueue.filter(item => item.index === current).concat(randomPlayQueue.filter(item => item.index !== current))
+  if (current)
+    return randomPlayQueue.filter(item => item.index === current).concat(randomPlayQueue.filter(item => item.index !== current))
+  else return randomPlayQueue
 }
 
 const nowTime = () => {
@@ -49,4 +51,6 @@ const fileSizeConvert = (fileSize: number) => {
       : `${(fileSize / 1024 / 1024 / 1024).toFixed(2)} GB`
 }
 
-export { timeShift, checkFileType, shufflePlayQueue, nowTime, fileSizeConvert }
+const filePathConvert = (filePath: string[]) => (filePath.join('/') === '/') ? '/' : filePath.slice(1).join('/')
+
+export { timeShift, checkFileType, shufflePlayQueue, nowTime, fileSizeConvert, filePathConvert }

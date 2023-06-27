@@ -33,7 +33,7 @@ const useFilesData = () => {
     return response
   }
 
-  const uploadAppRootJsonData = async (fileName: string, fileContent: any) => {
+  const uploadAppRootJsonData = async (fileName: string, fileContent: BodyInit) => {
     const acquireToken = await instance.acquireTokenSilent({ ...loginRequest, account: accounts[0] })
     const response = await uploadAppRootJson(fileName, fileContent, acquireToken.accessToken)
     return response

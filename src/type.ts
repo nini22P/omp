@@ -2,7 +2,7 @@ import { IPicture } from 'music-metadata-browser'
 
 export interface FileItem {
   fileName: string;
-  filePath: string;
+  filePath: string[];
   fileSize: number;
   fileType: 'folder' | 'audio' | 'video' | 'other';
 }
@@ -11,7 +11,7 @@ export interface PlayQueueItem {
   index: number;
   title: string;
   size: number;
-  path: string;
+  path: string[];
 }
 
 export interface PlayQueueStatus {
@@ -27,7 +27,7 @@ export interface PlayQueueAction {
 }
 
 export interface MetaData {
-  path: string;
+  path: string[];
   size?: number;
   title: string;
   artist?: string | undefined;
@@ -66,6 +66,7 @@ export interface PLayerAction {
 }
 
 export interface UiStatus {
+  folderTree: string[];
   audioViewIsShow: boolean;
   videoViewIsShow: boolean;
   controlIsShow: boolean;
@@ -75,6 +76,7 @@ export interface UiStatus {
 }
 
 export interface UiAction {
+  updateFolderTree: (folderTree: UiStatus['folderTree']) => void;
   updateAudioViewIsShow: (audioViewIsShow: UiStatus['audioViewIsShow']) => void;
   updateVideoViewIsShow: (videoViewIsShow: UiStatus['videoViewIsShow']) => void;
   updateControlIsShow: (controlIsShow: UiStatus['controlIsShow']) => void;

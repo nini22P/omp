@@ -42,7 +42,16 @@ const PlayLists = ({ closeSideBar }: { closeSideBar: () => void }) => {
               <ListItemIcon>
                 <ListOutlinedIcon />
               </ListItemIcon>
-              <ListItemText primary={playListsItem.title} />
+              <ListItemText
+                primary={playListsItem.title}
+                primaryTypographyProps={{
+                  style: {
+                    whiteSpace: 'nowrap',
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis'
+                  }
+                }}
+              />
             </ListItemButton>
           </ListItem >
         )

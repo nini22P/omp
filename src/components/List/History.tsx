@@ -1,6 +1,7 @@
 import useHistoryStore from '../../store/useHistoryStore'
 import { shallow } from 'zustand/shallow'
 import FileList from './FileList'
+import Loading from '../Loading'
 
 const History = () => {
   const [historyList, removeHistoryItem] = useHistoryStore((state) => [state.historyList, state.removeHistoryItem], shallow)
@@ -8,11 +9,12 @@ const History = () => {
   return (
     <>
       {
-        (historyList) &&
-        <FileList
-          fileList={historyList}
-          handleClickRemove={removeHistoryItem}
-        />
+        (!historyList)
+          ? <Loading />
+          : <FileList
+            fileList={historyList}
+            handleClickRemove={removeHistoryItem}
+          />
       }
     </>
   )

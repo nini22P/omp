@@ -27,7 +27,7 @@ const App = () => {
                   <SideBar />
                   <Divider orientation="vertical" flexItem />
                 </Grid>
-                <Grid xs={12} sm={8} md={9} lg={10} pt={1} pb={3} height={'100%'} sx={{ overflowY: 'auto' }} borderRight={`1px solid ${theme.palette.divider}`} >
+                <Grid xs={12} sm={8} md={9} lg={10} pt={1} pb={3} pl={{ xs: 0, md: 2 }} pr={{ xs: 0, md: 2 }} height={'100%'} sx={{ overflowY: 'auto' }} borderRight={`1px solid ${theme.palette.divider}`} >
                   <Outlet />
                 </Grid>
               </Grid>

@@ -80,7 +80,7 @@ export const getAppRootFiles = async (path: string, accessToken: string) => {
     .catch(error => console.log(error))
 }
 
-export const uploadAppRootJson = async (fileName: string, fileContent: any, accessToken: string) => {
+export const uploadAppRootJson = async (fileName: string, fileContent: BodyInit, accessToken: string) => {
   const headers = new Headers()
   const bearer = `Bearer ${accessToken}`
 
