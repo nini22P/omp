@@ -1,21 +1,22 @@
+import { useState } from 'react'
+import { useTranslation } from 'react-i18next'
+import { useNavigate, useParams } from 'react-router-dom'
 import { Button, ListItemText, Typography, Dialog, DialogTitle, DialogActions, Menu, MenuItem, DialogContent, TextField } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
-import { useNavigate, useParams } from 'react-router-dom'
 import { shallow } from 'zustand/shallow'
-import usePlayListsStore from '../../store/usePlayListsStore'
+import usePlaylistsStore from '../../store/usePlaylistsStore'
 import CommonList from '../CommonList/CommonList'
-import { useState } from 'react'
 import Loading from '../Loading'
-import { filePathConvert } from '../../util'
-import { useTranslation } from 'react-i18next'
 
+const Playlist = () => {
 
-const PlayList = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { id } = useParams()
-  const [playLists, updatePlayListsItem, removePlayListsItem] = usePlayListsStore((state) => [state.playLists, state.updatePlayListsItem, state.removePlayListsItem], shallow)
-  const playListItem = playLists?.find(playListItem => playListItem.id === id)
+
+  const [playlists, renamePlaylist, removePlaylist, removeFilesFromPlaylist] = usePlaylistsStore(
+    (state) => [state.playlists, state.renamePlaylist, state.removePlaylist, state.removeFilesFromPlaylist], shallow)
+  const playlist = playlists?.find(playlistItem => playlistItem.id === id)
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -33,32 +34,28 @@ const PlayList = () => {
     setAnchorEl(null)
   }
 
-  // 从播放列表中移除
-  const removePlayListItem = (filePathArray: string[][]) => {
-    playListItem &&
-      updatePlayListsItem({ ...playListItem, playList: [...playListItem.playList.filter(item => filePathArray.find(filePath => filePathConvert(filePath) !== filePathConvert(item.filePath)))] })
-  }
-
-  // 重命名播放列表
-  const renamePlayListItem = () => {
-    playListItem &&
-      updatePlayListsItem({ ...playListItem, title: newTitle })
-    setRenameDialogOpen(false)
+  //从播放列表移除文件
+  const removeFiles = (filePathArray: string[][]) => {
+    id && removeFilesFromPlaylist(id, filePathArray)
   }
 
   // 删除播放列表
-  const deletePlayListItem = () => {
-    id &&
-      removePlayListsItem(id)
-    setDeleteDiaLogOpen(false)
-    setNewTitle('')
-    return navigate('/')
+  const deletePlaylist = () => {
+    if (id && playlists) {
+      removePlaylist(id)
+      setDeleteDiaLogOpen(false)
+      setNewTitle('')
+      const prev = playlists[playlists?.findIndex((playlist) => playlist.id === id) - 1]
+      const next = playlists[playlists?.findIndex((playlist) => playlist.id === id) + 1]
+      const navigateToId = (prev) ? prev.id : (next) ? next.id : null
+      return navigate((navigateToId) ? `/playlist/${navigateToId}` : '/')
+    }
   }
 
   return (
     <div>
       {
-        (!playListItem)
+        (!playlist)
           ? <Loading />
           : <div>
             <Grid
@@ -69,12 +66,12 @@ const PlayList = () => {
             >
               <Grid xs={12}>
                 <Typography variant='h4' noWrap>
-                  {playListItem.title}
+                  {playlist.title}
                 </Typography>
               </Grid>
               {/* <Grid xs={'auto'}>
                 <Typography variant='body1' noWrap >
-                  {playListItem.playList.length} 媒体
+                  {playlistItem.playlist.length} 媒体
                 </Typography>
               </Grid> */}
               <Grid xs={'auto'}>
@@ -129,7 +126,14 @@ const PlayList = () => {
               </DialogContent>
               <DialogActions>
                 <Button onClick={() => setRenameDialogOpen(false)}>{t('common.cancel')}</Button>
-                <Button onClick={() => renamePlayListItem()} >{t('common.ok')}</Button>
+                <Button onClick={() => {
+                  if (id) {
+                    renamePlaylist(id, newTitle)
+                    setRenameDialogOpen(false)
+                  }
+                }} >
+                  {t('common.ok')}
+                </Button>
               </DialogActions>
             </Dialog>
 
@@ -145,13 +149,13 @@ const PlayList = () => {
               </DialogContent>
               <DialogActions>
                 <Button onClick={() => setDeleteDiaLogOpen(false)}>{t('common.cancel')}</Button>
-                <Button onClick={deletePlayListItem} >{t('common.ok')}</Button>
+                <Button onClick={deletePlaylist} >{t('common.ok')}</Button>
               </DialogActions>
             </Dialog>
 
             <CommonList
-              fileList={playListItem.playList}
-              handleClickRemove={removePlayListItem}
+              listData={playlist.fileList}
+              handleClickRemove={removeFiles}
             />
           </div>
       }
@@ -159,4 +163,4 @@ const PlayList = () => {
   )
 }
 
-export default PlayList
+export default Playlist

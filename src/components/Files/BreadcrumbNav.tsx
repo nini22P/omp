@@ -3,6 +3,7 @@ import { shallow } from 'zustand/shallow'
 import useUiStore from '../../store/useUiStore'
 
 const BreadcrumbNav = () => {
+
   const [folderTree, updateFolderTree] = useUiStore((state) => [state.folderTree, state.updateFolderTree], shallow)
 
   const handleListNavClick = (index: number) => updateFolderTree(folderTree.slice(0, index + 1))

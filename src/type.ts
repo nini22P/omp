@@ -1,6 +1,6 @@
 import { IPicture } from 'music-metadata-browser'
 
-export interface FileItem {
+export interface File {
   fileName: string;
   filePath: string[];
   fileSize: number;
@@ -17,13 +17,13 @@ export interface PlayQueueItem {
 export interface PlayQueueStatus {
   type: 'audio' | 'video';
   playQueue: PlayQueueItem[] | null;
-  current: number;
+  currentIndex: number;
 }
 
 export interface PlayQueueAction {
   updateType: (type: PlayQueueStatus['type']) => void,
   updatePlayQueue: (PlayQueue: PlayQueueStatus['playQueue']) => void;
-  updateCurrent: (index: PlayQueueStatus['current']) => void;
+  updateCurrentIndex: (index: PlayQueueStatus['currentIndex']) => void;
 }
 
 export interface MetaData {
@@ -85,34 +85,33 @@ export interface UiAction {
   updateMobileSideBarOpen: (mobileSideBarOpen: UiStatus['mobileSideBarOpen']) => void,
 }
 
-export type HistoryItem = FileItem
-
 export interface HistoryStatus {
-  historyList: HistoryItem[] | null;
+  historyList: File[] | null;
 }
 
 export interface HistoryAction {
   updateHistoryList: (historyList: HistoryStatus['historyList']) => void;
-  insertHistoryItem: (historyItem: HistoryItem) => void;
-  removeHistoryItem: (filePathArray: HistoryItem['filePath'][]) => void;
+  insertHistoryItem: (file: File) => void;
+  removeHistoryItem: (filePathArray: File['filePath'][]) => void;
   clearHistoryList: () => void;
 }
 
-export type PlayListItem = FileItem
 
-export interface PlayListsItem {
+export interface Playlist {
   id: string;
   title: string;
-  playList: PlayListItem[];
+  fileList: File[];
 }
 
-export interface PlayListsStatus {
-  playLists: PlayListsItem[] | null;
+export interface PlaylistsStatus {
+  playlists: Playlist[] | null;
 }
 
-export interface PlayListsAction {
-  updatePlayLists: (playLists: PlayListsStatus['playLists']) => void;
-  insertPlayListsItem: (playListsItem: PlayListsItem) => void;
-  updatePlayListsItem: (playListsItem: PlayListsItem) => void;
-  removePlayListsItem: (id: PlayListsItem['id']) => void;
+export interface PlaylistsAction {
+  updatePlaylists: (playlists: PlaylistsStatus['playlists']) => void;
+  insertPlaylist: (playlist: Playlist) => void;
+  renamePlaylist: (id: Playlist['id'], title: Playlist['title']) => void;
+  removePlaylist: (id: Playlist['id']) => void;
+  insertFilesToPlaylist: (id: Playlist['id'], files: File[]) => void;
+  removeFilesFromPlaylist: (id: Playlist['id'], filePathArray: File['filePath'][]) => void;
 }

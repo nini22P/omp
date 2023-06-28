@@ -1,5 +1,5 @@
-import useHistoryStore from '../store/useHistoryStore'
 import { shallow } from 'zustand/shallow'
+import useHistoryStore from '../store/useHistoryStore'
 import CommonList from './CommonList/CommonList'
 import Loading from './Loading'
 
@@ -11,7 +11,7 @@ const History = () => {
       {
         (!historyList) ? <Loading />
           : <CommonList
-            fileList={historyList}
+            listData={historyList}
             handleClickRemove={removeHistoryItem}
           />
       }

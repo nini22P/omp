@@ -1,3 +1,5 @@
+import { useMemo, useState } from 'react'
+import { extractColors } from 'extract-colors'
 import { Box, Container, IconButton, Slider, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined'
@@ -14,16 +16,13 @@ import RepeatOneIcon from '@mui/icons-material/RepeatOne'
 import OpenInFullIcon from '@mui/icons-material/OpenInFull'
 import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen'
 import PanoramaOutlinedIcon from '@mui/icons-material/PanoramaOutlined'
-import { extractColors } from 'extract-colors'
-
 // import PictureInPictureIcon from '@mui/icons-material/PictureInPicture'
-import { MetaData } from '../../type'
+import { shallow } from 'zustand/shallow'
 import usePlayQueueStore from '../../store/usePlayQueueStore'
 import usePlayerStore from '../../store/usePlayerStore'
 import useUiStore from '../../store/useUiStore'
 import { timeShift } from '../../util'
-import { shallow } from 'zustand/shallow'
-import { useMemo, useState } from 'react'
+import { MetaData } from '../../type'
 
 const Audio = (
   {
@@ -52,13 +51,16 @@ const Audio = (
       handleClickFullscreen: () => void,
     }
 ) => {
+
   const [playQueue] = usePlayQueueStore((state) => [state.playQueue])
-
   const [audioViewIsShow, fullscreen, updateAudioViewIsShow, updatePlayQueueIsShow] = useUiStore(
-    (state) => [state.audioViewIsShow, state.fullscreen, state.updateAudioViewIsShow, state.updatePlayQueueIsShow], shallow)
-
+    (state) => [state.audioViewIsShow, state.fullscreen, state.updateAudioViewIsShow, state.updatePlayQueueIsShow],
+    shallow
+  )
   const [isPlaying, cover, currentTime, duration, shuffle, repeat, updateShuffle] = usePlayerStore(
-    (state) => [state.isPlaying, state.cover, state.currentTime, state.duration, state.shuffle, state.repeat, state.updateShuffle], shallow)
+    (state) => [state.isPlaying, state.cover, state.currentTime, state.duration, state.shuffle, state.repeat, state.updateShuffle],
+    shallow
+  )
 
   const [noBackgound, setNoBackground] = useState(false)
   const [color, setColor] = useState('#ffffff')
@@ -79,7 +81,6 @@ const Audio = (
         height: '100dvh',
         position: 'fixed',
         transition: 'top 0.35s ease-in-out',
-        transform: 'translateZ(0)', // blur 性能优化
         background:
           (noBackgound || cover === './cd.png')
             ? `linear-gradient(rgba(50, 50, 50, 0.6), ${color}bb), #000`
@@ -147,7 +148,7 @@ const Audio = (
             >
               {/* 封面 */}
               <Grid sm={4} xs={12} >
-                <img style={{ maxHeight: '100vw', width: '100%', objectFit: 'contain' }} src={cover} alt='Cover' />
+                <img src={cover} alt='Cover' style={{ maxHeight: '100vw', width: '100%', objectFit: 'contain' }} />
               </Grid>
 
               {/* 音频信息 */}

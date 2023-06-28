@@ -13,12 +13,12 @@ import OpenInFullIcon from '@mui/icons-material/OpenInFull'
 import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen'
 import QueueMusicIcon from '@mui/icons-material/QueueMusic'
 // import PictureInPictureIcon from '@mui/icons-material/PictureInPicture'
-import { MetaData } from '../../type'
+import { shallow } from 'zustand/shallow'
 import usePlayQueueStore from '../../store/usePlayQueueStore'
 import usePlayerStore from '../../store/usePlayerStore'
 import useUiStore from '../../store/useUiStore'
 import { timeShift } from '../../util'
-import { shallow } from 'zustand/shallow'
+import { MetaData } from '../../type'
 
 const PlayerControl = (
   {
@@ -47,12 +47,14 @@ const PlayerControl = (
     }) => {
 
   const [type, playQueue] = usePlayQueueStore((state) => [state.type, state.playQueue], shallow)
-
   const [playQueueIsShow, fullscreen, updateAudioViewIsShow, updateVideoViewIsShow, updatePlayQueueIsShow] = useUiStore(
-    (state) => [state.playQueueIsShow, state.fullscreen, state.updateAudioViewIsShow, state.updateVideoViewIsShow, state.updatePlayQueueIsShow], shallow)
-
+    (state) => [state.playQueueIsShow, state.fullscreen, state.updateAudioViewIsShow, state.updateVideoViewIsShow, state.updatePlayQueueIsShow],
+    shallow
+  )
   const [isPlaying, cover, currentTime, duration, shuffle, repeat, updateShuffle] = usePlayerStore(
-    (state) => [state.isPlaying, state.cover, state.currentTime, state.duration, state.shuffle, state.repeat, state.updateShuffle], shallow)
+    (state) => [state.isPlaying, state.cover, state.currentTime, state.duration, state.shuffle, state.repeat, state.updateShuffle],
+    shallow
+  )
 
   return (
     <Container maxWidth={'xl'} disableGutters={true}>
@@ -117,7 +119,7 @@ const PlayerControl = (
                 wrap={'nowrap'} >
                 {(type === 'audio') &&
                   <Grid xs="auto" textAlign={'center'} width={'4rem'} height={'4rem'}>
-                    <img style={{ width: '4rem', height: '4rem', objectFit: 'cover' }} src={cover} alt='Cover' />
+                    <img src={cover} alt='Cover' style={{ width: '4rem', height: '4rem', objectFit: 'cover' }} />
                   </Grid>}
                 <Grid xs sx={{ pl: 1 }} minWidth={0}>
                   <Typography variant="body1" component="div" noWrap>

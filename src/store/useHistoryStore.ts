@@ -12,7 +12,7 @@ const useHistoryStore = create<HistoryStatus & HistoryAction>((set) => ({
   )),
   removeHistoryItem: (filePathArray) => set((state) => (
     (state.historyList !== null)
-      ? { historyList: state.historyList.filter((item) => filePathArray.find(filePath => filePath !== item.filePath)) }
+      ? { historyList: state.historyList.filter((item) => filePathArray.find(filePath => filePathConvert(filePath) !== filePathConvert(item.filePath))) }
       : {}
   )),
   clearHistoryList: () => set({ historyList: [] }),

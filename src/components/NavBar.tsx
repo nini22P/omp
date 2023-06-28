@@ -1,21 +1,23 @@
-import { Box, Typography, Link, Container, IconButton, useTheme } from '@mui/material'
+import { Box, Typography, Link, Container, IconButton } from '@mui/material'
 import GitHubIcon from '@mui/icons-material/GitHub'
 import LogoutIcon from '@mui/icons-material/Logout'
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined'
-import useUiStore from '../store/useUiStore'
 import { shallow } from 'zustand/shallow'
-import { useMsal } from '@azure/msal-react'
+import useUiStore from '../store/useUiStore'
 import useUser from '../hooks/useUser'
+import useTheme from '../hooks/useTheme'
 
 const NavBar = () => {
-  const theme = useTheme()
-  const [mobileSideBarOpen, updateMobileSideBarOpen] = useUiStore((state) => [state.mobileSideBarOpen, state.updateMobileSideBarOpen], shallow)
-  const { accounts } = useMsal()
-  const { logout } = useUser()
+  const { accounts, logout } = useUser()
+  const { styles } = useTheme()
+  const [mobileSideBarOpen, updateMobileSideBarOpen] = useUiStore(
+    (state) => [state.mobileSideBarOpen, state.updateMobileSideBarOpen],
+    shallow
+  )
 
   return (
     <Box sx={{
-      position: 'fixed', top: 0, left: 0, width: '100%', boxShadow: `0px 4px 4px -2px ${theme.palette.divider} `
+      position: 'fixed', top: 0, left: 0, width: '100%', boxShadow: `0px 4px 4px -2px ${styles.color.shadow} `
     }}>
       <Container maxWidth={'xl'} disableGutters={true}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '4rem', pl: 1, pr: 1 }}>
@@ -23,7 +25,7 @@ const NavBar = () => {
             <IconButton onClick={() => updateMobileSideBarOpen(!mobileSideBarOpen)} sx={{ display: { xs: '', sm: 'none' } }}>
               <MenuOutlinedIcon />
             </IconButton>
-            <img src='./logo.svg' style={{ height: '1.5rem', marginLeft: '0.5rem', marginRight: '0.5rem' }}></img>
+            <img src='./logo.svg' alt='logo' style={{ height: '1.5rem', marginLeft: '0.5rem', marginRight: '0.5rem' }} ></img>
             <Typography variant="h6" component="div" >
               OMP
             </Typography>

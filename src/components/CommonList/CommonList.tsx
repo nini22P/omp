@@ -1,6 +1,9 @@
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
+import shortUUID from 'short-uuid'
 import { Button, Dialog, DialogActions, DialogTitle, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
-import { checkFileType, filePathConvert, fileSizeConvert, shufflePlayQueue } from '../../util'
 import FolderIcon from '@mui/icons-material/Folder'
 import MusicNoteIcon from '@mui/icons-material/MusicNote'
 import MovieIcon from '@mui/icons-material/Movie'
@@ -8,20 +11,17 @@ import MoreVertOutlined from '@mui/icons-material/MoreVertOutlined'
 import PlaylistAddOutlinedIcon from '@mui/icons-material/PlaylistAddOutlined'
 import ListOutlinedIcon from '@mui/icons-material/ListOutlined'
 import ShuffleOutlinedIcon from '@mui/icons-material/ShuffleOutlined'
-import { useState } from 'react'
-import { FileItem, PlayListsItem } from '../../type'
-import usePlayListsStore from '../../store/usePlayListsStore'
 import { shallow } from 'zustand/shallow'
+import usePlaylistsStore from '../../store/usePlaylistsStore'
 import usePlayQueueStore from '../../store/usePlayQueueStore'
 import usePlayerStore from '../../store/usePlayerStore'
-import shortUUID from 'short-uuid'
 import useUiStore from '../../store/useUiStore'
-import { useNavigate } from 'react-router-dom'
-import { useTranslation } from 'react-i18next'
+import { File } from '../../type'
+import { checkFileType, fileSizeConvert, shufflePlayQueue } from '../../util'
 
 const CommonList = (
-  { fileList, handleClickRemove }
-    : { fileList: FileItem[], handleClickRemove?: (filePathArray: string[][], id?: string) => void }) => {
+  { listData, handleClickRemove }
+    : { listData: File[], handleClickRemove?: (filePathArray: string[][]) => void }) => {
 
   const { t } = useTranslation()
   const navigate = useNavigate()
@@ -31,8 +31,14 @@ const CommonList = (
   const [dialogOpen, setDialogOpen] = useState(false)
 
   const [folderTree, updateFolderTree] = useUiStore((state) => [state.folderTree, state.updateFolderTree], shallow)
-  const [type, playQueue, updateType, updatePlayQueue, updateCurrent] = usePlayQueueStore((state) => [state.type, state.playQueue, state.updateType, state.updatePlayQueue, state.updateCurrent], shallow)
-  const [playLists, insertPlayListsItem, updatePlayListsItem] = usePlayListsStore((state) => [state.playLists, state.insertPlayListsItem, state.updatePlayListsItem], shallow)
+  const [type, playQueue, updateType, updatePlayQueue, updateCurrentIndex] = usePlayQueueStore(
+    (state) => [state.type, state.playQueue, state.updateType, state.updatePlayQueue, state.updateCurrentIndex],
+    shallow
+  )
+  const [playlists, insertPlaylist, insertFilesToPlaylist] = usePlaylistsStore(
+    (state) => [state.playlists, state.insertPlaylist, state.insertFilesToPlaylist],
+    shallow
+  )
   const [shuffle, updateShuffle] = usePlayerStore(state => [state.shuffle, state.updateShuffle], shallow)
 
   const handleClickMenu = (event: React.MouseEvent<HTMLElement>, current: number) => {
@@ -47,14 +53,14 @@ const CommonList = (
   }
 
   const handleClickListItem = (filePath: string[]) => {
-    if (fileList) {
-      const currentFile = fileList.find(item => item.filePath === filePath)
+    if (listData) {
+      const currentFile = listData.find(item => item.filePath === filePath)
       if (currentFile && currentFile.fileType === 'folder') {
         updateFolderTree([...folderTree, currentFile.fileName])
       }
       if (currentFile && (currentFile.fileType === 'audio' || currentFile.fileType === 'video')) {
         let currentIndex = 0
-        const list = fileList
+        const list = listData
           .filter((item) => checkFileType(item.fileName) === currentFile.fileType)
           .map((item, index) => {
             if (currentFile?.filePath === item.filePath)
@@ -70,15 +76,15 @@ const CommonList = (
           updateShuffle(false)
         updateType(currentFile.fileType)
         updatePlayQueue(list)
-        updateCurrent(currentIndex)
+        updateCurrentIndex(currentIndex)
       }
     }
   }
 
   // 点击随机播放全部
   const handleClickShuffleAll = () => {
-    if (fileList) {
-      const list = fileList
+    if (listData) {
+      const list = listData
         .filter((item) => checkFileType(item.fileName) === 'audio')
         .map((item, index) => {
           return {
@@ -93,33 +99,29 @@ const CommonList = (
       updateType('audio')
       const shuffleList = shufflePlayQueue(list)
       updatePlayQueue(shuffleList)
-      updateCurrent(shuffleList[0].index)
+      updateCurrentIndex(shuffleList[0].index)
     }
   }
 
   // 新建播放列表
-  const addNewPlayList = () => {
+  const addNewPlaylist = () => {
     const id = shortUUID().generate()
-    insertPlayListsItem({ id, title: t('playlist.newPlaylist'), playList: [] })
+    insertPlaylist({ id, title: t('playlist.newPlaylist'), fileList: [] })
   }
 
   // 添加到播放列表
-  const addToPlayList = (playListsItem: PlayListsItem) => {
-    updatePlayListsItem(
-      {
-        ...playListsItem,
-        playList: [fileList[current], ...playListsItem.playList.filter((item) => filePathConvert(item.filePath) !== filePathConvert(fileList[current].filePath))]
-      })
+  const addToPlaylist = (id: string) => {
+    insertFilesToPlaylist(id, [listData[current]])
     setDialogOpen(false)
   }
 
   // 添加到播放队列
   const handleClickAddToPlayQueue = () => {
     setMenuOpen(false)
-    if (type === fileList[current].fileType) {
+    if (type === listData[current].fileType) {
       playQueue
-        ? updatePlayQueue([...playQueue, { index: playQueue.length, title: fileList[current].fileName, size: fileList[current].fileSize, path: fileList[current].filePath }])
-        : updatePlayQueue([{ index: 0, title: fileList[current].fileName, size: fileList[current].fileSize, path: fileList[current].filePath }])
+        ? updatePlayQueue([...playQueue, { index: playQueue.length, title: listData[current].fileName, size: listData[current].fileSize, path: listData[current].filePath }])
+        : updatePlayQueue([{ index: 0, title: listData[current].fileName, size: listData[current].fileSize, path: listData[current].filePath }])
     }
 
   }
@@ -127,8 +129,8 @@ const CommonList = (
   // 在文件夹中打开
   const handleClickOpenInFolder = () => {
     setMenuOpen(false)
-    if (fileList[current]) {
-      updateFolderTree(fileList[current].filePath.slice(0, -1))
+    if (listData[current]) {
+      updateFolderTree(listData[current].filePath.slice(0, -1))
       navigate('/')
     }
   }
@@ -156,7 +158,7 @@ const CommonList = (
         {
           handleClickRemove &&
           <MenuItem onClick={() => {
-            handleClickRemove([fileList[current].filePath],)
+            handleClickRemove([listData[current].filePath],)
             handleCloseMenu()
           }}>
             <ListItemText primary={t('common.remove')} />
@@ -173,14 +175,14 @@ const CommonList = (
         <DialogTitle>{t('playlist.addToPlaylist')}</DialogTitle>
         <List>
           {
-            playLists?.map((item, index) =>
+            playlists?.map((item, index) =>
               <ListItem
                 disablePadding
                 key={index}
               >
                 <ListItemButton
                   sx={{ pl: 3 }}
-                  onClick={() => addToPlayList(item)}
+                  onClick={() => addToPlaylist(item.id)}
                 >
                   <ListItemIcon>
                     <ListOutlinedIcon />
@@ -202,7 +204,7 @@ const CommonList = (
           <ListItem disablePadding>
             <ListItemButton
               sx={{ pl: 3 }}
-              onClick={addNewPlayList}
+              onClick={addNewPlaylist}
             >
               <ListItemIcon>
                 <PlaylistAddOutlinedIcon />
@@ -219,7 +221,7 @@ const CommonList = (
       {/* 文件列表 */}
       <Grid container>
         {
-          (fileList.length !== 0 && fileList.filter(item => item.fileType === 'audio').length !== 0) &&
+          (listData.length !== 0 && listData.filter(item => item.fileType === 'audio').length !== 0) &&
           <Grid xs={12}>
             <ListItem disablePadding>
               <ListItemButton onClick={handleClickShuffleAll}>
@@ -232,7 +234,7 @@ const CommonList = (
           </Grid>
         }
         {
-          fileList.map((item, index) =>
+          listData.map((item, index) =>
             <Grid key={index} lg={4} md={6} sm={12} xs={12} p={0} >
               <ListItem
                 disablePadding

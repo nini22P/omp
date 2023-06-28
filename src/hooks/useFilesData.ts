@@ -1,9 +1,9 @@
-import { useMsal } from '@azure/msal-react'
 import { getAppRootFiles, getFile, getFiles, uploadAppRootJson } from '../graph'
 import { loginRequest } from '../authConfig'
+import useUser from './useUser'
 
 const useFilesData = () => {
-  const { instance, accounts } = useMsal()
+  const { instance, accounts } = useUser()
 
   /**
 * 获取文件夹数据

@@ -1,37 +1,32 @@
-import { Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText, useTheme } from '@mui/material'
+import { useTranslation } from 'react-i18next'
+import { Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import { NavLink } from 'react-router-dom'
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined'
 import HistoryOutlinedIcon from '@mui/icons-material/HistoryOutlined'
 import { shallow } from 'zustand/shallow'
 import useUiStore from '../../store/useUiStore'
-import PlayLists from './PlayLists'
-import { useTranslation } from 'react-i18next'
+import Playlists from './Playlists'
+import useTheme from '../../hooks/useTheme'
 
 const SideBar = () => {
+
   const { t } = useTranslation()
-  const theme = useTheme()
-  const [mobileSideBarOpen, updateMobileSideBarOpen] = useUiStore((state) => [state.mobileSideBarOpen, state.updateMobileSideBarOpen], shallow)
-  const closeSideBar = () => {
-    if (mobileSideBarOpen)
-      updateMobileSideBarOpen(false)
-  }
-  const styles = {
-    active: {
-      '&.active': {
-        color: theme.palette.primary.main,
-      },
-      '&.active .MuiListItemIcon-root': {
-        color: theme.palette.primary.main,
-      },
-    }
-  }
+  const { styles } = useTheme()
+
+  const [mobileSideBarOpen, updateMobileSideBarOpen] = useUiStore(
+    (state) => [state.mobileSideBarOpen, state.updateMobileSideBarOpen],
+    shallow
+  )
+
+  const closeSideBar = () => (mobileSideBarOpen) && updateMobileSideBarOpen(false)
+
   return (
     <div>
       <List >
         <ListItem disablePadding={true}>
           <ListItemButton
             component={NavLink}
-            sx={styles.active}
+            sx={styles.listItemActive}
             to={'/'}
             onClick={closeSideBar}>
             <ListItemIcon>
@@ -43,7 +38,7 @@ const SideBar = () => {
         <ListItem disablePadding={true}>
           <ListItemButton
             component={NavLink}
-            sx={styles.active}
+            sx={styles.listItemActive}
             to={'/history'}
             onClick={closeSideBar}>
             <ListItemIcon >
@@ -54,7 +49,7 @@ const SideBar = () => {
         </ListItem>
       </List>
       <Divider />
-      <PlayLists closeSideBar={closeSideBar} />
+      <Playlists closeSideBar={closeSideBar} />
     </div>
   )
 }

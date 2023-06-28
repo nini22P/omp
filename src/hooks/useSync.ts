@@ -1,36 +1,36 @@
 import { useMemo } from 'react'
+import useSWR from 'swr'
+import { shallow } from 'zustand/shallow'
+import usePlaylistsStore from '../store/usePlaylistsStore'
 import useHistoryStore from '../store/useHistoryStore'
 import useFilesData from './useFilesData'
 import { fetchJson } from '../services'
-import { shallow } from 'zustand/shallow'
-import useSWR from 'swr'
-import usePlayListsStore from '../store/usePlayListsStore'
-import { HistoryItem, PlayListsItem } from '../type'
+import { File, Playlist } from '../type'
 
 const useSync = () => {
   const [historyList, updateHistoryList] = useHistoryStore((state) => [state.historyList, state.updateHistoryList], shallow)
-  const [playLists, updatePlayLists] = usePlayListsStore((state) => [state.playLists, state.updatePlayLists], shallow)
+  const [playlists, updatePlaylists] = usePlaylistsStore((state) => [state.playlists, state.updatePlaylists], shallow)
   const { getAppRootFilesData, uploadAppRootJsonData } = useFilesData()
 
   // 自动从 OneDrive 获取配置
   const appConfigfetcher = async () => {
     const appRootFiles = await getAppRootFilesData('/')
     const historyFile = appRootFiles.value.find((item: { name: string }) => item.name === 'history.json')
-    const playListsFile = appRootFiles.value.find((item: { name: string }) => item.name === 'playlists.json')
+    const playlistsFile = appRootFiles.value.find((item: { name: string }) => item.name === 'playlists.json')
     let history = []
-    let playLists = []
+    let playlists = []
     if (historyFile) {
       history = await fetchJson(historyFile['@microsoft.graph.downloadUrl'])
     }
-    if (playListsFile) {
-      playLists = await fetchJson(playListsFile['@microsoft.graph.downloadUrl'])
+    if (playlistsFile) {
+      playlists = await fetchJson(playlistsFile['@microsoft.graph.downloadUrl'])
     }
     return {
-      history: history.filter((item: HistoryItem) => typeof item.filePath === 'object'),
-      playLists: playLists.filter((item: PlayListsItem) => item.id)
+      history: history.filter((item: File) => typeof item.filePath === 'object'),
+      playlists: playlists.filter((item: Playlist) => typeof item.fileList === 'object')
     }
   }
-  const { data: appConfigData, error: appConfigError, isLoading: appConfigIsLoading } = useSWR<{ history: HistoryItem[], playLists: PlayListsItem[] }>('appConfig', appConfigfetcher)
+  const { data: appConfigData, error: appConfigError, isLoading: appConfigIsLoading } = useSWR<{ history: File[], playlists: Playlist[] }>('appConfig', appConfigfetcher)
   console.log('Get appConfigData')
 
   // 自动更新播放历史
@@ -51,17 +51,17 @@ const useSync = () => {
   // 自动更新播放列表
   useMemo(() => {
     if (!appConfigIsLoading && !appConfigError && appConfigData)
-      updatePlayLists(appConfigData.playLists)
+      updatePlaylists(appConfigData.playlists)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [appConfigData])
 
   // 自动上传播放列表
   useMemo(() => {
-    if (playLists !== null) {
-      uploadAppRootJsonData('playlists.json', JSON.stringify(playLists))
+    if (playlists !== null) {
+      uploadAppRootJsonData('playlists.json', JSON.stringify(playlists))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playLists])
+  }, [playlists])
 
 }
 

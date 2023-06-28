@@ -1,25 +1,25 @@
-import { Button, Container, Divider, Link, ThemeProvider, Typography } from '@mui/material'
 import { AuthenticatedTemplate, UnauthenticatedTemplate } from '@azure/msal-react'
+import { useTranslation } from 'react-i18next'
+import { Outlet } from 'react-router-dom'
+import { Button, Container, Divider, Link, ThemeProvider, Typography, Box } from '@mui/material'
+import Grid from '@mui/material/Unstable_Grid2'
 import NavBar from './components/NavBar'
 import Player from './components/Player/Player'
-import { Outlet } from 'react-router-dom'
 import SideBar from './components/SideBar/SideBar'
-import Grid from '@mui/material/Unstable_Grid2'
 import MobileSideBar from './components/SideBar/MobileSideBar'
 import useUser from './hooks/useUser'
 import useTheme from './hooks/useTheme'
-import { useTranslation } from 'react-i18next'
 
 const App = () => {
   const { t } = useTranslation()
-  const { login } = useUser()
   const { theme } = useTheme()
+  const { login } = useUser()
   return (
     <main>
       <ThemeProvider theme={theme}>
         <NavBar />
         <AuthenticatedTemplate>
-          <div style={{ position: 'absolute', height: 'calc(100dvh - 6rem - 4rem)', width: '100%', top: '4rem', }}>
+          <Box sx={{ position: 'absolute', height: 'calc(100dvh - 6rem - 4rem)', width: '100%', top: '4rem', }}>
             <Container maxWidth="xl" disableGutters={true} sx={{ height: '100%' }}>
               <MobileSideBar />
               <Grid container flexDirection={'row'} height={'100%'}  >
@@ -32,7 +32,7 @@ const App = () => {
                 </Grid>
               </Grid>
             </Container>
-          </div>
+          </Box>
           <Player />
         </AuthenticatedTemplate>
         <UnauthenticatedTemplate>

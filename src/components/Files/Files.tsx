@@ -1,14 +1,15 @@
-import { checkFileType, filePathConvert } from '../../util'
-import useFilesData from '../../hooks/useFilesData'
 import useSWR from 'swr'
+import { shallow } from 'zustand/shallow'
+import useUiStore from '../../store/useUiStore'
+import useFilesData from '../../hooks/useFilesData'
+import BreadcrumbNav from './BreadcrumbNav'
 import CommonList from '../CommonList/CommonList'
 import Loading from '../Loading'
-import useUiStore from '../../store/useUiStore'
-import { shallow } from 'zustand/shallow'
-import { FileItem } from '../../type'
-import BreadcrumbNav from './BreadcrumbNav'
+import { File } from '../../type'
+import { checkFileType, filePathConvert } from '../../util'
 
 const Files = () => {
+
   const [folderTree] = useUiStore((state) => [state.folderTree], shallow)
   const { getFilesData } = useFilesData()
   const fileListFetcher = (path: string) => getFilesData(path).then(res =>
@@ -22,7 +23,7 @@ const Files = () => {
     }
     )
   )
-  const { data: fileListData, error: fileListError, isLoading: fileListIsLoading } = useSWR<FileItem[], Error>(filePathConvert(folderTree), fileListFetcher, { revalidateOnFocus: false })
+  const { data: fileListData, error: fileListError, isLoading: fileListIsLoading } = useSWR<File[], Error>(filePathConvert(folderTree), fileListFetcher, { revalidateOnFocus: false })
   console.log('Get folder data')
 
   return (
@@ -32,7 +33,7 @@ const Files = () => {
         (fileListIsLoading || !fileListData || fileListError)
           ? <Loading />
           : <CommonList
-            fileList={fileListData}
+            listData={fileListData}
           />
       }
     </div>

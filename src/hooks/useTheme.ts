@@ -22,7 +22,22 @@ const useTheme = () => {
     [prefersDarkMode],
   )
 
-  return { theme }
+  const styles = {
+    listItemActive: {
+      '&.active': {
+        color: theme.palette.primary.main,
+      },
+      '&.active .MuiListItemIcon-root': {
+        color: theme.palette.primary.main,
+      },
+    },
+    color: {
+      primary: theme.palette.primary.main,
+      shadow: theme.palette.divider,
+    }
+  }
+
+  return { theme, styles }
 }
 
 export default useTheme

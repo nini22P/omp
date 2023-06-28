@@ -4,7 +4,12 @@ import useUiStore from '../../store/useUiStore'
 import SideBar from './SideBar'
 
 const MobileSideBar = () => {
-  const [mobileSideBarOpen, updateMobileSideBarOpen] = useUiStore((state) => [state.mobileSideBarOpen, state.updateMobileSideBarOpen], shallow)
+
+  const [mobileSideBarOpen, updateMobileSideBarOpen] = useUiStore(
+    (state) => [state.mobileSideBarOpen, state.updateMobileSideBarOpen],
+    shallow
+  )
+
   return (
     <Drawer
       variant="temporary"

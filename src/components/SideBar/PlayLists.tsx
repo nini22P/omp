@@ -1,51 +1,45 @@
-import { List, ListItem, ListItemText, ListItemIcon, ListItemButton, Button, useTheme } from '@mui/material'
+import { useTranslation } from 'react-i18next'
+import { NavLink, useNavigate } from 'react-router-dom'
+import shortUUID from 'short-uuid'
+import { List, ListItem, ListItemText, ListItemIcon, ListItemButton, Button } from '@mui/material'
 import ListOutlinedIcon from '@mui/icons-material/ListOutlined'
 import PlaylistAddOutlinedIcon from '@mui/icons-material/PlaylistAddOutlined'
-import { NavLink, useNavigate } from 'react-router-dom'
-import usePlayListsStore from '../../store/usePlayListsStore'
 import { shallow } from 'zustand/shallow'
-import shortUUID from 'short-uuid'
-import { useTranslation } from 'react-i18next'
-const PlayLists = ({ closeSideBar }: { closeSideBar: () => void }) => {
-  const { t } = useTranslation()
-  const theme = useTheme()
-  const styles = {
-    active: {
-      '&.active': {
-        color: theme.palette.primary.main,
-      },
-      '&.active .MuiListItemIcon-root': {
-        color: theme.palette.primary.main,
-      },
-    }
-  }
-  const navigate = useNavigate()
-  const [playLists, insertPlayListsItem] = usePlayListsStore((state) => [state.playLists, state.insertPlayListsItem], shallow)
+import usePlaylistsStore from '../../store/usePlaylistsStore'
+import useTheme from '../../hooks/useTheme'
 
-  const addPlayList = () => {
+const Playlists = ({ closeSideBar }: { closeSideBar: () => void }) => {
+
+  const { t } = useTranslation()
+  const { styles } = useTheme()
+  const navigate = useNavigate()
+  const [playlists, insertPlaylist] = usePlaylistsStore((state) => [state.playlists, state.insertPlaylist], shallow)
+
+  const addPlaylist = async () => {
     const id = shortUUID().generate()
-    insertPlayListsItem({ id, title: t('playlist.newPlaylist'), playList: [] })
+    insertPlaylist({ id, title: t('playlist.newPlaylist'), fileList: [] })
     return navigate(`/playlist/${id}`)
   }
+
   return (
     <List>
       {
-        playLists?.map((playListsItem, index) =>
+        playlists?.map((playlist, index) =>
           <ListItem
             disablePadding
             key={index}
           >
             <ListItemButton
               component={NavLink}
-              sx={styles.active}
-              to={`/playlist/${playListsItem.id}`}
+              sx={styles.listItemActive}
+              to={`/playlist/${playlist.id}`}
               onClick={closeSideBar}
             >
               <ListItemIcon>
                 <ListOutlinedIcon />
               </ListItemIcon>
               <ListItemText
-                primary={playListsItem.title}
+                primary={playlist.title}
                 primaryTypographyProps={{
                   style: {
                     whiteSpace: 'nowrap',
@@ -62,7 +56,7 @@ const PlayLists = ({ closeSideBar }: { closeSideBar: () => void }) => {
         <ListItemText>
           <Button
             startIcon={<PlaylistAddOutlinedIcon />}
-            onClick={addPlayList}
+            onClick={addPlaylist}
           >
             {t('playlist.addPlaylist')}
           </Button>
@@ -72,4 +66,4 @@ const PlayLists = ({ closeSideBar }: { closeSideBar: () => void }) => {
   )
 }
 
-export default PlayLists
+export default Playlists

@@ -1,46 +1,50 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Box, Container, IconButton, Paper, useTheme } from '@mui/material'
+import * as mm from 'music-metadata-browser'
+import { Box, Container, IconButton, Paper } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined'
-import * as mm from 'music-metadata-browser'
-import Audio from './Audio'
-import PlayerControl from './PlayerControl'
+import { shallow } from 'zustand/shallow'
+import useHistoryStore from '../../store/useHistoryStore'
+import useUiStore from '../../store/useUiStore'
 import useMetaDataListStore from '../../store/useMetaDataListStore'
 import usePlayQueueStore from '../../store/usePlayQueueStore'
 import usePlayerStore from '../../store/usePlayerStore'
-import PlayQueue from './PlayQueue'
-import useUiStore from '../../store/useUiStore'
-import { MetaData } from '../../type'
-import { shallow } from 'zustand/shallow'
 import { useControlHide } from '../../hooks/useControlHide'
 import { useMediaSession } from '../../hooks/useMediaSession'
-import { filePathConvert, shufflePlayQueue } from '../../util'
-import useHistoryStore from '../../store/useHistoryStore'
 import useFilesData from '../../hooks/useFilesData'
 import useSync from '../../hooks/useSync'
+import useTheme from '../../hooks/useTheme'
+import Audio from './Audio'
+import PlayerControl from './PlayerControl'
+import PlayQueue from './PlayQueue'
+import { MetaData } from '../../type'
+import { filePathConvert, shufflePlayQueue } from '../../util'
 
 const Player = () => {
 
-  useSync()
-
-  const theme = useTheme()
-
-  const { getFileData } = useFilesData()
-
-  const [type, playQueue, current, updateCurrent, updatePlayQueue] = usePlayQueueStore(
-    (state) => [state.type, state.playQueue, state.current, state.updateCurrent, state.updatePlayQueue], shallow)
-
+  const { styles } = useTheme()
   const [metaData, setMetaData] = useState<MetaData | null>(null)
 
-  const [metaDataList, insertMetaDataList] = useMetaDataListStore((state) => [state.metaDataList, state.insertMetaDataList], shallow)
+  useSync()
+  const { getFileData } = useFilesData()
 
+  const [type, playQueue, currentIndex, updateCurrentIndex, updatePlayQueue] = usePlayQueueStore(
+    (state) => [state.type, state.playQueue, state.currentIndex, state.updateCurrentIndex, state.updatePlayQueue],
+    shallow
+  )
+  const [metaDataList, insertMetaDataList] = useMetaDataListStore(
+    (state) => [state.metaDataList, state.insertMetaDataList],
+    shallow
+  )
   const [isPlaying, cover, shuffle, repeat, updateIsPlaying, updateCover, updateCurrentTime, updateDuration, updateRepeat] = usePlayerStore(
-    (state) => [state.isPlaying, state.cover, state.shuffle, state.repeat, state.updateIsPlaying, state.updateCover, state.updateCurrentTime, state.updateDuration, state.updateRepeat], shallow)
-
+    (state) => [state.isPlaying, state.cover, state.shuffle, state.repeat, state.updateIsPlaying, state.updateCover, state.updateCurrentTime, state.updateDuration, state.updateRepeat],
+    shallow
+  )
   const [videoViewIsShow, controlIsShow, updateVideoViewIsShow, updateControlIsShow, updateFullscreen] = useUiStore(
-    (state) => [state.videoViewIsShow, state.controlIsShow, state.updateVideoViewIsShow, state.updateControlIsShow, state.updateFullscreen], shallow)
-
-  const [insertHistoryitem] = useHistoryStore((state) => [state.insertHistoryItem], shallow)
+    (state) => [state.videoViewIsShow, state.controlIsShow, state.updateVideoViewIsShow, state.updateControlIsShow, state.updateFullscreen],
+    shallow
+  )
+  const insertHistoryitem = useHistoryStore((state) => state.insertHistoryItem)
 
   const playerRef = (useRef<HTMLVideoElement>(null))
   const player = playerRef.current   // 声明播放器对象
@@ -49,12 +53,12 @@ const Player = () => {
   // 获取当前播放文件链接
   useMemo(() => {
     if (playQueue !== null && playQueue.length !== 0) {
-      getFileData(filePathConvert(playQueue.filter(item => item.index === current)[0].path)).then((res) => {
+      getFileData(filePathConvert(playQueue.filter(item => item.index === currentIndex)[0].path)).then((res) => {
         setUrl(res['@microsoft.graph.downloadUrl'])
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playQueue?.find(item => item.index === current)?.path, current])
+  }, [playQueue?.find(item => item.index === currentIndex)?.path, currentIndex])
 
   // 预载完毕后立即播放并更新总时长
   useMemo(() => {
@@ -68,7 +72,7 @@ const Player = () => {
         // player.play()
         updateIsPlaying(true)
         updateDuration(player.duration)
-        const currentItem = playQueue.filter(item => item.index === current)[0]
+        const currentItem = playQueue.filter(item => item.index === currentIndex)[0]
         insertHistoryitem({
           fileName: currentItem.title,
           filePath: currentItem.path,
@@ -83,8 +87,8 @@ const Player = () => {
   // 播放开始暂停
   useEffect(() => {
     if (isPlaying) {
-      console.log('开始播放', playQueue?.filter(item => item.index === current)[0].path)
-      if (playQueue?.filter(item => item.index === current)[0].path)
+      console.log('开始播放', playQueue?.filter(item => item.index === currentIndex)[0].path)
+      if (playQueue?.filter(item => item.index === currentIndex)[0].path)
         player?.play()
       else {
         updateIsPlaying(false)
@@ -98,7 +102,7 @@ const Player = () => {
   // 随机
   useEffect(() => {
     if (shuffle && playQueue) {
-      const randomPlayQueue = shufflePlayQueue(playQueue, current)
+      const randomPlayQueue = shufflePlayQueue(playQueue, currentIndex)
       updatePlayQueue(randomPlayQueue)
     }
     if (!shuffle && playQueue) {
@@ -131,26 +135,26 @@ const Player = () => {
   // 下一曲
   const handleClickNext = () => {
     if (player && playQueue) {
-      const next = playQueue[(playQueue.findIndex(item => item.index === current) + 1)]
+      const next = playQueue[(playQueue.findIndex(item => item.index === currentIndex) + 1)]
       // player.pause()
       if (shuffle && next) {
-        updateCurrent(next.index)
+        updateCurrentIndex(next.index)
       }
-      if (!shuffle && current + 1 < playQueue?.length)
-        updateCurrent(current + 1)
+      if (!shuffle && currentIndex + 1 < playQueue?.length)
+        updateCurrentIndex(currentIndex + 1)
     }
   }
 
   // 上一曲
   const handleClickPrev = () => {
     if (player && playQueue) {
-      const prev = playQueue[(playQueue.findIndex(item => item.index === current) - 1)]
+      const prev = playQueue[(playQueue.findIndex(item => item.index === currentIndex) - 1)]
       // player.pause()
       if (shuffle && prev) {
-        updateCurrent(prev.index)
+        updateCurrentIndex(prev.index)
       }
-      if (!shuffle && current > 0)
-        updateCurrent(current - 1)
+      if (!shuffle && currentIndex > 0)
+        updateCurrentIndex(currentIndex - 1)
     }
   }
 
@@ -208,32 +212,32 @@ const Player = () => {
   // 播放结束时
   const onEnded = () => {
     if (playQueue) {
-      const next = playQueue[(playQueue.findIndex(item => item.index === current) + 1)]
+      const next = playQueue[(playQueue.findIndex(item => item.index === currentIndex) + 1)]
       if (repeat === 'one') {
         player?.play()
-      } else if (current + 1 === playQueue?.length || !next) { // 播放到队列结束时
+      } else if (currentIndex + 1 === playQueue?.length || !next) { // 播放到队列结束时
         if (repeat === 'all')
           if (shuffle)
-            updateCurrent(playQueue[playQueue.findIndex(item => item.index === playQueue[0].index)].index)
+            updateCurrentIndex(playQueue[playQueue.findIndex(item => item.index === playQueue[0].index)].index)
           else
-            updateCurrent(0)
+            updateCurrentIndex(0)
         else {
           updateIsPlaying(false)
           updateCurrentTime(0)
         }
       } else if (repeat === 'off' || repeat === 'all')
         if (shuffle)
-          updateCurrent(next.index)
+          updateCurrentIndex(next.index)
         else
-          updateCurrent(current + 1)
+          updateCurrentIndex(currentIndex + 1)
     }
   }
 
   // 获取 metadata
   useEffect(() => {
     if (type === 'audio' && playQueue !== null) {
-      console.log('开始获取 metadata', 'path:', playQueue.filter(item => item.index === current)[0].path)
-      const path = playQueue.filter(item => item.index === current)[0].path
+      console.log('开始获取 metadata', 'path:', playQueue.filter(item => item.index === currentIndex)[0].path)
+      const path = playQueue.filter(item => item.index === currentIndex)[0].path
       if (metaDataList.some(item => item.path === path)) {
         console.log('跳过获取 metadata', 'path:', path)
       } else {
@@ -267,23 +271,23 @@ const Player = () => {
   // 根据播放队列和元数据列表更新当前音频元数据
   useEffect(() => {
     if (playQueue && playQueue.length !== 0) {
-      const test = metaDataList.filter(metaData => metaData.path === playQueue.filter(item => item.index === current)[0].path)
+      const test = metaDataList.filter(metaData => metaData.path === playQueue.filter(item => item.index === currentIndex)[0].path)
       console.log('设定当前音频元数据')
       if (test.length !== 0) {
         setMetaData({
           ...test[0],
-          size: playQueue.filter(item => item.index === current)[0].size
+          size: playQueue.filter(item => item.index === currentIndex)[0].size
         })
       } else {
         setMetaData({
-          title: playQueue.filter(item => item.index === current)[0].title,
+          title: playQueue.filter(item => item.index === currentIndex)[0].title,
           artist: '',
-          path: playQueue.filter(item => item.index === current)[0].path,
+          path: playQueue.filter(item => item.index === currentIndex)[0].path,
         })
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playQueue?.find(item => item.index === current)?.path, current, metaDataList])
+  }, [playQueue?.find(item => item.index === currentIndex)?.path, currentIndex, metaDataList])
 
   // 设定封面
   useMemo(() => {
@@ -364,7 +368,7 @@ const Player = () => {
       <Paper
         elevation={0}
         square={true}
-        sx={{ position: 'fixed', bottom: '0', width: '100%', boxShadow: `0px -4px 4px -2px ${theme.palette.divider}` }}
+        sx={{ position: 'fixed', bottom: '0', width: '100%', boxShadow: `0px -4px 4px -2px ${styles.color.shadow}` }}
       // style={(videoViewIsShow) ? { backgroundColor: '#ffffffee' } : { backgroundColor: '#ffffff' }}
       >
         <Container maxWidth={false} disableGutters={true}>
