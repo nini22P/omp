@@ -117,7 +117,7 @@ const PlayerControl = (
                 wrap={'nowrap'} >
                 {(type === 'audio') &&
                   <Grid xs="auto" textAlign={'center'} width={'4rem'} height={'4rem'}>
-                    <img style={{ width: '4rem', height: '4rem', objectFit: 'cover' }} src={cover} />
+                    <img style={{ width: '4rem', height: '4rem', objectFit: 'cover' }} src={cover} alt='Cover' />
                   </Grid>}
                 <Grid xs sx={{ pl: 1 }} minWidth={0}>
                   <Typography variant="body1" component="div" noWrap>

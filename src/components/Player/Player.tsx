@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Container, IconButton, Paper, useTheme } from '@mui/material'
+import { Box, Container, IconButton, Paper, useTheme } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined'
 import * as mm from 'music-metadata-browser'
@@ -368,7 +368,7 @@ const Player = () => {
       // style={(videoViewIsShow) ? { backgroundColor: '#ffffffee' } : { backgroundColor: '#ffffff' }}
       >
         <Container maxWidth={false} disableGutters={true}>
-          <div style={(controlIsShow) ? {} : { display: 'none' }}>
+          <Box sx={(controlIsShow) ? {} : { display: 'none' }}>
             <PlayerControl
               metaData={metaData}
               handleClickPlay={handleClickPlay}
@@ -381,7 +381,7 @@ const Player = () => {
               handleClickRepeat={handleClickRepeat}
               handleClickFullscreen={handleClickFullscreen}
             />
-          </div>
+          </Box>
           <Audio
             metaData={metaData}
             handleClickPlay={handleClickPlay}

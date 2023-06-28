@@ -19,7 +19,7 @@ import useUiStore from '../../store/useUiStore'
 import { useNavigate } from 'react-router-dom'
 import { useTranslation } from 'react-i18next'
 
-const FileList = (
+const CommonList = (
   { fileList, handleClickRemove }
     : { fileList: FileItem[], handleClickRemove?: (filePathArray: string[][], id?: string) => void }) => {
 
@@ -159,7 +159,7 @@ const FileList = (
             handleClickRemove([fileList[current].filePath],)
             handleCloseMenu()
           }}>
-            <ListItemText primary={t('general.remove')} />
+            <ListItemText primary={t('common.remove')} />
           </MenuItem>
         }
       </Menu>
@@ -212,7 +212,7 @@ const FileList = (
           </ListItem>
         </List>
         <DialogActions>
-          <Button onClick={() => setDialogOpen(false)}>{t('general.cancel')}</Button>
+          <Button onClick={() => setDialogOpen(false)}>{t('common.cancel')}</Button>
         </DialogActions>
       </Dialog>
 
@@ -240,7 +240,7 @@ const FileList = (
                   (item.fileType === 'audio' || item.fileType === 'video') &&
                   <div>
                     <IconButton
-                      aria-label={t('general.more')}
+                      aria-label={t('common.more')}
                       onClick={(event) => handleClickMenu(event, index)}
                     >
                       <MoreVertOutlined />
@@ -284,4 +284,4 @@ const FileList = (
   )
 }
 
-export default FileList
+export default CommonList

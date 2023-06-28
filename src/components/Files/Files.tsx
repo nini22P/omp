@@ -1,7 +1,7 @@
 import { checkFileType, filePathConvert } from '../../util'
 import useFilesData from '../../hooks/useFilesData'
 import useSWR from 'swr'
-import FileList from '../List/FileList'
+import CommonList from '../CommonList/CommonList'
 import Loading from '../Loading'
 import useUiStore from '../../store/useUiStore'
 import { shallow } from 'zustand/shallow'
@@ -31,7 +31,7 @@ const Files = () => {
       {
         (fileListIsLoading || !fileListData || fileListError)
           ? <Loading />
-          : <FileList
+          : <CommonList
             fileList={fileListData}
           />
       }

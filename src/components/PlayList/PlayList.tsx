@@ -1,10 +1,9 @@
 import { Button, ListItemText, Typography, Dialog, DialogTitle, DialogActions, Menu, MenuItem, DialogContent, TextField } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
-import MoreVertOutlined from '@mui/icons-material/MoreVertOutlined'
 import { useNavigate, useParams } from 'react-router-dom'
 import { shallow } from 'zustand/shallow'
 import usePlayListsStore from '../../store/usePlayListsStore'
-import FileList from '../List/FileList'
+import CommonList from '../CommonList/CommonList'
 import { useState } from 'react'
 import Loading from '../Loading'
 import { filePathConvert } from '../../util'
@@ -85,7 +84,7 @@ const PlayList = () => {
                   // startIcon={<MoreVertOutlined />}
                   onClick={handleClickMenu}
                 >
-                  {t('general.more')}
+                  {t('common.more')}
                 </Button>
               </Grid>
             </Grid>
@@ -100,13 +99,13 @@ const PlayList = () => {
                 setRenameDialogOpen(true)
                 handleCloseMenu()
               }}>
-                <ListItemText primary={t('general.rename')} />
+                <ListItemText primary={t('common.rename')} />
               </MenuItem>
               <MenuItem onClick={() => {
                 setDeleteDiaLogOpen(true)
                 handleCloseMenu()
               }}>
-                <ListItemText primary={t('general.delete')} />
+                <ListItemText primary={t('common.delete')} />
               </MenuItem>
             </Menu>
 
@@ -117,7 +116,7 @@ const PlayList = () => {
               fullWidth
               maxWidth='xs'
             >
-              <DialogTitle>{t('general.rename')}</DialogTitle>
+              <DialogTitle>{t('common.rename')}</DialogTitle>
               <DialogContent>
                 <TextField
                   autoFocus
@@ -129,8 +128,8 @@ const PlayList = () => {
                 />
               </DialogContent>
               <DialogActions>
-                <Button onClick={() => setRenameDialogOpen(false)}>{t('general.cancel')}</Button>
-                <Button onClick={() => renamePlayListItem()} >{t('general.ok')}</Button>
+                <Button onClick={() => setRenameDialogOpen(false)}>{t('common.cancel')}</Button>
+                <Button onClick={() => renamePlayListItem()} >{t('common.ok')}</Button>
               </DialogActions>
             </Dialog>
 
@@ -145,12 +144,12 @@ const PlayList = () => {
                 {t('playlist.playlistWillBeDeleted')}
               </DialogContent>
               <DialogActions>
-                <Button onClick={() => setDeleteDiaLogOpen(false)}>{t('general.cancel')}</Button>
-                <Button onClick={deletePlayListItem} >{t('general.ok')}</Button>
+                <Button onClick={() => setDeleteDiaLogOpen(false)}>{t('common.cancel')}</Button>
+                <Button onClick={deletePlayListItem} >{t('common.ok')}</Button>
               </DialogActions>
             </Dialog>
 
-            <FileList
+            <CommonList
               fileList={playListItem.playList}
               handleClickRemove={removePlayListItem}
             />

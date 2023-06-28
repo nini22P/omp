@@ -1,8 +1,8 @@
 import i18next from 'i18next'
 import { initReactI18next } from 'react-i18next'
 import LanguageDetector from 'i18next-browser-languagedetector'
-import { en } from './locales/en'
-import { zhCN } from './locales/zh-cn'
+import en from './locales/en.json'
+import zh_CN from './locales/zh-CN.json'
 
 i18next
   .use(LanguageDetector)
@@ -16,8 +16,8 @@ i18next
       caches: []
     },
     resources: {
-      en: { translation: en },
-      zh: { translation: zhCN },
+      'en': { translation: en },
+      'zh-CN': { translation: zh_CN },
     },
   })
 
