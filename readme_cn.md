@@ -17,11 +17,11 @@
 - [x] Media Session
 - [x] PWA
 - [x] 播放历史同步
-- [ ] 播放列表同步
+- [x] 播放列表同步
 
 ## 截图
 
-![omp](https://github.com/nini22P/omp/assets/60903333/f74801dc-8f12-42db-9d83-814c0289093a)
+![omp](https://github.com/nini22P/omp/assets/60903333/9ebdf1af-e0f0-40b0-b90c-6f1795ccf2c3)
 
 ## 开发
 
@@ -37,7 +37,7 @@ VITE_CLIENT_ID=<clientId>
 VITE_REDIRECTURI=http://localhost:5173/
 ```
 
-6. 运行 `npm i && npm run dev`
+7. 运行 `npm i && npm run dev`
 
 ## 许可
 

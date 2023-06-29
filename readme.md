@@ -17,11 +17,11 @@ English | [中文](./readme_cn.md)
 - [x] Media Session
 - [x] PWA
 - [x] History Sync
-- [ ] Playlists Sync
+- [x] Playlists Sync
 
 ## Screenshot
 
-![omp](https://github.com/nini22P/omp/assets/60903333/f74801dc-8f12-42db-9d83-814c0289093a)
+![omp](https://github.com/nini22P/omp/assets/60903333/9ebdf1af-e0f0-40b0-b90c-6f1795ccf2c3)
 
 ## Development
 
@@ -37,7 +37,7 @@ VITE_CLIENT_ID=<clientId>
 VITE_REDIRECTURI=http://localhost:5173/
 ```
 
-6. Run `npm i && npm run dev`
+7. Run `npm i && npm run dev`
 
 ## License
 
