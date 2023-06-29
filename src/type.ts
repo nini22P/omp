@@ -7,11 +7,8 @@ export interface File {
   fileType: 'folder' | 'audio' | 'video' | 'other';
 }
 
-export interface PlayQueueItem {
+export interface PlayQueueItem extends File {
   index: number;
-  title: string;
-  size: number;
-  path: string[];
 }
 
 export interface PlayQueueStatus {
@@ -24,6 +21,7 @@ export interface PlayQueueAction {
   updateType: (type: PlayQueueStatus['type']) => void,
   updatePlayQueue: (PlayQueue: PlayQueueStatus['playQueue']) => void;
   updateCurrentIndex: (index: PlayQueueStatus['currentIndex']) => void;
+  removeFilesFromPlayQueue: (filePathArray: File['filePath'][]) => void;
 }
 
 export interface MetaData {
@@ -91,8 +89,8 @@ export interface HistoryStatus {
 
 export interface HistoryAction {
   updateHistoryList: (historyList: HistoryStatus['historyList']) => void;
-  insertHistoryItem: (file: File) => void;
-  removeHistoryItem: (filePathArray: File['filePath'][]) => void;
+  insertHistory: (file: File) => void;
+  removeHistory: (filePathArray: File['filePath'][]) => void;
   clearHistoryList: () => void;
 }
 
@@ -114,4 +112,20 @@ export interface PlaylistsAction {
   removePlaylist: (id: Playlist['id']) => void;
   insertFilesToPlaylist: (id: Playlist['id'], files: File[]) => void;
   removeFilesFromPlaylist: (id: Playlist['id'], filePathArray: File['filePath'][]) => void;
+}
+
+export interface CommonMenuStatus {
+  anchorEl: HTMLElement | null;
+  menuOpen: boolean;
+  dialogOpen: boolean;
+  currentFile: null | File;
+  handleClickRemove: null | ((filePathArray: string[][]) => void);
+}
+
+export interface CommonMenuAction {
+  updateAnchorEl: (anchorEl: CommonMenuStatus['anchorEl']) => void;
+  updateMenuOpen: (menuOpen: boolean) => void;
+  updateDialogOpen: (dialogOpen: CommonMenuStatus) => void;
+  updateCurrentFile: (currentFile: CommonMenuStatus['currentFile']) => void;
+  updateHandleClickRemove: (handleClickRemove: CommonMenuStatus['handleClickRemove']) => void;
 }

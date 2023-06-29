@@ -4,7 +4,7 @@ import CommonList from './CommonList/CommonList'
 import Loading from './Loading'
 
 const History = () => {
-  const [historyList, removeHistoryItem] = useHistoryStore((state) => [state.historyList, state.removeHistoryItem], shallow)
+  const [historyList, removeHistory] = useHistoryStore((state) => [state.historyList, state.removeHistory], shallow)
 
   return (
     <>
@@ -12,7 +12,7 @@ const History = () => {
         (!historyList) ? <Loading />
           : <CommonList
             listData={historyList}
-            handleClickRemove={removeHistoryItem}
+            handleClickRemove={removeHistory}
           />
       }
     </>

@@ -34,6 +34,7 @@ const Files = () => {
           ? <Loading />
           : <CommonList
             listData={fileListData}
+            multiColumn
           />
       }
     </div>

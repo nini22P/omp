@@ -44,7 +44,7 @@ const Player = () => {
     (state) => [state.videoViewIsShow, state.controlIsShow, state.updateVideoViewIsShow, state.updateControlIsShow, state.updateFullscreen],
     shallow
   )
-  const insertHistoryitem = useHistoryStore((state) => state.insertHistoryItem)
+  const insertHistory = useHistoryStore((state) => state.insertHistory)
 
   const playerRef = (useRef<HTMLVideoElement>(null))
   const player = playerRef.current   // 声明播放器对象
@@ -53,12 +53,12 @@ const Player = () => {
   // 获取当前播放文件链接
   useMemo(() => {
     if (playQueue !== null && playQueue.length !== 0) {
-      getFileData(filePathConvert(playQueue.filter(item => item.index === currentIndex)[0].path)).then((res) => {
+      getFileData(filePathConvert(playQueue.filter(item => item.index === currentIndex)[0].filePath)).then((res) => {
         setUrl(res['@microsoft.graph.downloadUrl'])
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playQueue?.find(item => item.index === currentIndex)?.path, currentIndex])
+  }, [playQueue?.find(item => item.index === currentIndex)?.filePath])
 
   // 预载完毕后立即播放并更新总时长
   useMemo(() => {
@@ -73,11 +73,11 @@ const Player = () => {
         updateIsPlaying(true)
         updateDuration(player.duration)
         const currentItem = playQueue.filter(item => item.index === currentIndex)[0]
-        insertHistoryitem({
-          fileName: currentItem.title,
-          filePath: currentItem.path,
-          fileSize: currentItem.size,
-          fileType: type,
+        insertHistory({
+          fileName: currentItem.fileName,
+          filePath: currentItem.filePath,
+          fileSize: currentItem.fileSize,
+          fileType: currentItem.fileType,
         })
       }
     }
@@ -87,8 +87,8 @@ const Player = () => {
   // 播放开始暂停
   useEffect(() => {
     if (isPlaying) {
-      console.log('开始播放', playQueue?.filter(item => item.index === currentIndex)[0].path)
-      if (playQueue?.filter(item => item.index === currentIndex)[0].path)
+      console.log('开始播放', playQueue?.filter(item => item.index === currentIndex)[0].filePath)
+      if (playQueue?.filter(item => item.index === currentIndex)[0].filePath)
         player?.play()
       else {
         updateIsPlaying(false)
@@ -236,16 +236,16 @@ const Player = () => {
   // 获取 metadata
   useEffect(() => {
     if (type === 'audio' && playQueue !== null) {
-      console.log('开始获取 metadata', 'path:', playQueue.filter(item => item.index === currentIndex)[0].path)
-      const path = playQueue.filter(item => item.index === currentIndex)[0].path
-      if (metaDataList.some(item => item.path === path)) {
+      const path = playQueue.filter(item => item.index === currentIndex)[0].filePath
+      console.log('开始获取 metadata', path)
+      if (metaDataList.some(item => filePathConvert(item.path) === filePathConvert(path))) {
         console.log('跳过获取 metadata', 'path:', path)
       } else {
         try {
           mm.fetchFromUrl(url).then(metadata => {
             if (metadata) {
               if (metadata.common.title !== undefined) {
-                console.log('获取 metadata', metadata)
+                console.log('获取 metadata')
                 const metaData = {
                   path: path,
                   title: metadata.common.title,
@@ -271,23 +271,25 @@ const Player = () => {
   // 根据播放队列和元数据列表更新当前音频元数据
   useEffect(() => {
     if (playQueue && playQueue.length !== 0) {
-      const test = metaDataList.filter(metaData => metaData.path === playQueue.filter(item => item.index === currentIndex)[0].path)
-      console.log('设定当前音频元数据')
+      const test = metaDataList
+        .filter(metaData =>
+          filePathConvert(metaData.path) === filePathConvert(playQueue.filter(item => item.index === currentIndex)[0].filePath))
+      console.log('设定当前音频元数据', test)
       if (test.length !== 0) {
         setMetaData({
           ...test[0],
-          size: playQueue.filter(item => item.index === currentIndex)[0].size
+          size: playQueue.filter(item => item.index === currentIndex)[0].fileSize
         })
       } else {
         setMetaData({
-          title: playQueue.filter(item => item.index === currentIndex)[0].title,
+          title: playQueue.filter(item => item.index === currentIndex)[0].fileName,
           artist: '',
-          path: playQueue.filter(item => item.index === currentIndex)[0].path,
+          path: playQueue.filter(item => item.index === currentIndex)[0].filePath,
         })
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playQueue?.find(item => item.index === currentIndex)?.path, currentIndex, metaDataList])
+  }, [playQueue?.find(item => item.index === currentIndex)?.filePath, currentIndex, metaDataList])
 
   // 设定封面
   useMemo(() => {
@@ -304,7 +306,6 @@ const Player = () => {
   // 检测全屏
   useEffect(() => {
     const handleFullscreenChange = () => {
-      console.log('全屏状态改变')
       updateFullscreen(!!document.fullscreenElement)
     }
     document.addEventListener('fullscreenchange', handleFullscreenChange)

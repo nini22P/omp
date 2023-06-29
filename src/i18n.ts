@@ -13,7 +13,7 @@ i18next
       escapeValue: false,
     },
     detection: {
-      caches: []
+      caches: []  // Disable LanguageDetector cache
     },
     resources: {
       'en': { translation: en },
