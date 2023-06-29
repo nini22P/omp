@@ -1,4 +1,4 @@
-import { playListItem } from './type'
+import { File, PlayQueueItem, PlayQueueStatus } from './type'
 
 /**
  * 将时间转换为分钟
@@ -13,7 +13,7 @@ const timeShift = (time: number) => {
 
 const isAudio = (name: string) => (/.(wav|mp3|aac|ogg|flac|m4a|opus)$/i).test(name)
 const isVideo = (name: string) => (/.(mp4|mkv|avi|mov|rmvb|webm|flv)$/i).test(name)
-const checkFileType = (name: string) => {
+const checkFileType = (name: string): File['fileType'] => {
   if (isAudio(name))
     return 'audio'
   if (isVideo(name))
@@ -22,18 +22,20 @@ const checkFileType = (name: string) => {
 }
 
 /**
- * 创建随机播放列表，当前播放id歌曲会排到第一
- * @param playList 播放列表
- * @param current 当前播放id
+ * 创建随机播放队列，如果传入当前播放id时歌曲会排到第一
+ * @param playQueue 播放队列
+ * @param currentIndex 当前播放id
  * @returns 
  */
-const shufflePlayList = (playList: playListItem[], current: number) => {
-  const randomPlayList = [...playList]
-  for (let i = randomPlayList.length - 1; i > 0; i--) {
+const shufflePlayQueue = (playQueue: PlayQueueItem[], currentIndex?: PlayQueueStatus['currentIndex']) => {
+  const randomPlayQueue = [...playQueue]
+  for (let i = randomPlayQueue.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
-    [randomPlayList[i], randomPlayList[j]] = [randomPlayList[j], randomPlayList[i]]
+    [randomPlayQueue[i], randomPlayQueue[j]] = [randomPlayQueue[j], randomPlayQueue[i]]
   }
-  return randomPlayList.filter(item => item.index === current).concat(randomPlayList.filter(item => item.index !== current))
+  if (currentIndex)
+    return randomPlayQueue.filter(item => item.index === currentIndex).concat(randomPlayQueue.filter(item => item.index !== currentIndex))
+  else return randomPlayQueue
 }
 
 const nowTime = () => {
@@ -41,7 +43,7 @@ const nowTime = () => {
   return `${dateTime.getFullYear}-${dateTime.getMonth}-${dateTime.getDay} ${dateTime.getHours}:${dateTime.getMinutes}`
 }
 
-const fileSizeConvert = (fileSize: number) => {
+const fileSizeConvert = (fileSize: File['fileSize']) => {
   return ((fileSize / 1024) < 1024)
     ? `${(fileSize / 1024).toFixed(2)} KB`
     : ((fileSize / 1024 / 1024) < 1024)
@@ -49,4 +51,6 @@ const fileSizeConvert = (fileSize: number) => {
       : `${(fileSize / 1024 / 1024 / 1024).toFixed(2)} GB`
 }
 
-export { timeShift, checkFileType, shufflePlayList, nowTime, fileSizeConvert }
+const filePathConvert = (filePath: File['filePath']) => (filePath.join('/') === '/') ? '/' : filePath.slice(1).join('/')
+
+export { timeShift, checkFileType, shufflePlayQueue, nowTime, fileSizeConvert, filePathConvert }

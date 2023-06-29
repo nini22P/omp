@@ -1,9 +1,9 @@
-import { useMsal } from '@azure/msal-react'
 import { getAppRootFiles, getFile, getFiles, uploadAppRootJson } from '../graph'
 import { loginRequest } from '../authConfig'
+import useUser from './useUser'
 
 const useFilesData = () => {
-  const { instance, accounts } = useMsal()
+  const { instance, accounts } = useUser()
 
   /**
 * 获取文件夹数据
@@ -33,7 +33,7 @@ const useFilesData = () => {
     return response
   }
 
-  const uploadAppRootJsonData = async (fileName: string, fileContent: any) => {
+  const uploadAppRootJsonData = async (fileName: string, fileContent: BodyInit) => {
     const acquireToken = await instance.acquireTokenSilent({ ...loginRequest, account: accounts[0] })
     const response = await uploadAppRootJson(fileName, fileContent, acquireToken.accessToken)
     return response

@@ -1,43 +1,50 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { Container, IconButton, Paper, useTheme } from '@mui/material'
+import * as mm from 'music-metadata-browser'
+import { Box, Container, IconButton, Paper } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined'
-import * as mm from 'music-metadata-browser'
-import AudioView from './AudioView'
-import PlayerControl from './PlayerControl'
-import useMetaDataListStore from '../../store/useMetaDataListStore'
-import usePlayListStore from '../../store/usePlayListStore'
-import usePlayerStore from '../../store/usePlayerStore'
-import PlayList from '../PlayList'
-import useUiStore from '../../store/useUiStore'
-import { MetaData } from '../../type'
 import { shallow } from 'zustand/shallow'
+import useHistoryStore from '../../store/useHistoryStore'
+import useUiStore from '../../store/useUiStore'
+import useMetaDataListStore from '../../store/useMetaDataListStore'
+import usePlayQueueStore from '../../store/usePlayQueueStore'
+import usePlayerStore from '../../store/usePlayerStore'
 import { useControlHide } from '../../hooks/useControlHide'
 import { useMediaSession } from '../../hooks/useMediaSession'
-import { shufflePlayList } from '../../util'
-import useHistoryStore from '../../store/useHistoryStore'
 import useFilesData from '../../hooks/useFilesData'
+import useSync from '../../hooks/useSync'
+import useTheme from '../../hooks/useTheme'
+import Audio from './Audio'
+import PlayerControl from './PlayerControl'
+import PlayQueue from './PlayQueue'
+import { MetaData } from '../../type'
+import { filePathConvert, shufflePlayQueue } from '../../util'
 
 const Player = () => {
 
-  const theme = useTheme()
-
-  const { getFileData } = useFilesData()
-
-  const [type, playList, current, updateCurrent, updatePlayList] = usePlayListStore(
-    (state) => [state.type, state.playList, state.current, state.updateCurrent, state.updatePlayList], shallow)
-
+  const { styles } = useTheme()
   const [metaData, setMetaData] = useState<MetaData | null>(null)
 
-  const [metaDataList, insertMetaDataList] = useMetaDataListStore((state) => [state.metaDataList, state.insertMetaDataList], shallow)
+  useSync()
+  const { getFileData } = useFilesData()
 
+  const [type, playQueue, currentIndex, updateCurrentIndex, updatePlayQueue] = usePlayQueueStore(
+    (state) => [state.type, state.playQueue, state.currentIndex, state.updateCurrentIndex, state.updatePlayQueue],
+    shallow
+  )
+  const [metaDataList, insertMetaDataList] = useMetaDataListStore(
+    (state) => [state.metaDataList, state.insertMetaDataList],
+    shallow
+  )
   const [isPlaying, cover, shuffle, repeat, updateIsPlaying, updateCover, updateCurrentTime, updateDuration, updateRepeat] = usePlayerStore(
-    (state) => [state.isPlaying, state.cover, state.shuffle, state.repeat, state.updateIsPlaying, state.updateCover, state.updateCurrentTime, state.updateDuration, state.updateRepeat], shallow)
-
+    (state) => [state.isPlaying, state.cover, state.shuffle, state.repeat, state.updateIsPlaying, state.updateCover, state.updateCurrentTime, state.updateDuration, state.updateRepeat],
+    shallow
+  )
   const [videoViewIsShow, controlIsShow, updateVideoViewIsShow, updateControlIsShow, updateFullscreen] = useUiStore(
-    (state) => [state.videoViewIsShow, state.controlIsShow, state.updateVideoViewIsShow, state.updateControlIsShow, state.updateFullscreen], shallow)
-
-  const [insertHistoryitem] = useHistoryStore((state) => [state.insertHistoryItem], shallow)
+    (state) => [state.videoViewIsShow, state.controlIsShow, state.updateVideoViewIsShow, state.updateControlIsShow, state.updateFullscreen],
+    shallow
+  )
+  const insertHistory = useHistoryStore((state) => state.insertHistory)
 
   const playerRef = (useRef<HTMLVideoElement>(null))
   const player = playerRef.current   // 声明播放器对象
@@ -45,17 +52,17 @@ const Player = () => {
 
   // 获取当前播放文件链接
   useMemo(() => {
-    if (playList !== null && playList.length !== 0) {
-      getFileData(playList.filter(item => item.index === current)[0].path).then((res) => {
+    if (playQueue !== null && playQueue.length !== 0) {
+      getFileData(filePathConvert(playQueue.filter(item => item.index === currentIndex)[0].filePath)).then((res) => {
         setUrl(res['@microsoft.graph.downloadUrl'])
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playList, current])
+  }, [playQueue?.find(item => item.index === currentIndex)?.filePath])
 
   // 预载完毕后立即播放并更新总时长
   useMemo(() => {
-    if (player !== null && playList) {
+    if (player !== null && playQueue) {
       updateDuration(0)
       player.load()
       player.onloadedmetadata = () => {
@@ -65,12 +72,12 @@ const Player = () => {
         // player.play()
         updateIsPlaying(true)
         updateDuration(player.duration)
-        insertHistoryitem({
-          filePath: playList.filter(item => item.index === current)[0].path,
-          fileType: type,
-          fileName: playList.filter(item => item.index === current)[0].title,
-          fileSize: playList.filter(item => item.index === current)[0].size,
-          lastTime: (new Date()).toISOString().replace('T', ' ').split('.')[0]
+        const currentItem = playQueue.filter(item => item.index === currentIndex)[0]
+        insertHistory({
+          fileName: currentItem.fileName,
+          filePath: currentItem.filePath,
+          fileSize: currentItem.fileSize,
+          fileType: currentItem.fileType,
         })
       }
     }
@@ -80,8 +87,8 @@ const Player = () => {
   // 播放开始暂停
   useEffect(() => {
     if (isPlaying) {
-      console.log('开始播放', playList?.filter(item => item.index === current)[0].path)
-      if (playList?.filter(item => item.index === current)[0].path)
+      console.log('开始播放', playQueue?.filter(item => item.index === currentIndex)[0].filePath)
+      if (playQueue?.filter(item => item.index === currentIndex)[0].filePath)
         player?.play()
       else {
         updateIsPlaying(false)
@@ -94,12 +101,12 @@ const Player = () => {
 
   // 随机
   useEffect(() => {
-    if (shuffle && playList) {
-      const randomPlayList = shufflePlayList(playList, current)
-      updatePlayList(randomPlayList)
+    if (shuffle && playQueue) {
+      const randomPlayQueue = shufflePlayQueue(playQueue, currentIndex)
+      updatePlayQueue(randomPlayQueue)
     }
-    if (!shuffle && playList) {
-      updatePlayList([...playList].sort((a, b) => a.index - b.index))
+    if (!shuffle && playQueue) {
+      updatePlayQueue([...playQueue].sort((a, b) => a.index - b.index))
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [shuffle])
@@ -127,27 +134,27 @@ const Player = () => {
 
   // 下一曲
   const handleClickNext = () => {
-    if (player && playList) {
-      const next = playList[(playList.findIndex(item => item.index === current) + 1)]
+    if (player && playQueue) {
+      const next = playQueue[(playQueue.findIndex(item => item.index === currentIndex) + 1)]
       // player.pause()
       if (shuffle && next) {
-        updateCurrent(next.index)
+        updateCurrentIndex(next.index)
       }
-      if (!shuffle && current + 1 < playList?.length)
-        updateCurrent(current + 1)
+      if (!shuffle && currentIndex + 1 < playQueue?.length)
+        updateCurrentIndex(currentIndex + 1)
     }
   }
 
   // 上一曲
   const handleClickPrev = () => {
-    if (player && playList) {
-      const prev = playList[(playList.findIndex(item => item.index === current) - 1)]
+    if (player && playQueue) {
+      const prev = playQueue[(playQueue.findIndex(item => item.index === currentIndex) - 1)]
       // player.pause()
       if (shuffle && prev) {
-        updateCurrent(prev.index)
+        updateCurrentIndex(prev.index)
       }
-      if (!shuffle && current > 0)
-        updateCurrent(current - 1)
+      if (!shuffle && currentIndex > 0)
+        updateCurrentIndex(currentIndex - 1)
     }
   }
 
@@ -204,41 +211,41 @@ const Player = () => {
 
   // 播放结束时
   const onEnded = () => {
-    if (playList) {
-      const next = playList[(playList.findIndex(item => item.index === current) + 1)]
+    if (playQueue) {
+      const next = playQueue[(playQueue.findIndex(item => item.index === currentIndex) + 1)]
       if (repeat === 'one') {
         player?.play()
-      } else if (current + 1 === playList?.length || !next) { // 播放到队列结束时
+      } else if (currentIndex + 1 === playQueue?.length || !next) { // 播放到队列结束时
         if (repeat === 'all')
           if (shuffle)
-            updateCurrent(playList[playList.findIndex(item => item.index === playList[0].index)].index)
+            updateCurrentIndex(playQueue[playQueue.findIndex(item => item.index === playQueue[0].index)].index)
           else
-            updateCurrent(0)
+            updateCurrentIndex(0)
         else {
           updateIsPlaying(false)
           updateCurrentTime(0)
         }
       } else if (repeat === 'off' || repeat === 'all')
         if (shuffle)
-          updateCurrent(next.index)
+          updateCurrentIndex(next.index)
         else
-          updateCurrent(current + 1)
+          updateCurrentIndex(currentIndex + 1)
     }
   }
 
   // 获取 metadata
   useEffect(() => {
-    if (type === 'audio' && playList !== null) {
-      console.log('开始获取 metadata', 'path:', playList.filter(item => item.index === current)[0].path)
-      const path = playList.filter(item => item.index === current)[0].path
-      if (metaDataList.some(item => item.path === path)) {
+    if (type === 'audio' && playQueue !== null) {
+      const path = playQueue.filter(item => item.index === currentIndex)[0].filePath
+      console.log('开始获取 metadata', path)
+      if (metaDataList.some(item => filePathConvert(item.path) === filePathConvert(path))) {
         console.log('跳过获取 metadata', 'path:', path)
       } else {
         try {
           mm.fetchFromUrl(url).then(metadata => {
             if (metadata) {
               if (metadata.common.title !== undefined) {
-                console.log('获取 metadata', metadata)
+                console.log('获取 metadata')
                 const metaData = {
                   path: path,
                   title: metadata.common.title,
@@ -261,29 +268,32 @@ const Player = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [url])
 
-  // 根据播放列表和元数据列表更新当前音频元数据
+  // 根据播放队列和元数据列表更新当前音频元数据
   useEffect(() => {
-    if (playList && playList.length !== 0) {
-      const test = metaDataList.filter(metaData => metaData.path === playList.filter(item => item.index === current)[0].path)
-      console.log('设定当前音频元数据')
+    if (playQueue && playQueue.length !== 0) {
+      const test = metaDataList
+        .filter(metaData =>
+          filePathConvert(metaData.path) === filePathConvert(playQueue.filter(item => item.index === currentIndex)[0].filePath))
+      console.log('设定当前音频元数据', test)
       if (test.length !== 0) {
         setMetaData({
           ...test[0],
-          size: playList.filter(item => item.index === current)[0].size
+          size: playQueue.filter(item => item.index === currentIndex)[0].fileSize
         })
       } else {
         setMetaData({
-          title: playList.filter(item => item.index === current)[0].title,
+          title: playQueue.filter(item => item.index === currentIndex)[0].fileName,
           artist: '',
-          path: playList.filter(item => item.index === current)[0].path,
+          path: playQueue.filter(item => item.index === currentIndex)[0].filePath,
         })
       }
     }
-  }, [playList, current, metaDataList])
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [playQueue?.find(item => item.index === currentIndex)?.filePath, currentIndex, metaDataList])
 
   // 设定封面
   useMemo(() => {
-    (!playList || !metaData || !metaData.cover)
+    (!playQueue || !metaData || !metaData.cover)
       ? updateCover('./cd.png')
       : updateCover(URL.createObjectURL(new Blob([new Uint8Array(metaData.cover[0].data)], { type: 'image/png' })))
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -296,7 +306,6 @@ const Player = () => {
   // 检测全屏
   useEffect(() => {
     const handleFullscreenChange = () => {
-      console.log('全屏状态改变')
       updateFullscreen(!!document.fullscreenElement)
     }
     document.addEventListener('fullscreenchange', handleFullscreenChange)
@@ -360,11 +369,11 @@ const Player = () => {
       <Paper
         elevation={0}
         square={true}
-        sx={{ position: 'fixed', bottom: '0', width: '100%', boxShadow: `0px -4px 4px -2px ${theme.palette.divider}` }}
+        sx={{ position: 'fixed', bottom: '0', width: '100%', boxShadow: `0px -4px 4px -2px ${styles.color.shadow}` }}
       // style={(videoViewIsShow) ? { backgroundColor: '#ffffffee' } : { backgroundColor: '#ffffff' }}
       >
         <Container maxWidth={false} disableGutters={true}>
-          <div style={(controlIsShow) ? {} : { display: 'none' }}>
+          <Box sx={(controlIsShow) ? {} : { display: 'none' }}>
             <PlayerControl
               metaData={metaData}
               handleClickPlay={handleClickPlay}
@@ -377,8 +386,8 @@ const Player = () => {
               handleClickRepeat={handleClickRepeat}
               handleClickFullscreen={handleClickFullscreen}
             />
-          </div>
-          <AudioView
+          </Box>
+          <Audio
             metaData={metaData}
             handleClickPlay={handleClickPlay}
             handleClickPause={handleClickPause}
@@ -390,7 +399,7 @@ const Player = () => {
             handleClickRepeat={handleClickRepeat}
             handleClickFullscreen={handleClickFullscreen}
           />
-          <PlayList />
+          <PlayQueue />
         </Container>
       </Paper >
     </div>

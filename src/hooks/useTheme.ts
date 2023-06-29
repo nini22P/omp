@@ -22,7 +22,40 @@ const useTheme = () => {
     [prefersDarkMode],
   )
 
-  return { theme }
+  const styles = {
+    color: {
+      primary: theme.palette.primary.main,
+      shadow: theme.palette.divider,
+    },
+    listItemActive: {
+      '&.active': {
+        color: theme.palette.primary.main,
+      },
+      '&.active .MuiListItemIcon-root': {
+        color: theme.palette.primary.main,
+      },
+    },
+    listItemPrimary: {
+      // '.MuiListItemIcon-root': {
+      //   color: theme.palette.primary.main,
+      // },
+      '.MuiListItemText-root': {
+        color: theme.palette.primary.main,
+      },
+      '.MuiListItemText-secondary': {
+        color: theme.palette.primary.main,
+      }
+    },
+    listItemTextNoWrap: {
+      style: {
+        whiteSpace: 'nowrap',
+        overflow: 'hidden',
+        textOverflow: 'ellipsis',
+      },
+    }
+  }
+
+  return { theme, styles }
 }
 
 export default useTheme

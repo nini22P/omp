@@ -1,25 +1,25 @@
-import { Button, Container, Divider, Link, ThemeProvider, Typography } from '@mui/material'
 import { AuthenticatedTemplate, UnauthenticatedTemplate } from '@azure/msal-react'
+import { useTranslation } from 'react-i18next'
+import { Outlet } from 'react-router-dom'
+import { Button, Container, Divider, Link, ThemeProvider, Typography, Box } from '@mui/material'
+import Grid from '@mui/material/Unstable_Grid2'
 import NavBar from './components/NavBar'
 import Player from './components/Player/Player'
-import { Outlet } from 'react-router-dom'
-import SideBar from './components/SideBar'
-import Grid from '@mui/material/Unstable_Grid2'
-import MobileSideBar from './components/MobileSideBar'
+import SideBar from './components/SideBar/SideBar'
+import MobileSideBar from './components/SideBar/MobileSideBar'
 import useUser from './hooks/useUser'
 import useTheme from './hooks/useTheme'
-import useSync from './hooks/useSync'
 
 const App = () => {
-  const { login } = useUser()
+  const { t } = useTranslation()
   const { theme } = useTheme()
-  useSync()
+  const { login } = useUser()
   return (
     <main>
       <ThemeProvider theme={theme}>
         <NavBar />
         <AuthenticatedTemplate>
-          <div style={{ position: 'absolute', height: 'calc(100dvh - 6rem - 4rem)', width: '100%', top: '4rem', }}>
+          <Box sx={{ position: 'absolute', height: 'calc(100dvh - 6rem - 4rem)', width: '100%', top: '4rem', }}>
             <Container maxWidth="xl" disableGutters={true} sx={{ height: '100%' }}>
               <MobileSideBar />
               <Grid container flexDirection={'row'} height={'100%'}  >
@@ -27,12 +27,12 @@ const App = () => {
                   <SideBar />
                   <Divider orientation="vertical" flexItem />
                 </Grid>
-                <Grid xs={12} sm={8} md={9} lg={10} height={'100%'} sx={{ overflowY: 'auto' }} pt={1} pb={3} pl={1} pr={1} borderRight={`1px solid ${theme.palette.divider}`} >
+                <Grid xs={12} sm={8} md={9} lg={10} pt={1} pb={3} pl={{ xs: 0, md: 2 }} pr={{ xs: 0, md: 2 }} height={'100%'} sx={{ overflowY: 'auto' }} borderRight={`1px solid ${theme.palette.divider}`} >
                   <Outlet />
                 </Grid>
               </Grid>
             </Container>
-          </div>
+          </Box>
           <Player />
         </AuthenticatedTemplate>
         <UnauthenticatedTemplate>
@@ -50,9 +50,9 @@ const App = () => {
             </div>
             <div>
               <Typography variant="h5" pb={2} >
-                Please sign in to see your files
+                {t('account.signInAlert')}
               </Typography>
-              <Button size="large" onClick={() => login()}>Sign in</Button>
+              <Button size="large" onClick={() => login()}>{t('account.signIn')}</Button>
             </div>
             <footer>
               Made with ❤ from <Link underline='none' href='https://github.com/nini22P'>22</Link>

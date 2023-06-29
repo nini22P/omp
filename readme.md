@@ -1,4 +1,4 @@
-<img height="100px" alt="logo" src="https://github.com/nini22P/omp/assets/60903333/4c4ac2b7-1002-478a-bb15-a5756e352fec"/>
+<img height="100px" width="100px" alt="logo" src="https://github.com/nini22P/omp/assets/60903333/4c4ac2b7-1002-478a-bb15-a5756e352fec"/>
 
 # OMP - OneDrive Media Player
 
@@ -7,19 +7,21 @@ English | [中文](./readme_cn.md)
 **[Now Playing](https://nini22p.github.io/omp/)**
 
 ## Features
+
 - [x] OneDrive Files View
 - [x] Music Playback
 - [x] Music Metadata
 - [x] Video Playback
-- [x] Playback Queue
+- [x] Play Queue
 - [x] Dark Mode
 - [x] Media Session
 - [x] PWA
 - [x] History Sync
-- [ ] Playlists Sync
+- [x] Playlists Sync
 
 ## Screenshot
-![omp](https://github.com/nini22P/omp/assets/60903333/f74801dc-8f12-42db-9d83-814c0289093a)
+
+![omp](https://github.com/nini22P/omp/assets/60903333/9ebdf1af-e0f0-40b0-b90c-6f1795ccf2c3)
 
 ## Development
 
@@ -35,7 +37,7 @@ VITE_CLIENT_ID=<clientId>
 VITE_REDIRECTURI=http://localhost:5173/
 ```
 
-6. Run `npm i && npm run dev`
+7. Run `npm i && npm run dev`
 
 ## License
 

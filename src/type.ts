@@ -1,32 +1,31 @@
 import { IPicture } from 'music-metadata-browser'
 
-export interface FileItem {
-  name: string;
-  size: number;
-  fileType: string;
+export interface File {
+  fileName: string;
+  filePath: string[];
+  fileSize: number;
+  fileType: 'folder' | 'audio' | 'video' | 'other';
 }
 
-export interface playListItem {
+export interface PlayQueueItem extends File {
   index: number;
-  title: string;
-  size: number;
-  path: string;
 }
 
-export interface PlayListStatus {
-  type: 'audio' | 'video' | string;
-  playList: playListItem[] | null;
-  current: number;
+export interface PlayQueueStatus {
+  type: 'audio' | 'video';
+  playQueue: PlayQueueItem[] | null;
+  currentIndex: number;
 }
 
-export interface PlayListAction {
-  updateType: (type: PlayListStatus['type']) => void,
-  updatePlayList: (playList: PlayListStatus['playList']) => void;
-  updateCurrent: (index: PlayListStatus['current']) => void;
+export interface PlayQueueAction {
+  updateType: (type: PlayQueueStatus['type']) => void,
+  updatePlayQueue: (PlayQueue: PlayQueueStatus['playQueue']) => void;
+  updateCurrentIndex: (index: PlayQueueStatus['currentIndex']) => void;
+  removeFilesFromPlayQueue: (filePathArray: File['filePath'][]) => void;
 }
 
 export interface MetaData {
-  path: string;
+  path: string[];
   size?: number;
   title: string;
   artist?: string | undefined;
@@ -38,7 +37,7 @@ export interface MetaData {
 }
 
 export interface MetaDataListStatus {
-  metaDataList: MetaData[] | [];
+  metaDataList: MetaData[];
 }
 
 export interface MetaDataListAction {
@@ -65,38 +64,68 @@ export interface PLayerAction {
 }
 
 export interface UiStatus {
+  folderTree: string[];
   audioViewIsShow: boolean;
   videoViewIsShow: boolean;
   controlIsShow: boolean;
-  playListIsShow: boolean;
+  playQueueIsShow: boolean;
   fullscreen: boolean;
   mobileSideBarOpen: boolean;
 }
 
 export interface UiAction {
+  updateFolderTree: (folderTree: UiStatus['folderTree']) => void;
   updateAudioViewIsShow: (audioViewIsShow: UiStatus['audioViewIsShow']) => void;
   updateVideoViewIsShow: (videoViewIsShow: UiStatus['videoViewIsShow']) => void;
   updateControlIsShow: (controlIsShow: UiStatus['controlIsShow']) => void;
-  updatePlayListIsShow: (playListIsShow: UiStatus['playListIsShow']) => void;
+  updatePlayQueueIsShow: (PlayQueueIsShow: UiStatus['playQueueIsShow']) => void;
   updateFullscreen: (fullscreen: UiStatus['fullscreen']) => void;
   updateMobileSideBarOpen: (mobileSideBarOpen: UiStatus['mobileSideBarOpen']) => void,
 }
 
-export interface HistoryItem {
-  filePath: string;
-  fileType: PlayListStatus['type'];
-  fileName: string;
-  fileSize: number;
-  lastTime: string;
-}
-
 export interface HistoryStatus {
-  historyList: HistoryItem[] | null;
+  historyList: File[] | null;
 }
 
 export interface HistoryAction {
   updateHistoryList: (historyList: HistoryStatus['historyList']) => void;
-  insertHistoryItem: (historyItem: HistoryItem) => void;
-  removeHistoryItem: (path: HistoryItem['filePath']) => void;
+  insertHistory: (file: File) => void;
+  removeHistory: (filePathArray: File['filePath'][]) => void;
   clearHistoryList: () => void;
+}
+
+
+export interface Playlist {
+  id: string;
+  title: string;
+  fileList: File[];
+}
+
+export interface PlaylistsStatus {
+  playlists: Playlist[] | null;
+}
+
+export interface PlaylistsAction {
+  updatePlaylists: (playlists: PlaylistsStatus['playlists']) => void;
+  insertPlaylist: (playlist: Playlist) => void;
+  renamePlaylist: (id: Playlist['id'], title: Playlist['title']) => void;
+  removePlaylist: (id: Playlist['id']) => void;
+  insertFilesToPlaylist: (id: Playlist['id'], files: File[]) => void;
+  removeFilesFromPlaylist: (id: Playlist['id'], filePathArray: File['filePath'][]) => void;
+}
+
+export interface CommonMenuStatus {
+  anchorEl: HTMLElement | null;
+  menuOpen: boolean;
+  dialogOpen: boolean;
+  currentFile: null | File;
+  handleClickRemove: null | ((filePathArray: string[][]) => void);
+}
+
+export interface CommonMenuAction {
+  updateAnchorEl: (anchorEl: CommonMenuStatus['anchorEl']) => void;
+  updateMenuOpen: (menuOpen: boolean) => void;
+  updateDialogOpen: (dialogOpen: CommonMenuStatus) => void;
+  updateCurrentFile: (currentFile: CommonMenuStatus['currentFile']) => void;
+  updateHandleClickRemove: (handleClickRemove: CommonMenuStatus['handleClickRemove']) => void;
 }

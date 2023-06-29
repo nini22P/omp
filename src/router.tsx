@@ -1,8 +1,9 @@
 import { createHashRouter } from 'react-router-dom'
 import App from './App'
-import ListView from './components/ListView'
-import NotFound from './components/NotFound'
+import Files from './components/Files/Files'
 import History from './components/History'
+import Playlist from './components/Playlist/Playlist'
+import NotFound from './components/NotFound'
 
 const router = createHashRouter([
   {
@@ -12,12 +13,16 @@ const router = createHashRouter([
     children: [
       {
         path: '/',
-        element: <ListView />
+        element: <Files />
       },
       {
-        path: 'history',
+        path: '/history',
         element: <History />
-      }
+      },
+      {
+        path: '/playlist/:id',
+        element: <Playlist />
+      },
     ]
   },
 ])
