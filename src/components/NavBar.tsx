@@ -4,11 +4,10 @@ import LogoutIcon from '@mui/icons-material/Logout'
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined'
 import { shallow } from 'zustand/shallow'
 import useUiStore from '../store/useUiStore'
-import useUser from '../hooks/useUser'
 import useTheme from '../hooks/useTheme'
+import { AccountInfo } from '@azure/msal-browser'
 
-const NavBar = () => {
-  const { accounts, logout } = useUser()
+const NavBar = ({ accounts, logout }: { accounts: AccountInfo[], logout: () => void }) => {
   const { styles } = useTheme()
   const [mobileSideBarOpen, updateMobileSideBarOpen] = useUiStore(
     (state) => [state.mobileSideBarOpen, state.updateMobileSideBarOpen],
@@ -22,9 +21,12 @@ const NavBar = () => {
       <Container maxWidth={'xl'} disableGutters={true}>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '4rem', pl: 1, pr: 1 }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} >
-            <IconButton onClick={() => updateMobileSideBarOpen(!mobileSideBarOpen)} sx={{ display: { xs: '', sm: 'none' } }}>
-              <MenuOutlinedIcon />
-            </IconButton>
+            {
+              (accounts.length !== 0) &&
+              <IconButton onClick={() => updateMobileSideBarOpen(!mobileSideBarOpen)} sx={{ display: { xs: '', sm: 'none' } }}>
+                <MenuOutlinedIcon />
+              </IconButton>
+            }
             <img src='./logo.svg' alt='logo' style={{ height: '1.5rem', marginLeft: '0.5rem', marginRight: '0.5rem' }} ></img>
             <Typography variant="h6" component="div" >
               OMP
