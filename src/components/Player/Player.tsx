@@ -12,7 +12,6 @@ import usePlayerStore from '../../store/usePlayerStore'
 import { useControlHide } from '../../hooks/useControlHide'
 import { useMediaSession } from '../../hooks/useMediaSession'
 import useFilesData from '../../hooks/useFilesData'
-import useSync from '../../hooks/useSync'
 import useTheme from '../../hooks/useTheme'
 import Audio from './Audio'
 import PlayerControl from './PlayerControl'
@@ -25,7 +24,6 @@ const Player = () => {
   const { styles } = useTheme()
   const [metaData, setMetaData] = useState<MetaData | null>(null)
 
-  useSync()
   const { getFileData } = useFilesData()
 
   const [type, playQueue, currentIndex, updateCurrentIndex, updatePlayQueue] = usePlayQueueStore(
@@ -82,7 +80,7 @@ const Player = () => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [player?.src])
+  }, [url])
 
   // 播放开始暂停
   useEffect(() => {
@@ -239,7 +237,7 @@ const Player = () => {
       const path = playQueue.filter(item => item.index === currentIndex)[0].filePath
       console.log('开始获取 metadata', path)
       if (metaDataList.some(item => filePathConvert(item.path) === filePathConvert(path))) {
-        console.log('跳过获取 metadata', 'path:', path)
+        console.log('跳过获取 metadata', path)
       } else {
         try {
           mm.fetchFromUrl(url).then(metadata => {
@@ -268,7 +266,7 @@ const Player = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [url])
 
-  // 根据播放队列和元数据列表更新当前音频元数据
+  // 更新当前音频元数据
   useEffect(() => {
     if (playQueue && playQueue.length !== 0) {
       const test = metaDataList
@@ -289,7 +287,7 @@ const Player = () => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playQueue?.find(item => item.index === currentIndex)?.filePath, currentIndex, metaDataList])
+  }, [url, metaDataList])
 
   // 设定封面
   useMemo(() => {

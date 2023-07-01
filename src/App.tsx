@@ -9,15 +9,18 @@ import SideBar from './components/SideBar/SideBar'
 import MobileSideBar from './components/SideBar/MobileSideBar'
 import useUser from './hooks/useUser'
 import useTheme from './hooks/useTheme'
+import useSync from './hooks/useSync'
 
 const App = () => {
   const { t } = useTranslation()
   const { theme } = useTheme()
-  const { login } = useUser()
+  const { accounts, login, logout } = useUser()
+  useSync(accounts)
+
   return (
     <main>
       <ThemeProvider theme={theme}>
-        <NavBar />
+        <NavBar accounts={accounts} logout={logout} />
         <AuthenticatedTemplate>
           <Box sx={{ position: 'absolute', height: 'calc(100dvh - 6rem - 4rem)', width: '100%', top: '4rem', }}>
             <Container maxWidth="xl" disableGutters={true} sx={{ height: '100%' }}>
