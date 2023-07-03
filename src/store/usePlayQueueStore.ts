@@ -1,6 +1,6 @@
 import { create } from 'zustand'
-import { PlayQueueAction, PlayQueueStatus } from '../type'
 import { filePathConvert } from '../util'
+import { PlayQueueStatus, PlayQueueAction } from '../types/playQueue'
 
 const usePlayQueueStore = create<PlayQueueStatus & PlayQueueAction>((set) => ({
   type: 'audio',

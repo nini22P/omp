@@ -1,6 +1,6 @@
 import { create } from 'zustand'
-import { HistoryStatus, HistoryAction } from '../type'
 import { filePathConvert } from '../util'
+import { HistoryStatus, HistoryAction } from '../types/history'
 
 const useHistoryStore = create<HistoryStatus & HistoryAction>((set) => ({
 

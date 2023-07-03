@@ -1,4 +1,6 @@
-import { File, PlayQueueItem, PlayQueueStatus } from './type'
+import { File } from './types/file'
+import { PlayQueueItem, PlayQueueStatus } from './types/playQueue'
+
 
 /**
  * 将时间转换为分钟
@@ -13,11 +15,15 @@ const timeShift = (time: number) => {
 
 const isAudio = (name: string) => (/.(wav|mp3|aac|ogg|flac|m4a|opus)$/i).test(name)
 const isVideo = (name: string) => (/.(mp4|mkv|avi|mov|rmvb|webm|flv)$/i).test(name)
+const isPicture = (name: string) => (/.(jpg|jpeg|png|bmp|webp|avif|tiff|gif|svg|ico)$/i.test(name))
+
 const checkFileType = (name: string): File['fileType'] => {
   if (isAudio(name))
     return 'audio'
   if (isVideo(name))
     return 'video'
+  if (isPicture(name))
+    return 'picture'
   return 'other'
 }
 

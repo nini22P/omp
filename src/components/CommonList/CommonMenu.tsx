@@ -8,8 +8,8 @@ import { shallow } from 'zustand/shallow'
 import usePlayQueueStore from '../../store/usePlayQueueStore'
 import usePlaylistsStore from '../../store/usePlaylistsStore'
 import useUiStore from '../../store/useUiStore'
-import { File } from '../../type'
 import { filePathConvert } from '../../util'
+import { File } from '../../types/file'
 
 const CommonMenu = (
   {

@@ -2,19 +2,22 @@ import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { IconButton, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
-import FolderIcon from '@mui/icons-material/Folder'
+import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined'
 import MusicNoteIcon from '@mui/icons-material/MusicNote'
 import MovieIcon from '@mui/icons-material/Movie'
 import MoreVertOutlined from '@mui/icons-material/MoreVertOutlined'
 import ShuffleOutlinedIcon from '@mui/icons-material/ShuffleOutlined'
+import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined'
+import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined'
 import { shallow } from 'zustand/shallow'
 import usePlayQueueStore from '../../store/usePlayQueueStore'
 import usePlayerStore from '../../store/usePlayerStore'
 import useUiStore from '../../store/useUiStore'
-import { File, PlayQueueItem } from '../../type'
 import { checkFileType, fileSizeConvert, shufflePlayQueue } from '../../util'
 import CommonMenu from './CommonMenu'
 import useTheme from '../../hooks/useTheme'
+import { PlayQueueItem } from '../../types/playQueue'
+import { File } from '../../types/file'
 
 const CommonList = (
   { listData, multiColumn, handleClickRemove }
@@ -122,6 +125,15 @@ const CommonList = (
             <Grid key={index} lg={multiColumn ? 4 : 12} md={multiColumn ? 6 : 12} sm={12} xs={12} p={0} >
               <ListItem
                 disablePadding
+                sx={{
+                  '& .MuiListItemButton-root': {
+                    paddingLeft: 3,
+                    // paddingRight: 9,
+                  },
+                  '& .MuiListItemSecondaryAction-root': {
+                    right: '4px',
+                  }
+                }}
                 secondaryAction={
                   (item.fileType === 'audio' || item.fileType === 'video') &&
                   <div>
@@ -144,16 +156,30 @@ const CommonList = (
               >
                 <ListItemButton
                   onClick={() => ((item as PlayQueueItem).index) ? updateCurrentIndex(index) : handleClickListItem(item.filePath)}
-                  sx={
-                    ((item as PlayQueueItem).index === currentIndex)
-                      ? styles.listItemPrimary
-                      : {}
+                  sx={{
+                    '& .MuiListItemIcon-root': {
+                      minWidth: 0,
+                      marginRight: 3,
+                    },
+                    '.MuiListItemText-root': {
+                      color: ((item as PlayQueueItem).index === currentIndex)
+                        ? styles.color.primary
+                        : ''
+                    },
+                    '.MuiListItemText-secondary': {
+                      color: ((item as PlayQueueItem).index === currentIndex)
+                        ? styles.color.primary
+                        : ''
+                    },
+                  }
                   }
                 >
                   <ListItemIcon>
-                    {item.fileType === 'folder' && <FolderIcon />}
+                    {item.fileType === 'folder' && <FolderOutlinedIcon />}
                     {item.fileType === 'audio' && <MusicNoteIcon />}
                     {item.fileType === 'video' && <MovieIcon />}
+                    {item.fileType === 'picture' && <InsertPhotoOutlinedIcon />}
+                    {item.fileType === 'other' && <InsertDriveFileOutlinedIcon />}
                   </ListItemIcon>
                   <ListItemText
                     primary={item.fileName}

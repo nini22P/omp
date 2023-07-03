@@ -5,8 +5,9 @@ import usePlaylistsStore from '../store/usePlaylistsStore'
 import useHistoryStore from '../store/useHistoryStore'
 import useFilesData from './useFilesData'
 import { fetchJson } from '../services'
-import { File, Playlist } from '../type'
 import { AccountInfo } from '@azure/msal-browser'
+import { File } from '../types/file'
+import { Playlist } from '../types/playlist'
 
 const useSync = (accounts: AccountInfo[]) => {
   const [historyList, updateHistoryList] = useHistoryStore((state) => [state.historyList, state.updateHistoryList], shallow)

@@ -1,7 +1,7 @@
 import { create } from 'zustand'
-import { PLayerStatus, PLayerAction } from '../type'
+import { PlayerStatus, PlayerAction } from '../types/player'
 
-const usePlayerStore = create<PLayerStatus & PLayerAction>((set) => ({
+const usePlayerStore = create<PlayerStatus & PlayerAction>((set) => ({
   isPlaying: false,
   cover: './cover.png',
   currentTime: 0,
