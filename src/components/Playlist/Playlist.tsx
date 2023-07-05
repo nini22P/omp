@@ -127,7 +127,7 @@ const Playlist = () => {
               <DialogActions>
                 <Button onClick={() => setRenameDialogOpen(false)}>{t('common.cancel')}</Button>
                 <Button onClick={() => {
-                  if (id) {
+                  if (id && newTitle) {
                     renamePlaylist(id, newTitle)
                     setRenameDialogOpen(false)
                   }

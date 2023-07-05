@@ -51,9 +51,14 @@ const Player = () => {
   // 获取当前播放文件链接
   useMemo(() => {
     if (playQueue !== null && playQueue.length !== 0) {
-      getFileData(filePathConvert(playQueue.filter(item => item.index === currentIndex)[0].filePath)).then((res) => {
-        setUrl(res['@microsoft.graph.downloadUrl'])
-      })
+      try {
+        getFileData(filePathConvert(playQueue.filter(item => item.index === currentIndex)[0].filePath)).then((res) => {
+          setUrl(res['@microsoft.graph.downloadUrl'])
+        })
+      } catch (error) {
+        console.error(error)
+        updateIsPlaying(false)
+      }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playQueue?.find(item => item.index === currentIndex)?.filePath])
@@ -287,7 +292,7 @@ const Player = () => {
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [url, metaDataList])
+  }, [playQueue?.find(item => item.index === currentIndex)?.filePath, metaDataList])
 
   // 设定封面
   useMemo(() => {

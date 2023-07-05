@@ -110,7 +110,18 @@ const CommonList = (
             !isPlayQueueView
           ) &&
           <Grid xs={12}>
-            <ListItem disablePadding>
+            <ListItem
+              disablePadding
+              sx={{
+                '& .MuiListItemButton-root': {
+                  paddingLeft: 3,
+                },
+                '& .MuiListItemIcon-root': {
+                  minWidth: 0,
+                  marginRight: 3,
+                },
+              }}
+            >
               <ListItemButton onClick={handleClickShuffleAll}>
                 <ListItemIcon>
                   <ShuffleOutlinedIcon />
