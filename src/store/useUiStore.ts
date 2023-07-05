@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { UiAction, UiStatus } from '../type'
+import { UiStatus, UiAction } from '../types/ui'
 
 const useUiStore = create<UiStatus & UiAction>((set) => ({
   folderTree: ['/'],

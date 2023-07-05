@@ -1,5 +1,5 @@
 import { create } from 'zustand'
-import { MetaDataListStatus, MetaDataListAction } from '../type'
+import { MetaDataListStatus, MetaDataListAction } from '../types/MetaData'
 
 const useMetaDataListStore = create<MetaDataListStatus & MetaDataListAction>((set) => ({
   metaDataList: [],

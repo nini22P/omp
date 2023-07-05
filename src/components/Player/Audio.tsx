@@ -22,7 +22,7 @@ import usePlayQueueStore from '../../store/usePlayQueueStore'
 import usePlayerStore from '../../store/usePlayerStore'
 import useUiStore from '../../store/useUiStore'
 import { timeShift } from '../../util'
-import { MetaData } from '../../type'
+import { MetaData } from '../../types/MetaData'
 
 const Audio = (
   {

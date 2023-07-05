@@ -1,6 +1,7 @@
 import { create } from 'zustand'
-import { PlaylistsStatus, PlaylistsAction } from '../type'
 import { filePathConvert } from '../util'
+import { PlaylistsStatus, PlaylistsAction } from '../types/playlist'
+
 const usePlaylistsStore = create<PlaylistsStatus & PlaylistsAction>((set) => ({
 
   playlists: null,

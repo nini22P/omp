@@ -16,8 +16,8 @@ import useTheme from '../../hooks/useTheme'
 import Audio from './Audio'
 import PlayerControl from './PlayerControl'
 import PlayQueue from './PlayQueue'
-import { MetaData } from '../../type'
 import { filePathConvert, shufflePlayQueue } from '../../util'
+import { MetaData } from '../../types/MetaData'
 
 const Player = () => {
 

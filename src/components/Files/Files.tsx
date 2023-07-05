@@ -5,8 +5,8 @@ import useFilesData from '../../hooks/useFilesData'
 import BreadcrumbNav from './BreadcrumbNav'
 import CommonList from '../CommonList/CommonList'
 import Loading from '../Loading'
-import { File } from '../../type'
 import { checkFileType, filePathConvert } from '../../util'
+import { File } from '../../types/file'
 
 const Files = () => {
 

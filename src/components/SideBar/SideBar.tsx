@@ -18,35 +18,35 @@ const SideBar = () => {
     shallow
   )
 
+  const navData = [
+    { router: '/', icon: <HomeOutlinedIcon />, label: t('nav.home') },
+    { router: '/history', icon: <HistoryOutlinedIcon />, label: t('nav.history') }
+  ]
+
   const closeSideBar = () => (mobileSideBarOpen) && updateMobileSideBarOpen(false)
 
   return (
     <div>
       <List >
-        <ListItem disablePadding={true}>
-          <ListItemButton
-            component={NavLink}
-            sx={styles.listItemActive}
-            to={'/'}
-            onClick={closeSideBar}>
-            <ListItemIcon>
-              <HomeOutlinedIcon />
-            </ListItemIcon>
-            <ListItemText primary={t('nav.home')} />
-          </ListItemButton>
-        </ListItem>
-        <ListItem disablePadding={true}>
-          <ListItemButton
-            component={NavLink}
-            sx={styles.listItemActive}
-            to={'/history'}
-            onClick={closeSideBar}>
-            <ListItemIcon >
-              <HistoryOutlinedIcon />
-            </ListItemIcon>
-            <ListItemText primary={t('nav.history')} />
-          </ListItemButton>
-        </ListItem>
+        {navData.map((item, index) =>
+          <ListItem
+            disablePadding
+            key={index}
+          >
+            <ListItemButton
+              component={NavLink}
+              sx={styles.navListItem}
+              to={item.router}
+              onClick={closeSideBar}
+            >
+              <ListItemIcon>
+                {item.icon}
+              </ListItemIcon>
+              <ListItemText primary={item.label} />
+            </ListItemButton>
+          </ListItem>
+        )
+        }
       </List>
       <Divider />
       <Playlists closeSideBar={closeSideBar} />

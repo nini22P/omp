@@ -31,7 +31,7 @@ const Playlists = ({ closeSideBar }: { closeSideBar: () => void }) => {
           >
             <ListItemButton
               component={NavLink}
-              sx={styles.listItemActive}
+              sx={styles.navListItem}
               to={`/playlist/${playlist.id}`}
               onClick={closeSideBar}
             >

@@ -27,24 +27,21 @@ const useTheme = () => {
       primary: theme.palette.primary.main,
       shadow: theme.palette.divider,
     },
-    listItemActive: {
+    navListItem: {
+      '&.MuiListItemButton-root': {
+        paddingLeft: 2,
+        paddingRight: 2,
+      },
+      '& .MuiListItemIcon-root': {
+        minWidth: 0,
+        marginRight: 2,
+      },
       '&.active': {
         color: theme.palette.primary.main,
       },
       '&.active .MuiListItemIcon-root': {
         color: theme.palette.primary.main,
       },
-    },
-    listItemPrimary: {
-      // '.MuiListItemIcon-root': {
-      //   color: theme.palette.primary.main,
-      // },
-      '.MuiListItemText-root': {
-        color: theme.palette.primary.main,
-      },
-      '.MuiListItemText-secondary': {
-        color: theme.palette.primary.main,
-      }
     },
     listItemTextNoWrap: {
       style: {
