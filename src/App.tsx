@@ -14,13 +14,13 @@ import useSync from './hooks/useSync'
 const App = () => {
   const { t } = useTranslation()
   const { theme } = useTheme()
-  const { accounts, login, logout } = useUser()
+  const { accounts, login } = useUser()
   useSync(accounts)
 
   return (
     <main>
       <ThemeProvider theme={theme}>
-        <NavBar accounts={accounts} logout={logout} />
+        <NavBar accounts={accounts} />
         <AuthenticatedTemplate>
           <Box sx={{ position: 'absolute', height: 'calc(100dvh - 6rem - 4rem)', width: '100%', top: '4rem', }}>
             <Container maxWidth="xl" disableGutters={true} sx={{ height: '100%' }}>

@@ -8,6 +8,7 @@
     "more": "More"
   },
   "account": {
+    "account": "Account",
     "signIn": "Sign in",
     "signOut": "Sign out",
     "signInAlert": "Please sign in to see your files"
@@ -23,6 +24,7 @@
   },
   "nav": {
     "home": "Home",
-    "history": "History"
+    "history": "History",
+    "setting": "Setting"
   }
 }
