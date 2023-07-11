@@ -1,34 +1,46 @@
-import { Avatar, CardHeader, IconButton, Tooltip, Typography } from '@mui/material'
-import LogoutIcon from '@mui/icons-material/Logout'
+import { Avatar, Button, Divider, List, ListItem, ListItemAvatar, ListItemButton, ListItemText } from '@mui/material'
 import useUser from '../hooks/useUser'
 import { useTranslation } from 'react-i18next'
+import useTheme from '../hooks/useTheme'
 
 const Setting = () => {
   const { accounts, logout } = useUser()
-  console.log(accounts)
   const { t } = useTranslation()
+  const { styles } = useTheme()
+
   return (
-    <div>
-      <Typography variant="subtitle1" sx={{ pl: 2.5, pt: 2 }}>
-        {t('account.account')}
-      </Typography>
-      <CardHeader
-        avatar={
+    <List>
+      {/* 账号 */}
+      <ListItem>
+        <ListItemAvatar>
+        </ListItemAvatar>
+        <ListItemText sx={{ color: styles.color.primary }}>
+          {t('account.account')}
+        </ListItemText>
+      </ListItem>
+
+      <ListItem
+        secondaryAction={
+          <Button onClick={() => logout()}>
+            {t('account.signOut')}
+          </Button>
+        }
+      >
+        <ListItemAvatar>
           <Avatar aria-label={accounts[0].name}>
             {accounts[0].name?.split(' ')[0]}
           </Avatar>
-        }
-        action={
-          <Tooltip title={t('account.signOut')}>
-            <IconButton onClick={() => logout()}>
-              <LogoutIcon />
-            </IconButton>
-          </Tooltip>
-        }
-        title={accounts[0].name}
-        subheader={accounts[0].username}
-      />
-    </div>
+        </ListItemAvatar>
+        <ListItemText
+          primary={accounts[0].name}
+          secondary={accounts[0].username}
+        />
+      </ListItem>
+
+      <Divider sx={{ mt: 1, mb: 1 }} />
+
+    </List>
+
   )
 }
 export default Setting

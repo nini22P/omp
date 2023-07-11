@@ -182,8 +182,7 @@ const CommonList = (
                         ? styles.color.primary
                         : ''
                     },
-                  }
-                  }
+                  }}
                 >
                   <ListItemIcon>
                     {item.fileType === 'folder' && <FolderOutlinedIcon />}
