@@ -5,9 +5,11 @@
     "rename": "重命名",
     "remove": "移除",
     "delete": "删除",
-    "more": "更多"
+    "more": "更多",
+    "about": "关于"
   },
   "account": {
+    "account": "账号",
     "signIn": "登录",
     "signOut": "注销",
     "signInAlert": "请登录以查看你的文件"
@@ -23,6 +25,7 @@
   },
   "nav": {
     "home": "主页",
-    "history": "历史"
+    "history": "历史",
+    "setting": "设置"
   }
 }

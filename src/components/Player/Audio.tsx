@@ -66,7 +66,7 @@ const Audio = (
   const [color, setColor] = useState('#ffffff')
 
   useMemo(() => {
-    if (cover !== './cd.png')
+    if (cover !== './cover.png')
       extractColors(cover)
         .then(color => setColor(color[0].hex))
         .catch(console.error)
@@ -81,8 +81,9 @@ const Audio = (
         height: '100dvh',
         position: 'fixed',
         transition: 'top 0.35s ease-in-out',
+        transform: 'translateZ(0)',
         background:
-          (noBackgound || cover === './cd.png')
+          (noBackgound || cover === './cover.png')
             ? `linear-gradient(rgba(50, 50, 50, 0.6), ${color}bb), #000`
             : `linear-gradient(rgba(50, 50, 50, 0.3), rgba(50, 50, 50, 0.3) ), url(${cover})  no-repeat center, #000`,
         backgroundSize: 'cover',
@@ -91,7 +92,7 @@ const Audio = (
       }}
       style={(audioViewIsShow) ? { top: 0 } : { top: '100vh' }}
     >
-      <Box sx={{ backdropFilter: (noBackgound || cover === './cd.png') ? '' : 'blur(30px)' }}>
+      <Box sx={{ backdropFilter: (noBackgound || cover === './cover.png') ? '' : 'blur(30px)' }}>
         <Container maxWidth={'xl'} disableGutters={true}>
           <Grid container
             pt={{ xs: 1, sm: 2 }}

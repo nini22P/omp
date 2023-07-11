@@ -3,6 +3,7 @@ import { Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText } f
 import { NavLink } from 'react-router-dom'
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined'
 import HistoryOutlinedIcon from '@mui/icons-material/HistoryOutlined'
+import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
 import { shallow } from 'zustand/shallow'
 import useUiStore from '../../store/useUiStore'
 import Playlists from './Playlists'
@@ -20,7 +21,8 @@ const SideBar = () => {
 
   const navData = [
     { router: '/', icon: <HomeOutlinedIcon />, label: t('nav.home') },
-    { router: '/history', icon: <HistoryOutlinedIcon />, label: t('nav.history') }
+    { router: '/history', icon: <HistoryOutlinedIcon />, label: t('nav.history') },
+    { router: '/setting', icon: <SettingsOutlinedIcon />, label: t('nav.setting') },
   ]
 
   const closeSideBar = () => (mobileSideBarOpen) && updateMobileSideBarOpen(false)

@@ -19,4 +19,5 @@ export interface MetaDataListStatus {
 export interface MetaDataListAction {
   updateMetaDataList: (metaDataList: MetaDataListStatus['metaDataList']) => void
   insertMetaDataList: (metaData: MetaData) => void
+  clearMetaDataList: () => void
 }

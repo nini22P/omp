@@ -242,7 +242,7 @@ const Player = () => {
       const path = playQueue.filter(item => item.index === currentIndex)[0].filePath
       console.log('开始获取 metadata', path)
       if (metaDataList.some(item => filePathConvert(item.path) === filePathConvert(path))) {
-        console.log('跳过获取 metadata', path)
+        console.log('跳过获取 metadata')
       } else {
         try {
           mm.fetchFromUrl(url).then(metadata => {
@@ -274,6 +274,7 @@ const Player = () => {
   // 更新当前音频元数据
   useEffect(() => {
     if (playQueue && playQueue.length !== 0) {
+      console.log(metaDataList)
       const test = metaDataList
         .filter(metaData =>
           filePathConvert(metaData.path) === filePathConvert(playQueue.filter(item => item.index === currentIndex)[0].filePath))
@@ -283,24 +284,26 @@ const Player = () => {
           ...test[0],
           size: playQueue.filter(item => item.index === currentIndex)[0].fileSize
         })
+        if (test[0].cover)
+          if (test[0].cover[0].data.data)
+            updateCover(URL.createObjectURL(new Blob([new Uint8Array(test[0].cover[0].data.data)], { type: 'image/png' })))
+          else if (test[0].cover[0].data)
+            updateCover(URL.createObjectURL(new Blob([new Uint8Array(test[0].cover[0].data)], { type: 'image/png' })))
+          else
+            updateCover('./cover.png')
+        else
+          updateCover('./cover.png')
       } else {
         setMetaData({
           title: playQueue.filter(item => item.index === currentIndex)[0].fileName,
           artist: '',
           path: playQueue.filter(item => item.index === currentIndex)[0].filePath,
         })
+        updateCover('./cover.png')
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playQueue?.find(item => item.index === currentIndex)?.filePath, metaDataList])
-
-  // 设定封面
-  useMemo(() => {
-    (!playQueue || !metaData || !metaData.cover)
-      ? updateCover('./cd.png')
-      : updateCover(URL.createObjectURL(new Blob([new Uint8Array(metaData.cover[0].data)], { type: 'image/png' })))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [metaData?.cover])
 
   // 向 mediaSession 发送当前播放进度
   useMediaSession(player, cover, metaData?.album, metaData?.artist, metaData?.title,

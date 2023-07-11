@@ -4,6 +4,7 @@ import Files from './components/Files/Files'
 import History from './components/History'
 import Playlist from './components/Playlist/Playlist'
 import NotFound from './components/NotFound'
+import Setting from './components/Setting'
 
 const router = createHashRouter([
   {
@@ -13,16 +14,20 @@ const router = createHashRouter([
     children: [
       {
         path: '/',
-        element: <Files />
+        element: <Files />,
       },
       {
         path: '/history',
-        element: <History />
+        element: <History />,
       },
       {
         path: '/playlist/:id',
-        element: <Playlist />
+        element: <Playlist />,
       },
+      {
+        path: '/setting',
+        element: <Setting />,
+      }
     ]
   },
 ])
