@@ -1,4 +1,4 @@
-import { Avatar, Button, Divider, List, ListItem, ListItemAvatar, ListItemButton, ListItemText } from '@mui/material'
+import { Avatar, Button, Divider, List, ListItem, ListItemAvatar, ListItemText } from '@mui/material'
 import useUser from '../hooks/useUser'
 import { useTranslation } from 'react-i18next'
 import useTheme from '../hooks/useTheme'
