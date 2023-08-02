@@ -1,5 +1,4 @@
 import useSWR from 'swr'
-import { shallow } from 'zustand/shallow'
 import useUiStore from '../../store/useUiStore'
 import useFilesData from '../../hooks/useFilesData'
 import BreadcrumbNav from './BreadcrumbNav'
@@ -10,7 +9,7 @@ import { File } from '../../types/file'
 
 const Files = () => {
 
-  const [folderTree] = useUiStore((state) => [state.folderTree], shallow)
+  const [folderTree] = useUiStore((state) => [state.folderTree])
   const { getFilesData } = useFilesData()
   const fileListFetcher = (path: string) => getFilesData(path).then(res =>
     res.map((item: { name: string; size: number; folder: { childCount: number, view: { sortBy: string, sortOrder: string, viewType: string } } }) => {

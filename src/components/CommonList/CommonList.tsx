@@ -30,12 +30,12 @@ const CommonList = (
   const [dialogOpen, setDialogOpen] = useState(false)
   const [currentFile, setCurrentFile] = useState<null | File>(null)
 
-  const [folderTree, updateFolderTree] = useUiStore((state) => [state.folderTree, state.updateFolderTree], shallow)
+  const [folderTree, updateFolderTree] = useUiStore((state) => [state.folderTree, state.updateFolderTree])
   const [currentIndex, updateType, updatePlayQueue, updateCurrentIndex] = usePlayQueueStore(
     (state) => [state.currentIndex, state.updateType, state.updatePlayQueue, state.updateCurrentIndex],
     shallow
   )
-  const [shuffle, updateShuffle] = usePlayerStore(state => [state.shuffle, state.updateShuffle], shallow)
+  const [shuffle, updateShuffle] = usePlayerStore(state => [state.shuffle, state.updateShuffle])
 
   const isPlayQueueView = listData?.some((item) => typeof (item as PlayQueueItem).index === 'number')
 

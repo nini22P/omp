@@ -1,8 +1,9 @@
-import { create } from 'zustand'
+import { createWithEqualityFn } from 'zustand/traditional'
 import { filePathConvert } from '../util'
 import { HistoryStatus, HistoryAction } from '../types/history'
+import { shallow } from 'zustand/shallow'
 
-const useHistoryStore = create<HistoryStatus & HistoryAction>((set) => ({
+const useHistoryStore = createWithEqualityFn<HistoryStatus & HistoryAction>((set) => ({
 
   historyList: null,
 
@@ -36,6 +37,6 @@ const useHistoryStore = create<HistoryStatus & HistoryAction>((set) => ({
 
   clearHistoryList: () => set({ historyList: [] }),
 
-}))
+}), shallow)
 
 export default useHistoryStore

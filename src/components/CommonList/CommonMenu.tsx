@@ -40,7 +40,7 @@ const CommonMenu = (
   const { t } = useTranslation()
   const navigate = useNavigate()
 
-  const [updateFolderTree] = useUiStore((state) => [state.updateFolderTree], shallow)
+  const [updateFolderTree] = useUiStore((state) => [state.updateFolderTree])
   const [playQueue, currentIndex, updatePlayQueue] = usePlayQueueStore(
     (state) => [state.playQueue, state.currentIndex, state.updatePlayQueue],
     shallow
