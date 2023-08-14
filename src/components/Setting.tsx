@@ -52,7 +52,7 @@ const Setting = () => {
       {
         licenses.map((license) =>
           <ListItem key={license.name} disablePadding>
-            <ListItemButton onClick={() => window.open(license.link.replace('git+', '').replace('.git', ''), '_blank')}>
+            <ListItemButton onClick={() => window.open(license.link, '_blank')}>
               <ListItemAvatar></ListItemAvatar>
               <ListItemText primary={license.name} secondary={license.licenseType} />
             </ListItemButton>
