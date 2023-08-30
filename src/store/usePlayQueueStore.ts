@@ -1,8 +1,9 @@
-import { create } from 'zustand'
 import { filePathConvert } from '../util'
 import { PlayQueueStatus, PlayQueueAction } from '../types/playQueue'
+import { createWithEqualityFn } from 'zustand/traditional'
+import { shallow } from 'zustand/shallow'
 
-const usePlayQueueStore = create<PlayQueueStatus & PlayQueueAction>((set) => ({
+const usePlayQueueStore = createWithEqualityFn<PlayQueueStatus & PlayQueueAction>((set) => ({
   type: 'audio',
   playQueue: null,
   currentIndex: 0,
@@ -27,6 +28,6 @@ const usePlayQueueStore = create<PlayQueueStatus & PlayQueueAction>((set) => ({
     }
 
   )
-}))
+}), shallow)
 
 export default usePlayQueueStore

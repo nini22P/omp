@@ -1,7 +1,8 @@
-import { create } from 'zustand'
+import { createWithEqualityFn } from 'zustand/traditional'
+import { shallow } from 'zustand/shallow'
 import { UiStatus, UiAction } from '../types/ui'
 
-const useUiStore = create<UiStatus & UiAction>((set) => ({
+const useUiStore = createWithEqualityFn<UiStatus & UiAction>((set) => ({
   folderTree: ['/'],
   audioViewIsShow: false,
   videoViewIsShow: false,
@@ -16,6 +17,6 @@ const useUiStore = create<UiStatus & UiAction>((set) => ({
   updatePlayQueueIsShow: (playQueueIsShow) => set(() => ({ playQueueIsShow: playQueueIsShow })),
   updateFullscreen: (fullscreen) => set(() => ({ fullscreen: fullscreen })),
   updateMobileSideBarOpen: (mobileSideBarOpen) => set(() => ({ mobileSideBarOpen: mobileSideBarOpen })),
-}))
+}), shallow)
 
 export default useUiStore

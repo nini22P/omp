@@ -3,7 +3,6 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Button, ListItemText, Typography, Dialog, DialogTitle, DialogActions, Menu, MenuItem, DialogContent, TextField } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
-import { shallow } from 'zustand/shallow'
 import usePlaylistsStore from '../../store/usePlaylistsStore'
 import CommonList from '../CommonList/CommonList'
 import Loading from '../Loading'
@@ -15,7 +14,7 @@ const Playlist = () => {
   const { id } = useParams()
 
   const [playlists, renamePlaylist, removePlaylist, removeFilesFromPlaylist] = usePlaylistsStore(
-    (state) => [state.playlists, state.renamePlaylist, state.removePlaylist, state.removeFilesFromPlaylist], shallow)
+    (state) => [state.playlists, state.renamePlaylist, state.removePlaylist, state.removeFilesFromPlaylist])
   const playlist = playlists?.find(playlistItem => playlistItem.id === id)
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)

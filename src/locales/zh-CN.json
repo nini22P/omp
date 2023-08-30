@@ -6,7 +6,8 @@
     "remove": "移除",
     "delete": "删除",
     "more": "更多",
-    "about": "关于"
+    "about": "关于",
+    "openSourceDependencies": "开源库"
   },
   "account": {
     "account": "账号",

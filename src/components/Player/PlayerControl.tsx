@@ -46,7 +46,7 @@ const PlayerControl = (
       handleClickFullscreen: () => void,
     }) => {
 
-  const [type, playQueue] = usePlayQueueStore((state) => [state.type, state.playQueue], shallow)
+  const [type, playQueue] = usePlayQueueStore((state) => [state.type, state.playQueue])
   const [playQueueIsShow, fullscreen, updateAudioViewIsShow, updateVideoViewIsShow, updatePlayQueueIsShow] = useUiStore(
     (state) => [state.playQueueIsShow, state.fullscreen, state.updateAudioViewIsShow, state.updateVideoViewIsShow, state.updatePlayQueueIsShow],
     shallow

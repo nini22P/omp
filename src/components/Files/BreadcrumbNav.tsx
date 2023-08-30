@@ -1,10 +1,9 @@
 import { Breadcrumbs, Button } from '@mui/material'
-import { shallow } from 'zustand/shallow'
 import useUiStore from '../../store/useUiStore'
 
 const BreadcrumbNav = () => {
 
-  const [folderTree, updateFolderTree] = useUiStore((state) => [state.folderTree, state.updateFolderTree], shallow)
+  const [folderTree, updateFolderTree] = useUiStore((state) => [state.folderTree, state.updateFolderTree])
 
   const handleListNavClick = (index: number) => updateFolderTree(folderTree.slice(0, index + 1))
 

@@ -32,7 +32,7 @@ const NavBar = ({ accounts }: { accounts: AccountInfo[] }) => {
                 <MenuOutlinedIcon />
               </IconButton>
             }
-            <img src='./logo.svg' alt='logo' style={{ height: '1.5rem', marginLeft: '0.5rem', marginRight: '0.5rem' }} ></img>
+            <img src='./logo.svg' alt='logo' style={{ height: '1.5rem', marginLeft: '0.5rem', marginRight: '0.8rem' }} ></img>
             <Typography variant="h6" component="div" >
               OMP
             </Typography>

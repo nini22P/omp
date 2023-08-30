@@ -1,8 +1,9 @@
-import { create } from 'zustand'
 import { filePathConvert } from '../util'
 import { PlaylistsStatus, PlaylistsAction } from '../types/playlist'
+import { shallow } from 'zustand/shallow'
+import { createWithEqualityFn } from 'zustand/traditional'
 
-const usePlaylistsStore = create<PlaylistsStatus & PlaylistsAction>((set) => ({
+const usePlaylistsStore = createWithEqualityFn<PlaylistsStatus & PlaylistsAction>((set) => ({
 
   playlists: null,
 
@@ -51,6 +52,6 @@ const usePlaylistsStore = create<PlaylistsStatus & PlaylistsAction>((set) => ({
       )
     })),
 
-}))
+}), shallow)
 
 export default usePlaylistsStore

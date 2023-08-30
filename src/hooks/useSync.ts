@@ -1,6 +1,5 @@
 import { useMemo } from 'react'
 import useSWR from 'swr'
-import { shallow } from 'zustand/shallow'
 import usePlaylistsStore from '../store/usePlaylistsStore'
 import useHistoryStore from '../store/useHistoryStore'
 import useFilesData from './useFilesData'
@@ -10,8 +9,8 @@ import { File } from '../types/file'
 import { Playlist } from '../types/playlist'
 
 const useSync = (accounts: AccountInfo[]) => {
-  const [historyList, updateHistoryList] = useHistoryStore((state) => [state.historyList, state.updateHistoryList], shallow)
-  const [playlists, updatePlaylists] = usePlaylistsStore((state) => [state.playlists, state.updatePlaylists], shallow)
+  const [historyList, updateHistoryList] = useHistoryStore((state) => [state.historyList, state.updateHistoryList])
+  const [playlists, updatePlaylists] = usePlaylistsStore((state) => [state.playlists, state.updatePlaylists])
   const { getAppRootFilesData, uploadAppRootJsonData } = useFilesData()
 
   // 自动从 OneDrive 获取配置

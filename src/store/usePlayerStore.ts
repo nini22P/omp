@@ -1,7 +1,8 @@
-import { create } from 'zustand'
 import { PlayerStatus, PlayerAction } from '../types/player'
+import { shallow } from 'zustand/shallow'
+import { createWithEqualityFn } from 'zustand/traditional'
 
-const usePlayerStore = create<PlayerStatus & PlayerAction>((set) => ({
+const usePlayerStore = createWithEqualityFn<PlayerStatus & PlayerAction>((set) => ({
   isPlaying: false,
   cover: './cover.png',
   currentTime: 0,
@@ -14,6 +15,6 @@ const usePlayerStore = create<PlayerStatus & PlayerAction>((set) => ({
   updateDuration: (duration) => set(() => ({ duration: duration })),
   updateShuffle: (shuffle) => set(() => ({ shuffle: shuffle })),
   updateRepeat: (repeat) => set(() => ({ repeat: repeat })),
-}))
+}), shallow)
 
 export default usePlayerStore

@@ -6,7 +6,8 @@
     "remove": "Remove",
     "delete": "Delete",
     "more": "More",
-    "about": "关于"
+    "about": "About",
+    "openSourceDependencies": "Open source dependencies"
   },
   "account": {
     "account": "Account",

@@ -4,7 +4,6 @@ import shortUUID from 'short-uuid'
 import { List, ListItem, ListItemText, ListItemIcon, ListItemButton, Button } from '@mui/material'
 import ListOutlinedIcon from '@mui/icons-material/ListOutlined'
 import PlaylistAddOutlinedIcon from '@mui/icons-material/PlaylistAddOutlined'
-import { shallow } from 'zustand/shallow'
 import usePlaylistsStore from '../../store/usePlaylistsStore'
 import useTheme from '../../hooks/useTheme'
 
@@ -13,7 +12,7 @@ const Playlists = ({ closeSideBar }: { closeSideBar: () => void }) => {
   const { t } = useTranslation()
   const { styles } = useTheme()
   const navigate = useNavigate()
-  const [playlists, insertPlaylist] = usePlaylistsStore((state) => [state.playlists, state.insertPlaylist], shallow)
+  const [playlists, insertPlaylist] = usePlaylistsStore((state) => [state.playlists, state.insertPlaylist])
 
   const addPlaylist = async () => {
     const id = shortUUID().generate()
