@@ -3,7 +3,6 @@ import * as mm from 'music-metadata-browser'
 import { Box, Container, IconButton, Paper } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined'
-import { shallow } from 'zustand/shallow'
 import useHistoryStore from '../../store/useHistoryStore'
 import useUiStore from '../../store/useUiStore'
 import useMetaDataListStore from '../../store/useMetaDataListStore'
@@ -27,21 +26,16 @@ const Player = () => {
   const { getFileData } = useFilesData()
 
   const [type, playQueue, currentIndex, updateCurrentIndex, updatePlayQueue] = usePlayQueueStore(
-    (state) => [state.type, state.playQueue, state.currentIndex, state.updateCurrentIndex, state.updatePlayQueue],
-    shallow
-  )
-  const [metaDataList, insertMetaDataList] = useMetaDataListStore(
-    (state) => [state.metaDataList, state.insertMetaDataList],
-    shallow
-  )
-  const [isPlaying, cover, shuffle, repeat, updateIsPlaying, updateCover, updateCurrentTime, updateDuration, updateRepeat] = usePlayerStore(
-    (state) => [state.isPlaying, state.cover, state.shuffle, state.repeat, state.updateIsPlaying, state.updateCover, state.updateCurrentTime, state.updateDuration, state.updateRepeat],
-    shallow
-  )
+    (state) => [state.type, state.playQueue, state.currentIndex, state.updateCurrentIndex, state.updatePlayQueue])
+
+  const [metaDataList, insertMetaDataList] = useMetaDataListStore((state) => [state.metaDataList, state.insertMetaDataList])
+
+  const [playStatu, cover, shuffle, repeat, updatePlayStatu, updateCover, updateCurrentTime, updateDuration, updateRepeat] = usePlayerStore(
+    (state) => [state.playStatu, state.cover, state.shuffle, state.repeat, state.updatePlayStatu, state.updateCover, state.updateCurrentTime, state.updateDuration, state.updateRepeat])
+
   const [videoViewIsShow, controlIsShow, updateVideoViewIsShow, updateControlIsShow, updateFullscreen] = useUiStore(
-    (state) => [state.videoViewIsShow, state.controlIsShow, state.updateVideoViewIsShow, state.updateControlIsShow, state.updateFullscreen],
-    shallow
-  )
+    (state) => [state.videoViewIsShow, state.controlIsShow, state.updateVideoViewIsShow, state.updateControlIsShow, state.updateFullscreen])
+
   const insertHistory = useHistoryStore((state) => state.insertHistory)
 
   const playerRef = (useRef<HTMLVideoElement>(null))
@@ -54,16 +48,16 @@ const Player = () => {
       try {
         getFileData(filePathConvert(playQueue.filter(item => item.index === currentIndex)[0].filePath)).then((res) => {
           setUrl(res['@microsoft.graph.downloadUrl'])
+          updatePlayStatu('waiting')
         })
       } catch (error) {
         console.error(error)
-        updateIsPlaying(false)
+        updatePlayStatu('paused')
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [playQueue?.find(item => item.index === currentIndex)?.filePath])
 
-  // 预载完毕后立即播放并更新总时长
   useMemo(() => {
     if (player !== null && playQueue) {
       updateDuration(0)
@@ -72,8 +66,7 @@ const Player = () => {
         if (type === 'video') {
           updateVideoViewIsShow(true) //类型是视频时打开视频播放
         }
-        // player.play()
-        updateIsPlaying(true)
+        updatePlayStatu('playing')
         updateDuration(player.duration)
         const currentItem = playQueue.filter(item => item.index === currentIndex)[0]
         insertHistory({
@@ -89,18 +82,18 @@ const Player = () => {
 
   // 播放开始暂停
   useEffect(() => {
-    if (isPlaying) {
+    if (playStatu === 'playing') {
       console.log('开始播放', playQueue?.filter(item => item.index === currentIndex)[0].filePath)
       if (playQueue?.filter(item => item.index === currentIndex)[0].filePath)
         player?.play()
       else {
-        updateIsPlaying(false)
+        updatePlayStatu('paused')
       }
     }
-    else
+    if (playStatu === 'paused')
       player?.pause()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isPlaying])
+  }, [playStatu])
 
   // 随机
   useEffect(() => {
@@ -127,12 +120,12 @@ const Player = () => {
 
   // 播放开始
   const handleClickPlay = () => {
-    updateIsPlaying(true)
+    updatePlayStatu('playing')
   }
 
   // 播放暂停
   const handleClickPause = () => {
-    updateIsPlaying(false)
+    updatePlayStatu('paused')
   }
 
   // 下一曲
@@ -225,7 +218,7 @@ const Player = () => {
           else
             updateCurrentIndex(0)
         else {
-          updateIsPlaying(false)
+          updatePlayStatu('paused')
           updateCurrentTime(0)
         }
       } else if (repeat === 'off' || repeat === 'all')

@@ -1,5 +1,5 @@
 export interface PlayerStatus {
-  isPlaying: boolean;
+  playStatu: 'paused' | 'playing' | 'waiting';
   cover: string;
   currentTime: number;
   duration: number;
@@ -8,7 +8,7 @@ export interface PlayerStatus {
 }
 
 export interface PlayerAction {
-  updateIsPlaying: (isPlaying: PlayerStatus['isPlaying']) => void;
+  updatePlayStatu: (isPlaying: PlayerStatus['playStatu']) => void;
   updateCover: (cover: PlayerStatus['cover']) => void;
   updateCurrentTime: (currentTime: PlayerStatus['currentTime']) => void;
   updateDuration: (duration: PlayerStatus['duration']) => void;

@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react'
 import { extractColors } from 'extract-colors'
-import { Box, Container, IconButton, Slider, Typography } from '@mui/material'
+import { Box, CircularProgress, Container, IconButton, Slider, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined'
 import QueueMusicOutlinedIcon from '@mui/icons-material/QueueMusicOutlined'
@@ -17,7 +17,6 @@ import OpenInFullIcon from '@mui/icons-material/OpenInFull'
 import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen'
 import PanoramaOutlinedIcon from '@mui/icons-material/PanoramaOutlined'
 // import PictureInPictureIcon from '@mui/icons-material/PictureInPicture'
-import { shallow } from 'zustand/shallow'
 import usePlayQueueStore from '../../store/usePlayQueueStore'
 import usePlayerStore from '../../store/usePlayerStore'
 import useUiStore from '../../store/useUiStore'
@@ -53,14 +52,12 @@ const Audio = (
 ) => {
 
   const [playQueue] = usePlayQueueStore((state) => [state.playQueue])
+
   const [audioViewIsShow, fullscreen, updateAudioViewIsShow, updatePlayQueueIsShow] = useUiStore(
-    (state) => [state.audioViewIsShow, state.fullscreen, state.updateAudioViewIsShow, state.updatePlayQueueIsShow],
-    shallow
-  )
-  const [isPlaying, cover, currentTime, duration, shuffle, repeat, updateShuffle] = usePlayerStore(
-    (state) => [state.isPlaying, state.cover, state.currentTime, state.duration, state.shuffle, state.repeat, state.updateShuffle],
-    shallow
-  )
+    (state) => [state.audioViewIsShow, state.fullscreen, state.updateAudioViewIsShow, state.updatePlayQueueIsShow])
+
+  const [playStatu, cover, currentTime, duration, shuffle, repeat, updateShuffle] = usePlayerStore(
+    (state) => [state.playStatu, state.cover, state.currentTime, state.duration, state.shuffle, state.repeat, state.updateShuffle])
 
   const [noBackgound, setNoBackground] = useState(false)
   const [color, setColor] = useState('#ffffff')
@@ -193,15 +190,22 @@ const Audio = (
                     <FastRewindIcon sx={{ height: 32, width: 32 }} style={{ color: '#fff' }} />
                   </IconButton>
                   {
-                    (!isPlaying)
-                      ?
-                      <IconButton aria-label="play" onClick={() => handleClickPlay()}>
-                        <PlayCircleOutlinedIcon sx={{ height: 64, width: 64 }} style={{ color: '#fff' }} />
-                      </IconButton>
-                      :
-                      <IconButton aria-label="pause" onClick={() => handleClickPause()}>
-                        <PauseCircleOutlinedIcon sx={{ height: 64, width: 64 }} style={{ color: '#fff' }} />
-                      </IconButton>
+                    (playStatu === 'paused') &&
+                    <IconButton aria-label="play" onClick={() => handleClickPlay()}>
+                      <PlayCircleOutlinedIcon sx={{ height: 64, width: 64 }} style={{ color: '#fff' }} />
+                    </IconButton>
+                  }
+                  {
+                    (playStatu === 'playing') &&
+                    <IconButton aria-label="pause" onClick={() => handleClickPause()}>
+                      <PauseCircleOutlinedIcon sx={{ height: 64, width: 64 }} style={{ color: '#fff' }} />
+                    </IconButton>
+                  }
+                  {
+                    (playStatu === 'waiting') &&
+                    <Box sx={{ height: 80, width: 80, padding: '8px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                      <CircularProgress style={{ color: '#fff' }} size={64} />
+                    </Box>
                   }
                   <IconButton aria-label="forward" sx={{ display: { sm: 'inline-grid', xs: 'none' } }} onClick={() => handleClickSeekforward(10)} >
                     <FastForwardIcon sx={{ height: 32, width: 32 }} style={{ color: '#fff' }} />
