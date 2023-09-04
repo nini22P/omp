@@ -1,21 +1,14 @@
 import { Button, Drawer } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import KeyboardArrowRightOutlinedIcon from '@mui/icons-material/KeyboardArrowRightOutlined'
-import { shallow } from 'zustand/shallow'
 import usePlayQueueStore from '../../store/usePlayQueueStore'
 import useUiStore from '../../store/useUiStore'
 import CommonList from '../CommonList/CommonList'
 
 const PlayQueue = () => {
 
-  const [playQueue, removeFilesFromPlayQueue] = usePlayQueueStore(
-    (state) => [state.playQueue, state.removeFilesFromPlayQueue],
-    shallow
-  )
-  const [playQueueIsShow, updatePlayQueueIsShow] = useUiStore(
-    (state) => [state.playQueueIsShow, state.updatePlayQueueIsShow],
-    shallow
-  )
+  const [playQueue, removeFilesFromPlayQueue] = usePlayQueueStore((state) => [state.playQueue, state.removeFilesFromPlayQueue])
+  const [playQueueIsShow, updatePlayQueueIsShow] = useUiStore((state) => [state.playQueueIsShow, state.updatePlayQueueIsShow])
 
   return (
     <Drawer

@@ -3,13 +3,13 @@ import { shallow } from 'zustand/shallow'
 import { createWithEqualityFn } from 'zustand/traditional'
 
 const usePlayerStore = createWithEqualityFn<PlayerStatus & PlayerAction>((set) => ({
-  isPlaying: false,
+  playStatu: 'paused',
   cover: './cover.png',
   currentTime: 0,
   duration: 0,
   shuffle: false,
   repeat: 'off',
-  updateIsPlaying: (isPlaying) => set(() => ({ isPlaying: isPlaying })),
+  updatePlayStatu: (playStatu) => set(() => ({ playStatu: playStatu })),
   updateCover: (cover) => set(() => (({ cover: cover }))),
   updateCurrentTime: (currentTime) => set(() => ({ currentTime: currentTime })),
   updateDuration: (duration) => set(() => ({ duration: duration })),

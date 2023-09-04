@@ -1,4 +1,4 @@
-import { ButtonBase, Container, IconButton, Slider, Typography } from '@mui/material'
+import { Box, ButtonBase, CircularProgress, Container, IconButton, Slider, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious'
 import SkipNextIcon from '@mui/icons-material/SkipNext'
@@ -13,7 +13,6 @@ import OpenInFullIcon from '@mui/icons-material/OpenInFull'
 import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen'
 import QueueMusicIcon from '@mui/icons-material/QueueMusic'
 // import PictureInPictureIcon from '@mui/icons-material/PictureInPicture'
-import { shallow } from 'zustand/shallow'
 import usePlayQueueStore from '../../store/usePlayQueueStore'
 import usePlayerStore from '../../store/usePlayerStore'
 import useUiStore from '../../store/useUiStore'
@@ -47,14 +46,12 @@ const PlayerControl = (
     }) => {
 
   const [type, playQueue] = usePlayQueueStore((state) => [state.type, state.playQueue])
+
   const [playQueueIsShow, fullscreen, updateAudioViewIsShow, updateVideoViewIsShow, updatePlayQueueIsShow] = useUiStore(
-    (state) => [state.playQueueIsShow, state.fullscreen, state.updateAudioViewIsShow, state.updateVideoViewIsShow, state.updatePlayQueueIsShow],
-    shallow
-  )
-  const [isPlaying, cover, currentTime, duration, shuffle, repeat, updateShuffle] = usePlayerStore(
-    (state) => [state.isPlaying, state.cover, state.currentTime, state.duration, state.shuffle, state.repeat, state.updateShuffle],
-    shallow
-  )
+    (state) => [state.playQueueIsShow, state.fullscreen, state.updateAudioViewIsShow, state.updateVideoViewIsShow, state.updatePlayQueueIsShow])
+
+  const [playStatu, cover, currentTime, duration, shuffle, repeat, updateShuffle] = usePlayerStore(
+    (state) => [state.playStatu, state.cover, state.currentTime, state.duration, state.shuffle, state.repeat, state.updateShuffle])
 
   return (
     <Container maxWidth={'xl'} disableGutters={true}>
@@ -147,15 +144,22 @@ const PlayerControl = (
               <FastRewindIcon />
             </IconButton>
             {
-              (!isPlaying)
-                ?
-                <IconButton aria-label="play" onClick={() => handleClickPlay()}>
-                  <PlayCircleOutlinedIcon sx={{ height: 38, width: 38 }} />
-                </IconButton>
-                :
-                <IconButton aria-label="pause" onClick={() => handleClickPause()}>
-                  <PauseCircleOutlinedIcon sx={{ height: 38, width: 38 }} />
-                </IconButton>
+              (playStatu === 'paused') &&
+              <IconButton aria-label="play" onClick={() => handleClickPlay()}>
+                <PlayCircleOutlinedIcon sx={{ height: 38, width: 38 }} />
+              </IconButton>
+            }
+            {
+              (playStatu === 'playing') &&
+              <IconButton aria-label="pause" onClick={() => handleClickPause()}>
+                <PauseCircleOutlinedIcon sx={{ height: 38, width: 38 }} />
+              </IconButton>
+            }
+            {
+              (playStatu === 'waiting') &&
+              <Box sx={{ padding: '8px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <CircularProgress style={{ color: '#666' }} size={38} />
+              </Box>
             }
             <IconButton sx={{ display: { sm: 'inline-grid', xs: 'none' } }} aria-label="forward" onClick={() => handleClickSeekforward(10)} >
               <FastForwardIcon />
