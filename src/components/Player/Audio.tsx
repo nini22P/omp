@@ -203,8 +203,8 @@ const Audio = (
                   }
                   {
                     (playStatu === 'waiting') &&
-                    <Box sx={{ height: 80, width: 80, padding: '8px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                      <CircularProgress style={{ color: '#fff' }} size={64} />
+                    <Box sx={{ height: 80, width: 80, padding: '13px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                      <CircularProgress style={{ color: '#fff' }} size={54} />
                     </Box>
                   }
                   <IconButton aria-label="forward" sx={{ display: { sm: 'inline-grid', xs: 'none' } }} onClick={() => handleClickSeekforward(10)} >
