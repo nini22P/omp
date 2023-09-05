@@ -28,13 +28,13 @@ English | [中文](./readme_cn.md)
 1. Go to <https://portal.azure.com/>
 2. Into `App registrations` register an application
 3. `Supported account types` select the third item (`Accounts in any organizational directory and personal Microsoft accounts`)
-4. `Redirect URI` select `SPA`, url enter <http://localhost:5173/>
+4. `Redirect URI` select `SPA`, url enter <http://localhost:8760>
 5. `API Permissions` add `User.Read` `Files.Read` `Files.ReadWrite.AppFolder`
 6. Add `.env.development` in project path
 
 ```env
 VITE_CLIENT_ID=<clientId>
-VITE_REDIRECTURI=http://localhost:5173/
+VITE_REDIRECTURI=http://localhost:8760
 ```
 
 7. Run `npm i && npm run dev`

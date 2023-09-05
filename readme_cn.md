@@ -28,13 +28,13 @@
 1. 打开 <https://portal.azure.com/>
 2. 进入 `应用注册` 添加一个新应用
 3. `支持账户类型` 选择第三项 (`任何组织目录中的帐户和个人 Microsoft 帐户`)
-4. `重定向 URI` 选择 `SPA`, url 输入 <http://localhost:5173/>
+4. `重定向 URI` 选择 `SPA`, url 输入 <http://localhost:8760>
 5. `API 权限` 添加 `User.Read` `Files.Read` `Files.ReadWrite.AppFolder`
 6. 在项目路径添加 `.env.development`
 
 ```env
 VITE_CLIENT_ID=<clientId>
-VITE_REDIRECTURI=http://localhost:5173/
+VITE_REDIRECTURI=http://localhost:8760
 ```
 
 7. 运行 `npm i && npm run dev`
