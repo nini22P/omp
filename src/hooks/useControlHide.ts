@@ -5,7 +5,7 @@ export const useControlHide = (type: string, videoViewIsShow: boolean) => {
   const updateControlIsShow = useUiStore((state) => state.updateControlIsShow)
   useEffect(() => {
     if (type === 'video' && videoViewIsShow) {
-      let timer: number | undefined
+      let timer: string | number | NodeJS.Timeout | undefined
       const resetTimer = () => {
         updateControlIsShow(true)
         clearTimeout(timer)
