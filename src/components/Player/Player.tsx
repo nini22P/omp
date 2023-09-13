@@ -278,9 +278,7 @@ const Player = () => {
           size: playQueue.filter(item => item.index === currentIndex)[0].fileSize
         })
         if (test[0].cover)
-          if (test[0].cover[0].data.data)
-            updateCover(URL.createObjectURL(new Blob([new Uint8Array(test[0].cover[0].data.data)], { type: 'image/png' })))
-          else if (test[0].cover[0].data)
+          if (test[0].cover[0].data)
             updateCover(URL.createObjectURL(new Blob([new Uint8Array(test[0].cover[0].data)], { type: 'image/png' })))
           else
             updateCover('./cover.png')

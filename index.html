@@ -5,7 +5,6 @@
   <link rel="icon" href="./logo.svg" sizes="any">
   <link rel="apple-touch-icon" href="./apple-touch-icon.png">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <script>navigator.serviceWorker.register("./service-worker.js")</script>
   <link rel="manifest" href="./manifest.json" />
   <title>OMP</title>
   <meta name="description" content="OneDrive Media Player" />
@@ -22,7 +21,21 @@
 
 <body>
   <div id="root"></div>
-  <script type="module" src="/src/main.tsx"></script>
 </body>
+
+<script>
+  if ("serviceWorker" in navigator) {
+    window.addEventListener("load", () => {
+      navigator.serviceWorker
+        .register("service-worker.js")
+        .then((registration) => {
+          console.log("Service Worker registered: ", registration);
+        })
+        .catch((registrationError) => {
+          console.error("Service Worker registration failed: ", registrationError);
+        });
+    });
+  }
+</script>
 
 </html>

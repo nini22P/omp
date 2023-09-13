@@ -1,14 +1,13 @@
 {
   "name": "omp",
+  "description": "OneDrive Media Player",
   "private": true,
   "version": "1.1.2",
-  "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
+    "dev": "webpack serve",
+    "build": "webpack --mode=production --node-env=production",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
-    "start": "tsc && vite build && vite preview"
+    "watch": "webpack --watch"
   },
   "dependencies": {
     "@azure/msal-browser": "^3.0.2",
@@ -32,19 +31,30 @@
     "zustand": "^4.4.1"
   },
   "devDependencies": {
-    "@esbuild-plugins/node-globals-polyfill": "^0.2.3",
-    "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
+    "@types/copy-webpack-plugin": "^10.1.0",
     "@types/extract-colors": "^1.1.1",
+    "@types/node": "^20.6.0",
     "@types/react": "^18.2.21",
     "@types/react-dom": "^18.2.7",
     "@typescript-eslint/eslint-plugin": "^6.6.0",
     "@typescript-eslint/parser": "^6.6.0",
-    "@vitejs/plugin-react": "^4.0.4",
+    "autoprefixer": "^10.4.15",
+    "copy-webpack-plugin": "^11.0.0",
+    "css-loader": "^6.8.1",
     "eslint": "^8.48.0",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.3",
-    "rollup-plugin-polyfill-node": "^0.12.0",
+    "html-webpack-plugin": "^5.5.3",
+    "postcss": "^8.4.29",
+    "postcss-loader": "^7.3.3",
+    "prettier": "^3.0.3",
+    "style-loader": "^3.3.3",
+    "ts-loader": "^9.4.4",
+    "ts-node": "^10.9.1",
     "typescript": "^5.2.2",
-    "vite": "^4.4.9"
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4",
+    "webpack-dev-server": "^4.15.1",
+    "workbox-webpack-plugin": "^7.0.0"
   }
 }
