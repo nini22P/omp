@@ -23,6 +23,18 @@ English | [中文](./readme_cn.md)
 
 ![omp](https://github.com/nini22P/omp/assets/60903333/9ebdf1af-e0f0-40b0-b90c-6f1795ccf2c3)
 
+## FAQ
+
+### Where is my data stored?
+
+All of OMP data is stored in the `Apps / OMP` folder in your OneDrive. Where `history.json` is the history and `playlists.json` is the playlists. If you have lost your data, you can restore an older version by visiting the OneDrive web version.
+
+### How to retrieve old versions of data after changing client IDs
+
+The client ID has been changed in `v1.2.0`, you need to re-authorize it, and new data will be created in the new folder if you are using the old version.
+
+First close OMP, then open `OneDrive / Apps`, find `OMP 1` folder, delete all files in it, then find `OMP` folder, move all files in it to `OMP 1` folder, delete `OMP` folder, and finally rename `OMP 1` folder to `OMP`.
+
 ## Running and Build
 
 ### App registrations
