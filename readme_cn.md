@@ -23,21 +23,37 @@
 
 ![omp](https://github.com/nini22P/omp/assets/60903333/9ebdf1af-e0f0-40b0-b90c-6f1795ccf2c3)
 
-## 开发
+## 运行和编译
+
+### 注册应用
 
 1. 打开 <https://portal.azure.com/>
 2. 进入 `应用注册` 添加一个新应用
 3. `支持账户类型` 选择第三项 (`任何组织目录中的帐户和个人 Microsoft 帐户`)
 4. `重定向 URI` 选择 `SPA`, url 输入 <http://localhost:8760>
 5. `API 权限` 添加 `User.Read` `Files.Read` `Files.ReadWrite.AppFolder`
-6. 在项目路径添加 `.env.development`
+
+### 运行开发服务器
+
+在项目路径添加 `.env.development`
 
 ```env
-VITE_CLIENT_ID=<clientId>
-VITE_REDIRECTURI=http://localhost:8760
+CLIENT_ID=<clientId>
+REDIRECT_URI=http://localhost:8760
 ```
 
-7. 运行 `npm i && npm run dev`
+运行 `npm i && npm run dev`
+
+### 本地编译
+
+在项目路径添加 `.env`
+
+```env
+CLIENT_ID=<clientId>
+REDIRECT_URI=<redirectUri>
+```
+
+运行 `npm i && npm run build`
 
 ## 许可
 
