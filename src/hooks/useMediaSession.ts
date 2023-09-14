@@ -16,7 +16,7 @@ export const useMediaSession = (
 ) => {
   const defaultSkipTime = 10
   // 向 mediaSession 发送当前播放进度
-  function updatePositionState() {
+  const updatePositionState = () => {
     if ('setPositionState' in navigator.mediaSession && player && !isNaN(player.duration)) {
       navigator.mediaSession.setPositionState({
         duration: player.duration,
@@ -25,6 +25,7 @@ export const useMediaSession = (
       })
     }
   }
+
   if (player)
     player.onplaying = () => {
       updatePositionState()

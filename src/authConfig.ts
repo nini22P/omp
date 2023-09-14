@@ -12,9 +12,9 @@ import { LogLevel } from '@azure/msal-browser'
  */
 export const msalConfig = {
   auth: {
-    clientId: import.meta.env.VITE_CLIENT_ID,
+    clientId: process.env.CLIENT_ID as string,
     authority: 'https://login.microsoftonline.com/common',
-    redirectUri: import.meta.env.VITE_REDIRECTURI
+    redirectUri: process.env.REDIRECT_URI as string,
   },
   cache: {
     cacheLocation: 'localStorage', // This configures where your cache will be stored
@@ -30,9 +30,9 @@ export const msalConfig = {
           case LogLevel.Error:
             console.error(message)
             return
-          case LogLevel.Info:
-            console.info(message)
-            return
+          // case LogLevel.Info:
+          //   console.info(message)
+          //   return
           case LogLevel.Verbose:
             console.debug(message)
             return

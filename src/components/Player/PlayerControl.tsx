@@ -157,8 +157,8 @@ const PlayerControl = (
             }
             {
               (playStatu === 'waiting') &&
-              <Box sx={{ padding: '8px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                <CircularProgress style={{ color: '#666' }} size={38} />
+              <Box sx={{ padding: '11px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <CircularProgress style={{ color: '#666' }} size={32} />
               </Box>
             }
             <IconButton sx={{ display: { sm: 'inline-grid', xs: 'none' } }} aria-label="forward" onClick={() => handleClickSeekforward(10)} >
