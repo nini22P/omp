@@ -39,8 +39,8 @@ jobs:
         run: npm install
       - name: Build
         env:
-          VITE_CLIENT_ID: ${{ secrets.CLIENT_ID }}
-          VITE_REDIRECTURI: ${{ secrets.REDIRECT_URI }}
+          CLIENT_ID: ${{ secrets.CLIENT_ID }}
+          REDIRECT_URI: ${{ secrets.REDIRECT_URI }}
         run: npm run build
       - name: Setup Pages
         uses: actions/configure-pages@v3
