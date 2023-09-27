@@ -12,15 +12,16 @@ const Files = () => {
   const [folderTree] = useUiStore((state) => [state.folderTree])
   const { getFilesData } = useFilesData()
   const fileListFetcher = (path: string) => getFilesData(path).then(res =>
-    res.map((item: { name: string; size: number; folder: { childCount: number, view: { sortBy: string, sortOrder: string, viewType: string } } }) => {
-      return {
-        fileName: item.name,
-        filePath: [...folderTree, item.name],
-        fileSize: item.size,
-        fileType: (item.folder) ? 'folder' : checkFileType(item.name)
-      }
-    }
-    )
+    res
+      .map((item: { name: string; size: number; folder: { childCount: number, view: { sortBy: string, sortOrder: string, viewType: string } } }) => {
+        return {
+          fileName: item.name,
+          filePath: [...folderTree, item.name],
+          fileSize: item.size,
+          fileType: (item.folder) ? 'folder' : checkFileType(item.name)
+        }
+      })
+      .filter((item: { fileType: File['fileType'] }) => item.fileType !== 'other')
   )
   const { data: fileListData, error: fileListError, isLoading: fileListIsLoading } = useSWR<File[], Error>(filePathConvert(folderTree), fileListFetcher, { revalidateOnFocus: false })
   console.log('Get folder data')

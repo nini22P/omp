@@ -1,13 +1,12 @@
 import { File } from './types/file'
 import { PlayQueueItem, PlayQueueStatus } from './types/playQueue'
 
-
 /**
  * 将时间转换为分钟
  * @param time 
  * @returns 
  */
-const timeShift = (time: number) => {
+export const timeShift = (time: number) => {
   const minute = Math.floor(time / 60).toFixed().toString().padStart(2, '0')
   const second = (time % 60).toFixed().toString().padStart(2, '0')
   return `${minute} : ${second}`
@@ -17,7 +16,7 @@ const isAudio = (name: string) => (/.(wav|mp3|aac|ogg|flac|m4a|opus)$/i).test(na
 const isVideo = (name: string) => (/.(mp4|mkv|avi|mov|rmvb|webm|flv)$/i).test(name)
 const isPicture = (name: string) => (/.(jpg|jpeg|png|bmp|webp|avif|tiff|gif|svg|ico)$/i.test(name))
 
-const checkFileType = (name: string): File['fileType'] => {
+export const checkFileType = (name: string): File['fileType'] => {
   if (isAudio(name))
     return 'audio'
   if (isVideo(name))
@@ -33,7 +32,7 @@ const checkFileType = (name: string): File['fileType'] => {
  * @param currentIndex 当前播放id
  * @returns 
  */
-const shufflePlayQueue = (playQueue: PlayQueueItem[], currentIndex?: PlayQueueStatus['currentIndex']) => {
+export const shufflePlayQueue = (playQueue: PlayQueueItem[], currentIndex?: PlayQueueStatus['currentIndex']) => {
   const randomPlayQueue = [...playQueue]
   for (let i = randomPlayQueue.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -44,12 +43,12 @@ const shufflePlayQueue = (playQueue: PlayQueueItem[], currentIndex?: PlayQueueSt
   else return randomPlayQueue
 }
 
-const nowTime = () => {
+export const nowTime = () => {
   const dateTime = new Date()
   return `${dateTime.getFullYear}-${dateTime.getMonth}-${dateTime.getDay} ${dateTime.getHours}:${dateTime.getMinutes}`
 }
 
-const fileSizeConvert = (fileSize: File['fileSize']) => {
+export const fileSizeConvert = (fileSize: File['fileSize']) => {
   return ((fileSize / 1024) < 1024)
     ? `${(fileSize / 1024).toFixed(2)} KB`
     : ((fileSize / 1024 / 1024) < 1024)
@@ -57,6 +56,4 @@ const fileSizeConvert = (fileSize: File['fileSize']) => {
       : `${(fileSize / 1024 / 1024 / 1024).toFixed(2)} GB`
 }
 
-const filePathConvert = (filePath: File['filePath']) => (filePath.join('/') === '/') ? '/' : filePath.slice(1).join('/')
-
-export { timeShift, checkFileType, shufflePlayQueue, nowTime, fileSizeConvert, filePathConvert }
+export const filePathConvert = (filePath: File['filePath']) => (filePath.join('/') === '/') ? '/' : filePath.slice(1).join('/')

@@ -13,38 +13,37 @@ const useSync = (accounts: AccountInfo[]) => {
   const [playlists, updatePlaylists] = usePlaylistsStore((state) => [state.playlists, state.updatePlaylists])
   const { getAppRootFilesData, uploadAppRootJsonData } = useFilesData()
 
-  // 自动从 OneDrive 获取配置
-  const appConfigfetcher = async () => {
-    if (accounts.length === 0)
-      return {
-        history: null,
-        playlists: null,
-      }
+  const isLoggedIn = accounts.length > 0
+
+  // 自动从 OneDrive 获取应用数据
+  const appDatafetcher = async () => {
     const appRootFiles = await getAppRootFilesData('/')
     const historyFile = appRootFiles.value.find((item: { name: string }) => item.name === 'history.json')
     const playlistsFile = appRootFiles.value.find((item: { name: string }) => item.name === 'playlists.json')
     let history = []
     let playlists = []
+
     if (historyFile) {
       history = await fetchJson(historyFile['@microsoft.graph.downloadUrl'])
     }
     if (playlistsFile) {
       playlists = await fetchJson(playlistsFile['@microsoft.graph.downloadUrl'])
     }
-    console.log('Get appConfigData')
+    console.log('Get app data')
     return {
       history: history.filter((item: File) => typeof item.filePath === 'object'),
       playlists: playlists.filter((item: Playlist) => typeof item.fileList === 'object')
     }
   }
-  const { data: appConfigData, error: appConfigError, isLoading: appConfigIsLoading } = useSWR<{ history: File[], playlists: Playlist[] }>('appConfig', appConfigfetcher)
+
+  const { data, error, isLoading } = useSWR<{ history: File[], playlists: Playlist[] }>(isLoggedIn ? 'fetchAppData' : null, appDatafetcher)
 
   // 自动更新播放历史
   useMemo(() => {
-    if (!appConfigIsLoading && !appConfigError && appConfigData?.history)
-      updateHistoryList(appConfigData.history)
+    if (!isLoading && !error && data?.history)
+      updateHistoryList(data.history)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [appConfigData])
+  }, [data])
 
   // 自动上传播放历史
   useMemo(() => {
@@ -56,10 +55,10 @@ const useSync = (accounts: AccountInfo[]) => {
 
   // 自动更新播放列表
   useMemo(() => {
-    if (!appConfigIsLoading && !appConfigError && appConfigData?.playlists)
-      updatePlaylists(appConfigData.playlists)
+    if (!isLoading && !error && data?.playlists)
+      updatePlaylists(data.playlists)
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [appConfigData])
+  }, [data])
 
   // 自动上传播放列表
   useMemo(() => {
