@@ -1,5 +1,5 @@
-import { getAppRootFiles, getFile, getFiles, uploadAppRootJson } from '../graph'
-import { loginRequest } from '../authConfig'
+import { getAppRootFiles, getFile, getFiles, uploadAppRootJson } from '../services/graph'
+import { loginRequest } from '../services/authConfig'
 import useUser from './useUser'
 
 const useFilesData = () => {

@@ -2,9 +2,9 @@ import useSWR from 'swr'
 import useUiStore from '../../store/useUiStore'
 import useFilesData from '../../hooks/useFilesData'
 import BreadcrumbNav from './BreadcrumbNav'
-import CommonList from '../CommonList/CommonList'
+import CommonList from '../../components/CommonList/CommonList'
 import Loading from '../Loading'
-import { checkFileType, filePathConvert } from '../../util'
+import { checkFileType, filePathConvert } from '../../utils'
 import { File } from '../../types/file'
 
 const Files = () => {

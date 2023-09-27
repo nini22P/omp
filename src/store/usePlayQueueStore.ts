@@ -1,4 +1,4 @@
-import { filePathConvert } from '../util'
+import { filePathConvert } from '../utils'
 import { PlayQueueStatus, PlayQueueAction } from '../types/playQueue'
 import { createWithEqualityFn } from 'zustand/traditional'
 import { shallow } from 'zustand/shallow'

@@ -26,7 +26,7 @@ const config = {
             React: 'react',
         }),
         new HtmlWebpackPlugin({
-            template: 'index.html',
+            template: './src/index.html',
         }),
         new CopyWebpackPlugin({
             patterns: [{ from: 'public' }],

@@ -20,7 +20,7 @@ import PanoramaOutlinedIcon from '@mui/icons-material/PanoramaOutlined'
 import usePlayQueueStore from '../../store/usePlayQueueStore'
 import usePlayerStore from '../../store/usePlayerStore'
 import useUiStore from '../../store/useUiStore'
-import { timeShift } from '../../util'
+import { timeShift } from '../../utils'
 import { MetaData } from '../../types/MetaData'
 
 const Audio = (

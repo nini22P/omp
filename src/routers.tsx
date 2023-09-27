@@ -1,10 +1,10 @@
 import { createHashRouter } from 'react-router-dom'
 import App from './App'
-import Files from './components/Files/Files'
-import History from './components/History'
-import Playlist from './components/Playlist/Playlist'
-import NotFound from './components/NotFound'
-import Setting from './components/Setting'
+import Files from './pages/Files/Files'
+import History from './pages/History'
+import Playlist from './pages/Playlist/Playlist'
+import NotFound from './pages/NotFound'
+import Setting from './pages/Setting'
 
 const router = createHashRouter([
   {
