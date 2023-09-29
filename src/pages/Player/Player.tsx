@@ -15,7 +15,7 @@ import useTheme from '../../hooks/useTheme'
 import Audio from './Audio'
 import PlayerControl from './PlayerControl'
 import PlayQueue from './PlayQueue'
-import { filePathConvert, shufflePlayQueue } from '../../util'
+import { filePathConvert, shufflePlayQueue } from '../../utils'
 import { MetaData } from '../../types/MetaData'
 
 const Player = () => {
@@ -264,14 +264,13 @@ const Player = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [url])
 
-  // 更新当前音频元数据
+  // 更新当前 metadata
   useEffect(() => {
     if (playQueue && playQueue.length !== 0) {
-      console.log(metaDataList)
       const test = metaDataList
         .filter(metaData =>
           filePathConvert(metaData.path) === filePathConvert(playQueue.filter(item => item.index === currentIndex)[0].filePath))
-      console.log('设定当前音频元数据', test)
+      console.log('设定当前 metadata', test)
       if (test.length !== 0) {
         setMetaData({
           ...test[0],

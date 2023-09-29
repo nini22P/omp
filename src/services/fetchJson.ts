@@ -3,7 +3,7 @@
  * @param url 
  * @returns 
  */
-export const fetchJson = async (url: string) => {
+const fetchJson = async (url: string) => {
   try {
     const response = await fetch(url)
     const json = response.json()
@@ -12,3 +12,5 @@ export const fetchJson = async (url: string) => {
     console.error(error)
   }
 }
+
+export default fetchJson

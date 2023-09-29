@@ -1,5 +1,5 @@
 import { createWithEqualityFn } from 'zustand/traditional'
-import { filePathConvert } from '../util'
+import { filePathConvert } from '../utils'
 import { HistoryStatus, HistoryAction } from '../types/history'
 import { shallow } from 'zustand/shallow'
 

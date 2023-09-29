@@ -1,4 +1,4 @@
-import { filePathConvert } from '../util'
+import { filePathConvert } from '../utils'
 import { PlaylistsStatus, PlaylistsAction } from '../types/playlist'
 import { shallow } from 'zustand/shallow'
 import { createWithEqualityFn } from 'zustand/traditional'

@@ -4,7 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { Button, ListItemText, Typography, Dialog, DialogTitle, DialogActions, Menu, MenuItem, DialogContent, TextField } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import usePlaylistsStore from '../../store/usePlaylistsStore'
-import CommonList from '../CommonList/CommonList'
+import CommonList from '../../components/CommonList/CommonList'
 import Loading from '../Loading'
 
 const Playlist = () => {

@@ -3,10 +3,10 @@ import { useTranslation } from 'react-i18next'
 import { Outlet } from 'react-router-dom'
 import { Button, Container, Divider, Link, ThemeProvider, Typography, Box } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
-import NavBar from './components/NavBar'
-import Player from './components/Player/Player'
-import SideBar from './components/SideBar/SideBar'
-import MobileSideBar from './components/SideBar/MobileSideBar'
+import NavBar from './pages/NavBar'
+import Player from './pages/Player/Player'
+import SideBar from './pages/SideBar/SideBar'
+import MobileSideBar from './pages/SideBar/MobileSideBar'
 import useUser from './hooks/useUser'
 import useTheme from './hooks/useTheme'
 import useSync from './hooks/useSync'
@@ -26,11 +26,11 @@ const App = () => {
             <Container maxWidth="xl" disableGutters={true} sx={{ height: '100%' }}>
               <MobileSideBar />
               <Grid container flexDirection={'row'} height={'100%'}  >
-                <Grid xs={0} sm={4} md={3} lg={2} height={'100%'} sx={{ overflowY: 'auto', display: { xs: 'none', sm: 'block' }, }} pb={1} borderRight={`1px solid ${theme.palette.divider}`} borderLeft={`1px solid ${theme.palette.divider}`} >
+                <Grid xs={0} sm={3} lg={2} height={'100%'} sx={{ overflowY: 'auto', display: { xs: 'none', sm: 'block' }, }} pb={1} borderRight={`1px solid ${theme.palette.divider}`} borderLeft={`1px solid ${theme.palette.divider}`} >
                   <SideBar />
                   <Divider orientation="vertical" flexItem />
                 </Grid>
-                <Grid xs={12} sm={8} md={9} lg={10} pt={1} pb={3} height={'100%'} sx={{ overflowY: 'auto' }} borderRight={`1px solid ${theme.palette.divider}`} >
+                <Grid xs={12} sm={9} lg={10} pt={1} pb={3} height={'100%'} sx={{ overflowY: 'auto' }} borderRight={`1px solid ${theme.palette.divider}`} >
                   <Outlet />
                 </Grid>
               </Grid>
@@ -49,8 +49,7 @@ const App = () => {
               padding: '1rem',
               textAlign: 'center',
             }}>
-            <div>
-            </div>
+            <div>{/* Don't delete this */}</div>
             <div>
               <Typography variant="h5" pb={2} >
                 {t('account.signInAlert')}

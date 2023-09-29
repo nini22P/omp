@@ -3,7 +3,7 @@ import Grid from '@mui/material/Unstable_Grid2'
 import KeyboardArrowRightOutlinedIcon from '@mui/icons-material/KeyboardArrowRightOutlined'
 import usePlayQueueStore from '../../store/usePlayQueueStore'
 import useUiStore from '../../store/useUiStore'
-import CommonList from '../CommonList/CommonList'
+import CommonList from '../../components/CommonList/CommonList'
 
 const PlayQueue = () => {
 

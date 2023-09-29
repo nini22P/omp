@@ -1,7 +1,7 @@
 {
   "name": "OMP",
   "short_name": "OMP",
-  "start_url": "./",
+  "start_url": ".",
   "display": "standalone",
   "description": "OneDrive Media Player",
   "dir": "auto",

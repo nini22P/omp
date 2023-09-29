@@ -2,7 +2,7 @@ import { Avatar, Button, Divider, List, ListItem, ListItemAvatar, ListItemButton
 import useUser from '../hooks/useUser'
 import { useTranslation } from 'react-i18next'
 import useTheme from '../hooks/useTheme'
-import { licenses } from '../licenses'
+import { licenses } from '../data/licenses'
 
 const Setting = () => {
   const { accounts, logout } = useUser()

@@ -21,6 +21,7 @@ const Playlists = ({ closeSideBar }: { closeSideBar: () => void }) => {
   }
 
   return (
+    playlists &&
     <List>
       {
         playlists?.map((playlist, index) =>

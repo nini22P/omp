@@ -23,9 +23,10 @@ const config = {
         new webpack.ProvidePlugin({
             process: 'process/browser',
             Buffer: ['buffer', 'Buffer'],
+            React: 'react',
         }),
         new HtmlWebpackPlugin({
-            template: 'index.html',
+            template: './src/index.html',
         }),
         new CopyWebpackPlugin({
             patterns: [{ from: 'public' }],
@@ -35,8 +36,10 @@ const config = {
         rules: [
             {
                 test: /\.(ts|tsx)$/i,
-                loader: 'ts-loader',
-                exclude: ['/node_modules/'],
+                exclude: /(node_modules)/,
+                use: {
+                    loader: 'swc-loader',
+                }
             },
             {
                 test: /\.css$/i,
