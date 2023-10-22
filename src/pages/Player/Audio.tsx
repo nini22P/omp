@@ -62,12 +62,10 @@ const Audio = (
   const [noBackgound, setNoBackground] = useState(false)
   const [color, setColor] = useState('#ffffff')
 
-  useMemo(() => {
-    if (cover !== './cover.png')
-      extractColors(cover)
-        .then(color => setColor(color[0].hex))
-        .catch(console.error)
-  }, [cover])
+  useMemo(
+    () => (cover !== './cover.png') && extractColors(cover).then(color => setColor(color[0].hex)).catch(console.error),
+    [cover]
+  )
 
   return (
     <Container
