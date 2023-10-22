@@ -39,6 +39,8 @@ const CommonList = (
 
   const isPlayQueueView = listData?.some((item) => typeof (item as PlayQueueItem).index === 'number')
 
+  isPlayQueueView && document.getElementById('playing-item')?.scrollIntoView({behavior: 'auto', block: 'center'})
+
   const handleClickMenu = (event: React.MouseEvent<HTMLElement>, currentFile: File) => {
     setMenuOpen(true)
     setCurrentFile(currentFile)
@@ -136,6 +138,7 @@ const CommonList = (
             <Grid key={index} lg={multiColumn ? 4 : 12} md={multiColumn ? 6 : 12} sm={12} xs={12} p={0} >
               <ListItem
                 disablePadding
+                id = {(item as PlayQueueItem).index === currentIndex ? 'playing-item' : ''}
                 sx={{
                   '& .MuiListItemButton-root': {
                     paddingLeft: 3,
