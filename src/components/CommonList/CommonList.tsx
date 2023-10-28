@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react';
 import { useTranslation } from 'react-i18next'
 import { IconButton, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
@@ -39,7 +39,13 @@ const CommonList = (
 
   const isPlayQueueView = listData?.some((item) => typeof (item as PlayQueueItem).index === 'number')
 
-  isPlayQueueView && document.getElementById('playing-item')?.scrollIntoView({behavior: 'auto', block: 'center'})
+  // 打开播放队列时滚动到当前播放文件
+  useEffect(() => {
+    isPlayQueueView && document.getElementById('playing-item')?.scrollIntoView({behavior: 'auto', block: 'center'})
+  },
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  []
+  )
 
   const handleClickMenu = (event: React.MouseEvent<HTMLElement>, currentFile: File) => {
     setMenuOpen(true)

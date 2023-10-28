@@ -59,7 +59,7 @@ const Audio = (
   const [playStatu, cover, currentTime, duration, shuffle, repeat, updateShuffle] = usePlayerStore(
     (state) => [state.playStatu, state.cover, state.currentTime, state.duration, state.shuffle, state.repeat, state.updateShuffle])
 
-  const [noBackgound, setNoBackground] = useState(false)
+  const [noBackground, setNoBackground] = useState(false)
   const [color, setColor] = useState('#ffffff')
 
   useMemo(
@@ -78,7 +78,7 @@ const Audio = (
         transition: 'top 0.35s ease-in-out',
         transform: 'translateZ(0)',
         background:
-          (noBackgound || cover === './cover.png')
+          (noBackground || cover === './cover.png')
             ? `linear-gradient(rgba(50, 50, 50, 0.6), ${color}bb), #000`
             : `linear-gradient(rgba(50, 50, 50, 0.3), rgba(50, 50, 50, 0.3) ), url(${cover})  no-repeat center, #000`,
         backgroundSize: 'cover',
@@ -87,7 +87,7 @@ const Audio = (
       }}
       style={(audioViewIsShow) ? { top: 0 } : { top: '100vh' }}
     >
-      <Box sx={{ backdropFilter: (noBackgound || cover === './cover.png') ? '' : 'blur(30px)' }}>
+      <Box sx={{ backdropFilter: (noBackground || cover === './cover.png') ? '' : 'blur(30px)' }}>
         <Container maxWidth={'xl'} disableGutters={true}>
           <Grid container
             pt={{ xs: 1, sm: 2 }}
@@ -112,8 +112,8 @@ const Audio = (
               <IconButton aria-label="PlayQueue" onClick={() => updatePlayQueueIsShow(true)} >
                 <QueueMusicOutlinedIcon style={{ color: '#fff' }} />
               </IconButton>
-              <IconButton aria-label="NoBackground" onClick={() => setNoBackground(!noBackgound)} >
-                <PanoramaOutlinedIcon style={noBackgound ? { color: '#aaa' } : { color: '#fff' }} />
+              <IconButton aria-label="NoBackground" onClick={() => setNoBackground(!noBackground)} >
+                <PanoramaOutlinedIcon style={noBackground ? { color: '#aaa' } : { color: '#fff' }} />
               </IconButton>
               <IconButton aria-label="Full" onClick={() => handleClickFullscreen()}>
                 {
