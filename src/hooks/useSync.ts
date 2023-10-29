@@ -39,34 +39,38 @@ const useSync = (accounts: AccountInfo[]) => {
   const { data, error, isLoading } = useSWR<{ history: File[], playlists: Playlist[] }>(isLoggedIn ? 'fetchAppData' : null, appDatafetcher)
 
   // 自动更新播放历史
-  useMemo(() => {
-    if (!isLoading && !error && data?.history)
-      updateHistoryList(data.history)
+  useMemo(
+    () => {
+      (!isLoading && !error && data?.history) && updateHistoryList(data.history)
+      return true
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data])
+    [data]
+  )
 
   // 自动上传播放历史
-  useMemo(() => {
-    if (historyList !== null) {
-      uploadAppRootJsonData('history.json', JSON.stringify(historyList))
-    }
+  useMemo(
+    () => (historyList !== null) && uploadAppRootJsonData('history.json', JSON.stringify(historyList)),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [historyList])
+    [historyList]
+  )
 
   // 自动更新播放列表
-  useMemo(() => {
-    if (!isLoading && !error && data?.playlists)
-      updatePlaylists(data.playlists)
+  useMemo(
+    () => {
+      (!isLoading && !error && data?.playlists) && updatePlaylists(data.playlists)
+      return true
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data])
+    [data]
+  )
 
   // 自动上传播放列表
-  useMemo(() => {
-    if (playlists !== null) {
-      uploadAppRootJsonData('playlists.json', JSON.stringify(playlists))
-    }
+  useMemo(
+    () => (playlists !== null) && uploadAppRootJsonData('playlists.json', JSON.stringify(playlists)),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [playlists])
+    [playlists]
+  )
 
 }
 

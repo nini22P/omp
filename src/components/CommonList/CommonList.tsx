@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { IconButton, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
@@ -38,6 +38,14 @@ const CommonList = (
   const [shuffle, updateShuffle] = usePlayerStore(state => [state.shuffle, state.updateShuffle])
 
   const isPlayQueueView = listData?.some((item) => typeof (item as PlayQueueItem).index === 'number')
+
+  // 打开播放队列时滚动到当前播放文件
+  useEffect(() => {
+    isPlayQueueView && document.getElementById('playing-item')?.scrollIntoView({behavior: 'auto', block: 'center'})
+  },
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  []
+  )
 
   const handleClickMenu = (event: React.MouseEvent<HTMLElement>, currentFile: File) => {
     setMenuOpen(true)
@@ -136,6 +144,7 @@ const CommonList = (
             <Grid key={index} lg={multiColumn ? 4 : 12} md={multiColumn ? 6 : 12} sm={12} xs={12} p={0} >
               <ListItem
                 disablePadding
+                id = {(item as PlayQueueItem).index === currentIndex ? 'playing-item' : ''}
                 sx={{
                   '& .MuiListItemButton-root': {
                     paddingLeft: 3,
