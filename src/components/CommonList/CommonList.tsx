@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
 import { IconButton, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
