@@ -20,11 +20,21 @@ const NavBar = ({ accounts }: { accounts: AccountInfo[] }) => {
         top: 0,
         left: 0,
         width: '100%',
-        boxShadow: `0px 4px 4px -2px ${styles.color.shadow}`,
+        outline: `1px solid ${styles.color.shadow}`
       }}
+      className='app-region-drag'
     >
       <Container maxWidth={'xl'} disableGutters={true}>
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '4rem', pl: 1, pr: 1 }}>
+        <Box
+          sx={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            left: 'env(titlebar-area-x, 0)',
+            height: 'env(titlebar-area-height, 3rem)',
+            pl: 1,
+            pr: 1
+          }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} >
             {
               (accounts.length !== 0) &&
@@ -32,7 +42,7 @@ const NavBar = ({ accounts }: { accounts: AccountInfo[] }) => {
                 <MenuOutlinedIcon />
               </IconButton>
             }
-            <img src='./logo.svg' alt='logo' style={{ height: '1.5rem', marginLeft: '0.5rem', marginRight: '0.8rem' }} ></img>
+            <img src='./logo.svg' alt='logo' style={{ height: '1.25rem', marginLeft: '0.6rem', marginRight: '0.75rem' }} ></img>
             <Typography variant="h6" component="div" >
               OMP
             </Typography>

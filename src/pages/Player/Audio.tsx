@@ -88,7 +88,11 @@ const Audio = (
       style={(audioViewIsShow) ? { top: 0 } : { top: '100vh' }}
     >
       <Box sx={{ backdropFilter: (noBackground || cover === './cover.png') ? '' : 'blur(30px)' }}>
-        <Container maxWidth={'xl'} disableGutters={true}>
+        <Container
+          maxWidth={'xl'}
+          disableGutters={true}
+          className='pt-titlebar-area-height'
+        >
           <Grid container
             pt={{ xs: 1, sm: 2 }}
             pb={{ xs: 1, sm: 2 }}
@@ -101,21 +105,36 @@ const Audio = (
               alignItems: 'start',
             }}
           >
-
             <Grid xs={6} pl={{ xs: 1, sm: 0 }} >
-              <IconButton aria-label="close" onClick={() => updateAudioViewIsShow(false)} >
+              <IconButton
+                aria-label="close"
+                onClick={() => updateAudioViewIsShow(false)}
+                className='app-region-no-drag'
+              >
                 <KeyboardArrowDownOutlinedIcon style={{ color: '#fff' }} />
               </IconButton>
             </Grid>
 
             <Grid xs={6} pr={{ xs: 1, sm: 0 }} textAlign={'right'}>
-              <IconButton aria-label="PlayQueue" onClick={() => updatePlayQueueIsShow(true)} >
+              <IconButton
+                aria-label="PlayQueue"
+                onClick={() => updatePlayQueueIsShow(true)}
+                className='app-region-no-drag'
+              >
                 <QueueMusicOutlinedIcon style={{ color: '#fff' }} />
               </IconButton>
-              <IconButton aria-label="NoBackground" onClick={() => setNoBackground(!noBackground)} >
+              <IconButton
+                aria-label="NoBackground"
+                onClick={() => setNoBackground(!noBackground)}
+                className='app-region-no-drag'
+              >
                 <PanoramaOutlinedIcon style={noBackground ? { color: '#aaa' } : { color: '#fff' }} />
               </IconButton>
-              <IconButton aria-label="Full" onClick={() => handleClickFullscreen()}>
+              <IconButton
+                aria-label="Full"
+                onClick={() => handleClickFullscreen()}
+                className='app-region-no-drag'
+              >
                 {
                   fullscreen
                     ? <CloseFullscreenIcon style={{ height: 20, width: 20, color: '#fff' }} />
