@@ -3,10 +3,12 @@
   "short_name": "OMP",
   "start_url": ".",
   "display": "standalone",
+  "display_override": [
+    "window-controls-overlay"
+  ],
   "description": "OneDrive Media Player",
   "dir": "auto",
   "orientation": "any",
-  "theme_color": "#1e1e1e",
   "icons": [
     {
       "src": "./favicon.ico",

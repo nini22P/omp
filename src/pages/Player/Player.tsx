@@ -356,7 +356,8 @@ const Player = () => {
             justifyContent: 'center',
             alignItems: 'start',
             backgroundColor: '#000'
-          }}>
+          }}
+        >
           <Grid xs={12} sx={{ width: '100%', height: '100%' }}>
             <video
               width={'100%'}
@@ -373,11 +374,16 @@ const Player = () => {
           <Grid xs={12}
             position={'absolute'}
             sx={controlIsShow ? { top: 0, left: 0, borderRadius: '0 0 5px 0', width: 'auto' } : { display: 'none' }}
+            className='pt-titlebar-area-height'
           >
-            <IconButton aria-label="close" onClick={() => {
-              updateVideoViewIsShow(false)
-              updateControlIsShow(true)
-            }} >
+            <IconButton
+              aria-label="close"
+              onClick={() => {
+                updateVideoViewIsShow(false)
+                updateControlIsShow(true)
+              }}
+              className='app-region-no-drag'
+            >
               <KeyboardArrowDownOutlinedIcon sx={{ color: '#fff' }} />
             </IconButton>
           </Grid>
@@ -388,7 +394,7 @@ const Player = () => {
       <Paper
         elevation={0}
         square={true}
-        sx={{ position: 'fixed', bottom: '0', width: '100%', boxShadow: `0px -4px 4px -2px ${styles.color.shadow}` }}
+        sx={{ position: 'fixed', bottom: '0', width: '100%', boxShadow: `0px -2px 2px -1px ${styles.color.shadow}` }}
       // style={(videoViewIsShow) ? { backgroundColor: '#ffffffee' } : { backgroundColor: '#ffffff' }}
       >
         <Container maxWidth={false} disableGutters={true}>

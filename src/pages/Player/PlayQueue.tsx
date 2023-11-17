@@ -17,13 +17,13 @@ const PlayQueue = () => {
       onClose={() => updatePlayQueueIsShow(false)}
       elevation={0}
     >
-      <Grid container wrap='nowrap' height={'100dvh'} width={{ xs: '100vw', sm: '400px', md: '500px' }} >
-        <Grid height={'100dvh'}>
+      <Grid container wrap='nowrap' height={'100dvh'} width={{ xs: '100vw', sm: '400px', md: '500px' }}>
+        <Grid height={'100%'} className='app-region-no-drag'>
           <Button sx={{ height: '100dvh' }} onClick={() => updatePlayQueueIsShow(false)}>
             <KeyboardArrowRightOutlinedIcon />
           </Button>
         </Grid>
-        <Grid xs sx={{ height: '100dvh', overflowY: 'auto' }}>
+        <Grid xs sx={{ height: '100%', overflowY: 'auto' }} className='pt-titlebar-area-height app-region-no-drag'>
           {
             playQueue &&
             <CommonList

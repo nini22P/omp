@@ -10,19 +10,21 @@ import MobileSideBar from './pages/SideBar/MobileSideBar'
 import useUser from './hooks/useUser'
 import useTheme from './hooks/useTheme'
 import useSync from './hooks/useSync'
+import useThemeColor from './hooks/useThemeColor'
 
 const App = () => {
   const { t } = useTranslation()
   const { theme } = useTheme()
   const { accounts, login } = useUser()
   useSync(accounts)
+  useThemeColor()
 
   return (
     <main>
       <ThemeProvider theme={theme}>
         <NavBar accounts={accounts} />
         <AuthenticatedTemplate>
-          <Box sx={{ position: 'absolute', height: 'calc(100dvh - 6rem - 4rem)', width: '100%', top: '4rem', }}>
+          <Box sx={{ position: 'absolute', height: 'calc(100dvh - 6rem - env(titlebar-area-height, 3rem))', width: '100%', top: 'env(titlebar-area-height, 3rem)', }}>
             <Container maxWidth="xl" disableGutters={true} sx={{ height: '100%' }}>
               <MobileSideBar />
               <Grid container flexDirection={'row'} height={'100%'}  >

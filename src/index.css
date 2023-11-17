@@ -16,3 +16,23 @@
 a {
   text-decoration: inherit;
 }
+
+.app-region-drag {
+  -webkit-app-region: drag;
+  app-region: drag;
+}
+
+.app-region-no-drag {
+  -webkit-app-region: no-drag;
+  app-region: no-drag;
+}
+
+.pt-titlebar-area-height {
+  padding-top: 0 !important;
+}
+
+@media (display-mode: window-controls-overlay) {
+  .pt-titlebar-area-height {
+    padding-top: env(titlebar-area-height, 32) !important;
+  }
+}
