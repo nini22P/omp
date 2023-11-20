@@ -38,7 +38,11 @@ const NavBar = ({ accounts }: { accounts: AccountInfo[] }) => {
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} >
             {
               (accounts.length !== 0) &&
-              <IconButton onClick={() => updateMobileSideBarOpen(!mobileSideBarOpen)} sx={{ display: { xs: '', sm: 'none' } }}>
+              <IconButton
+                onClick={() => updateMobileSideBarOpen(!mobileSideBarOpen)}
+                sx={{ display: { xs: '', sm: 'none' } }}
+                className='app-region-no-drag'
+              >
                 <MenuOutlinedIcon />
               </IconButton>
             }

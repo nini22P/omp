@@ -17,11 +17,11 @@ import OpenInFullIcon from '@mui/icons-material/OpenInFull'
 import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen'
 import PanoramaOutlinedIcon from '@mui/icons-material/PanoramaOutlined'
 // import PictureInPictureIcon from '@mui/icons-material/PictureInPicture'
-import usePlayQueueStore from '../../store/usePlayQueueStore'
-import usePlayerStore from '../../store/usePlayerStore'
-import useUiStore from '../../store/useUiStore'
-import { timeShift } from '../../utils'
-import { MetaData } from '../../types/MetaData'
+import usePlayQueueStore from '../../../store/usePlayQueueStore'
+import usePlayerStore from '../../../store/usePlayerStore'
+import useUiStore from '../../../store/useUiStore'
+import { timeShift } from '../../../utils'
+import { MetaData } from '../../../types/MetaData'
 
 const Audio = (
   {
