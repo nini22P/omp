@@ -297,11 +297,16 @@ const Player = () => {
             ...test[0],
             size: playQueue.filter(item => item.index === currentIndex)[0].fileSize
           })
-          if (test[0].cover)
-            if (test[0].cover[0].data)
-              updateCover(URL.createObjectURL(new Blob([new Uint8Array(test[0].cover[0].data)], { type: 'image/png' })))
-            else
+          if (test[0].cover?.length) {
+            const cover = test[0].cover[0].data
+            if (cover && 'data' in cover && Array.isArray(cover.data)) {
+              updateCover(URL.createObjectURL(new Blob([new Uint8Array(cover.data as unknown as ArrayBufferLike)], { type: 'image/png' })))
+            } else if (cover) {
+              updateCover(URL.createObjectURL(new Blob([new Uint8Array(cover as ArrayBufferLike)], { type: 'image/png' })))
+            } else {
               updateCover('./cover.png')
+            }
+          }
           else
             updateCover('./cover.png')
         } else {

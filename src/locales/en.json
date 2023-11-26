@@ -5,6 +5,7 @@
     "rename": "Rename",
     "remove": "Remove",
     "delete": "Delete",
+    "clear": "Clear",
     "more": "More",
     "about": "About",
     "openSourceDependencies": "Open source dependencies"
@@ -28,5 +29,9 @@
     "home": "Home",
     "history": "History",
     "setting": "Setting"
+  },
+  "data": {
+    "data": "Data",
+    "metaDataCache": "Local MetaData Cache"
   }
 }

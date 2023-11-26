@@ -5,6 +5,7 @@
     "rename": "重命名",
     "remove": "移除",
     "delete": "删除",
+    "clear": "清除",
     "more": "更多",
     "about": "关于",
     "openSourceDependencies": "开源库"
@@ -28,5 +29,9 @@
     "home": "主页",
     "history": "历史",
     "setting": "设置"
+  },
+  "data": {
+    "data": "数据",
+    "localMetaDataCache": "本地元数据缓存"
   }
 }
