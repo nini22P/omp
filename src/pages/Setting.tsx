@@ -3,11 +3,16 @@ import useUser from '../hooks/useUser'
 import { useTranslation } from 'react-i18next'
 import useTheme from '../hooks/useTheme'
 import { licenses } from '../data/licenses'
+import useMetaDataListStore from '../store/useMetaDataListStore'
 
 const Setting = () => {
   const { accounts, logout } = useUser()
   const { t } = useTranslation()
   const { styles } = useTheme()
+
+  const [metaDataList, clearMetaDataList] = useMetaDataListStore((state) => [state.metaDataList, state.clearMetaDataList])
+
+  const size = metaDataList.length ? (Buffer.byteLength(JSON.stringify(metaDataList)) / 1024 / 1024).toFixed(2) : null
 
   return (
     <List>
@@ -26,6 +31,23 @@ const Setting = () => {
           <Avatar aria-label={accounts[0].name}>{accounts[0].name?.split(' ')[0]}</Avatar>
         </ListItemAvatar>
         <ListItemText primary={accounts[0].name} secondary={accounts[0].username} />
+      </ListItem>
+
+      <Divider sx={{ mt: 1, mb: 1 }} />
+
+      <ListItem>
+        <ListItemAvatar></ListItemAvatar>
+        <ListItemText sx={{ color: styles.color.primary }} primary={t('data.data')} />
+      </ListItem>
+      <ListItem
+        secondaryAction={
+          <Button onClick={() => clearMetaDataList()}>
+            {t('common.clear')}
+          </Button>
+        }
+      >
+        <ListItemAvatar></ListItemAvatar>
+        <ListItemText primary={t('data.localMetaDataCache')} secondary={size ? `${size} MB` : null} />
       </ListItem>
 
       <Divider sx={{ mt: 1, mb: 1 }} />

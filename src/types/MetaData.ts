@@ -9,7 +9,7 @@ export interface MetaData {
   album?: string | undefined;
   year?: number | undefined;
   genre?: string[] | undefined;
-  cover?: IPicture[] | undefined;
+  cover?: IPicture[] | { data: { type: 'Buffer', data: string[] } }[] | undefined;
 }
 
 export interface MetaDataListStatus {
