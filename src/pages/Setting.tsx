@@ -4,6 +4,7 @@ import { useTranslation } from 'react-i18next'
 import useTheme from '../hooks/useTheme'
 import { licenses } from '../data/licenses'
 import useMetaDataListStore from '../store/useMetaDataListStore'
+import { useEffect, useState } from 'react'
 
 const Setting = () => {
   const { accounts, logout } = useUser()
@@ -12,7 +13,12 @@ const Setting = () => {
 
   const [metaDataList, clearMetaDataList] = useMetaDataListStore((state) => [state.metaDataList, state.clearMetaDataList])
 
-  const size = metaDataList.length ? (Buffer.byteLength(JSON.stringify(metaDataList)) / 1024 / 1024).toFixed(2) : null
+  const [metaDataCachesize, setMetaDataCachesize] = useState<string | null>(null)
+
+  useEffect(() => {
+    const size = metaDataList.length ? (Buffer.byteLength(JSON.stringify(metaDataList)) / 1024 / 1024).toFixed(2) : null
+    setMetaDataCachesize(size)
+  },[metaDataList])
 
   return (
     <List>
@@ -47,7 +53,7 @@ const Setting = () => {
         }
       >
         <ListItemAvatar></ListItemAvatar>
-        <ListItemText primary={t('data.localMetaDataCache')} secondary={size ? `${size} MB` : null} />
+        <ListItemText primary={t('data.localMetaDataCache')} secondary={metaDataCachesize ? `${metaDataCachesize} MB` : null} />
       </ListItem>
 
       <Divider sx={{ mt: 1, mb: 1 }} />
