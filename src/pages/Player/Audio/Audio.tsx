@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react'
+import { useMemo } from 'react'
 import { extractColors } from 'extract-colors'
 import { Box, CircularProgress, Container, IconButton, Slider, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
@@ -53,17 +53,40 @@ const Audio = (
 
   const [playQueue] = usePlayQueueStore((state) => [state.playQueue])
 
-  const [audioViewIsShow, fullscreen, updateAudioViewIsShow, updatePlayQueueIsShow] = useUiStore(
-    (state) => [state.audioViewIsShow, state.fullscreen, state.updateAudioViewIsShow, state.updatePlayQueueIsShow])
+  const [
+    audioViewIsShow,
+    fullscreen,
+    backgroundIsShow,
+    shuffle,
+    repeat,
+    color,
+    updateAudioViewIsShow,
+    updatePlayQueueIsShow,
+    updateBackgroundIsShow,
+    updateShuffle,
+    updateColor,
+  ] = useUiStore(
+    (state) => [
+      state.audioViewIsShow,
+      state.fullscreen,
+      state.backgroundIsShow,
+      state.shuffle,
+      state.repeat,
+      state.color,
+      state.updateAudioViewIsShow,
+      state.updatePlayQueueIsShow,
+      state.updateBackgroundIsShow,
+      state.updateShuffle,
+      state.updateColor,
+    ]
+  )
 
-  const [playStatu, cover, currentTime, duration, shuffle, repeat, updateShuffle] = usePlayerStore(
-    (state) => [state.playStatu, state.cover, state.currentTime, state.duration, state.shuffle, state.repeat, state.updateShuffle])
-
-  const [noBackground, setNoBackground] = useState(false)
-  const [color, setColor] = useState('#ffffff')
+  const [playStatu, isLoading, cover, currentTime, duration] = usePlayerStore(
+    (state) => [state.playStatu, state.isLoading, state.cover, state.currentTime, state.duration,])
 
   useMemo(
-    () => (cover !== './cover.png') && extractColors(cover).then(color => setColor(color[0].hex)).catch(console.error),
+    () => (cover !== './cover.png') && extractColors(cover).then(color => updateColor(color[0].hex)).catch(console.error),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     [cover]
   )
 
@@ -78,7 +101,7 @@ const Audio = (
         transition: 'top 0.35s ease-in-out',
         transform: 'translateZ(0)',
         background:
-          (noBackground || cover === './cover.png')
+          (!backgroundIsShow || cover === './cover.png')
             ? `linear-gradient(rgba(50, 50, 50, 0.6), ${color}bb), #000`
             : `linear-gradient(rgba(50, 50, 50, 0.3), rgba(50, 50, 50, 0.3) ), url(${cover})  no-repeat center, #000`,
         backgroundSize: 'cover',
@@ -87,7 +110,7 @@ const Audio = (
       }}
       style={(audioViewIsShow) ? { top: 0 } : { top: '100vh' }}
     >
-      <Box sx={{ backdropFilter: (noBackground || cover === './cover.png') ? '' : 'blur(30px)' }}>
+      <Box sx={{ backdropFilter: (!backgroundIsShow || cover === './cover.png') ? '' : 'blur(30px)' }}>
         <Container
           maxWidth={'xl'}
           disableGutters={true}
@@ -125,10 +148,10 @@ const Audio = (
               </IconButton>
               <IconButton
                 aria-label="NoBackground"
-                onClick={() => setNoBackground(!noBackground)}
+                onClick={() => updateBackgroundIsShow(!backgroundIsShow)}
                 className='app-region-no-drag'
               >
-                <PanoramaOutlinedIcon style={noBackground ? { color: '#aaa' } : { color: '#fff' }} />
+                <PanoramaOutlinedIcon style={!backgroundIsShow ? { color: '#aaa' } : { color: '#fff' }} />
               </IconButton>
               <IconButton
                 aria-label="Full"
@@ -207,19 +230,19 @@ const Audio = (
                     <FastRewindIcon sx={{ height: 32, width: 32 }} style={{ color: '#fff' }} />
                   </IconButton>
                   {
-                    (playStatu === 'paused') &&
+                    (!isLoading && playStatu === 'paused') &&
                     <IconButton aria-label="play" onClick={() => handleClickPlay()}>
                       <PlayCircleOutlinedIcon sx={{ height: 64, width: 64 }} style={{ color: '#fff' }} />
                     </IconButton>
                   }
                   {
-                    (playStatu === 'playing') &&
+                    (!isLoading && playStatu === 'playing') &&
                     <IconButton aria-label="pause" onClick={() => handleClickPause()}>
                       <PauseCircleOutlinedIcon sx={{ height: 64, width: 64 }} style={{ color: '#fff' }} />
                     </IconButton>
                   }
                   {
-                    (playStatu === 'waiting') &&
+                    isLoading &&
                     <Box sx={{ height: 80, width: 80, padding: '13px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                       <CircularProgress style={{ color: '#fff' }} size={54} />
                     </Box>

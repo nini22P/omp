@@ -47,11 +47,30 @@ const PlayerControl = (
 
   const [type, playQueue] = usePlayQueueStore((state) => [state.type, state.playQueue])
 
-  const [playQueueIsShow, fullscreen, updateAudioViewIsShow, updateVideoViewIsShow, updatePlayQueueIsShow] = useUiStore(
-    (state) => [state.playQueueIsShow, state.fullscreen, state.updateAudioViewIsShow, state.updateVideoViewIsShow, state.updatePlayQueueIsShow])
+  const [
+    playQueueIsShow,
+    fullscreen,
+    shuffle,
+    repeat,
+    updateAudioViewIsShow,
+    updateVideoViewIsShow,
+    updatePlayQueueIsShow,
+    updateShuffle,
+  ] = useUiStore(
+    (state) => [
+      state.playQueueIsShow,
+      state.fullscreen,
+      state.shuffle,
+      state.repeat,
+      state.updateAudioViewIsShow,
+      state.updateVideoViewIsShow,
+      state.updatePlayQueueIsShow,
+      state.updateShuffle,
+    ]
+  )
 
-  const [playStatu, cover, currentTime, duration, shuffle, repeat, updateShuffle] = usePlayerStore(
-    (state) => [state.playStatu, state.cover, state.currentTime, state.duration, state.shuffle, state.repeat, state.updateShuffle])
+  const [playStatu, isLoading, cover, currentTime, duration] = usePlayerStore(
+    (state) => [state.playStatu, state.isLoading, state.cover, state.currentTime, state.duration])
 
   return (
     <Container maxWidth={'xl'} disableGutters={true}>
@@ -144,19 +163,19 @@ const PlayerControl = (
               <FastRewindIcon />
             </IconButton>
             {
-              (playStatu === 'paused') &&
+              (!isLoading && playStatu === 'paused') &&
               <IconButton aria-label="play" onClick={() => handleClickPlay()}>
                 <PlayCircleOutlinedIcon sx={{ height: 38, width: 38 }} />
               </IconButton>
             }
             {
-              (playStatu === 'playing') &&
+              (!isLoading && playStatu === 'playing') &&
               <IconButton aria-label="pause" onClick={() => handleClickPause()}>
                 <PauseCircleOutlinedIcon sx={{ height: 38, width: 38 }} />
               </IconButton>
             }
             {
-              (playStatu === 'waiting') &&
+              isLoading &&
               <Box sx={{ padding: '11px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <CircularProgress style={{ color: '#666' }} size={32} />
               </Box>

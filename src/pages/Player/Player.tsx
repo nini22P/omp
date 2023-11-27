@@ -16,12 +16,10 @@ import Audio from './Audio/Audio'
 import PlayerControl from './PlayerControl'
 import PlayQueue from './PlayQueue'
 import { filePathConvert, shufflePlayQueue } from '../../utils'
-import { MetaData } from '../../types/MetaData'
 
 const Player = () => {
 
   const { styles } = useTheme()
-  const [currentMetaData, setCurrentMetaData] = useState<MetaData | null>(null)
 
   const { getFileData } = useFilesData()
 
@@ -30,11 +28,57 @@ const Player = () => {
 
   const { getLocalMetaData, setLocalMetaData } = useLocalMetaDataStore()
 
-  const [playStatu, cover, shuffle, repeat, updatePlayStatu, updateCover, updateCurrentTime, updateDuration, updateRepeat] = usePlayerStore(
-    (state) => [state.playStatu, state.cover, state.shuffle, state.repeat, state.updatePlayStatu, state.updateCover, state.updateCurrentTime, state.updateDuration, state.updateRepeat])
+  const [
+    currentMetaData,
+    metadataUpdate,
+    playStatu,
+    isLoading,
+    cover,
+    updateCurrentMetaData,
+    updateMetadataUpdate,
+    updatePlayStatu,
+    updateIsLoading,
+    updateCover,
+    updateCurrentTime,
+    updateDuration,
+  ] = usePlayerStore(
+    (state) => [
+      state.currentMetaData,
+      state.metadataUpdate,
+      state.playStatu,
+      state.isLoading,
+      state.cover,
+      state.updateCurrentMetaData,
+      state.updateMetadataUpdate,
+      state.updatePlayStatu,
+      state.updateIsLoading,
+      state.updateCover,
+      state.updateCurrentTime,
+      state.updateDuration,
+    ]
+  )
 
-  const [videoViewIsShow, controlIsShow, updateVideoViewIsShow, updateControlIsShow, updateFullscreen] = useUiStore(
-    (state) => [state.videoViewIsShow, state.controlIsShow, state.updateVideoViewIsShow, state.updateControlIsShow, state.updateFullscreen])
+  const [
+    videoViewIsShow,
+    controlIsShow,
+    shuffle,
+    repeat,
+    updateVideoViewIsShow,
+    updateControlIsShow,
+    updateFullscreen,
+    updateRepeat,
+  ] = useUiStore(
+    (state) => [
+      state.videoViewIsShow,
+      state.controlIsShow,
+      state.shuffle,
+      state.repeat,
+      state.updateVideoViewIsShow,
+      state.updateControlIsShow,
+      state.updateFullscreen,
+      state.updateRepeat,
+    ]
+  )
 
   const insertHistory = useHistoryStore((state) => state.insertHistory)
 
@@ -49,7 +93,7 @@ const Player = () => {
         try {
           getFileData(filePathConvert(playQueue.filter(item => item.index === currentIndex)[0].filePath)).then((res) => {
             setUrl(res['@microsoft.graph.downloadUrl'])
-            updatePlayStatu('waiting')
+            updateIsLoading(true)
           })
         } catch (error) {
           console.error(error)
@@ -68,10 +112,10 @@ const Player = () => {
         updateDuration(0)
         player.load()
         player.onloadedmetadata = () => {
-          if (type === 'video') {
-            updateVideoViewIsShow(true) //类型是视频时打开视频播放
+          updateIsLoading(false)
+          if (playStatu === 'playing') {
+            player.play()
           }
-          updatePlayStatu('playing')
           updateDuration(player.duration)
           const currentItem = playQueue.filter(item => item.index === currentIndex)[0]
           insertHistory({
@@ -91,19 +135,21 @@ const Player = () => {
   // 播放开始暂停
   useEffect(
     () => {
-      if (playStatu === 'playing') {
-        console.log('开始播放', playQueue?.filter(item => item.index === currentIndex)[0].filePath)
-        if (playQueue?.filter(item => item.index === currentIndex)[0].filePath)
-          player?.play()
-        else {
-          updatePlayStatu('paused')
+      if (player !== null && !isLoading && player.src.includes('1drv.com')) {
+        if (playStatu === 'playing') {
+          console.log('开始播放', playQueue?.filter(item => item.index === currentIndex)[0].filePath)
+          if (playQueue?.filter(item => item.index === currentIndex)[0].filePath)
+            player?.play()
+          else {
+            updatePlayStatu('paused')
+          }
         }
+        if (playStatu === 'paused')
+          player?.pause()
       }
-      if (playStatu === 'paused')
-        player?.pause()
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [playStatu]
+    [playStatu, isLoading]
   )
 
   // 随机
@@ -246,10 +292,61 @@ const Player = () => {
     }
   }
 
-  // 获取 metadata
+  // 更新当前 metadata
+  useEffect(
+    () => {
+      const updateMetaData = async () => {
+
+        if (playQueue) {
+
+          const metaData = await getLocalMetaData(playQueue.filter(item => item.index === currentIndex)[0].filePath)
+
+          if (!metaData) {
+            updateCurrentMetaData(
+              {
+                title: playQueue.filter(item => item.index === currentIndex)[0].fileName,
+                artist: '',
+                path: playQueue.filter(item => item.index === currentIndex)[0].filePath,
+              }
+            )
+            updateCover('./cover.png')
+          }
+
+          if (
+            type === 'audio'
+            &&
+            metaData
+            &&
+            metaData.path
+            &&
+            filePathConvert(metaData.path) === filePathConvert(playQueue.filter(item => item.index === currentIndex)[0].filePath)
+          ) {
+            console.log('Update current metaData: ', metaData.title)
+            updateCurrentMetaData(metaData)
+            if (metaData.cover?.length) {
+              const cover = metaData.cover[0].data
+              if (cover && 'data' in cover && Array.isArray(cover.data)) {
+                updateCover(URL.createObjectURL(new Blob([new Uint8Array(cover.data as unknown as ArrayBufferLike)], { type: 'image/png' })))
+              }
+              else if (cover) {
+                updateCover(URL.createObjectURL(new Blob([new Uint8Array(cover as ArrayBufferLike)], { type: 'image/png' })))
+              }
+            }
+          }
+        }
+      }
+
+      updateMetaData()
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [playQueue?.filter(item => item.index === currentIndex)[0].filePath, metadataUpdate]
+  )
+
+  // 获取在线 metadata
   useEffect(
     () => {
       const getNetMetaData = async (path: string[]) => {
+        console.log('Start get net metadata: ', path.slice(-1)[0])
         try {
           const metadata = await mm.fetchFromUrl(url)
           if (metadata && metadata.common.title !== undefined) {
@@ -271,47 +368,16 @@ const Player = () => {
         }
       }
 
-      const updateCurrentMetaData = (metaData: MetaData) => {
-        setCurrentMetaData(metaData)
-
-        if (metaData.cover?.length) {
-          const cover = metaData.cover[0].data
-          if (cover && 'data' in cover && Array.isArray(cover.data)) {
-            updateCover(URL.createObjectURL(new Blob([new Uint8Array(cover.data as unknown as ArrayBufferLike)], { type: 'image/png' })))
-          }
-          else if (cover) {
-            updateCover(URL.createObjectURL(new Blob([new Uint8Array(cover as ArrayBufferLike)], { type: 'image/png' })))
-          }
-        } else {
-          updateCover('./cover.png')
-        }
-      }
-
       const run = async () => {
 
-        if (playQueue) {
-          updateCurrentMetaData(
-            {
-              title: playQueue.filter(item => item.index === currentIndex)[0].fileName,
-              artist: '',
-              path: playQueue.filter(item => item.index === currentIndex)[0].filePath,
-            }
-          )
-        }
+        if (playQueue && type === 'audio' && currentMetaData?.path) {
+          const localMetaData = await getLocalMetaData(currentMetaData?.path)
 
-        if (playQueue && type === 'audio') {
-          const path = playQueue.filter(item => item.index === currentIndex)[0].filePath
-          const localMetaData = await getLocalMetaData(path)
-
-          if (localMetaData) {
-            console.log('Get local metadata')
-            updateCurrentMetaData(localMetaData)
-          } else {
-            const netMetaData = await getNetMetaData(path)
-            console.log('Get net metadata')
+          if (!localMetaData) {
+            const netMetaData = await getNetMetaData(currentMetaData?.path)
+            console.log('Get net metadata: ', netMetaData?.title)
             if (netMetaData) {
-              setLocalMetaData(netMetaData)
-              updateCurrentMetaData(netMetaData)
+              setLocalMetaData(netMetaData).then(() => updateMetadataUpdate())
             }
           }
         }
@@ -368,7 +434,7 @@ const Player = () => {
               width={'100%'}
               height={'100%'}
               src={url}
-              autoPlay
+              // autoPlay
               ref={playerRef}
               onEnded={() => onEnded()}
               onDoubleClick={() => handleClickFullscreen()}
