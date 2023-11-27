@@ -5,7 +5,7 @@ import Grid from '@mui/material/Unstable_Grid2'
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined'
 import useHistoryStore from '../../store/useHistoryStore'
 import useUiStore from '../../store/useUiStore'
-import useMetaDataListStore from '../../store/useMetaDataListStore'
+import useLocalMetaDataStore from '../../store/useLocalMetaDataStore'
 import usePlayQueueStore from '../../store/usePlayQueueStore'
 import usePlayerStore from '../../store/usePlayerStore'
 import { useControlHide } from '../../hooks/useControlHide'
@@ -21,14 +21,14 @@ import { MetaData } from '../../types/MetaData'
 const Player = () => {
 
   const { styles } = useTheme()
-  const [metaData, setMetaData] = useState<MetaData | null>(null)
+  const [currentMetaData, setCurrentMetaData] = useState<MetaData | null>(null)
 
   const { getFileData } = useFilesData()
 
   const [type, playQueue, currentIndex, updateCurrentIndex, updatePlayQueue] = usePlayQueueStore(
     (state) => [state.type, state.playQueue, state.currentIndex, state.updateCurrentIndex, state.updatePlayQueue])
 
-  const [metaDataList, insertMetaDataList] = useMetaDataListStore((state) => [state.metaDataList, state.insertMetaDataList])
+  const { getLocalMetaData, setLocalMetaData } = useLocalMetaDataStore()
 
   const [playStatu, cover, shuffle, repeat, updatePlayStatu, updateCover, updateCurrentTime, updateDuration, updateRepeat] = usePlayerStore(
     (state) => [state.playStatu, state.cover, state.shuffle, state.repeat, state.updatePlayStatu, state.updateCover, state.updateCurrentTime, state.updateDuration, state.updateRepeat])
@@ -249,82 +249,82 @@ const Player = () => {
   // 获取 metadata
   useEffect(
     () => {
-      if (type === 'audio' && playQueue !== null) {
-        const path = playQueue.filter(item => item.index === currentIndex)[0].filePath
-        console.log('开始获取 metadata', path)
-        if (metaDataList.some(item => filePathConvert(item.path) === filePathConvert(path))) {
-          console.log('跳过获取 metadata')
+      const getNetMetaData = async (path: string[]) => {
+        try {
+          const metadata = await mm.fetchFromUrl(url)
+          if (metadata && metadata.common.title !== undefined) {
+            const metaData = {
+              path: path,
+              title: metadata.common.title,
+              artist: metadata.common.artist,
+              albumArtist: metadata.common.albumartist,
+              album: metadata.common.album,
+              year: metadata.common.year,
+              genre: metadata.common.genre,
+              cover: metadata.common.picture,
+            }
+            return metaData
+          }
+        } catch (error) {
+          console.log('Failed to get net metadata', error)
+          return null
+        }
+      }
+
+      const updateCurrentMetaData = (metaData: MetaData) => {
+        setCurrentMetaData(metaData)
+
+        if (metaData.cover?.length) {
+          const cover = metaData.cover[0].data
+          if (cover && 'data' in cover && Array.isArray(cover.data)) {
+            updateCover(URL.createObjectURL(new Blob([new Uint8Array(cover.data as unknown as ArrayBufferLike)], { type: 'image/png' })))
+          }
+          else if (cover) {
+            updateCover(URL.createObjectURL(new Blob([new Uint8Array(cover as ArrayBufferLike)], { type: 'image/png' })))
+          }
         } else {
-          try {
-            mm.fetchFromUrl(url).then(metadata => {
-              if (metadata) {
-                if (metadata.common.title !== undefined) {
-                  console.log('获取 metadata')
-                  const metaData = {
-                    path: path,
-                    title: metadata.common.title,
-                    artist: metadata.common.artist,
-                    albumArtist: metadata.common.albumartist,
-                    album: metadata.common.album,
-                    year: metadata.common.year,
-                    genre: metadata.common.genre,
-                    cover: metadata.common.picture,
-                  }
-                  insertMetaDataList(metaData)
-                }
-              }
-            })
-          } catch (error) {
-            console.log('未能获取 metadata', error)
+          updateCover('./cover.png')
+        }
+      }
+
+      const run = async () => {
+
+        if (playQueue) {
+          updateCurrentMetaData(
+            {
+              title: playQueue.filter(item => item.index === currentIndex)[0].fileName,
+              artist: '',
+              path: playQueue.filter(item => item.index === currentIndex)[0].filePath,
+            }
+          )
+        }
+
+        if (playQueue && type === 'audio') {
+          const path = playQueue.filter(item => item.index === currentIndex)[0].filePath
+          const localMetaData = await getLocalMetaData(path)
+
+          if (localMetaData) {
+            console.log('Get local metadata')
+            updateCurrentMetaData(localMetaData)
+          } else {
+            const netMetaData = await getNetMetaData(path)
+            console.log('Get net metadata')
+            if (netMetaData) {
+              setLocalMetaData(netMetaData)
+              updateCurrentMetaData(netMetaData)
+            }
           }
         }
       }
+
+      run()
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [url]
   )
 
-  // 更新当前 metadata
-  useEffect(
-    () => {
-      if (playQueue && playQueue.length !== 0) {
-        const test = metaDataList
-          .filter(metaData =>
-            filePathConvert(metaData.path) === filePathConvert(playQueue.filter(item => item.index === currentIndex)[0].filePath))
-        console.log('设定当前 metadata', test)
-        if (test.length !== 0) {
-          setMetaData({
-            ...test[0],
-            size: playQueue.filter(item => item.index === currentIndex)[0].fileSize
-          })
-          if (test[0].cover?.length) {
-            const cover = test[0].cover[0].data
-            if (cover && 'data' in cover && Array.isArray(cover.data)) {
-              updateCover(URL.createObjectURL(new Blob([new Uint8Array(cover.data as unknown as ArrayBufferLike)], { type: 'image/png' })))
-            } else if (cover) {
-              updateCover(URL.createObjectURL(new Blob([new Uint8Array(cover as ArrayBufferLike)], { type: 'image/png' })))
-            } else {
-              updateCover('./cover.png')
-            }
-          }
-          else
-            updateCover('./cover.png')
-        } else {
-          setMetaData({
-            title: playQueue.filter(item => item.index === currentIndex)[0].fileName,
-            artist: '',
-            path: playQueue.filter(item => item.index === currentIndex)[0].filePath,
-          })
-          updateCover('./cover.png')
-        }
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [playQueue?.find(item => item.index === currentIndex)?.filePath, metaDataList]
-  )
-
   // 向 mediaSession 发送当前播放进度
-  useMediaSession(player, cover, metaData?.album, metaData?.artist, metaData?.title,
+  useMediaSession(player, cover, currentMetaData?.album, currentMetaData?.artist, currentMetaData?.title,
     handleClickPlay, handleClickPause, handleClickNext, handleClickPrev, handleClickSeekbackward, handleClickSeekforward, SeekTo)
 
   // 检测全屏
@@ -405,7 +405,7 @@ const Player = () => {
         <Container maxWidth={false} disableGutters={true}>
           <Box sx={(controlIsShow) ? {} : { display: 'none' }}>
             <PlayerControl
-              metaData={metaData}
+              metaData={currentMetaData}
               handleClickPlay={handleClickPlay}
               handleClickPause={handleClickPause}
               handleClickNext={handleClickNext}
@@ -418,7 +418,7 @@ const Player = () => {
             />
           </Box>
           <Audio
-            metaData={metaData}
+            metaData={currentMetaData}
             handleClickPlay={handleClickPlay}
             handleClickPause={handleClickPause}
             handleClickNext={handleClickNext}
