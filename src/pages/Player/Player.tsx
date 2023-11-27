@@ -80,7 +80,7 @@ const Player = () => {
     ]
   )
 
-  const insertHistory = useHistoryStore((state) => state.insertHistory)
+  const [historyList, insertHistory] = useHistoryStore((state) => [state.historyList, state.insertHistory])
 
   const playerRef = (useRef<HTMLVideoElement>(null))
   const player = playerRef.current   // 声明播放器对象
@@ -117,13 +117,6 @@ const Player = () => {
             player.play()
           }
           updateDuration(player.duration)
-          const currentItem = playQueue.filter(item => item.index === currentIndex)[0]
-          insertHistory({
-            fileName: currentItem.fileName,
-            filePath: currentItem.filePath,
-            fileSize: currentItem.fileSize,
-            fileType: currentItem.fileType,
-          })
         }
       }
       return true
@@ -138,8 +131,19 @@ const Player = () => {
       if (player !== null && !isLoading && player.src.includes('1drv.com')) {
         if (playStatu === 'playing') {
           console.log('开始播放', playQueue?.filter(item => item.index === currentIndex)[0].filePath)
-          if (playQueue?.filter(item => item.index === currentIndex)[0].filePath)
+          if (playQueue?.filter(item => item.index === currentIndex)[0].filePath) {
             player?.play()
+            const currentItem = playQueue.filter(item => item.index === currentIndex)[0]
+            console.log(historyList)
+            if (historyList !== null) {
+              insertHistory({
+                fileName: currentItem.fileName,
+                filePath: currentItem.filePath,
+                fileSize: currentItem.fileSize,
+                fileType: currentItem.fileType,
+              })
+            }
+          }
           else {
             updatePlayStatu('paused')
           }
