@@ -3,22 +3,40 @@ import useUser from '../hooks/useUser'
 import { useTranslation } from 'react-i18next'
 import useTheme from '../hooks/useTheme'
 import { licenses } from '../data/licenses'
-import useMetaDataListStore from '../store/useMetaDataListStore'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
+import useLocalMetaDataStore from '../store/useLocalMetaDataStore'
 
 const Setting = () => {
   const { accounts, logout } = useUser()
   const { t } = useTranslation()
   const { styles } = useTheme()
 
-  const [metaDataList, clearMetaDataList] = useMetaDataListStore((state) => [state.metaDataList, state.clearMetaDataList])
+  const { getAllLocalMetaData, clearLocalMetaData } = useLocalMetaDataStore()
 
-  const [metaDataCachesize, setMetaDataCachesize] = useState<string | null>(null)
+  const [localMetaDataSize, setLocalMetaDataSize] = useState<string | null>(null)
+  const [localMetaDataButton, setLocalMetaDataButton] = useState<'calculate' | 'clear'>('calculate')
 
-  useEffect(() => {
-    const size = metaDataList.length ? (Buffer.byteLength(JSON.stringify(metaDataList)) / 1024 / 1024).toFixed(2) : null
-    setMetaDataCachesize(size)
-  },[metaDataList])
+  const getLocalMetaDataSize = async () => {
+    const allLocalMetaData = await getAllLocalMetaData()
+    if (allLocalMetaData) {
+      const blob = new Blob([JSON.stringify(allLocalMetaData)], { type: 'application/json' })
+      return (blob.size / 1024 / 1024).toFixed(2)
+    }
+  }
+
+  const handleLocalMetaDataButton = async () => {
+    if (localMetaDataButton === 'calculate') {
+      const size = await getLocalMetaDataSize()
+      setLocalMetaDataSize(size || null)
+      setLocalMetaDataButton('clear')
+    }
+    if (localMetaDataButton === 'clear') {
+      clearLocalMetaData()
+      setLocalMetaDataSize(null)
+      setLocalMetaDataButton('calculate')
+    }
+
+  }
 
   return (
     <List>
@@ -47,13 +65,13 @@ const Setting = () => {
       </ListItem>
       <ListItem
         secondaryAction={
-          <Button onClick={() => clearMetaDataList()}>
-            {t('common.clear')}
+          <Button onClick={() => handleLocalMetaDataButton()}>
+            {localMetaDataButton === 'calculate' ? t('common.calculate') : t('common.clear')}
           </Button>
         }
       >
         <ListItemAvatar></ListItemAvatar>
-        <ListItemText primary={t('data.localMetaDataCache')} secondary={metaDataCachesize ? `${metaDataCachesize} MB` : null} />
+        <ListItemText primary={t('data.localMetaDataCache')} secondary={localMetaDataSize ? `${localMetaDataSize} MB` : ' '} />
       </ListItem>
 
       <Divider sx={{ mt: 1, mb: 1 }} />
