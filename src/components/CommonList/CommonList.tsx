@@ -181,7 +181,16 @@ const CommonList = (
                 }
               >
                 <ListItemButton
-                  onClick={() => ((item as PlayQueueItem).index) ? updateCurrentIndex(index) : handleClickListItem(item.filePath)}
+                  onClick={
+                    () => {
+                      if ((item as PlayQueueItem).index) {
+                        updatePlayStatu('playing')
+                        updateCurrentIndex(index)
+                      } else {
+                        handleClickListItem(item.filePath)
+                      }
+                    }
+                  }
                   sx={{
                     '& .MuiListItemIcon-root': {
                       minWidth: 0,
