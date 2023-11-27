@@ -9,7 +9,6 @@ import MoreVertOutlined from '@mui/icons-material/MoreVertOutlined'
 import ShuffleOutlinedIcon from '@mui/icons-material/ShuffleOutlined'
 import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined'
 import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined'
-import { shallow } from 'zustand/shallow'
 import usePlayQueueStore from '../../store/usePlayQueueStore'
 import usePlayerStore from '../../store/usePlayerStore'
 import useUiStore from '../../store/useUiStore'
@@ -30,12 +29,13 @@ const CommonList = (
   const [dialogOpen, setDialogOpen] = useState(false)
   const [currentFile, setCurrentFile] = useState<null | File>(null)
 
-  const [folderTree, updateFolderTree] = useUiStore((state) => [state.folderTree, state.updateFolderTree])
+  const [folderTree, shuffle, updateVideoViewIsShow, updateFolderTree, updateShuffle] = useUiStore(
+    (state) => [state.folderTree, state.shuffle, state.updateVideoViewIsShow, state.updateFolderTree, state.updateShuffle])
+
   const [currentIndex, updateType, updatePlayQueue, updateCurrentIndex] = usePlayQueueStore(
-    (state) => [state.currentIndex, state.updateType, state.updatePlayQueue, state.updateCurrentIndex],
-    shallow
-  )
-  const [shuffle, updateShuffle] = usePlayerStore(state => [state.shuffle, state.updateShuffle])
+    (state) => [state.currentIndex, state.updateType, state.updatePlayQueue, state.updateCurrentIndex])
+
+  const [updatePlayStatu] = usePlayerStore(state => [state.updatePlayStatu])
 
   const isPlayQueueView = listData?.some((item) => typeof (item as PlayQueueItem).index === 'number')
 
@@ -69,11 +69,16 @@ const CommonList = (
               currentIndex = index
             return { index, ...item }
           })
-        if (shuffle)
+        if (shuffle) {
           updateShuffle(false)
+        }
         updateType(currentFile.fileType)
         updatePlayQueue(list)
         updateCurrentIndex(currentIndex)
+        updatePlayStatu('playing')
+        if (currentFile.fileType === 'video') {
+          updateVideoViewIsShow(true)
+        }
       }
     }
   }
@@ -90,6 +95,7 @@ const CommonList = (
       const shuffleList = shufflePlayQueue(list)
       updatePlayQueue(shuffleList)
       updateCurrentIndex(shuffleList[0].index)
+      updatePlayStatu('playing')
     }
   }
 
