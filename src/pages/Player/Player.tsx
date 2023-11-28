@@ -130,11 +130,10 @@ const Player = () => {
     () => {
       if (player !== null && !isLoading && player.src.includes('1drv.com')) {
         if (playStatu === 'playing') {
-          console.log('开始播放', playQueue?.filter(item => item.index === currentIndex)[0].filePath)
+          console.log('Playing', playQueue?.filter(item => item.index === currentIndex)[0].filePath)
           if (playQueue?.filter(item => item.index === currentIndex)[0].filePath) {
             player?.play()
             const currentItem = playQueue.filter(item => item.index === currentIndex)[0]
-            console.log(historyList)
             if (historyList !== null) {
               insertHistory({
                 fileName: currentItem.fileName,
@@ -303,14 +302,14 @@ const Player = () => {
 
         if (playQueue) {
 
-          const metaData = await getLocalMetaData(playQueue.filter(item => item.index === currentIndex)[0].filePath)
+          const metaData = await getLocalMetaData(playQueue.filter(item => item.index === currentIndex)[0]?.filePath)
 
           if (!metaData) {
             updateCurrentMetaData(
               {
-                title: playQueue.filter(item => item.index === currentIndex)[0].fileName,
+                title: playQueue.filter(item => item.index === currentIndex)[0]?.fileName || 'Not playing',
                 artist: '',
-                path: playQueue.filter(item => item.index === currentIndex)[0].filePath,
+                path: playQueue.filter(item => item.index === currentIndex)[0]?.filePath,
               }
             )
             updateCover('./cover.png')
@@ -343,7 +342,7 @@ const Player = () => {
       updateMetaData()
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [playQueue?.filter(item => item.index === currentIndex)[0].filePath, metadataUpdate]
+    [playQueue?.filter(item => item.index === currentIndex)[0]?.filePath, metadataUpdate]
   )
 
   // 获取在线 metadata

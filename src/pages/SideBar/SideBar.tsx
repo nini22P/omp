@@ -29,7 +29,7 @@ const SideBar = () => {
 
   return (
     <div>
-      <List >
+      <List>
         {navData.map((item, index) =>
           <ListItem
             disablePadding
