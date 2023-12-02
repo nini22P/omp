@@ -83,6 +83,12 @@ const CommonList = (
     }
   }
 
+  // 点击播放队列列表
+  const handleClickPlayQueueItem = (index: number) => {
+    updatePlayStatu('playing')
+    updateCurrentIndex(index)
+  }
+
   // 点击随机播放全部
   const handleClickShuffleAll = () => {
     if (listData) {
@@ -182,19 +188,17 @@ const CommonList = (
               >
                 <ListItemButton
                   onClick={
-                    () => {
-                      if ((item as PlayQueueItem).index) {
-                        updatePlayStatu('playing')
-                        updateCurrentIndex(index)
-                      } else {
-                        handleClickListItem(item.filePath)
-                      }
-                    }
+                    () => ((item as PlayQueueItem).index)
+                      ? handleClickPlayQueueItem(index)
+                      : handleClickListItem(item.filePath)
                   }
                   sx={{
                     '& .MuiListItemIcon-root': {
                       minWidth: 0,
                       marginRight: 3,
+                      color: ((item as PlayQueueItem).index === currentIndex)
+                        ? styles.color.primary
+                        : '',
                     },
                     '.MuiListItemText-root': {
                       color: ((item as PlayQueueItem).index === currentIndex)

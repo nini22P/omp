@@ -125,9 +125,9 @@ const CommonMenu = (
 
         {
           (
-            handleClickRemove &&
-            currentFile &&
-            !(isPlayQueueView && currentFile?.filePath === playQueue?.find((item) => item.index === currentIndex)?.filePath)
+            handleClickRemove
+            && currentFile
+            && !(isPlayQueueView && currentFile?.filePath === playQueue?.find((item) => item.index === currentIndex)?.filePath)
           ) &&
           <MenuItem
             onClick={() => {
@@ -138,7 +138,9 @@ const CommonMenu = (
             <ListItemText primary={t('common.remove')} />
           </MenuItem>
         }
-      </Menu><Dialog
+      </Menu>
+
+      <Dialog
         open={dialogOpen}
         onClose={() => setDialogOpen(false)}
         fullWidth
