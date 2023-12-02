@@ -19,21 +19,18 @@ English | [中文](./readme_cn.md)
 - [x] History Sync
 - [x] Playlists Sync
 
-## Screenshot
+## Screenshots
 
-![omp](https://github.com/nini22P/omp/assets/60903333/9ebdf1af-e0f0-40b0-b90c-6f1795ccf2c3)
+![203825](https://github.com/nini22P/omp/assets/60903333/83ee1913-ed11-4a73-add0-d5655eb451e9)
+![203915](https://github.com/nini22P/omp/assets/60903333/35b0e1ce-8441-4b70-9ddb-96023b1c4f60)
+![204043](https://github.com/nini22P/omp/assets/60903333/efdf3f0a-fd79-4875-ba51-c421d8730589)
+![204226](https://github.com/nini22P/omp/assets/60903333/6c532070-8f77-4dc0-81a5-7c3efb2543bf)
 
 ## FAQ
 
 ### Where is my data stored?
 
 All of OMP data is stored in the `Apps / OMP` folder in your OneDrive. Where `history.json` is the history and `playlists.json` is the playlists. If you have lost your data, you can restore an older version by visiting the OneDrive web version.
-
-### How to retrieve old versions of data after changing client IDs
-
-The client ID has been changed in `v1.2.0`, you need to re-authorize it, and new data will be created in the new folder if you are using the old version.
-
-First close OMP, then open `OneDrive / Apps`, find `OMP 1` folder, delete all files in it, then find `OMP` folder, move all files in it to `OMP 1` folder, delete `OMP` folder, and finally rename `OMP 1` folder to `OMP`.
 
 ## Running and Build
 

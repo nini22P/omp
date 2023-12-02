@@ -21,19 +21,16 @@
 
 ## 截图
 
-![omp](https://github.com/nini22P/omp/assets/60903333/9ebdf1af-e0f0-40b0-b90c-6f1795ccf2c3)
+![203825](https://github.com/nini22P/omp/assets/60903333/83ee1913-ed11-4a73-add0-d5655eb451e9)
+![203915](https://github.com/nini22P/omp/assets/60903333/35b0e1ce-8441-4b70-9ddb-96023b1c4f60)
+![204043](https://github.com/nini22P/omp/assets/60903333/efdf3f0a-fd79-4875-ba51-c421d8730589)
+![204226](https://github.com/nini22P/omp/assets/60903333/6c532070-8f77-4dc0-81a5-7c3efb2543bf)
 
 ## FAQ
 
 ### 我的数据保存在哪里？
 
 OMP 的数据全部保存在你的 OneDrive 中的 `应用 / OMP` 文件夹中。其中 `history.json` 为历史记录，`playlists.json` 为播放列表，如果有数据丢失可以访问 OneDrive 网页版恢复旧版本数据。
-
-### 更换客户端 ID 后如何找回旧版本数据
-
-`v1.2.0` 中更换了客户端 ID，需重新授权，如果是旧版本用户使用时会在新文件夹中创建新数据。
-
-首先关闭 OMP，然后打开 `OneDrive / 应用`，找到 `OMP 1` 文件夹，删除里面的全部文件，然后找到 `OMP` 文件夹，将里面的全部文件移动到 `OMP 1` 文件夹，删除 `OMP` 文件夹，最后将 `OMP 1` 文件夹重命名为 `OMP`。
 
 ## 运行和编译
 
