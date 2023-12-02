@@ -106,7 +106,13 @@ const Audio = (
             : `linear-gradient(rgba(50, 50, 50, 0.3), rgba(50, 50, 50, 0.3) ), url(${cover})  no-repeat center, #000`,
         backgroundSize: 'cover',
         color: '#fff',
-        overflow: 'hidden'
+        overflow: 'hidden',
+        '.MuiIconButton-root:hover': {
+          backgroundColor: 'rgb(255 255 255 / 8%)',
+        },
+        '.MuiSvgIcon-root': {
+          color: '#fff',
+        },
       }}
       style={(audioViewIsShow) ? { top: 0 } : { top: '100vh' }}
     >
@@ -134,7 +140,7 @@ const Audio = (
                 onClick={() => updateAudioViewIsShow(false)}
                 className='app-region-no-drag'
               >
-                <KeyboardArrowDownOutlinedIcon style={{ color: '#fff' }} />
+                <KeyboardArrowDownOutlinedIcon />
               </IconButton>
             </Grid>
 
@@ -144,14 +150,14 @@ const Audio = (
                 onClick={() => updatePlayQueueIsShow(true)}
                 className='app-region-no-drag'
               >
-                <QueueMusicOutlinedIcon style={{ color: '#fff' }} />
+                <QueueMusicOutlinedIcon />
               </IconButton>
               <IconButton
                 aria-label="NoBackground"
                 onClick={() => updateBackgroundIsShow(!backgroundIsShow)}
                 className='app-region-no-drag'
               >
-                <PanoramaOutlinedIcon style={!backgroundIsShow ? { color: '#aaa' } : { color: '#fff' }} />
+                <PanoramaOutlinedIcon style={!backgroundIsShow ? { color: '#aaa' } : {}} />
               </IconButton>
               <IconButton
                 aria-label="Full"
@@ -160,8 +166,8 @@ const Audio = (
               >
                 {
                   fullscreen
-                    ? <CloseFullscreenIcon style={{ height: 20, width: 20, color: '#fff' }} />
-                    : <OpenInFullIcon style={{ height: 20, width: 20, color: '#fff' }} />
+                    ? <CloseFullscreenIcon style={{ height: 20, width: 20 }} />
+                    : <OpenInFullIcon style={{ height: 20, width: 20 }} />
                 }
               </IconButton>
               {/* <IconButton aria-label="PictureInPicture" >
@@ -185,8 +191,8 @@ const Audio = (
               gap={{ xs: 0, sm: 3 }}
             >
               {/* 封面 */}
-              <Grid sm={4} xs={12} >
-                <img src={cover} alt='Cover' style={{ maxHeight: '100vw', width: '100%', objectFit: 'contain' }} />
+              <Grid sm={4} xs={12} sx={{ textAlign: 'center' }}>
+                <img src={cover} alt='Cover' style={{ maxHeight: '50vh', width: '100%', objectFit: 'contain' }} />
               </Grid>
 
               {/* 音频信息 */}
@@ -224,42 +230,40 @@ const Audio = (
                     <ShuffleIcon sx={{ height: 28, width: 28 }} style={(shuffle) ? { color: '#fff' } : { color: '#ccc' }} />
                   </IconButton>
                   <IconButton aria-label="previous" onClick={() => handleClickPrev()} >
-                    <SkipPreviousIcon sx={{ height: 48, width: 48 }} style={{ color: '#fff' }} />
+                    <SkipPreviousIcon sx={{ height: 48, width: 48 }} />
                   </IconButton>
                   <IconButton aria-label="backward" sx={{ display: { sm: 'inline-grid', xs: 'none' } }} onClick={() => handleClickSeekbackward(10)} >
-                    <FastRewindIcon sx={{ height: 32, width: 32 }} style={{ color: '#fff' }} />
+                    <FastRewindIcon sx={{ height: 32, width: 32 }} />
                   </IconButton>
                   {
                     (!isLoading && playStatu === 'paused') &&
                     <IconButton aria-label="play" onClick={() => handleClickPlay()}>
-                      <PlayCircleOutlinedIcon sx={{ height: 64, width: 64 }} style={{ color: '#fff' }} />
+                      <PlayCircleOutlinedIcon sx={{ height: 64, width: 64 }} />
                     </IconButton>
                   }
                   {
                     (!isLoading && playStatu === 'playing') &&
                     <IconButton aria-label="pause" onClick={() => handleClickPause()}>
-                      <PauseCircleOutlinedIcon sx={{ height: 64, width: 64 }} style={{ color: '#fff' }} />
+                      <PauseCircleOutlinedIcon sx={{ height: 64, width: 64 }} />
                     </IconButton>
                   }
                   {
                     isLoading &&
                     <Box sx={{ height: 80, width: 80, padding: '13px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                      <CircularProgress style={{ color: '#fff' }} size={54} />
+                      <CircularProgress color="inherit" size={54} />
                     </Box>
                   }
                   <IconButton aria-label="forward" sx={{ display: { sm: 'inline-grid', xs: 'none' } }} onClick={() => handleClickSeekforward(10)} >
-                    <FastForwardIcon sx={{ height: 32, width: 32 }} style={{ color: '#fff' }} />
+                    <FastForwardIcon sx={{ height: 32, width: 32 }} />
                   </IconButton>
                   <IconButton aria-label="next" onClick={handleClickNext} >
-                    <SkipNextIcon sx={{ height: 48, width: 48 }} style={{ color: '#fff' }} />
+                    <SkipNextIcon sx={{ height: 48, width: 48 }} />
                   </IconButton>
                   <IconButton aria-label="repeat" onClick={() => handleClickRepeat()} >
                     {
                       (repeat === 'one')
-                        ?
-                        < RepeatOneIcon sx={{ height: 28, width: 28 }} style={{ color: '#fff' }} />
-                        :
-                        <RepeatIcon sx={{ height: 28, width: 28 }} style={(repeat === 'off') ? { color: '#ccc' } : { color: '#fff' }} />
+                        ? <RepeatOneIcon sx={{ height: 28, width: 28 }} />
+                        : <RepeatIcon sx={{ height: 28, width: 28 }} style={(repeat === 'off') ? { color: '#ccc' } : {}} />
                     }
 
                   </IconButton>

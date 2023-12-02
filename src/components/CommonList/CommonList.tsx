@@ -196,6 +196,9 @@ const CommonList = (
                     '& .MuiListItemIcon-root': {
                       minWidth: 0,
                       marginRight: 3,
+                      color: ((item as PlayQueueItem).index === currentIndex)
+                        ? styles.color.primary
+                        : '',
                     },
                     '.MuiListItemText-root': {
                       color: ((item as PlayQueueItem).index === currentIndex)
