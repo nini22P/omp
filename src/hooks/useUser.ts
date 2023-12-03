@@ -1,5 +1,7 @@
 import { useMsal } from '@azure/msal-react'
 import { loginRequest } from '../services/authConfig'
+import usePlayQueueStore from '../store/usePlayQueueStore'
+import useUiStore from '../store/useUiStore'
 
 const useUser = () => {
   const { instance, accounts } = useMsal()
@@ -14,6 +16,8 @@ const useUser = () => {
 
   //登出
   const logout = () => {
+    usePlayQueueStore.persist.clearStorage()
+    useUiStore.persist.clearStorage()
     instance.logoutRedirect({
       postLogoutRedirectUri: '/'
     })

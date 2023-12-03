@@ -11,8 +11,7 @@ import RepeatIcon from '@mui/icons-material/Repeat'
 import RepeatOneIcon from '@mui/icons-material/RepeatOne'
 import OpenInFullIcon from '@mui/icons-material/OpenInFull'
 import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen'
-import QueueMusicIcon from '@mui/icons-material/QueueMusic'
-// import PictureInPictureIcon from '@mui/icons-material/PictureInPicture'
+import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay'
 import usePlayQueueStore from '../../store/usePlayQueueStore'
 import usePlayerStore from '../../store/usePlayerStore'
 import useUiStore from '../../store/useUiStore'
@@ -83,11 +82,13 @@ const PlayerControl = (
           pl={{ xs: 0, sm: 1 }}
           pr={{ xs: 0, sm: 1 }}
           sx={{ justifyContent: 'space-between', alignItems: 'center', textAlign: 'center' }}>
-          <Grid xs='auto' >
+          <Grid
+            xs='auto'
+            sx={{ display: { sm: 'inline-grid', xs: 'none' } }}
+          >
             <Typography
               component='div'
               color='text.secondary'
-              sx={{ display: { sm: 'inline-grid', xs: 'none' } }}
             >
               {timeShift(currentTime)}
             </Typography>
@@ -104,16 +105,17 @@ const PlayerControl = (
               onChange={(_, current) => handleTimeRangeonChange(current)}
             />
           </Grid>
-          <Grid xs='auto'>
+          <Grid
+            xs='auto'
+            sx={{ display: { sm: 'inline-grid', xs: 'none' } }}
+          >
             <Typography
               component='div'
               color='text.secondary'
-              sx={{ display: { sm: 'inline-grid', xs: 'none' } }}
             >
               {timeShift((duration) ? duration : 0)}
             </Typography>
           </Grid>
-          {/* </Grid> */}
         </Grid>
 
         <Grid container xs={12} wrap={'nowrap'} sx={{ alignItems: 'center' }} >
@@ -153,15 +155,26 @@ const PlayerControl = (
 
           {/* 基本控制按钮 */}
           <Grid container lg={3} md={4} sm={5} xs={5} wrap='nowrap' sx={{ justifyContent: 'center', alignItems: 'center', }} >
-            <IconButton aria-label="shuffle" onClick={() => updateShuffle(!shuffle)}>
-              <ShuffleIcon sx={{ height: 20, width: 20, display: { sm: 'inline-grid', xs: 'none' } }} style={(shuffle) ? {} : { color: '#aaa' }} />
+            <IconButton
+              sx={{ display: { sm: 'inline-grid', xs: 'none' } }}
+              aria-label="shuffle"
+              onClick={() => updateShuffle(!shuffle)}
+            >
+              <ShuffleIcon sx={{ height: 20, width: 20 }} style={(shuffle) ? {} : { color: '#aaa' }} />
             </IconButton>
+
             <IconButton aria-label="previous" onClick={handleClickPrev} >
               <SkipPreviousIcon />
             </IconButton>
-            <IconButton sx={{ display: { sm: 'inline-grid', xs: 'none' } }} aria-label="backward" onClick={() => handleClickSeekbackward(10)} >
+
+            <IconButton
+              sx={{ display: { sm: 'inline-grid', xs: 'none' } }}
+              aria-label="backward"
+              onClick={() => handleClickSeekbackward(10)}
+            >
               <FastRewindIcon />
             </IconButton>
+
             {
               (!isLoading && playStatu === 'paused') &&
               <IconButton aria-label="play" onClick={() => handleClickPlay()}>
@@ -180,20 +193,31 @@ const PlayerControl = (
                 <CircularProgress style={{ color: '#666' }} size={32} />
               </Box>
             }
-            <IconButton sx={{ display: { sm: 'inline-grid', xs: 'none' } }} aria-label="forward" onClick={() => handleClickSeekforward(10)} >
+
+            <IconButton
+              sx={{ display: { sm: 'inline-grid', xs: 'none' } }}
+              aria-label="forward"
+              onClick={() => handleClickSeekforward(10)}
+            >
               <FastForwardIcon />
             </IconButton>
+
             <IconButton aria-label="next" onClick={handleClickNext} >
               <SkipNextIcon />
             </IconButton>
-            <IconButton aria-label="repeat" onClick={() => handleClickRepeat()} >
+
+            <IconButton
+              sx={{ display: { sm: 'inline-grid', xs: 'none' } }}
+              aria-label="repeat"
+              onClick={() => handleClickRepeat()}
+            >
               {
                 (repeat === 'one')
                   ?
-                  <RepeatOneIcon sx={{ height: 20, width: 20, display: { sm: 'inline-grid', xs: 'none' } }} />
+                  <RepeatOneIcon sx={{ height: 20, width: 20, }} />
                   :
                   <RepeatIcon
-                    sx={{ height: 20, width: 20, display: { sm: 'inline-grid', xs: 'none' } }}
+                    sx={{ height: 20, width: 20 }}
                     style={(repeat === 'off') ? { color: '#aaa' } : {}}
                   />
               }
@@ -209,7 +233,7 @@ const PlayerControl = (
             pr={1}
           >
             <IconButton onClick={() => updatePlayQueueIsShow(!playQueueIsShow)}>
-              <QueueMusicIcon sx={{ display: { sm: 'inline-grid', xs: 'none' } }} />
+              <PlaylistPlayIcon sx={{ display: { sm: 'inline-grid', xs: 'none' } }} />
             </IconButton>
             <IconButton onClick={() => handleClickFullscreen()} >
               {
@@ -218,9 +242,6 @@ const PlayerControl = (
                   : <OpenInFullIcon sx={{ height: 18, width: 18, display: { sm: 'inline-grid', xs: 'none' } }} />
               }
             </IconButton>
-            {/* <IconButton  >
-                <PictureInPictureIcon sx={{ height: 18, width: 18, display: { sm: 'inline-grid', xs: 'none' } }} />
-              </IconButton> */}
           </Grid>
 
         </Grid>

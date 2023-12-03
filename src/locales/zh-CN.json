@@ -15,7 +15,7 @@
     "account": "账号",
     "signIn": "登录",
     "signOut": "注销",
-    "signInAlert": "请登录以查看你的文件"
+    "signInAlert": "请登录微软账户以查看你的文件"
   },
   "playlist": {
     "newPlaylist": "新播放列表",
