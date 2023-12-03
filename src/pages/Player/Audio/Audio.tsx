@@ -107,9 +107,6 @@ const Audio = (
         backgroundSize: 'cover',
         color: '#fff',
         overflow: 'hidden',
-        '.MuiIconButton-root:hover': {
-          backgroundColor: 'rgb(255 255 255 / 8%)',
-        },
         '.MuiSvgIcon-root': {
           color: '#fff',
         },
@@ -171,32 +168,49 @@ const Audio = (
                 }
               </IconButton>
               {/* <IconButton aria-label="PictureInPicture" >
-                  <PictureInPictureIcon style={{ height: 20, width: 20, color: '#fff' }} />
+                  <PictureInPictureIcon style={{ height: 20, width: 20 }} />
                 </IconButton> */}
             </Grid>
 
             {/* 封面和音频信息 */}
             <Grid container
+              xs={12}
               maxWidth={'lg'}
-              height={{ xs: 'calc(100dvh - 4rem)', sm: 'auto' }}
+              height={{ xs: 'calc(100dvh - 4rem - env(titlebar-area-height, 0px))', sm: 'auto' }}
               flexDirection={{ xs: 'column', sm: 'row' }}
               wrap='nowrap'
-              xs={12}
-              sx={{
-                justifyContent: 'space-evenly',
-                alignItems: 'center',
-              }}
+              justifyContent={{ xs: 'end', sm: 'space-evenly' }}
+              alignItems={'center'}
               pl={{ xs: 0, sm: 1 }}
               pr={{ xs: 0, sm: 1 }}
-              gap={{ xs: 0, sm: 3 }}
+              pb={{ xs: 3, sm: 0 }}
+              gap={{ xs: 3, sm: 3 }}
             >
               {/* 封面 */}
-              <Grid sm={4} xs={12} sx={{ textAlign: 'center' }}>
-                <img src={cover} alt='Cover' style={{ maxHeight: '50vh', width: '100%', objectFit: 'contain' }} />
+              <Grid
+                container
+                xs={12}
+                sm={4}
+                flexGrow={1}
+                justifyContent={'center'}
+                alignItems={'center'}
+                overflow={'hidden'}
+                sx={{ objectFit: 'cover' }}
+              >
+                <img
+                  src={cover}
+                  alt='Cover'
+                  style={{
+                    height: '100%',
+                    maxHeight: '100vw',
+                    width: '100%',
+                    objectFit: 'cover',
+                  }}
+                />
               </Grid>
 
               {/* 音频信息 */}
-              <Grid sm={8} xs={12} pl={{ xs: 0, lg: 5 }} textAlign={'center'}>
+              <Grid xs={12} sm={8} pl={{ xs: 0, lg: 5 }} textAlign={'center'}>
                 <Grid xs={12} pl={4} pr={4} >
                   <Typography variant="h6" component="div" textAlign={'center'} noWrap>
                     {(!playQueue || !metaData) ? 'Not playing' : metaData.title}
