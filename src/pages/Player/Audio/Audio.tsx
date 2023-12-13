@@ -16,12 +16,11 @@ import RepeatOneIcon from '@mui/icons-material/RepeatOne'
 import OpenInFullIcon from '@mui/icons-material/OpenInFull'
 import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen'
 import PanoramaOutlinedIcon from '@mui/icons-material/PanoramaOutlined'
-// import PictureInPictureIcon from '@mui/icons-material/PictureInPicture'
-import usePlayQueueStore from '../../../store/usePlayQueueStore'
-import usePlayerStore from '../../../store/usePlayerStore'
-import useUiStore from '../../../store/useUiStore'
-import { timeShift } from '../../../utils'
-import { MetaData } from '../../../types/MetaData'
+import usePlayQueueStore from '@/store/usePlayQueueStore'
+import usePlayerStore from '@/store/usePlayerStore'
+import useUiStore from '@/store/useUiStore'
+import { MetaData } from '@/types/MetaData'
+import { timeShift } from '@/utils'
 
 const Audio = (
   {
@@ -167,9 +166,6 @@ const Audio = (
                     : <OpenInFullIcon style={{ height: 20, width: 20 }} />
                 }
               </IconButton>
-              {/* <IconButton aria-label="PictureInPicture" >
-                  <PictureInPictureIcon style={{ height: 20, width: 20 }} />
-                </IconButton> */}
             </Grid>
 
             {/* 封面和音频信息 */}

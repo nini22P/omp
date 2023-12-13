@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-export const useMediaSession = (
+const useMediaSession = (
   player: HTMLVideoElement | null,
   cover: string,
   album: string | undefined,
@@ -71,3 +71,5 @@ export const useMediaSession = (
     [cover, album, artist, title, handleClickPlay, handleClickPause, handleClickNext, handleClickPrev, handleClickSeekbackward, handleClickSeekforward, SeekTo]
   )
 }
+
+export default useMediaSession

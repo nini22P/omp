@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 import useUiStore from '../store/useUiStore'
 
-export const useControlHide = (type: string, videoViewIsShow: boolean) => {
+const useControlHide = (type: string, videoViewIsShow: boolean) => {
   const updateControlIsShow = useUiStore((state) => state.updateControlIsShow)
   useEffect(
     () => {
@@ -28,3 +28,5 @@ export const useControlHide = (type: string, videoViewIsShow: boolean) => {
     [type, videoViewIsShow]
   )
 }
+
+export default useControlHide

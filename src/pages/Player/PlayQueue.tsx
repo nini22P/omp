@@ -1,10 +1,10 @@
 import { Button, Drawer } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import KeyboardArrowRightOutlinedIcon from '@mui/icons-material/KeyboardArrowRightOutlined'
-import usePlayQueueStore from '../../store/usePlayQueueStore'
-import useUiStore from '../../store/useUiStore'
-import CommonList from '../../components/CommonList/CommonList'
-import useTheme from '../../hooks/useTheme'
+import usePlayQueueStore from '@/store/usePlayQueueStore'
+import useUiStore from '@/store/useUiStore'
+import CommonList from '@/components/CommonList/CommonList'
+import useTheme from '@/hooks/useTheme'
 
 const PlayQueue = () => {
 
