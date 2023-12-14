@@ -77,7 +77,9 @@ const usePlayer = (player: HTMLVideoElement | null) => {
   // 获取当前播放文件链接
   useMemo(
     () => {
-      player?.pause()
+      if (player) {
+        player.src = ''
+      }
       if (playQueue !== null && playQueue.length !== 0) {
         try {
           getFileData(filePathConvert(playQueue.filter(item => item.index === currentIndex)[0].filePath)).then((res) => {
@@ -101,10 +103,10 @@ const usePlayer = (player: HTMLVideoElement | null) => {
         updateDuration(0)
         player.load()
         player.onloadedmetadata = () => {
-          updateIsLoading(false)
-          if (playStatu === 'playing') {
+          if (isLoading && playStatu === 'playing') {
             player.play()
           }
+          updateIsLoading(false)
           updateDuration(player.duration)
         }
       }
