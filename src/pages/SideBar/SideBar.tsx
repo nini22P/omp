@@ -7,7 +7,7 @@ import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
 import { shallow } from 'zustand/shallow'
 import useUiStore from '../../store/useUiStore'
 import Playlists from './Playlists'
-import useTheme from '../../hooks/useTheme'
+import useTheme from '../../hooks/ui/useTheme'
 
 const SideBar = () => {
 

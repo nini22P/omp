@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import useUiStore from '../store/useUiStore'
+import useUiStore from '../../store/useUiStore'
 const useThemeColor = () => {
   const [audioViewIsShow, videoViewIsShow] = useUiStore((state) => [state.audioViewIsShow, state.videoViewIsShow])
 

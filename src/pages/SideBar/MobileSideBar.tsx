@@ -2,7 +2,7 @@ import { Drawer } from '@mui/material'
 import { shallow } from 'zustand/shallow'
 import useUiStore from '../../store/useUiStore'
 import SideBar from './SideBar'
-import useTheme from '../../hooks/useTheme'
+import useTheme from '../../hooks/ui/useTheme'
 
 const MobileSideBar = () => {
 

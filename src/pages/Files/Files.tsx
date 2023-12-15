@@ -1,6 +1,6 @@
 import useSWR from 'swr'
 import useUiStore from '../../store/useUiStore'
-import useFilesData from '../../hooks/useFilesData'
+import useFilesData from '../../hooks/graph/useFilesData'
 import BreadcrumbNav from './BreadcrumbNav'
 import CommonList from '../../components/CommonList/CommonList'
 import Loading from '../Loading'

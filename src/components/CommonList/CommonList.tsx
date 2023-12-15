@@ -14,7 +14,7 @@ import usePlayerStore from '../../store/usePlayerStore'
 import useUiStore from '../../store/useUiStore'
 import { checkFileType, fileSizeConvert, shufflePlayQueue } from '../../utils'
 import CommonMenu from './CommonMenu'
-import useTheme from '../../hooks/useTheme'
+import useTheme from '../../hooks/ui/useTheme'
 import { PlayQueueItem } from '../../types/playQueue'
 import { File } from '../../types/file'
 

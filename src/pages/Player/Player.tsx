@@ -1,17 +1,20 @@
-import { useEffect, useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import { Box, Container, IconButton, Paper } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined'
-import useControlHide from '@/hooks/useControlHide'
-import useMediaSession from '@/hooks/useMediaSession'
-import usePlayer from '@/hooks/usePlayer'
-import useTheme from '@/hooks/useTheme'
+import useControlHide from '@/hooks/ui/useControlHide'
+import useMediaSession from '@/hooks/player/useMediaSession'
+import usePlayerCore from '@/hooks/player/usePlayerCore'
+import usePlayerControl from '@/hooks/player/usePlayerControl'
+import useTheme from '@/hooks/ui/useTheme'
+import useFullscreen from '@/hooks/ui/useFullscreen'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
 import Audio from './Audio/Audio'
 import PlayerControl from './PlayerControl'
 import PlayQueue from './PlayQueue'
+import { extractColors } from 'extract-colors'
 
 const Player = () => {
 
@@ -34,14 +37,14 @@ const Player = () => {
     controlIsShow,
     updateVideoViewIsShow,
     updateControlIsShow,
-    updateFullscreen,
+    updateColor,
   ] = useUiStore(
     (state) => [
       state.videoViewIsShow,
       state.controlIsShow,
       state.updateVideoViewIsShow,
       state.updateControlIsShow,
-      state.updateFullscreen,
+      state.updateColor,
     ]
   )
 
@@ -51,6 +54,9 @@ const Player = () => {
   const {
     url,
     onEnded,
+  } = usePlayerCore(player)
+
+  const {
     seekTo,
     handleClickPlay,
     handleClickPause,
@@ -58,9 +64,7 @@ const Player = () => {
     handleClickPrev,
     handleClickSeekforward,
     handleClickSeekbackward,
-    handleTimeRangeonChange,
-    handleClickRepeat,
-  } = usePlayer(player)
+  } = usePlayerControl(player)
 
   // 向 mediaSession 发送当前播放进度
   useMediaSession(
@@ -75,30 +79,19 @@ const Player = () => {
     handleClickPrev,
     handleClickSeekbackward,
     handleClickSeekforward,
-    seekTo
+    seekTo,
   )
 
   // 播放视频时自动隐藏ui
   useControlHide(type, videoViewIsShow)
 
-  // 检测全屏
-  useEffect(() => {
-    const handleFullscreenChange = () => {
-      updateFullscreen(!!document.fullscreenElement)
-    }
-    document.addEventListener('fullscreenchange', handleFullscreenChange)
-    return () => {
-      document.removeEventListener('fullscreenchange', handleFullscreenChange)
-    }
-  })
+  const { handleClickFullscreen } = useFullscreen()
 
-  const handleClickFullscreen = () => {
-    if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen()
-    } else {
-      document.exitFullscreen()
-    }
-  }
+  useMemo(
+    () => (cover !== './cover.png') && extractColors(cover).then(color => updateColor(color[0].hex)).catch(console.error),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [cover]
+  )
 
   return (
     <div>
@@ -158,31 +151,9 @@ const Player = () => {
       >
         <Container maxWidth={false} disableGutters={true}>
           <Box sx={(controlIsShow) ? {} : { display: 'none' }}>
-            <PlayerControl
-              metaData={currentMetaData}
-              handleClickPlay={handleClickPlay}
-              handleClickPause={handleClickPause}
-              handleClickNext={handleClickNext}
-              handleClickPrev={handleClickPrev}
-              handleClickSeekforward={handleClickSeekforward}
-              handleClickSeekbackward={handleClickSeekbackward}
-              handleTimeRangeonChange={handleTimeRangeonChange}
-              handleClickRepeat={handleClickRepeat}
-              handleClickFullscreen={handleClickFullscreen}
-            />
+            <PlayerControl player={player} />
           </Box>
-          <Audio
-            metaData={currentMetaData}
-            handleClickPlay={handleClickPlay}
-            handleClickPause={handleClickPause}
-            handleClickNext={handleClickNext}
-            handleClickPrev={handleClickPrev}
-            handleClickSeekforward={handleClickSeekforward}
-            handleClickSeekbackward={handleClickSeekbackward}
-            handleTimeRangeonChange={handleTimeRangeonChange}
-            handleClickRepeat={handleClickRepeat}
-            handleClickFullscreen={handleClickFullscreen}
-          />
+          <Audio player={player} />
           <PlayQueue />
         </Container>
       </Paper >

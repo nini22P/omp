@@ -15,34 +15,11 @@ import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
-import { MetaData } from '@/types/MetaData'
+import useFullscreen from '@/hooks/ui/useFullscreen'
+import usePlayerControl from '@/hooks/player/usePlayerControl'
 import { timeShift } from '@/utils'
 
-const PlayerControl = (
-  {
-    metaData,
-    handleClickPlay,
-    handleClickPause,
-    handleClickNext,
-    handleClickPrev,
-    handleClickSeekforward,
-    handleClickSeekbackward,
-    handleTimeRangeonChange,
-    handleClickRepeat,
-    handleClickFullscreen,
-  }
-    : {
-      metaData: MetaData | null,
-      handleClickPlay: () => void,
-      handleClickPause: () => void,
-      handleClickNext: () => void,
-      handleClickPrev: () => void,
-      handleClickSeekforward: (skipTime: number) => void,
-      handleClickSeekbackward: (skipTime: number) => void,
-      handleTimeRangeonChange: (current: number | number[]) => void,
-      handleClickRepeat: () => void,
-      handleClickFullscreen: () => void,
-    }) => {
+const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
 
   const [type, playQueue] = usePlayQueueStore((state) => [state.type, state.playQueue])
 
@@ -68,8 +45,36 @@ const PlayerControl = (
     ]
   )
 
-  const [playStatu, isLoading, cover, currentTime, duration] = usePlayerStore(
-    (state) => [state.playStatu, state.isLoading, state.cover, state.currentTime, state.duration])
+  const [
+    currentMetaData,
+    playStatu,
+    isLoading,
+    cover,
+    currentTime,
+    duration,
+  ] = usePlayerStore(
+    (state) => [
+      state.currentMetaData,
+      state.playStatu,
+      state.isLoading,
+      state.cover,
+      state.currentTime,
+      state.duration,
+    ]
+  )
+
+  const {
+    handleClickPlay,
+    handleClickPause,
+    handleClickNext,
+    handleClickPrev,
+    handleClickSeekforward,
+    handleClickSeekbackward,
+    handleTimeRangeonChange,
+    handleClickRepeat,
+  } = usePlayerControl(player)
+
+  const { handleClickFullscreen } = useFullscreen()
 
   return (
     <Container maxWidth={'xl'} disableGutters={true}>
@@ -141,11 +146,11 @@ const PlayerControl = (
                   </Grid>}
                 <Grid xs sx={{ pl: 1 }} minWidth={0}>
                   <Typography variant="body1" component="div" noWrap>
-                    {(!playQueue || !metaData) ? 'Not playing' : metaData.title}
+                    {(!playQueue || !currentMetaData) ? 'Not playing' : currentMetaData.title}
                   </Typography>
                   <div>
-                    {(!playQueue || !metaData) || <Typography variant="subtitle1" color="text.secondary" component="div" noWrap>
-                      {(metaData.artist) && metaData.artist}{(metaData.album) && ` • ${metaData.album}`}
+                    {(!playQueue || !currentMetaData) || <Typography variant="subtitle1" color="text.secondary" component="div" noWrap>
+                      {(currentMetaData.artist) && currentMetaData.artist}{(currentMetaData.album) && ` • ${currentMetaData.album}`}
                     </Typography>}
                   </div>
                 </Grid>

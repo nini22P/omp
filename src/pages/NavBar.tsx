@@ -3,7 +3,7 @@ import GitHubIcon from '@mui/icons-material/GitHub'
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined'
 import { shallow } from 'zustand/shallow'
 import useUiStore from '../store/useUiStore'
-import useTheme from '../hooks/useTheme'
+import useTheme from '../hooks/ui/useTheme'
 import { AccountInfo } from '@azure/msal-browser'
 
 const NavBar = ({ accounts }: { accounts: AccountInfo[] }) => {
