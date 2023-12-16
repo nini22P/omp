@@ -10,6 +10,10 @@ export interface UiStatus {
   shuffle: boolean;
   repeat: 'off' | 'all' | 'one';
   color: string;
+  sortBy: 'name' | 'size' | 'datetime';
+  orderBy: 'asc' | 'desc';
+  foldersFirst: boolean;
+  mediaOnly: boolean;
 }
 
 export interface UiAction {
@@ -24,4 +28,8 @@ export interface UiAction {
   updateShuffle: (shuffle: UiStatus['shuffle']) => void;
   updateRepeat: (loop: UiStatus['repeat']) => void;
   updateColor: (color: UiStatus['color']) => void;
+  updateSortBy: (sortBy: UiStatus['sortBy']) => void;
+  updateOrderBy: (orderBy: UiStatus['orderBy']) => void;
+  updateFoldersFirst: (foldersFirst: UiStatus['foldersFirst']) => void;
+  updateMediaOnly: (mediaOnly: UiStatus['mediaOnly']) => void;
 }

@@ -1,20 +1,18 @@
 import { useMemo, useRef } from 'react'
-import { Box, Container, IconButton, Paper } from '@mui/material'
-import Grid from '@mui/material/Unstable_Grid2'
-import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined'
-import useControlHide from '@/hooks/ui/useControlHide'
+import { Box, Container } from '@mui/material'
+import { extractColors } from 'extract-colors'
+import usePlayerStore from '@/store/usePlayerStore'
+import useUiStore from '@/store/useUiStore'
+import usePlayQueueStore from '@/store/usePlayQueueStore'
 import useMediaSession from '@/hooks/player/useMediaSession'
 import usePlayerCore from '@/hooks/player/usePlayerCore'
 import usePlayerControl from '@/hooks/player/usePlayerControl'
 import useTheme from '@/hooks/ui/useTheme'
-import useFullscreen from '@/hooks/ui/useFullscreen'
-import usePlayQueueStore from '@/store/usePlayQueueStore'
-import usePlayerStore from '@/store/usePlayerStore'
-import useUiStore from '@/store/useUiStore'
+import useControlHide from '@/hooks/ui/useControlHide'
+import VideoPlayer from './VideoPlayer'
 import Audio from './Audio/Audio'
 import PlayerControl from './PlayerControl'
 import PlayQueue from './PlayQueue'
-import { extractColors } from 'extract-colors'
 
 const Player = () => {
 
@@ -30,20 +28,14 @@ const Player = () => {
     ]
   )
 
-  const [type] = usePlayQueueStore((state) => [state.type])
-
   const [
     videoViewIsShow,
     controlIsShow,
-    updateVideoViewIsShow,
-    updateControlIsShow,
     updateColor,
   ] = useUiStore(
     (state) => [
       state.videoViewIsShow,
       state.controlIsShow,
-      state.updateVideoViewIsShow,
-      state.updateControlIsShow,
       state.updateColor,
     ]
   )
@@ -82,11 +74,12 @@ const Player = () => {
     seekTo,
   )
 
+  const [type] = usePlayQueueStore((state) => [state.type])
+
   // 播放视频时自动隐藏ui
   useControlHide(type, videoViewIsShow)
 
-  const { handleClickFullscreen } = useFullscreen()
-
+  // 从专辑封面提取颜色
   useMemo(
     () => (cover !== './cover.png') && extractColors(cover).then(color => updateColor(color[0].hex)).catch(console.error),
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -95,57 +88,8 @@ const Player = () => {
 
   return (
     <div>
-      <Container
-        maxWidth={false}
-        disableGutters={true}
-        sx={{ width: '100%', height: '100dvh', position: 'fixed', transition: 'top 0.35s' }}
-        style={(videoViewIsShow) ? { top: '0' } : { top: '100vh' }}
-      >
-        <Grid container
-          sx={{
-            width: '100%',
-            height: '100%',
-            justifyContent: 'center',
-            alignItems: 'start',
-            backgroundColor: '#000'
-          }}
-        >
-          <Grid xs={12} sx={{ width: '100%', height: '100%' }}>
-            <video
-              width={'100%'}
-              height={'100%'}
-              src={url}
-              // autoPlay
-              ref={playerRef}
-              onEnded={() => onEnded()}
-              onDoubleClick={() => handleClickFullscreen()}
-            />
-          </Grid>
-
-          {/* 视频播放顶栏 */}
-          <Grid xs={12}
-            position={'absolute'}
-            sx={controlIsShow ? { top: 0, left: 0, borderRadius: '0 0 5px 0', width: 'auto' } : { display: 'none' }}
-            className='pt-titlebar-area-height'
-          >
-            <IconButton
-              aria-label="close"
-              onClick={() => {
-                updateVideoViewIsShow(false)
-                updateControlIsShow(true)
-              }}
-              className='app-region-no-drag'
-            >
-              <KeyboardArrowDownOutlinedIcon sx={{ color: '#fff' }} />
-            </IconButton>
-          </Grid>
-
-        </Grid>
-
-      </Container>
-      <Paper
-        elevation={0}
-        square={true}
+      <VideoPlayer url={url} onEnded={onEnded} ref={playerRef} />
+      <Box
         sx={{ position: 'fixed', bottom: '0', width: '100%', boxShadow: `0px -2px 2px -1px ${styles.color.shadow}` }}
       // style={(videoViewIsShow) ? { backgroundColor: '#ffffffee' } : { backgroundColor: '#ffffff' }}
       >
@@ -156,7 +100,7 @@ const Player = () => {
           <Audio player={player} />
           <PlayQueue />
         </Container>
-      </Paper >
+      </Box >
     </div>
   )
 }

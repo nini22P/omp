@@ -221,7 +221,16 @@ const CommonList = (
                   </ListItemIcon>
                   <ListItemText
                     primary={item.fileName}
-                    secondary={fileSizeConvert(item.fileSize)}
+                    secondary={
+                      `${item.lastModifiedDateTime
+                        ? `${new Date(item.lastModifiedDateTime).toLocaleString(undefined, {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                          hour: 'numeric',
+                          minute: 'numeric',
+                        })} | `
+                        : ''}${fileSizeConvert(item.fileSize)}`}
                     primaryTypographyProps={{
                       style: {
                         whiteSpace: 'nowrap',
@@ -233,7 +242,8 @@ const CommonList = (
                       style: {
                         whiteSpace: 'nowrap',
                         overflow: 'hidden',
-                        textOverflow: 'ellipsis'
+                        textOverflow: 'ellipsis',
+                        fontWeight: 'lighter',
                       }
                     }}
                   />

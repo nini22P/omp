@@ -3,4 +3,5 @@ export interface File {
   filePath: string[];
   fileSize: number;
   fileType: 'folder' | 'audio' | 'video' | 'picture' | 'other';
+  lastModifiedDateTime?: string;
 }
