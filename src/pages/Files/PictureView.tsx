@@ -3,7 +3,7 @@ import usePictureStore from '@/store/usePictureStore'
 import { filePathConvert } from '@/utils'
 import { CloseOutlined } from '@mui/icons-material'
 import { Box, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material'
-import { useEffect, useState } from 'react'
+import useSWRImmutable from 'swr/immutable'
 
 const PictureView = () => {
 
@@ -23,28 +23,19 @@ const PictureView = () => {
 
   const open = pictureList.length > 0
 
-  const [imgUrl, setImgUrl] = useState<string | null>(null)
-
   const { getFileData } = useFilesData()
 
-  useEffect(
-    () => {
-      if (currentPicture) {
-        try {
-          getFileData(filePathConvert(currentPicture.filePath)).then(res => {
-            setImgUrl(res['@microsoft.graph.downloadUrl'])
-          })
-        } catch (error) {
-          setImgUrl('')
-        }
-      }
-      return (
-        setImgUrl(null)
-      )
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentPicture]
-  )
+  const path = currentPicture ? filePathConvert(currentPicture.filePath) : null
+
+  const urlFetcher = async () => {
+    if (path) {
+      const res = await getFileData(path)
+      return res['@microsoft.graph.downloadUrl']
+    } else
+      return null
+  }
+
+  const { data: imgUrl, isLoading } = useSWRImmutable(path ? path : null, urlFetcher)
 
   const handleClose = () => {
     updatePictureList([])
@@ -75,7 +66,7 @@ const PictureView = () => {
       </DialogTitle>
       <DialogContent>
         <Box width='100%' height='100%' display='flex' justifyContent='center' alignItems='center'>
-          {(!imgUrl)
+          {(isLoading)
             ? <CircularProgress />
             : <img
               src={imgUrl}
