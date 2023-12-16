@@ -8,6 +8,7 @@ import { checkFileType, filePathConvert } from '../../utils'
 import { File } from '../../types/file'
 import Grid from '@mui/material/Unstable_Grid2/Grid2'
 import FilterMenu from './FilterMenu'
+import PictureView from './PictureView'
 
 const Files = () => {
 
@@ -102,6 +103,7 @@ const Files = () => {
             multiColumn
           />
       }
+      <PictureView />
     </div>
   )
 }

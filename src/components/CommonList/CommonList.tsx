@@ -12,6 +12,7 @@ import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined'
 import usePlayQueueStore from '../../store/usePlayQueueStore'
 import usePlayerStore from '../../store/usePlayerStore'
 import useUiStore from '../../store/useUiStore'
+import usePictureStore from '@/store/usePictureStore'
 import { checkFileType, fileSizeConvert, shufflePlayQueue } from '../../utils'
 import CommonMenu from './CommonMenu'
 import useTheme from '../../hooks/ui/useTheme'
@@ -37,6 +38,16 @@ const CommonList = (
 
   const [updatePlayStatu] = usePlayerStore(state => [state.updatePlayStatu])
 
+  const [
+    updatePictureList,
+    updateCurrentPicture,
+  ] = usePictureStore(
+    state => [
+      state.updatePictureList,
+      state.updateCurrentPicture,
+    ]
+  )
+
   const isPlayQueueView = listData?.some((item) => typeof (item as PlayQueueItem).index === 'number')
 
   // 打开播放队列时滚动到当前播放文件
@@ -57,13 +68,21 @@ const CommonList = (
   const handleClickListItem = (filePath: string[]) => {
     if (listData) {
       const currentFile = listData.find(item => item.filePath === filePath)
+
       if (currentFile && currentFile.fileType === 'folder') {
         updateFolderTree([...folderTree, currentFile.fileName])
       }
+
+      if (currentFile && currentFile.fileType === 'picture') {
+        const list = listData.filter(item => item.fileType === 'picture')
+        updatePictureList(list)
+        updateCurrentPicture(currentFile)
+      }
+
       if (currentFile && (currentFile.fileType === 'audio' || currentFile.fileType === 'video')) {
         let currentIndex = 0
         const list = listData
-          .filter((item) => checkFileType(item.fileName) === currentFile.fileType)
+          .filter((item) => item.fileType === currentFile.fileType)
           .map((item, index) => {
             if (currentFile?.filePath === item.filePath)
               currentIndex = index
