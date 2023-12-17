@@ -37,7 +37,7 @@ export async function getFiles(path: string, accessToken: string) {
     headers: headers
   }
 
-  return fetch(`${graphConfig.graphMeEndpoint}/me/drive/root:/${encodeURI(path)}:/children?$top=2147483647`, options)
+  return fetch(`${graphConfig.graphMeEndpoint}/me/drive/root:/${encodeURI(path)}:/children?$top=2147483647&expand=thumbnails`, options)
     .then(response => response.json())
     .catch(error => console.log(error))
 }

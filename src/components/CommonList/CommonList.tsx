@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { IconButton, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
+import { Avatar, IconButton, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined'
 import MusicNoteIcon from '@mui/icons-material/MusicNote'
@@ -153,7 +153,7 @@ const CommonList = (
               disablePadding
               sx={{
                 '& .MuiListItemButton-root': {
-                  paddingLeft: 3,
+                  paddingLeft: 4,
                 },
                 '& .MuiListItemIcon-root': {
                   minWidth: 0,
@@ -197,6 +197,7 @@ const CommonList = (
                             filePath: item.filePath,
                             fileSize: item.fileSize,
                             fileType: item.fileType,
+                            id: item.id,
                           }
                         )}
                     >
@@ -212,13 +213,6 @@ const CommonList = (
                       : handleClickListItem(item.filePath)
                   }
                   sx={{
-                    '& .MuiListItemIcon-root': {
-                      minWidth: 0,
-                      marginRight: 3,
-                      color: ((item as PlayQueueItem).index === currentIndex)
-                        ? styles.color.primary
-                        : '',
-                    },
                     '.MuiListItemText-root': {
                       color: ((item as PlayQueueItem).index === currentIndex)
                         ? styles.color.primary
@@ -231,13 +225,22 @@ const CommonList = (
                     },
                   }}
                 >
-                  <ListItemIcon>
-                    {item.fileType === 'folder' && <FolderOutlinedIcon />}
-                    {item.fileType === 'audio' && <MusicNoteIcon />}
-                    {item.fileType === 'video' && <MovieIcon />}
-                    {item.fileType === 'picture' && <InsertPhotoOutlinedIcon />}
-                    {item.fileType === 'other' && <InsertDriveFileOutlinedIcon />}
-                  </ListItemIcon>
+                  {
+                    (item.thumbnails && item.thumbnails[0])
+                      ? <ListItemAvatar>
+                        <Avatar variant="square" alt={item.fileName} src={item.thumbnails[0].medium.url} />
+                      </ListItemAvatar>
+                      : <ListItemAvatar>
+                        <Avatar variant="square">
+                          {item.fileType === 'folder' && <FolderOutlinedIcon />}
+                          {item.fileType === 'audio' && <MusicNoteIcon />}
+                          {item.fileType === 'video' && <MovieIcon />}
+                          {item.fileType === 'picture' && <InsertPhotoOutlinedIcon />}
+                          {item.fileType === 'other' && <InsertDriveFileOutlinedIcon />}
+                        </Avatar>
+                      </ListItemAvatar>
+                  }
+
                   <ListItemText
                     primary={item.fileName}
                     secondary={

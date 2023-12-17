@@ -20,6 +20,8 @@ import useUiStore from '@/store/useUiStore'
 import useFullscreen from '@/hooks/ui/useFullscreen'
 import usePlayerControl from '@/hooks/player/usePlayerControl'
 import { timeShift } from '@/utils'
+import { useMemo } from 'react'
+import { extractColors } from 'extract-colors'
 
 const Audio = ({ player }: { player: HTMLVideoElement | null }) => {
 
@@ -36,6 +38,7 @@ const Audio = ({ player }: { player: HTMLVideoElement | null }) => {
     updatePlayQueueIsShow,
     updateBackgroundIsShow,
     updateShuffle,
+    updateColor,
   ] = useUiStore(
     (state) => [
       state.audioViewIsShow,
@@ -48,6 +51,7 @@ const Audio = ({ player }: { player: HTMLVideoElement | null }) => {
       state.updatePlayQueueIsShow,
       state.updateBackgroundIsShow,
       state.updateShuffle,
+      state.updateColor,
     ]
   )
 
@@ -81,6 +85,14 @@ const Audio = ({ player }: { player: HTMLVideoElement | null }) => {
   } = usePlayerControl(player)
 
   const { handleClickFullscreen } = useFullscreen()
+
+  // 从专辑封面提取颜色
+  useMemo(
+    () => (cover !== './cover.png')
+      && extractColors(cover).then(color => updateColor(color[0].hex)).catch(console.error),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [cover]
+  )
 
   return (
     <Container

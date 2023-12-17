@@ -55,7 +55,7 @@ const useFilesData = () => {
     getFileData,
     getFileThumbnailsData,
     getAppRootFilesData,
-    uploadAppRootJsonData
+    uploadAppRootJsonData,
   }
 }
 

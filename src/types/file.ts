@@ -4,18 +4,19 @@ export interface File {
   fileSize: number;
   fileType: 'folder' | 'audio' | 'video' | 'picture' | 'other';
   lastModifiedDateTime?: string;
-  id: string;
+  id?: string;
+  thumbnails?: Thumbnail[];
 }
 
-export interface Thumbnail {
+export interface ThumbnailItem {
   height: number;
   width: number;
   url: string;
 }
 
-export interface Thumbnails {
+export interface Thumbnail {
   id: string;
-  small: Thumbnail;
-  medium: Thumbnail;
-  large: Thumbnail;
+  small: ThumbnailItem;
+  medium: ThumbnailItem;
+  large: ThumbnailItem;
 }

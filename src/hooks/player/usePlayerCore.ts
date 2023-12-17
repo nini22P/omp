@@ -204,11 +204,12 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
           const metaData = await getLocalMetaData(playQueue.filter(item => item.index === currentIndex)[0]?.filePath)
 
           if (!metaData) {
+            const currentMetaData = playQueue.filter(item => item.index === currentIndex)[0]
             updateCurrentMetaData(
               {
-                title: playQueue.filter(item => item.index === currentIndex)[0]?.fileName || 'Not playing',
+                title: currentMetaData?.fileName || 'Not playing',
                 artist: '',
-                path: playQueue.filter(item => item.index === currentIndex)[0]?.filePath,
+                path: currentMetaData?.filePath,
               }
             )
             updateCover('./cover.png')

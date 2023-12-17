@@ -10,7 +10,7 @@ const useControlHide = (type: string, videoViewIsShow: boolean) => {
         const resetTimer = () => {
           updateControlIsShow(true)
           clearTimeout(timer)
-          timer = (setTimeout(() => updateControlIsShow(false), 3000))
+          timer = (setTimeout(() => updateControlIsShow(false), 5000))
         }
         resetTimer()
         window.addEventListener('mousemove', resetTimer)

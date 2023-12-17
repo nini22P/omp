@@ -1,6 +1,5 @@
-import { useMemo, useRef } from 'react'
+import { useRef } from 'react'
 import { Box, Container } from '@mui/material'
-import { extractColors } from 'extract-colors'
 import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
@@ -31,12 +30,10 @@ const Player = () => {
   const [
     videoViewIsShow,
     controlIsShow,
-    updateColor,
   ] = useUiStore(
     (state) => [
       state.videoViewIsShow,
       state.controlIsShow,
-      state.updateColor,
     ]
   )
 
@@ -78,13 +75,6 @@ const Player = () => {
 
   // 播放视频时自动隐藏ui
   useControlHide(type, videoViewIsShow)
-
-  // 从专辑封面提取颜色
-  useMemo(
-    () => (cover !== './cover.png') && extractColors(cover).then(color => updateColor(color[0].hex)).catch(console.error),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [cover]
-  )
 
   return (
     <div>
