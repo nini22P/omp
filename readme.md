@@ -39,7 +39,7 @@ All of OMP data is stored in the `Apps / OMP` folder in your OneDrive. Where `hi
 1. Go to <https://portal.azure.com/>
 2. Into `App registrations` register an application
 3. `Supported account types` select the third item (`Accounts in any organizational directory and personal Microsoft accounts`)
-4. `Redirect URI` select `SPA`, url enter <http://localhost:8760>
+4. `Redirect URI` select `SPA`, url enter <http://localhost:8760> or the domain of your deploy
 5. `API Permissions` add `User.Read` `Files.Read` `Files.ReadWrite.AppFolder`
 
 ### Run dev server
