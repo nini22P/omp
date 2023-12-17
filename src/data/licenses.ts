@@ -99,6 +99,12 @@ export const licenses = [
     'author': 'Remix Software <hello@remix.run>'
   },
   {
+    'name': 'react-virtualized',
+    'licenseType': 'MIT',
+    'link': 'https://github.com/bvaughn/react-virtualized',
+    'author': 'Brian Vaughn',
+  },
+  {
     'name': 'short-uuid',
     'licenseType': 'MIT',
     'link': 'https://github.com/oculus42/short-uuid',

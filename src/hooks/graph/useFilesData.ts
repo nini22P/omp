@@ -1,5 +1,5 @@
-import { getAppRootFiles, getFile, getFiles, uploadAppRootJson } from '../services/graph'
-import { loginRequest } from '../services/authConfig'
+import { getAppRootFiles, getFile, getFileThumbnails, getFiles, uploadAppRootJson } from '@/graph/graph'
+import { loginRequest } from '@/graph/authConfig'
 import useUser from './useUser'
 
 const useFilesData = () => {
@@ -27,6 +27,17 @@ const useFilesData = () => {
     return response
   }
 
+  /**
+   * 获取文件缩略图
+   * @param itemId 
+   * @returns 
+   */
+  const getFileThumbnailsData = async (itemId: string) => {
+    const acquireToken = await instance.acquireTokenSilent({ ...loginRequest, account: accounts[0] })
+    const response = await getFileThumbnails(itemId, acquireToken.accessToken)
+    return response
+  }
+
   const getAppRootFilesData = async (filePath: string) => {
     const acquireToken = await instance.acquireTokenSilent({ ...loginRequest, account: accounts[0] })
     const response = await getAppRootFiles(filePath, acquireToken.accessToken)
@@ -39,7 +50,13 @@ const useFilesData = () => {
     return response
   }
 
-  return { getFilesData, getFileData, getAppRootFilesData, uploadAppRootJsonData }
+  return {
+    getFilesData,
+    getFileData,
+    getFileThumbnailsData,
+    getAppRootFilesData,
+    uploadAppRootJsonData,
+  }
 }
 
 export default useFilesData

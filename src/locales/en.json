@@ -34,5 +34,18 @@
   "data": {
     "data": "Data",
     "metaDataCache": "Local MetaData Cache"
+  },
+  "files": {
+    "sortBy": {
+      "name": "Name",
+      "size": "Size",
+      "lastModified": "Last Modified"
+    },
+    "orderBy": {
+      "asc": "Ascending",
+      "desc": "Descending"
+    },
+    "foldersFirst": "Folders first",
+    "mediaOnly": "Media only"
   }
 }

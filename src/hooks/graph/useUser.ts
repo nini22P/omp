@@ -1,7 +1,7 @@
 import { useMsal } from '@azure/msal-react'
-import { loginRequest } from '../services/authConfig'
-import usePlayQueueStore from '../store/usePlayQueueStore'
-import useUiStore from '../store/useUiStore'
+import { loginRequest } from '@/graph/authConfig'
+import usePlayQueueStore from '@/store/usePlayQueueStore'
+import useUiStore from '@/store/useUiStore'
 
 const useUser = () => {
   const { instance, accounts } = useMsal()

@@ -1,12 +1,12 @@
 import { useMemo } from 'react'
 import useSWR from 'swr'
-import usePlaylistsStore from '../store/usePlaylistsStore'
-import useHistoryStore from '../store/useHistoryStore'
+import usePlaylistsStore from '@/store/usePlaylistsStore'
+import useHistoryStore from '@/store/useHistoryStore'
 import useFilesData from './useFilesData'
-import fetchJson from '../services/fetchJson'
 import { AccountInfo } from '@azure/msal-browser'
-import { File } from '../types/file'
-import { Playlist } from '../types/playlist'
+import { File } from '@/types/file'
+import { Playlist } from '@/types/playlist'
+import fetchJson from '@/utils'
 
 const useSync = (accounts: AccountInfo[]) => {
   const [historyList, updateHistoryList] = useHistoryStore((state) => [state.historyList, state.updateHistoryList])

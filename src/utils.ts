@@ -57,3 +57,20 @@ export const fileSizeConvert = (fileSize: File['fileSize']) => {
 }
 
 export const filePathConvert = (filePath: File['filePath']) => (filePath.join('/') === '/') ? '/' : filePath.slice(1).join('/')
+
+/**
+ * 根据 url 解析 json
+ * @param url 
+ * @returns 
+ */
+const fetchJson = async (url: string) => {
+  try {
+    const response = await fetch(url)
+    const json = response.json()
+    return json
+  } catch (error) {
+    console.error(error)
+  }
+}
+
+export default fetchJson

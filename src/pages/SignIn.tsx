@@ -1,6 +1,6 @@
 import { Button, Container, Link, Typography } from '@mui/material'
 import { useTranslation } from 'react-i18next'
-import useUser from '../hooks/useUser'
+import useUser from '../hooks/graph/useUser'
 
 const SignIn = () => {
   const { t } = useTranslation()

@@ -34,5 +34,18 @@
   "data": {
     "data": "数据",
     "localMetaDataCache": "本地元数据缓存"
+  },
+  "files": {
+    "sortBy": {
+      "name": "名称",
+      "size": "大小",
+      "lastModified": "最后修改"
+    },
+    "orderBy": {
+      "asc": "正序",
+      "desc": "倒序"
+    },
+    "foldersFirst": "文件夹优先",
+    "mediaOnly": "仅限媒体"
   }
 }

@@ -1,5 +1,3 @@
-import { useMemo } from 'react'
-import { extractColors } from 'extract-colors'
 import { Box, CircularProgress, Container, IconButton, Slider, Typography } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined'
@@ -19,36 +17,13 @@ import PanoramaOutlinedIcon from '@mui/icons-material/PanoramaOutlined'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
-import { MetaData } from '@/types/MetaData'
+import useFullscreen from '@/hooks/ui/useFullscreen'
+import usePlayerControl from '@/hooks/player/usePlayerControl'
 import { timeShift } from '@/utils'
+import { useMemo } from 'react'
+import { extractColors } from 'extract-colors'
 
-const Audio = (
-  {
-    metaData,
-    handleClickPlay,
-    handleClickPause,
-    handleClickNext,
-    handleClickPrev,
-    handleClickSeekforward,
-    handleClickSeekbackward,
-    handleTimeRangeonChange,
-    handleClickRepeat,
-    handleClickFullscreen,
-  }
-    :
-    {
-      metaData: MetaData | null,
-      handleClickPlay: () => void,
-      handleClickPause: () => void,
-      handleClickNext: () => void,
-      handleClickPrev: () => void,
-      handleClickSeekforward: (skipTime: number) => void,
-      handleClickSeekbackward: (skipTime: number) => void,
-      handleTimeRangeonChange: (current: number | number[]) => void,
-      handleClickRepeat: () => void,
-      handleClickFullscreen: () => void,
-    }
-) => {
+const Audio = ({ player }: { player: HTMLVideoElement | null }) => {
 
   const [playQueue] = usePlayQueueStore((state) => [state.playQueue])
 
@@ -80,11 +55,41 @@ const Audio = (
     ]
   )
 
-  const [playStatu, isLoading, cover, currentTime, duration] = usePlayerStore(
-    (state) => [state.playStatu, state.isLoading, state.cover, state.currentTime, state.duration,])
+  const [
+    currentMetaData,
+    playStatu,
+    isLoading,
+    cover,
+    currentTime,
+    duration
+  ] = usePlayerStore(
+    (state) => [
+      state.currentMetaData,
+      state.playStatu,
+      state.isLoading,
+      state.cover,
+      state.currentTime,
+      state.duration,
+    ]
+  )
 
+  const {
+    handleClickPlay,
+    handleClickPause,
+    handleClickNext,
+    handleClickPrev,
+    handleClickSeekforward,
+    handleClickSeekbackward,
+    handleTimeRangeonChange,
+    handleClickRepeat,
+  } = usePlayerControl(player)
+
+  const { handleClickFullscreen } = useFullscreen()
+
+  // 从专辑封面提取颜色
   useMemo(
-    () => (cover !== './cover.png') && extractColors(cover).then(color => updateColor(color[0].hex)).catch(console.error),
+    () => (cover !== './cover.png')
+      && extractColors(cover).then(color => updateColor(color[0].hex)).catch(console.error),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [cover]
   )
@@ -209,13 +214,13 @@ const Audio = (
               <Grid xs={12} sm={8} pl={{ xs: 0, lg: 5 }} textAlign={'center'}>
                 <Grid xs={12} pl={4} pr={4} >
                   <Typography variant="h6" component="div" textAlign={'center'} noWrap>
-                    {(!playQueue || !metaData) ? 'Not playing' : metaData.title}
+                    {(!playQueue || !currentMetaData) ? 'Not playing' : currentMetaData.title}
                   </Typography>
                   <Typography variant="body1" component="div" textAlign={'center'} noWrap>
-                    {(playQueue && metaData) && metaData.artist}
+                    {(playQueue && currentMetaData) && currentMetaData.artist}
                   </Typography>
                   <Typography variant="body1" component="div" textAlign={'center'} noWrap>
-                    {(playQueue && metaData) && metaData.album}
+                    {(playQueue && currentMetaData) && currentMetaData.album}
                   </Typography>
                 </Grid>
 

@@ -1,5 +1,5 @@
 import { useEffect } from 'react'
-import useUiStore from '../store/useUiStore'
+import useUiStore from '../../store/useUiStore'
 
 const useControlHide = (type: string, videoViewIsShow: boolean) => {
   const updateControlIsShow = useUiStore((state) => state.updateControlIsShow)
@@ -10,7 +10,7 @@ const useControlHide = (type: string, videoViewIsShow: boolean) => {
         const resetTimer = () => {
           updateControlIsShow(true)
           clearTimeout(timer)
-          timer = (setTimeout(() => updateControlIsShow(false), 3000))
+          timer = (setTimeout(() => updateControlIsShow(false), 5000))
         }
         resetTimer()
         window.addEventListener('mousemove', resetTimer)

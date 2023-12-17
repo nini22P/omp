@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useTranslation } from 'react-i18next'
-import { IconButton, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
+import { Avatar, IconButton, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined'
 import MusicNoteIcon from '@mui/icons-material/MusicNote'
@@ -12,9 +12,10 @@ import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined'
 import usePlayQueueStore from '../../store/usePlayQueueStore'
 import usePlayerStore from '../../store/usePlayerStore'
 import useUiStore from '../../store/useUiStore'
+import usePictureStore from '@/store/usePictureStore'
 import { checkFileType, fileSizeConvert, shufflePlayQueue } from '../../utils'
 import CommonMenu from './CommonMenu'
-import useTheme from '../../hooks/useTheme'
+import useTheme from '../../hooks/ui/useTheme'
 import { PlayQueueItem } from '../../types/playQueue'
 import { File } from '../../types/file'
 
@@ -37,6 +38,16 @@ const CommonList = (
 
   const [updatePlayStatu] = usePlayerStore(state => [state.updatePlayStatu])
 
+  const [
+    updatePictureList,
+    updateCurrentPicture,
+  ] = usePictureStore(
+    state => [
+      state.updatePictureList,
+      state.updateCurrentPicture,
+    ]
+  )
+
   const isPlayQueueView = listData?.some((item) => typeof (item as PlayQueueItem).index === 'number')
 
   // 打开播放队列时滚动到当前播放文件
@@ -57,13 +68,21 @@ const CommonList = (
   const handleClickListItem = (filePath: string[]) => {
     if (listData) {
       const currentFile = listData.find(item => item.filePath === filePath)
+
       if (currentFile && currentFile.fileType === 'folder') {
         updateFolderTree([...folderTree, currentFile.fileName])
       }
+
+      if (currentFile && currentFile.fileType === 'picture') {
+        const list = listData.filter(item => item.fileType === 'picture')
+        updatePictureList(list)
+        updateCurrentPicture(currentFile)
+      }
+
       if (currentFile && (currentFile.fileType === 'audio' || currentFile.fileType === 'video')) {
         let currentIndex = 0
         const list = listData
-          .filter((item) => checkFileType(item.fileName) === currentFile.fileType)
+          .filter((item) => item.fileType === currentFile.fileType)
           .map((item, index) => {
             if (currentFile?.filePath === item.filePath)
               currentIndex = index
@@ -134,7 +153,7 @@ const CommonList = (
               disablePadding
               sx={{
                 '& .MuiListItemButton-root': {
-                  paddingLeft: 3,
+                  paddingLeft: 4,
                 },
                 '& .MuiListItemIcon-root': {
                   minWidth: 0,
@@ -178,6 +197,7 @@ const CommonList = (
                             filePath: item.filePath,
                             fileSize: item.fileSize,
                             fileType: item.fileType,
+                            id: item.id,
                           }
                         )}
                     >
@@ -193,13 +213,6 @@ const CommonList = (
                       : handleClickListItem(item.filePath)
                   }
                   sx={{
-                    '& .MuiListItemIcon-root': {
-                      minWidth: 0,
-                      marginRight: 3,
-                      color: ((item as PlayQueueItem).index === currentIndex)
-                        ? styles.color.primary
-                        : '',
-                    },
                     '.MuiListItemText-root': {
                       color: ((item as PlayQueueItem).index === currentIndex)
                         ? styles.color.primary
@@ -212,16 +225,34 @@ const CommonList = (
                     },
                   }}
                 >
-                  <ListItemIcon>
-                    {item.fileType === 'folder' && <FolderOutlinedIcon />}
-                    {item.fileType === 'audio' && <MusicNoteIcon />}
-                    {item.fileType === 'video' && <MovieIcon />}
-                    {item.fileType === 'picture' && <InsertPhotoOutlinedIcon />}
-                    {item.fileType === 'other' && <InsertDriveFileOutlinedIcon />}
-                  </ListItemIcon>
+                  {
+                    (item.thumbnails && item.thumbnails[0])
+                      ? <ListItemAvatar>
+                        <Avatar variant="square" alt={item.fileName} src={item.thumbnails[0].medium.url} />
+                      </ListItemAvatar>
+                      : <ListItemAvatar>
+                        <Avatar variant="square">
+                          {item.fileType === 'folder' && <FolderOutlinedIcon />}
+                          {item.fileType === 'audio' && <MusicNoteIcon />}
+                          {item.fileType === 'video' && <MovieIcon />}
+                          {item.fileType === 'picture' && <InsertPhotoOutlinedIcon />}
+                          {item.fileType === 'other' && <InsertDriveFileOutlinedIcon />}
+                        </Avatar>
+                      </ListItemAvatar>
+                  }
+
                   <ListItemText
                     primary={item.fileName}
-                    secondary={fileSizeConvert(item.fileSize)}
+                    secondary={
+                      `${item.lastModifiedDateTime
+                        ? `${new Date(item.lastModifiedDateTime).toLocaleString(undefined, {
+                          year: 'numeric',
+                          month: 'long',
+                          day: 'numeric',
+                          hour: 'numeric',
+                          minute: 'numeric',
+                        })} | `
+                        : ''}${fileSizeConvert(item.fileSize)}`}
                     primaryTypographyProps={{
                       style: {
                         whiteSpace: 'nowrap',
@@ -233,7 +264,8 @@ const CommonList = (
                       style: {
                         whiteSpace: 'nowrap',
                         overflow: 'hidden',
-                        textOverflow: 'ellipsis'
+                        textOverflow: 'ellipsis',
+                        fontWeight: 'lighter',
                       }
                     }}
                   />

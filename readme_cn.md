@@ -39,7 +39,7 @@ OMP 的数据全部保存在你的 OneDrive 中的 `应用 / OMP` 文件夹中�
 1. 打开 <https://portal.azure.com/>
 2. 进入 `应用注册` 添加一个新应用
 3. `支持账户类型` 选择第三项 (`任何组织目录中的帐户和个人 Microsoft 帐户`)
-4. `重定向 URI` 选择 `SPA`, url 输入 <http://localhost:8760>
+4. `重定向 URI` 选择 `SPA`, url 输入 <http://localhost:8760> 或者你部署访问的域名
 5. `API 权限` 添加 `User.Read` `Files.Read` `Files.ReadWrite.AppFolder`
 
 ### 运行开发服务器

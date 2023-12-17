@@ -4,7 +4,7 @@ import KeyboardArrowRightOutlinedIcon from '@mui/icons-material/KeyboardArrowRig
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import useUiStore from '@/store/useUiStore'
 import CommonList from '@/components/CommonList/CommonList'
-import useTheme from '@/hooks/useTheme'
+import useTheme from '@/hooks/ui/useTheme'
 
 const PlayQueue = () => {
 
