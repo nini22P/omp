@@ -8,7 +8,7 @@ import { checkFileType, filePathConvert } from '../../utils'
 import { File } from '../../types/file'
 import Grid from '@mui/material/Unstable_Grid2/Grid2'
 import FilterMenu from './FilterMenu'
-import PictureView from './PictureView'
+import PictureView from './PictureView/PictureView'
 
 const Files = () => {
 
@@ -36,6 +36,7 @@ const Files = () => {
         name: string;
         size: number;
         lastModifiedDateTime: string;
+        id: string;
         folder: { childCount: number, view: { sortBy: string, sortOrder: string, viewType: string } };
       }) => {
         return {
@@ -44,6 +45,7 @@ const Files = () => {
           fileSize: item.size,
           fileType: (item.folder) ? 'folder' : checkFileType(item.name),
           lastModifiedDateTime: item.lastModifiedDateTime,
+          id: item.id,
         }
       })
   )

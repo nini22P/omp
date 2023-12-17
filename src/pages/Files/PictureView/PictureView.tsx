@@ -4,24 +4,23 @@ import { filePathConvert } from '@/utils'
 import { CloseOutlined } from '@mui/icons-material'
 import { Box, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material'
 import useSWRImmutable from 'swr/immutable'
+import PictureList from './PictureList'
 
 const PictureView = () => {
 
   const [
-    pictureList,
     currentPicture,
     updatePictureList,
     updateCurrentPicture,
   ] = usePictureStore(
     state => [
-      state.pictureList,
       state.currentPicture,
       state.updatePictureList,
       state.updateCurrentPicture,
     ]
   )
 
-  const open = pictureList.length > 0
+  const open = currentPicture !== null
 
   const { getFileData } = useFilesData()
 
@@ -35,7 +34,7 @@ const PictureView = () => {
       return null
   }
 
-  const { data: imgUrl, isLoading } = useSWRImmutable(path ? path : null, urlFetcher)
+  const { data: imgUrl, isLoading } = useSWRImmutable(path ? `${path}-url` : null, urlFetcher)
 
   const handleClose = () => {
     updatePictureList([])
@@ -64,8 +63,14 @@ const PictureView = () => {
         <IconButton onClick={(handleClose)}><CloseOutlined /></IconButton>
         {currentPicture?.fileName}
       </DialogTitle>
-      <DialogContent>
-        <Box width='100%' height='100%' display='flex' justifyContent='center' alignItems='center'>
+      <DialogContent sx={{ padding: 0 }}>
+        <Box
+          width='100%'
+          height='100%'
+          display='flex'
+          justifyContent='center'
+          alignItems='center'
+        >
           {(isLoading)
             ? <CircularProgress />
             : <img
@@ -74,6 +79,7 @@ const PictureView = () => {
               style={{ width: 'auto', maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
             />
           }
+          <PictureList />
         </Box>
       </DialogContent>
     </Dialog>
