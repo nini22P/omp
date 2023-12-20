@@ -9,6 +9,7 @@ import { File, Thumbnail } from '../../types/file'
 import Grid from '@mui/material/Unstable_Grid2/Grid2'
 import FilterMenu from './FilterMenu'
 import PictureView from '../PictureView/PictureView'
+import { Divider } from '@mui/material'
 
 const Files = () => {
 
@@ -30,14 +31,15 @@ const Files = () => {
 
   const { getFilesData } = useFilesData()
 
-  const fileListFetcher = async (path: string) => {
+  const fileListFetcher = async (path: string): Promise<File[]> => {
     interface ResItem {
       name: string;
       size: number;
       lastModifiedDateTime: string;
       id: string;
       thumbnails: Thumbnail[];
-      folder: { childCount: number, view: { sortBy: string, sortOrder: string, viewType: string } };
+      '@microsoft.graph.downloadUrl'?: string;
+      folder?: { childCount: number, view: { sortBy: string, sortOrder: string, viewType: string } };
     }
     const res: ResItem[] = await getFilesData(path)
 
@@ -51,11 +53,13 @@ const Files = () => {
           lastModifiedDateTime: item.lastModifiedDateTime,
           id: item.id,
           thumbnails: item.thumbnails,
+          url: item['@microsoft.graph.downloadUrl'],
         }
       })
   }
 
-  const { data: fileListData, error: fileListError, isLoading: fileListIsLoading } = useSWR<File[], Error>(filePathConvert(folderTree), fileListFetcher, { revalidateOnFocus: false })
+  const { data: fileListData, error: fileListError, isLoading: fileListIsLoading } =
+    useSWR<File[], Error>(filePathConvert(folderTree), fileListFetcher, { revalidateOnFocus: false })
 
   const filteredFileList = (!fileListData)
     ? []
@@ -94,8 +98,16 @@ const Files = () => {
     })
 
   return (
-    <div>
+    <Grid container
+      sx={{
+        height: '100%',
+        overflow: 'auto',
+        flexDirection: 'column',
+        justifyContent: 'flex-start',
+        flexWrap: 'nowrap',
+      }}>
       <Grid container
+        xs={12}
         justifyContent='space-between'
         alignItems='center'
         wrap='nowrap'
@@ -107,16 +119,19 @@ const Files = () => {
           <FilterMenu />
         </Grid>
       </Grid>
-      {
-        (fileListIsLoading || !fileListData || !sortedFileList || fileListError)
-          ? <Loading />
-          : <CommonList
-            listData={sortedFileList}
-            multiColumn
-          />
-      }
+      <Divider />
+      <Grid xs={12} sx={{ flexGrow: 1, overflow: 'auto', paddingBottom: '1rem' }}>
+        {
+          (fileListIsLoading || !fileListData || !sortedFileList || fileListError)
+            ? <Loading />
+            : <CommonList
+              listData={sortedFileList}
+              multiColumn
+            />
+        }
+      </Grid>
       <PictureView />
-    </div>
+    </Grid>
   )
 }
 

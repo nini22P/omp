@@ -203,7 +203,7 @@ const Audio = ({ player }: { player: HTMLVideoElement | null }) => {
                   alt='Cover'
                   style={{
                     height: '100%',
-                    maxHeight: '100vw',
+                    maxHeight: '80dvh',
                     width: '100%',
                     objectFit: 'cover',
                   }}

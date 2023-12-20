@@ -1,30 +1,28 @@
 import { useState, useEffect } from 'react'
-import { useTranslation } from 'react-i18next'
-import { Avatar, IconButton, ListItem, ListItemAvatar, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
-import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined'
-import MusicNoteIcon from '@mui/icons-material/MusicNote'
-import MovieIcon from '@mui/icons-material/Movie'
-import MoreVertOutlined from '@mui/icons-material/MoreVertOutlined'
-import ShuffleOutlinedIcon from '@mui/icons-material/ShuffleOutlined'
-import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined'
-import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined'
 import usePlayQueueStore from '../../store/usePlayQueueStore'
 import usePlayerStore from '../../store/usePlayerStore'
 import useUiStore from '../../store/useUiStore'
 import usePictureStore from '@/store/usePictureStore'
-import { checkFileType, fileSizeConvert, shufflePlayQueue } from '../../utils'
+import { checkFileType, shufflePlayQueue } from '../../utils'
 import CommonMenu from './CommonMenu'
-import useTheme from '../../hooks/ui/useTheme'
 import { PlayQueueItem } from '../../types/playQueue'
 import { File } from '../../types/file'
+import CommonListItem from './CommonListItem'
+import ShuffleAll from './ShuffleAll'
+import { Box } from '@mui/material'
 
 const CommonList = (
-  { listData, multiColumn, handleClickRemove }
-    : { listData?: File[] | PlayQueueItem[], multiColumn?: boolean, handleClickRemove?: (filePathArray: string[][]) => void }) => {
+  {
+    listData,
+    multiColumn,
+    handleClickRemove,
+  }: {
+    listData?: File[] | PlayQueueItem[],
+    multiColumn?: boolean,
+    handleClickRemove?: (filePathArray: string[][]) => void,
+  }) => {
 
-  const { t } = useTranslation()
-  const { styles } = useTheme()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [menuOpen, setMenuOpen] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -51,9 +49,10 @@ const CommonList = (
   const isPlayQueueView = listData?.some((item) => typeof (item as PlayQueueItem).index === 'number')
 
   // 打开播放队列时滚动到当前播放文件
-  useEffect(() => {
-    isPlayQueueView && document.getElementById('playing-item')?.scrollIntoView({ behavior: 'auto', block: 'center' })
-  },
+  useEffect(
+    () => {
+      isPlayQueueView && document.getElementById('playing-item')?.scrollIntoView({ behavior: 'auto', block: 'center' })
+    },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     []
   )
@@ -124,8 +123,13 @@ const CommonList = (
     }
   }
 
+  const handleClickItem = (item: PlayQueueItem | File) =>
+    ((item as PlayQueueItem).index)
+      ? handleClickPlayQueueItem((item as PlayQueueItem).index)
+      : handleClickListItem(item.filePath)
+
   return (
-    <div>
+    <Box>
       {/* 菜单 */}
       <CommonMenu
         anchorEl={anchorEl}
@@ -143,139 +147,30 @@ const CommonList = (
       <Grid container>
         {
           (
-            listData &&
-            listData.length !== 0 &&
-            listData.find((item) => item.fileType === 'audio') &&
-            !isPlayQueueView
-          ) &&
+            listData
+            && listData.length !== 0
+            && listData.find((item) => item.fileType === 'audio')
+            && !isPlayQueueView
+          )
+          &&
           <Grid xs={12}>
-            <ListItem
-              disablePadding
-              sx={{
-                '& .MuiListItemButton-root': {
-                  paddingLeft: 4,
-                },
-                '& .MuiListItemIcon-root': {
-                  minWidth: 0,
-                  marginRight: 3,
-                },
-              }}
-            >
-              <ListItemButton onClick={handleClickShuffleAll}>
-                <ListItemIcon>
-                  <ShuffleOutlinedIcon />
-                </ListItemIcon>
-                <ListItemText primary={t('playlist.shuffleAll')} />
-              </ListItemButton>
-            </ListItem>
+            <ShuffleAll handleClickShuffleAll={handleClickShuffleAll} />
           </Grid>
         }
         {
           listData?.map((item, index) =>
-            <Grid key={index} lg={multiColumn ? 4 : 12} md={multiColumn ? 6 : 12} sm={12} xs={12} p={0} >
-              <ListItem
-                disablePadding
-                id={(item as PlayQueueItem).index === currentIndex ? 'playing-item' : ''}
-                sx={{
-                  '& .MuiListItemButton-root': {
-                    paddingLeft: 3,
-                    // paddingRight: 9,
-                  },
-                  '& .MuiListItemSecondaryAction-root': {
-                    right: '4px',
-                  }
-                }}
-                secondaryAction={
-                  (item.fileType === 'audio' || item.fileType === 'video') &&
-                  <div>
-                    <IconButton
-                      aria-label={t('common.more')}
-                      onClick={(event) =>
-                        handleClickMenu(event,
-                          {
-                            fileName: item.fileName,
-                            filePath: item.filePath,
-                            fileSize: item.fileSize,
-                            fileType: item.fileType,
-                            id: item.id,
-                          }
-                        )}
-                    >
-                      <MoreVertOutlined />
-                    </IconButton>
-                  </div>
-                }
-              >
-                <ListItemButton
-                  onClick={
-                    () => ((item as PlayQueueItem).index)
-                      ? handleClickPlayQueueItem(index)
-                      : handleClickListItem(item.filePath)
-                  }
-                  sx={{
-                    '.MuiListItemText-root': {
-                      color: ((item as PlayQueueItem).index === currentIndex)
-                        ? styles.color.primary
-                        : ''
-                    },
-                    '.MuiListItemText-secondary': {
-                      color: ((item as PlayQueueItem).index === currentIndex)
-                        ? styles.color.primary
-                        : ''
-                    },
-                  }}
-                >
-                  {
-                    (item.thumbnails && item.thumbnails[0])
-                      ? <ListItemAvatar>
-                        <Avatar variant="square" alt={item.fileName} src={item.thumbnails[0].medium.url} />
-                      </ListItemAvatar>
-                      : <ListItemAvatar>
-                        <Avatar variant="square">
-                          {item.fileType === 'folder' && <FolderOutlinedIcon />}
-                          {item.fileType === 'audio' && <MusicNoteIcon />}
-                          {item.fileType === 'video' && <MovieIcon />}
-                          {item.fileType === 'picture' && <InsertPhotoOutlinedIcon />}
-                          {item.fileType === 'other' && <InsertDriveFileOutlinedIcon />}
-                        </Avatar>
-                      </ListItemAvatar>
-                  }
-
-                  <ListItemText
-                    primary={item.fileName}
-                    secondary={
-                      `${item.lastModifiedDateTime
-                        ? `${new Date(item.lastModifiedDateTime).toLocaleString(undefined, {
-                          year: 'numeric',
-                          month: 'long',
-                          day: 'numeric',
-                          hour: 'numeric',
-                          minute: 'numeric',
-                        })} | `
-                        : ''}${fileSizeConvert(item.fileSize)}`}
-                    primaryTypographyProps={{
-                      style: {
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis'
-                      }
-                    }}
-                    secondaryTypographyProps={{
-                      style: {
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                        fontWeight: 'lighter',
-                      }
-                    }}
-                  />
-                </ListItemButton>
-              </ListItem>
+            <Grid key={index} xs={12} sm={12} md={multiColumn ? 6 : 12} lg={multiColumn ? 4 : 12} p={0} >
+              <CommonListItem
+                active={((item as PlayQueueItem).index === currentIndex)}
+                item={item}
+                handleClickItem={handleClickItem}
+                handleClickMenu={handleClickMenu}
+              />
             </Grid>
           )
         }
       </Grid>
-    </div>
+    </Box>
   )
 }
 
