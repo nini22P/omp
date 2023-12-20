@@ -120,13 +120,12 @@ const Files = () => {
         </Grid>
       </Grid>
       <Divider />
-      <Grid xs={12} sx={{ flexGrow: 1, overflow: 'auto', paddingBottom: '1rem' }}>
+      <Grid xs={12} sx={{ flexGrow: 1, overflow: 'auto' }}>
         {
           (fileListIsLoading || !fileListData || !sortedFileList || fileListError)
             ? <Loading />
             : <CommonList
               listData={sortedFileList}
-              multiColumn
             />
         }
       </Grid>

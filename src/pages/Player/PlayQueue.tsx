@@ -44,7 +44,7 @@ const PlayQueue = () => {
             playQueue &&
             <CommonList
               listData={playQueue}
-              handleClickRemove={removeFilesFromPlayQueue}
+              func={{ handleClickRemove: removeFilesFromPlayQueue }}
             />
           }
         </Grid>

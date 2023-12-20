@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, Key, CSSProperties } from 'react'
 import Grid from '@mui/material/Unstable_Grid2'
 import usePlayQueueStore from '../../store/usePlayQueueStore'
 import usePlayerStore from '../../store/usePlayerStore'
@@ -11,16 +11,17 @@ import { File } from '../../types/file'
 import CommonListItem from './CommonListItem'
 import ShuffleAll from './ShuffleAll'
 import { Box } from '@mui/material'
+import { AutoSizer, List } from 'react-virtualized'
 
 const CommonList = (
   {
     listData,
-    multiColumn,
-    handleClickRemove,
+    func,
   }: {
     listData?: File[] | PlayQueueItem[],
-    multiColumn?: boolean,
-    handleClickRemove?: (filePathArray: string[][]) => void,
+    func?: {
+      handleClickRemove?: (filePathArray: string[][]) => void,
+    },
   }) => {
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
@@ -128,8 +129,25 @@ const CommonList = (
       ? handleClickPlayQueueItem((item as PlayQueueItem).index)
       : handleClickListItem(item.filePath)
 
+  const rowRenderer = ({ key, index, style }: { key: Key, index: number, style: CSSProperties }) => {
+    return (
+      listData
+      &&
+      <Grid key={key} style={style}>
+        <CommonListItem
+          active={((listData[index] as PlayQueueItem).index === currentIndex)}
+          item={listData[index]}
+          handleClickItem={handleClickItem}
+          handleClickMenu={handleClickMenu}
+        />
+      </Grid>
+    )
+  }
+
   return (
-    <Box>
+    listData
+    &&
+    <Box sx={{ height: '100%', width: '100%' }}>
       {/* 菜单 */}
       <CommonMenu
         anchorEl={anchorEl}
@@ -139,16 +157,15 @@ const CommonList = (
         setAnchorEl={setAnchorEl}
         setMenuOpen={setMenuOpen}
         setDialogOpen={setDialogOpen}
-        handleClickRemove={handleClickRemove}
+        handleClickRemove={func?.handleClickRemove}
         isPlayQueueView={isPlayQueueView}
       />
 
       {/* 文件列表 */}
-      <Grid container>
+      <Grid container sx={{ flexDirection: 'column', flexWrap: 'nowrap', height: '100%' }}>
         {
           (
-            listData
-            && listData.length !== 0
+            listData.length !== 0
             && listData.find((item) => item.fileType === 'audio')
             && !isPlayQueueView
           )
@@ -157,18 +174,24 @@ const CommonList = (
             <ShuffleAll handleClickShuffleAll={handleClickShuffleAll} />
           </Grid>
         }
-        {
-          listData?.map((item, index) =>
-            <Grid key={index} xs={12} sm={12} md={multiColumn ? 6 : 12} lg={multiColumn ? 4 : 12} p={0} >
-              <CommonListItem
-                active={((item as PlayQueueItem).index === currentIndex)}
-                item={item}
-                handleClickItem={handleClickItem}
-                handleClickMenu={handleClickMenu}
-              />
-            </Grid>
-          )
-        }
+        <Grid xs={12} sx={{ flexGrow: 1, overflow: 'hidden' }}>
+          <AutoSizer>
+            {
+              ({ height, width }) => (
+                <List
+                  height={height}
+                  width={width}
+                  rowCount={listData.length}
+                  rowHeight={72}
+                  rowRenderer={rowRenderer}
+                  style={{
+                    paddingBottom: '1rem',
+                  }}
+                />
+              )
+            }
+          </AutoSizer>
+        </Grid>
       </Grid>
     </Box>
   )

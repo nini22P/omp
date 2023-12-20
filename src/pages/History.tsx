@@ -6,12 +6,12 @@ const History = () => {
   const [historyList, removeHistory] = useHistoryStore((state) => [state.historyList, state.removeHistory])
 
   return (
-    <div style={{ padding: '0.5rem 0 1rem 0' }}>
+    <div style={{ height: '100%' }}>
       {
         (!historyList) ? <Loading />
           : <CommonList
             listData={historyList}
-            handleClickRemove={removeHistory}
+            func={{ handleClickRemove: removeHistory }}
           />
       }
     </div>
