@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Button, ListItemText, Typography, Dialog, DialogTitle, DialogActions, Menu, MenuItem, DialogContent, TextField } from '@mui/material'
+import { Button, ListItemText, Typography, Dialog, DialogTitle, DialogActions, Menu, MenuItem, DialogContent, TextField, Box } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import usePlaylistsStore from '../../store/usePlaylistsStore'
 import CommonList from '../../components/CommonList/CommonList'
@@ -52,11 +52,11 @@ const Playlist = () => {
   }
 
   return (
-    <div>
+    <Box sx={{ height: '100%' }}>
       {
         (!playlist)
           ? <Loading />
-          : <div>
+          : <Grid container sx={{ flexDirection: 'column', height: '100%' }}>
             <Grid
               container
               sx={{ pt: 3, pl: 2, pr: 2, pb: 2 }}
@@ -85,80 +85,84 @@ const Playlist = () => {
               </Grid>
             </Grid>
 
-            {/* 菜单 */}
-            <Menu
-              anchorEl={anchorEl}
-              open={menuOpen}
-              onClose={handleCloseMenu}
-            >
-              <MenuItem onClick={() => {
-                setRenameDialogOpen(true)
-                handleCloseMenu()
-              }}>
-                <ListItemText primary={t('common.rename')} />
-              </MenuItem>
-              <MenuItem onClick={() => {
-                setDeleteDiaLogOpen(true)
-                handleCloseMenu()
-              }}>
-                <ListItemText primary={t('common.delete')} />
-              </MenuItem>
-            </Menu>
+            <Grid sx={{ flexGrow: 1 }}>
+              <CommonList
+                listData={playlist.fileList}
+                func={{ handleClickRemove: removeFiles }}
+              />
+            </Grid>
 
-            {/* 重命名播放列表 */}
-            <Dialog
-              open={renameDialogOpen}
-              onClose={() => setRenameDialogOpen(false)}
-              fullWidth
-              maxWidth='xs'
-            >
-              <DialogTitle>{t('common.rename')}</DialogTitle>
-              <DialogContent>
-                <TextField
-                  autoFocus
-                  margin="dense"
-                  fullWidth
-                  variant="standard"
-                  value={newTitle}
-                  onChange={(event) => setNewTitle(event.target.value)}
-                />
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={() => setRenameDialogOpen(false)}>{t('common.cancel')}</Button>
-                <Button onClick={() => {
-                  if (id && newTitle) {
-                    renamePlaylist(id, newTitle)
-                    setRenameDialogOpen(false)
-                  }
-                }} >
-                  {t('common.ok')}
-                </Button>
-              </DialogActions>
-            </Dialog>
-
-            {/* 删除播放列表 */}
-            <Dialog
-              open={deleteDiaLogOpen}
-              onClose={() => setDeleteDiaLogOpen(false)}
-              fullWidth
-              maxWidth='xs'
-            >
-              <DialogContent>
-                {t('playlist.playlistWillBeDeleted')}
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={() => setDeleteDiaLogOpen(false)}>{t('common.cancel')}</Button>
-                <Button onClick={deletePlaylist} >{t('common.ok')}</Button>
-              </DialogActions>
-            </Dialog>
-
-            <CommonList
-              listData={playlist.fileList}
-              handleClickRemove={removeFiles}
-            />
-          </div>
+          </Grid>
       }
-    </div>
+
+      {/* 菜单 */}
+      <Menu
+        anchorEl={anchorEl}
+        open={menuOpen}
+        onClose={handleCloseMenu}
+      >
+        <MenuItem onClick={() => {
+          setRenameDialogOpen(true)
+          handleCloseMenu()
+        }}>
+          <ListItemText primary={t('common.rename')} />
+        </MenuItem>
+        <MenuItem onClick={() => {
+          setDeleteDiaLogOpen(true)
+          handleCloseMenu()
+        }}>
+          <ListItemText primary={t('common.delete')} />
+        </MenuItem>
+      </Menu>
+
+      {/* 重命名播放列表 */}
+      <Dialog
+        open={renameDialogOpen}
+        onClose={() => setRenameDialogOpen(false)}
+        fullWidth
+        maxWidth='xs'
+      >
+        <DialogTitle>{t('common.rename')}</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            margin="dense"
+            fullWidth
+            variant="standard"
+            value={newTitle}
+            onChange={(event) => setNewTitle(event.target.value)}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setRenameDialogOpen(false)}>{t('common.cancel')}</Button>
+          <Button onClick={() => {
+            if (id && newTitle) {
+              renamePlaylist(id, newTitle)
+              setRenameDialogOpen(false)
+            }
+          }} >
+            {t('common.ok')}
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* 删除播放列表 */}
+      <Dialog
+        open={deleteDiaLogOpen}
+        onClose={() => setDeleteDiaLogOpen(false)}
+        fullWidth
+        maxWidth='xs'
+      >
+        <DialogContent>
+          {t('playlist.playlistWillBeDeleted')}
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setDeleteDiaLogOpen(false)}>{t('common.cancel')}</Button>
+          <Button onClick={deletePlaylist} >{t('common.ok')}</Button>
+        </DialogActions>
+      </Dialog>
+
+    </Box>
   )
 }
 
