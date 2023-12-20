@@ -1,38 +1,13 @@
-import useFilesData from '@/hooks/graph/useFilesData'
 import useTheme from '@/hooks/ui/useTheme'
-import usePictureStore from '@/store/usePictureStore'
-import { File, Thumbnails } from '@/types/file'
-import { CircularProgress, Paper } from '@mui/material'
-import useSWRImmutable from 'swr/immutable'
+import { File } from '@/types/file'
+import { Paper } from '@mui/material'
 
-const PictureListItem = ({ picture }: { picture: File }) => {
+const PictureListItem = ({ picture, isCurrent }: { picture: File, isCurrent: boolean }) => {
 
   const { styles } = useTheme()
 
-  const [
-    currentPicture,
-    updateCurrentPicture,
-  ] = usePictureStore(
-    state => [
-      state.currentPicture,
-      state.updateCurrentPicture,
-    ]
-  )
-
-  const isCurrent = currentPicture?.id === picture.id
-
-  const { getFileThumbnailsData } = useFilesData()
-
-  const thumbnailsFetcher = async () => {
-    const res = await getFileThumbnailsData(picture.id)
-    return res.value[0]
-  }
-
-  const { data: thumbnails, isLoading } = useSWRImmutable<Thumbnails>(`${picture.id}-thumbnails`, thumbnailsFetcher)
-
   return (
     <Paper
-      onClick={() => updateCurrentPicture(picture)}
       sx={{
         height: '96px',
         display: 'flex',
@@ -45,15 +20,12 @@ const PictureListItem = ({ picture }: { picture: File }) => {
         // boxShadow: `1px 2px 2px -1px ${styles.color.shadow}`
       }}
     >
-      {
-        isLoading
-          ? <CircularProgress />
-          : <img
-            src={thumbnails?.medium.url}
-            alt={picture.fileName}
-            style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '4px' }}
-          />
-      }
+      <img
+        src={picture.thumbnails ? picture.thumbnails[0].medium.url : ''}
+        alt={picture.fileName}
+        style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '4px' }}
+        loading='lazy'
+      />
     </Paper>
   )
 }

@@ -1,10 +1,8 @@
-import useFilesData from '@/hooks/graph/useFilesData'
 import usePictureStore from '@/store/usePictureStore'
-import { filePathConvert } from '@/utils'
 import { CloseOutlined } from '@mui/icons-material'
-import { Box, CircularProgress, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material'
-import useSWRImmutable from 'swr/immutable'
+import { Box, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material'
 import PictureList from './PictureList'
+import { useEffect, useRef } from 'react'
 
 const PictureView = () => {
 
@@ -22,24 +20,26 @@ const PictureView = () => {
 
   const open = currentPicture !== null
 
-  const { getFileData } = useFilesData()
-
-  const path = currentPicture ? filePathConvert(currentPicture.filePath) : null
-
-  const urlFetcher = async () => {
-    if (path) {
-      const res = await getFileData(path)
-      return res['@microsoft.graph.downloadUrl']
-    } else
-      return null
-  }
-
-  const { data: imgUrl, isLoading } = useSWRImmutable(path ? `${path}-url` : null, urlFetcher)
-
   const handleClose = () => {
     updatePictureList([])
     updateCurrentPicture(null)
   }
+
+  const imgRef = useRef<HTMLImageElement | null>(null)
+
+  useEffect(
+    () => {
+      const imageElement = imgRef.current
+      if (imageElement) {
+        imageElement.src = currentPicture?.url || ''
+      }
+      return () => {
+        if (imageElement)
+          imageElement.src = ''
+      }
+    },
+    [currentPicture?.url]
+  )
 
   return (
     <Dialog
@@ -57,7 +57,6 @@ const PictureView = () => {
           background: 'transparent',
         }
       }}
-    // className='pt-titlebar-area-height'
     >
       <DialogTitle padding='1rem !important' display='flex' alignItems={'center'} gap={2} lineHeight={1} overflow={'hidden'}>
         <IconButton onClick={(handleClose)}><CloseOutlined /></IconButton>
@@ -71,14 +70,12 @@ const PictureView = () => {
           justifyContent='center'
           alignItems='center'
         >
-          {(isLoading)
-            ? <CircularProgress />
-            : <img
-              src={imgUrl}
-              alt={currentPicture?.fileName}
-              style={{ width: 'auto', maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
-            />
-          }
+          <img
+            ref={imgRef}
+            src={currentPicture?.url}
+            alt={currentPicture?.fileName}
+            style={{ width: 'auto', maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+          />
           <PictureList />
         </Box>
       </DialogContent>

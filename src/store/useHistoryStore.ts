@@ -18,7 +18,7 @@ const useHistoryStore = createWithEqualityFn<HistoryStatus & HistoryAction>((set
               file,
               ...state.historyList.filter((item) =>
                 filePathConvert(item.filePath) !== filePathConvert(file.filePath))
-            ].slice(0, 100)
+            ].slice(0, 200)
         }
         : { historyList: [file] }
     )),

@@ -8,10 +8,12 @@ const PictureList = () => {
   const [
     pictureList,
     currentPicture,
+    updateCurrentPicture,
   ] = usePictureStore(
     state => [
       state.pictureList,
       state.currentPicture,
+      state.updateCurrentPicture,
     ]
   )
 
@@ -42,8 +44,8 @@ const PictureList = () => {
   )
 
   const cellRenderer = ({ columnIndex, key, style }: { columnIndex: number, key: Key, style: CSSProperties }) =>
-    <Box key={key} style={style} sx={{ padding: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-      <PictureListItem picture={pictureList[columnIndex]} />
+    <Box onClick={() => updateCurrentPicture(pictureList[columnIndex])} key={key} style={style} sx={{ padding: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+      <PictureListItem picture={pictureList[columnIndex]} isCurrent={columnIndex === currentIndex} />
     </Box>
 
   return (
@@ -75,8 +77,7 @@ const PictureList = () => {
             }}
           />
         )}
-      </WindowScroller>,
-
+      </WindowScroller>
     </Box>
   )
 }

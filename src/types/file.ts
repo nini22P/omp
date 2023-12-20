@@ -6,6 +6,7 @@ export interface File {
   lastModifiedDateTime?: string;
   id?: string;
   thumbnails?: Thumbnail[];
+  url?: string;
 }
 
 export interface ThumbnailItem {
