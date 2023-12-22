@@ -1,4 +1,4 @@
-import { filePathConvert } from '../utils'
+import { pathConvert } from '../utils'
 import { PlayQueueStatus, PlayQueueAction } from '../types/playQueue'
 import { createWithEqualityFn } from 'zustand/traditional'
 import { shallow } from 'zustand/shallow'
@@ -19,9 +19,9 @@ const usePlayQueueStore = createWithEqualityFn<PlayQueueStatus & PlayQueueAction
         return {
           playQueue:
             state.playQueue
-              ?.filter((item) => filePathArray.find(filePath => filePathConvert(filePath) !== filePathConvert(item.filePath)))
+              ?.filter((item) => filePathArray.find(filePath => pathConvert(filePath) !== pathConvert(item.filePath)))
               .map((item, index) => {
-                if (currentFile && filePathConvert(item.filePath) === filePathConvert(currentFile?.filePath))
+                if (currentFile && pathConvert(item.filePath) === pathConvert(currentFile?.filePath))
                   newCurrentIndex = index
                 return { ...item, index }
               }),

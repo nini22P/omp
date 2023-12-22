@@ -36,3 +36,25 @@ a {
     padding-top: env(titlebar-area-height, 32) !important;
   }
 }
+
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #8d24aa99;
+  border-radius: 16px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #8e24aa;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}

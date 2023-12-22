@@ -48,7 +48,7 @@ export const nowTime = () => {
   return `${dateTime.getFullYear}-${dateTime.getMonth}-${dateTime.getDay} ${dateTime.getHours}:${dateTime.getMinutes}`
 }
 
-export const fileSizeConvert = (fileSize: File['fileSize']) => {
+export const sizeConvert = (fileSize: File['fileSize']) => {
   return ((fileSize / 1024) < 1024)
     ? `${(fileSize / 1024).toFixed(2)} KB`
     : ((fileSize / 1024 / 1024) < 1024)
@@ -56,14 +56,14 @@ export const fileSizeConvert = (fileSize: File['fileSize']) => {
       : `${(fileSize / 1024 / 1024 / 1024).toFixed(2)} GB`
 }
 
-export const filePathConvert = (filePath: File['filePath']) => (filePath.join('/') === '/') ? '/' : filePath.slice(1).join('/')
+export const pathConvert = (filePath: File['filePath']) => (filePath.join('/') === '/') ? '/' : filePath.slice(1).join('/')
 
 /**
  * 根据 url 解析 json
  * @param url 
  * @returns 
  */
-const fetchJson = async (url: string) => {
+export const fetchJson = async (url: string) => {
   try {
     const response = await fetch(url)
     const json = response.json()
@@ -72,5 +72,3 @@ const fetchJson = async (url: string) => {
     console.error(error)
   }
 }
-
-export default fetchJson

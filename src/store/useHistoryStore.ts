@@ -1,5 +1,5 @@
 import { createWithEqualityFn } from 'zustand/traditional'
-import { filePathConvert } from '../utils'
+import { pathConvert } from '../utils'
 import { HistoryStatus, HistoryAction } from '../types/history'
 import { shallow } from 'zustand/shallow'
 
@@ -17,7 +17,7 @@ const useHistoryStore = createWithEqualityFn<HistoryStatus & HistoryAction>((set
             [
               file,
               ...state.historyList.filter((item) =>
-                filePathConvert(item.filePath) !== filePathConvert(file.filePath))
+                pathConvert(item.filePath) !== pathConvert(file.filePath))
             ].slice(0, 200)
         }
         : { historyList: [file] }
@@ -29,7 +29,7 @@ const useHistoryStore = createWithEqualityFn<HistoryStatus & HistoryAction>((set
         historyList:
           state.historyList?.filter((item) =>
             filePathArray.find(filePath =>
-              filePathConvert(filePath) !== filePathConvert(item.filePath)
+              pathConvert(filePath) !== pathConvert(item.filePath)
             )
           )
       }

@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
+import { Box, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import { NavLink } from 'react-router-dom'
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined'
 import HistoryOutlinedIcon from '@mui/icons-material/HistoryOutlined'
@@ -28,7 +28,10 @@ const SideBar = () => {
   const closeSideBar = () => (mobileSideBarOpen) && updateMobileSideBarOpen(false)
 
   return (
-    <div>
+    <Box sx={{
+      height: '100%',
+      overflow: 'auto',
+    }}>
       <List>
         {navData.map((item, index) =>
           <ListItem
@@ -52,7 +55,7 @@ const SideBar = () => {
       </List>
       <Divider />
       <Playlists closeSideBar={closeSideBar} />
-    </div>
+    </Box>
   )
 }
 export default SideBar

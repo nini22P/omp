@@ -8,7 +8,7 @@ import { shallow } from 'zustand/shallow'
 import usePlayQueueStore from '../../store/usePlayQueueStore'
 import usePlaylistsStore from '../../store/usePlaylistsStore'
 import useUiStore from '../../store/useUiStore'
-import { filePathConvert } from '../../utils'
+import { pathConvert } from '../../utils'
 import { File } from '../../types/file'
 
 const CommonMenu = (
@@ -109,7 +109,7 @@ const CommonMenu = (
         </MenuItem>
         {  // 当前选择文件不在播放队列中时显示
           (currentFile && !playQueue?.find((file) => {
-            return filePathConvert(file.filePath) === filePathConvert(currentFile?.filePath)
+            return pathConvert(file.filePath) === pathConvert(currentFile?.filePath)
           })) &&
           <MenuItem onClick={handleClickAddToPlayQueue}>
             <ListItemText primary={t('playlist.addToPlayQueue')} />

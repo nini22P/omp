@@ -2,7 +2,7 @@ import usePictureStore from '@/store/usePictureStore'
 import { Box } from '@mui/material'
 import PictureListItem from './PictureListItem'
 import { Grid, WindowScroller } from 'react-virtualized'
-import { CSSProperties, Key, useEffect, useState } from 'react'
+import { CSSProperties, Key, useEffect, useRef } from 'react'
 
 const PictureList = () => {
   const [
@@ -19,29 +19,27 @@ const PictureList = () => {
 
   const currentIndex = pictureList.findIndex(picture => picture.id === currentPicture?.id)
 
-  const [pictureListIsShow, setPictureListIsShow] = useState(true)
+  const scrollContainerRef = useRef<HTMLElement | null>(null)
+  const gridRef = useRef<Grid | null>(null)
 
-  useEffect(
-    () => {
-      let timer: string | number | NodeJS.Timeout | undefined
-      const resetTimer = () => {
-        setPictureListIsShow(true)
-        clearTimeout(timer)
-        timer = (setTimeout(() => setPictureListIsShow(false), 5000))
+  useEffect(() => {
+    const scrollContainer = scrollContainerRef.current
+    const grid = gridRef.current
+    if (scrollContainer && grid) {
+      const onWheel = (e: WheelEvent) => {
+        if (e.deltaY === 0) return
+        e.preventDefault()
+        const gridWidth = grid.props.columnWidth as number * grid.props.columnCount
+        let left: number = grid.state.scrollLeft + e.deltaY * 2
+        if (left < 0) left = 0
+        if (left + grid.props.width + 32 > gridWidth) left = gridWidth - grid.props.width + 32
+        grid.scrollToPosition({ scrollLeft: left, scrollTop: 0 })
       }
-      resetTimer()
-      window.addEventListener('mousemove', resetTimer)
-      window.addEventListener('mousedown', resetTimer)
-      window.addEventListener('keydown', resetTimer)
-      return () => {
-        window.removeEventListener('mousemove', resetTimer)
-        window.removeEventListener('mousedown', resetTimer)
-        window.removeEventListener('keydown', resetTimer)
-        clearTimeout(timer)
-      }
-    },
-    []
-  )
+      scrollContainer.addEventListener('wheel', onWheel)
+      return () => scrollContainer.removeEventListener('wheel', onWheel)
+    }
+  }, [])
+
 
   const cellRenderer = ({ columnIndex, key, style }: { columnIndex: number, key: Key, style: CSSProperties }) =>
     <Box onClick={() => updateCurrentPicture(pictureList[columnIndex])} key={key} style={style} sx={{ padding: '4px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
@@ -50,19 +48,19 @@ const PictureList = () => {
 
   return (
     <Box
-      position={'absolute'}
-      bottom={0}
       display={'flex'}
       flexDirection={'row'}
       flexWrap={'nowrap'}
       width={'100%'}
       overflow={'auto'}
-      height={pictureListIsShow ? 'auto' : 0}
+      height='auto'
+      ref={scrollContainerRef}
     >
       <WindowScroller>
         {({ height, width }) => (
           <Grid
             cellRenderer={cellRenderer}
+            ref={ref => gridRef.current = ref}
             columnCount={pictureList.length}
             columnWidth={104}
             rowCount={1}
@@ -73,7 +71,7 @@ const PictureList = () => {
             scrollToColumn={currentIndex}
             scrollToAlignment={'center'}
             style={{
-              padding: '0 16px 8px 16px',
+              padding: '0 16px',
             }}
           />
         )}
