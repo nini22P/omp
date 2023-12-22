@@ -10,6 +10,7 @@ export interface UiStatus {
   shuffle: boolean;
   repeat: 'off' | 'all' | 'one';
   color: string;
+  display: 'list' | 'multicolumnList' | 'grid';
   sortBy: 'name' | 'size' | 'datetime';
   orderBy: 'asc' | 'desc';
   foldersFirst: boolean;
@@ -28,6 +29,7 @@ export interface UiAction {
   updateShuffle: (shuffle: UiStatus['shuffle']) => void;
   updateRepeat: (loop: UiStatus['repeat']) => void;
   updateColor: (color: UiStatus['color']) => void;
+  updateDisplay: (display: UiStatus['display']) => void;
   updateSortBy: (sortBy: UiStatus['sortBy']) => void;
   updateOrderBy: (orderBy: UiStatus['orderBy']) => void;
   updateFoldersFirst: (foldersFirst: UiStatus['foldersFirst']) => void;

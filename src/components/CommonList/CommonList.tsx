@@ -1,4 +1,4 @@
-import { useState, useEffect, Key, CSSProperties } from 'react'
+import { useState, useEffect, Key, CSSProperties, useRef } from 'react'
 import Grid from '@mui/material/Unstable_Grid2'
 import usePlayQueueStore from '../../store/usePlayQueueStore'
 import usePlayerStore from '../../store/usePlayerStore'
@@ -10,15 +10,18 @@ import { PlayQueueItem } from '../../types/playQueue'
 import { File } from '../../types/file'
 import CommonListItem from './CommonListItem'
 import ShuffleAll from './ShuffleAll'
-import { Box } from '@mui/material'
+import { Box, useMediaQuery, useTheme } from '@mui/material'
 import { AutoSizer, List } from 'react-virtualized'
+import CommonListItemCard from './CommonListItemCard'
 
 const CommonList = (
   {
     listData,
+    display = 'list',
     func,
   }: {
     listData?: File[] | PlayQueueItem[],
+    display?: 'list' | 'multicolumnList' | 'grid',
     func?: {
       handleClickRemove?: (filePathArray: string[][]) => void,
     },
@@ -129,25 +132,98 @@ const CommonList = (
       ? handleClickPlayQueueItem((item as PlayQueueItem).index)
       : handleClickListItem(item.filePath)
 
-  const rowRenderer = ({ key, index, style }: { key: Key, index: number, style: CSSProperties }) => {
+
+  const theme = useTheme()
+  const xs = useMediaQuery(theme.breakpoints.up('xs'))
+  const sm = useMediaQuery(theme.breakpoints.up('sm'))
+  const md = useMediaQuery(theme.breakpoints.up('md'))
+  const lg = useMediaQuery(theme.breakpoints.up('lg'))
+  const xl = useMediaQuery(theme.breakpoints.up('xl'))
+
+  const getGridCols = (): number => {
+    if (xl) return 6
+    if (lg) return 5
+    if (md) return 4
+    if (sm) return 3
+    if (xs) return 2
+    return 2
+  }
+
+  const getListCols = (): number => {
+    if (xl) return 3
+    if (lg) return 3
+    if (md) return 2
+    if (sm) return 1
+    if (xs) return 1
+    return 1
+  }
+
+  const gridCols = getGridCols()
+
+  const gridRenderer = ({ key, index, style }: { key: Key, index: number, style: CSSProperties }) => {
     return (
       listData
       &&
-      <Grid key={key} style={style}>
-        <CommonListItem
-          active={((listData[index] as PlayQueueItem).index === currentIndex)}
-          item={listData[index]}
-          handleClickItem={handleClickItem}
-          handleClickMenu={handleClickMenu}
-        />
+      <Grid container key={key} style={style}>
+        {
+          [...Array(gridCols)].map((_, i) => {
+            const item = listData[index * gridCols + i]
+            return (
+              item
+              &&
+              <Grid key={item.fileName} xs={12 / gridCols} sx={{ aspectRatio: '1/1', overflow: 'hidden' }}>
+                <CommonListItemCard
+                  active={((item as PlayQueueItem).index === currentIndex)}
+                  item={item}
+                  handleClickItem={handleClickItem}
+                  handleClickMenu={handleClickMenu}
+                />
+              </Grid>
+            )
+          })
+        }
       </Grid>
     )
   }
 
+  const listCols = (display === 'multicolumnList') ? getListCols() : 1
+
+  const rowRenderer = ({ key, index, style }: { key: Key, index: number, style: CSSProperties }) => {
+    return (
+      listData
+      &&
+      <Grid container key={key} style={style}>
+        {
+          [...Array(listCols)].map((_, i) => {
+            const item = listData[index * listCols + i]
+            return (
+              item
+              &&
+              <Grid key={item.fileName} xs={12 / listCols}>
+                <CommonListItem
+                  active={((item as PlayQueueItem).index === currentIndex)}
+                  item={item}
+                  handleClickItem={handleClickItem}
+                  handleClickMenu={handleClickMenu}
+                />
+              </Grid>
+            )
+          })
+        }
+      </Grid>
+    )
+  }
+
+  const listRef = useRef<List | null>(null)
+  const updateListRowHeight = () => listRef.current && listRef.current.recomputeRowHeights()
+
   return (
     listData
     &&
-    <Box sx={{ height: '100%', width: '100%' }}>
+    <Box sx={{
+      height: '100%',
+      width: '100%',
+    }}>
       {/* 菜单 */}
       <CommonMenu
         anchorEl={anchorEl}
@@ -174,23 +250,53 @@ const CommonList = (
             <ShuffleAll handleClickShuffleAll={handleClickShuffleAll} />
           </Grid>
         }
-        <Grid xs={12} sx={{ flexGrow: 1, overflow: 'hidden' }}>
-          <AutoSizer>
-            {
-              ({ height, width }) => (
-                <List
-                  height={height}
-                  width={width}
-                  rowCount={listData.length}
-                  rowHeight={72}
-                  rowRenderer={rowRenderer}
-                  style={{
-                    paddingBottom: '1rem',
-                  }}
-                />
-              )
-            }
-          </AutoSizer>
+        <Grid xs={12}
+          sx={{
+            flexGrow: 1,
+            overflow: 'hidden',
+          }}>
+          {
+            display === 'grid'
+            &&
+            <AutoSizer onResize={() => updateListRowHeight()}>
+              {
+                ({ height, width }) =>
+                  <List
+                    ref={(ref => (listRef.current = ref))}
+                    height={height}
+                    width={width}
+                    rowCount={Math.ceil(listData.length / gridCols)}
+                    rowHeight={width / gridCols}
+                    rowRenderer={gridRenderer}
+                    style={{
+                      paddingBottom: '0.5rem',
+                    }}
+                  />
+              }
+            </AutoSizer>
+          }
+          {
+            (display === 'list' || display === 'multicolumnList')
+            &&
+            <AutoSizer onResize={() => updateListRowHeight()}>
+              {
+                ({ height, width }) =>
+
+                  <List
+                    ref={(ref => (listRef.current = ref))}
+                    height={height}
+                    width={width}
+                    rowCount={Math.ceil(listData.length / listCols)}
+                    rowHeight={72}
+                    rowRenderer={rowRenderer}
+                    style={{
+                      paddingBottom: '1rem',
+                    }}
+                  />
+              }
+            </AutoSizer>
+          }
+
         </Grid>
       </Grid>
     </Box>

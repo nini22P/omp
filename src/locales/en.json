@@ -36,6 +36,11 @@
     "metaDataCache": "Local MetaData Cache"
   },
   "files": {
+    "display": {
+      "list": "List",
+      "multicolumnList": "Multicolumn list",
+      "grid": "Grid"
+    },
     "sortBy": {
       "name": "Name",
       "size": "Size",

@@ -15,6 +15,7 @@ const Files = () => {
 
   const [
     folderTree,
+    display,
     sortBy,
     orderBy,
     foldersFirst,
@@ -22,6 +23,7 @@ const Files = () => {
   ] = useUiStore(
     (state) => [
       state.folderTree,
+      state.display,
       state.sortBy,
       state.orderBy,
       state.foldersFirst,
@@ -125,6 +127,7 @@ const Files = () => {
           (fileListIsLoading || !fileListData || !sortedFileList || fileListError)
             ? <Loading />
             : <CommonList
+              display={display}
               listData={sortedFileList}
             />
         }

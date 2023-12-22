@@ -15,20 +15,24 @@ const FilterMenu = () => {
   }
 
   const [
+    display,
     sortBy,
     orderBy,
     foldersFirst,
     mediaOnly,
+    updateDisplay,
     updateSortBy,
     updateOrderBy,
     updateFoldersFirst,
     updateMediaOnly,
   ] = useUiStore(
     (state) => [
+      state.display,
       state.sortBy,
       state.orderBy,
       state.foldersFirst,
       state.mediaOnly,
+      state.updateDisplay,
       state.updateSortBy,
       state.updateOrderBy,
       state.updateFoldersFirst,
@@ -60,6 +64,20 @@ const FilterMenu = () => {
         }}
         sx={{ userSelect: 'none' }}
       >
+
+        <RadioGroup
+          aria-labelledby="display-radio-buttons-group-label"
+          defaultValue={display}
+          name='display-radio-buttons-group'
+          sx={{ paddingLeft: 2 }}
+        >
+          <FormControlLabel value={'list'} control={<Radio />} label={t('files.display.list')} onChange={() => updateDisplay('list')} />
+          <FormControlLabel value={'multicolumnList'} control={<Radio />} label={t('files.display.multicolumnList')} onChange={() => updateDisplay('multicolumnList')} />
+          <FormControlLabel value={'grid'} control={<Radio />} label={t('files.display.grid')} onChange={() => updateDisplay('grid')} />
+        </RadioGroup>
+
+        <Divider />
+
         <RadioGroup
           aria-labelledby="sort-radio-buttons-group-label"
           defaultValue={sortBy}

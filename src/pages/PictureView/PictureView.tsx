@@ -1,6 +1,6 @@
 import usePictureStore from '@/store/usePictureStore'
 import { CloseOutlined } from '@mui/icons-material'
-import { Box, Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material'
+import { Box, Dialog, IconButton } from '@mui/material'
 import PictureList from './PictureList'
 import { useEffect, useRef } from 'react'
 
@@ -58,27 +58,29 @@ const PictureView = () => {
         }
       }}
     >
-      <DialogTitle padding='1rem !important' display='flex' alignItems={'center'} gap={2} lineHeight={1} overflow={'hidden'}>
-        <IconButton onClick={(handleClose)}><CloseOutlined /></IconButton>
-        {currentPicture?.fileName}
-      </DialogTitle>
-      <DialogContent sx={{ padding: 0 }}>
-        <Box
-          width='100%'
-          height='100%'
-          display='flex'
-          justifyContent='center'
-          alignItems='center'
-        >
+      <Box
+        sx={{
+          width: '100%',
+          height: '100dvh',
+          display: 'flex',
+          flexDirection: 'column',
+          flexWrap: 'nowrap',
+        }}
+      >
+        <Box padding='0.5rem' display='flex' alignItems={'center'} gap={2} overflow={'hidden'}>
+          <IconButton onClick={(handleClose)}><CloseOutlined /></IconButton>
+          {currentPicture?.fileName}
+        </Box>
+        <Box sx={{ height: 0, flexGrow: 1 }}>
           <img
             ref={imgRef}
             src={currentPicture?.url}
             alt={currentPicture?.fileName}
-            style={{ width: 'auto', maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
+            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
           />
-          <PictureList />
         </Box>
-      </DialogContent>
+        <PictureList />
+      </Box>
     </Dialog>
   )
 }

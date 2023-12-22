@@ -36,6 +36,11 @@
     "localMetaDataCache": "本地元数据缓存"
   },
   "files": {
+    "display": {
+      "list": "列表",
+      "multicolumnList": "多列列表",
+      "grid": "网格"
+    },
     "sortBy": {
       "name": "名称",
       "size": "大小",
