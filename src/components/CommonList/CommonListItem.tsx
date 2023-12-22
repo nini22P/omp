@@ -28,7 +28,6 @@ const CommonListItem = ({
   return (
     <ListItem
       disablePadding
-      id={active ? 'playing-item' : ''}
       sx={{
         '& .MuiListItemButton-root': {
           paddingLeft: 3,

@@ -50,17 +50,6 @@ const CommonList = (
     ]
   )
 
-  const isPlayQueueView = listData?.some((item) => typeof (item as PlayQueueItem).index === 'number')
-
-  // 打开播放队列时滚动到当前播放文件
-  useEffect(
-    () => {
-      isPlayQueueView && document.getElementById('playing-item')?.scrollIntoView({ behavior: 'auto', block: 'center' })
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    []
-  )
-
   const handleClickMenu = (event: React.MouseEvent<HTMLElement>, currentFile: File) => {
     setMenuOpen(true)
     setCurrentFile(currentFile)
@@ -159,6 +148,7 @@ const CommonList = (
   }
 
   const gridCols = getGridCols()
+  const listCols = (display === 'multicolumnList') ? getListCols() : 1
 
   const gridRenderer = ({ key, index, style }: { key: Key, index: number, style: CSSProperties }) => {
     return (
@@ -185,8 +175,6 @@ const CommonList = (
       </Grid>
     )
   }
-
-  const listCols = (display === 'multicolumnList') ? getListCols() : 1
 
   const rowRenderer = ({ key, index, style }: { key: Key, index: number, style: CSSProperties }) => {
     return (
@@ -216,6 +204,19 @@ const CommonList = (
 
   const listRef = useRef<List | null>(null)
   const updateListRowHeight = () => listRef.current && listRef.current.recomputeRowHeights()
+
+  const isPlayQueueView = listData?.some((item) => typeof (item as PlayQueueItem).index === 'number')
+  // 打开播放队列时滚动到当前播放文件
+  useEffect(
+    () => {
+      if (isPlayQueueView && listRef.current) {
+        const index = listData?.findIndex((item) => (item as PlayQueueItem).index === currentIndex)
+        setTimeout(() => listRef.current?.scrollToRow(index), 100)
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    []
+  )
 
   return (
     listData
@@ -268,6 +269,7 @@ const CommonList = (
                     rowCount={Math.ceil(listData.length / gridCols)}
                     rowHeight={width / gridCols}
                     rowRenderer={gridRenderer}
+                    scrollToAlignment={'center'}
                     style={{
                       paddingBottom: '0.5rem',
                     }}
@@ -289,6 +291,7 @@ const CommonList = (
                     rowCount={Math.ceil(listData.length / listCols)}
                     rowHeight={72}
                     rowRenderer={rowRenderer}
+                    scrollToAlignment={'center'}
                     style={{
                       paddingBottom: '1rem',
                     }}
