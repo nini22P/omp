@@ -5,7 +5,7 @@ import useLocalMetaDataStore from '@/store/useLocalMetaDataStore'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
-import { filePathConvert, shufflePlayQueue } from '@/utils'
+import { pathConvert, shufflePlayQueue } from '@/utils'
 import useFilesData from '../graph/useFilesData'
 
 const usePlayerCore = (player: HTMLVideoElement | null) => {
@@ -80,7 +80,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
       }
       if (playQueue !== null && playQueue.length !== 0) {
         try {
-          getFileData(filePathConvert(playQueue.filter(item => item.index === currentIndex)[0].filePath)).then((res) => {
+          getFileData(pathConvert(playQueue.filter(item => item.index === currentIndex)[0].filePath)).then((res) => {
             setUrl(res['@microsoft.graph.downloadUrl'])
             updateIsLoading(true)
           })
@@ -222,7 +222,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
             &&
             metaData.path
             &&
-            filePathConvert(metaData.path) === filePathConvert(playQueue.filter(item => item.index === currentIndex)[0].filePath)
+            pathConvert(metaData.path) === pathConvert(playQueue.filter(item => item.index === currentIndex)[0].filePath)
           ) {
             console.log('Update current metaData: ', metaData.title)
             updateCurrentMetaData(metaData)

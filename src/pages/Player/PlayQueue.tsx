@@ -10,8 +10,29 @@ const PlayQueue = () => {
 
   const { styles } = useTheme()
 
-  const [playQueue, removeFilesFromPlayQueue] = usePlayQueueStore((state) => [state.playQueue, state.removeFilesFromPlayQueue])
-  const [playQueueIsShow, updatePlayQueueIsShow] = useUiStore((state) => [state.playQueueIsShow, state.updatePlayQueueIsShow])
+  const [
+    currentIndex,
+    playQueue,
+    removeFilesFromPlayQueue
+  ] = usePlayQueueStore(
+    (state) => [
+      state.currentIndex,
+      state.playQueue,
+      state.removeFilesFromPlayQueue,
+    ]
+  )
+
+  const [
+    playQueueIsShow,
+    updatePlayQueueIsShow
+  ] = useUiStore(
+    (state) => [
+      state.playQueueIsShow,
+      state.updatePlayQueueIsShow,
+    ]
+  )
+
+  const currentFile = playQueue?.find((item) => item.index === currentIndex)
 
   return (
     <Drawer
@@ -44,6 +65,8 @@ const PlayQueue = () => {
             playQueue &&
             <CommonList
               listData={playQueue}
+              activeFilePath={currentFile?.filePath}
+              scrollFilePath={currentFile?.filePath}
               func={{ handleClickRemove: removeFilesFromPlayQueue }}
             />
           }

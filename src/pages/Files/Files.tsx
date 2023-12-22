@@ -4,7 +4,7 @@ import useFilesData from '../../hooks/graph/useFilesData'
 import BreadcrumbNav from './BreadcrumbNav'
 import CommonList from '../../components/CommonList/CommonList'
 import Loading from '../Loading'
-import { checkFileType, filePathConvert } from '../../utils'
+import { checkFileType, pathConvert } from '../../utils'
 import { File, Thumbnail } from '../../types/file'
 import Grid from '@mui/material/Unstable_Grid2/Grid2'
 import FilterMenu from './FilterMenu'
@@ -20,6 +20,7 @@ const Files = () => {
     orderBy,
     foldersFirst,
     mediaOnly,
+    updateFolderTree,
   ] = useUiStore(
     (state) => [
       state.folderTree,
@@ -28,6 +29,7 @@ const Files = () => {
       state.orderBy,
       state.foldersFirst,
       state.mediaOnly,
+      state.updateFolderTree,
     ]
   )
 
@@ -61,7 +63,7 @@ const Files = () => {
   }
 
   const { data: fileListData, error: fileListError, isLoading: fileListIsLoading } =
-    useSWR<File[], Error>(filePathConvert(folderTree), fileListFetcher, { revalidateOnFocus: false })
+    useSWR<File[], Error>(pathConvert(folderTree), fileListFetcher, { revalidateOnFocus: false })
 
   const filteredFileList = (!fileListData)
     ? []
@@ -99,6 +101,12 @@ const Files = () => {
       } else return 0
     })
 
+  const handleListNavClick = (index: number) => {
+    if (index < folderTree.length - 1) {
+      updateFolderTree(folderTree.slice(0, index + 1))
+    }
+  }
+
   return (
     <Grid container
       sx={{
@@ -115,7 +123,7 @@ const Files = () => {
         wrap='nowrap'
       >
         <Grid>
-          <BreadcrumbNav />
+          <BreadcrumbNav handleListNavClick={handleListNavClick} />
         </Grid>
         <Grid xs={'auto'} paddingRight={2}>
           <FilterMenu />

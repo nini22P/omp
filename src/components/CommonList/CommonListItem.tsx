@@ -1,6 +1,6 @@
 import useTheme from '@/hooks/ui/useTheme'
 import { File } from '@/types/file'
-import { fileSizeConvert } from '@/utils'
+import { sizeConvert } from '@/utils'
 import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined'
 import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined'
 import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined'
@@ -110,7 +110,7 @@ const CommonListItem = ({
                 hour: 'numeric',
                 minute: 'numeric',
               })} | `
-              : ''}${fileSizeConvert(item.fileSize)}`}
+              : ''}${sizeConvert(item.fileSize)}`}
           primaryTypographyProps={{
             style: {
               whiteSpace: 'nowrap',

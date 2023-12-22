@@ -1,4 +1,4 @@
-import { filePathConvert } from '../utils'
+import { pathConvert } from '../utils'
 import { PlaylistsStatus, PlaylistsAction } from '../types/playlist'
 import { shallow } from 'zustand/shallow'
 import { createWithEqualityFn } from 'zustand/traditional'
@@ -29,7 +29,7 @@ const usePlaylistsStore = createWithEqualityFn<PlaylistsStatus & PlaylistsAction
             ...playlist,
             fileList: files.concat(playlist.fileList.filter((item) =>
               files.find((file) =>
-                filePathConvert(file.filePath) !== filePathConvert(item.filePath)
+                pathConvert(file.filePath) !== pathConvert(item.filePath)
               )
             ))
           }
@@ -45,7 +45,7 @@ const usePlaylistsStore = createWithEqualityFn<PlaylistsStatus & PlaylistsAction
             ...playlist,
             fileList: playlist.fileList.filter((file) =>
               filePathArray.find((filePath) =>
-                filePathConvert(filePath) !== filePathConvert(file.filePath)
+                pathConvert(filePath) !== pathConvert(file.filePath)
               ))
           }
           : playlist

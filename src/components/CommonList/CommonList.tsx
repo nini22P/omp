@@ -4,7 +4,7 @@ import usePlayQueueStore from '../../store/usePlayQueueStore'
 import usePlayerStore from '../../store/usePlayerStore'
 import useUiStore from '../../store/useUiStore'
 import usePictureStore from '@/store/usePictureStore'
-import { checkFileType, shufflePlayQueue } from '../../utils'
+import { checkFileType, pathConvert, shufflePlayQueue } from '../../utils'
 import CommonMenu from './CommonMenu'
 import { PlayQueueItem } from '../../types/playQueue'
 import { File } from '../../types/file'
@@ -18,10 +18,14 @@ const CommonList = (
   {
     listData,
     display = 'list',
+    scrollFilePath,
+    activeFilePath,
     func,
   }: {
     listData?: File[] | PlayQueueItem[],
     display?: 'list' | 'multicolumnList' | 'grid',
+    scrollFilePath?: File['filePath'],
+    activeFilePath?: File['filePath'],
     func?: {
       handleClickRemove?: (filePathArray: string[][]) => void,
     },
@@ -32,11 +36,23 @@ const CommonList = (
   const [dialogOpen, setDialogOpen] = useState(false)
   const [currentFile, setCurrentFile] = useState<null | File>(null)
 
-  const [folderTree, shuffle, updateVideoViewIsShow, updateFolderTree, updateShuffle] = useUiStore(
-    (state) => [state.folderTree, state.shuffle, state.updateVideoViewIsShow, state.updateFolderTree, state.updateShuffle])
+  const [
+    folderTree,
+    shuffle,
+    updateVideoViewIsShow,
+    updateFolderTree,
+    updateShuffle
+  ] = useUiStore(
+    (state) => [
+      state.folderTree,
+      state.shuffle,
+      state.updateVideoViewIsShow,
+      state.updateFolderTree,
+      state.updateShuffle,
+    ])
 
-  const [currentIndex, updateType, updatePlayQueue, updateCurrentIndex] = usePlayQueueStore(
-    (state) => [state.currentIndex, state.updateType, state.updatePlayQueue, state.updateCurrentIndex])
+  const [updateType, updatePlayQueue, updateCurrentIndex] = usePlayQueueStore(
+    (state) => [state.updateType, state.updatePlayQueue, state.updateCurrentIndex])
 
   const [updatePlayStatu] = usePlayerStore(state => [state.updatePlayStatu])
 
@@ -163,7 +179,7 @@ const CommonList = (
               &&
               <Grid key={item.fileName} xs={12 / gridCols} sx={{ aspectRatio: '1/1', overflow: 'hidden' }}>
                 <CommonListItemCard
-                  active={((item as PlayQueueItem).index === currentIndex)}
+                  active={activeFilePath ? pathConvert(activeFilePath) === pathConvert(item.filePath) : false}
                   item={item}
                   handleClickItem={handleClickItem}
                   handleClickMenu={handleClickMenu}
@@ -189,7 +205,7 @@ const CommonList = (
               &&
               <Grid key={item.fileName} xs={12 / listCols}>
                 <CommonListItem
-                  active={((item as PlayQueueItem).index === currentIndex)}
+                  active={activeFilePath ? pathConvert(activeFilePath) === pathConvert(item.filePath) : false}
                   item={item}
                   handleClickItem={handleClickItem}
                   handleClickMenu={handleClickMenu}
@@ -206,11 +222,12 @@ const CommonList = (
   const updateListRowHeight = () => listRef.current && listRef.current.recomputeRowHeights()
 
   const isPlayQueueView = listData?.some((item) => typeof (item as PlayQueueItem).index === 'number')
+
   // 打开播放队列时滚动到当前播放文件
   useEffect(
     () => {
-      if (isPlayQueueView && listRef.current) {
-        const index = listData?.findIndex((item) => (item as PlayQueueItem).index === currentIndex)
+      if (isPlayQueueView && listRef.current && scrollFilePath) {
+        const index = listData?.findIndex((item) => pathConvert(scrollFilePath) === pathConvert(item.filePath))
         setTimeout(() => listRef.current?.scrollToRow(index), 100)
       }
     },
@@ -299,7 +316,6 @@ const CommonList = (
               }
             </AutoSizer>
           }
-
         </Grid>
       </Grid>
     </Box>
