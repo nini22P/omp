@@ -71,12 +71,12 @@ const PictureView = () => {
           <IconButton onClick={(handleClose)}><CloseOutlined /></IconButton>
           {currentPicture?.fileName}
         </Box>
-        <Box sx={{ height: 0, flexGrow: 1 }}>
+        <Box sx={{ height: 0, flexGrow: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <img
             ref={imgRef}
             src={currentPicture?.url}
             alt={currentPicture?.fileName}
-            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+            style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
           />
         </Box>
         <PictureList />

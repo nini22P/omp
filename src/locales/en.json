@@ -51,6 +51,7 @@
       "desc": "Descending"
     },
     "foldersFirst": "Folders first",
-    "mediaOnly": "Media only"
+    "mediaOnly": "Media only",
+    "hdThumbnails": "HD thumbnails"
   }
 }

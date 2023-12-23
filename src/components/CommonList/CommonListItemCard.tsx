@@ -4,6 +4,7 @@ import { FolderOutlined, InsertDriveFileOutlined, InsertPhotoOutlined, MoreVertO
 import { useTranslation } from 'react-i18next'
 import Grid from '@mui/material/Unstable_Grid2/Grid2'
 import useTheme from '@/hooks/ui/useTheme'
+import useUtils from '@/hooks/useUtils'
 
 const CommonListItemCard = ({
   item,
@@ -19,7 +20,9 @@ const CommonListItemCard = ({
 
   const { styles } = useTheme()
   const { t } = useTranslation()
-  const imgUrl = item.thumbnails && item.thumbnails[0] && item.thumbnails[0].medium.url
+  const { getThumbnailUrl } = useUtils()
+
+  const thumbnailUrl = getThumbnailUrl(item)
 
   return (
     <ListItemButton
@@ -36,10 +39,10 @@ const CommonListItemCard = ({
             {item.fileType === 'other' && <InsertDriveFileOutlined sx={{ width: '50%', height: '50%' }} />}
           </Grid>
           {
-            imgUrl
+            thumbnailUrl
             &&
             <img
-              src={imgUrl}
+              src={thumbnailUrl}
               onError={({ currentTarget }) => {
                 currentTarget.onerror = null
                 currentTarget.style.display = 'none'
@@ -49,7 +52,7 @@ const CommonListItemCard = ({
             />
           }
         </Grid>
-        <Grid container xs={12} sx={{ width: '100%', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem' }}>
+        <Grid container xs={12} sx={{ width: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
           <Grid container sx={{ justifyContent: 'center', alignItems: 'center', width: '34px', height: '34px' }} >
             {item.fileType === 'folder' && <FolderOutlined />}
             {item.fileType === 'audio' && <MusicNote />}

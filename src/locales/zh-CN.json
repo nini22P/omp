@@ -51,6 +51,7 @@
       "desc": "倒序"
     },
     "foldersFirst": "文件夹优先",
-    "mediaOnly": "仅限媒体"
+    "mediaOnly": "仅限媒体",
+    "hdThumbnails": "高清缩略图"
   }
 }

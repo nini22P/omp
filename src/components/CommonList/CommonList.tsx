@@ -177,7 +177,7 @@ const CommonList = (
             return (
               item
               &&
-              <Grid key={item.fileName} xs={12 / gridCols} sx={{ aspectRatio: '1/1', overflow: 'hidden' }}>
+              <Grid key={item.fileName} xs={12 / gridCols} sx={{ aspectRatio: '4/5', overflow: 'hidden' }}>
                 <CommonListItemCard
                   active={activeFilePath ? pathConvert(activeFilePath) === pathConvert(item.filePath) : false}
                   item={item}
@@ -284,7 +284,7 @@ const CommonList = (
                     height={height}
                     width={width}
                     rowCount={Math.ceil(listData.length / gridCols)}
-                    rowHeight={width / gridCols}
+                    rowHeight={width / gridCols / 4 * 5}
                     rowRenderer={gridRenderer}
                     scrollToAlignment={'center'}
                     style={{
