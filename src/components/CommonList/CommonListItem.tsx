@@ -109,7 +109,7 @@ const CommonListItem = ({
                 day: 'numeric',
                 hour: 'numeric',
                 minute: 'numeric',
-              })} | `
+              })} • `
               : ''}${sizeConvert(item.fileSize)}`}
           primaryTypographyProps={{
             style: {

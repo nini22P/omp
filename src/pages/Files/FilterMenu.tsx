@@ -20,11 +20,13 @@ const FilterMenu = () => {
     orderBy,
     foldersFirst,
     mediaOnly,
+    hdThumbnails,
     updateDisplay,
     updateSortBy,
     updateOrderBy,
     updateFoldersFirst,
     updateMediaOnly,
+    updateHDThumbnails
   ] = useUiStore(
     (state) => [
       state.display,
@@ -32,11 +34,13 @@ const FilterMenu = () => {
       state.orderBy,
       state.foldersFirst,
       state.mediaOnly,
+      state.hdThumbnails,
       state.updateDisplay,
       state.updateSortBy,
       state.updateOrderBy,
       state.updateFoldersFirst,
       state.updateMediaOnly,
+      state.updateHDThumbnails,
     ]
   )
 
@@ -108,6 +112,7 @@ const FilterMenu = () => {
         >
           <FormControlLabel control={<Checkbox checked={foldersFirst} />} label={t('files.foldersFirst')} onChange={() => updateFoldersFirst(!foldersFirst)} />
           <FormControlLabel control={<Checkbox checked={mediaOnly} />} label={t('files.mediaOnly')} onChange={() => updateMediaOnly(!mediaOnly)} />
+          <FormControlLabel control={<Checkbox checked={hdThumbnails} />} label={t('files.hdThumbnails')} onChange={() => updateHDThumbnails(!hdThumbnails)} />
         </FormGroup>
 
       </Menu>

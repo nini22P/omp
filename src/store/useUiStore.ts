@@ -22,6 +22,7 @@ const useUiStore = createWithEqualityFn<UiStatus & UiAction>()(
       orderBy: 'asc',
       foldersFirst: true,
       mediaOnly: true,
+      hdThumbnails: false,
       updateFolderTree: (folderTree) => set(() => ({ folderTree: folderTree })),
       updateAudioViewIsShow: (audioViewIsShow) => set(() => ({ audioViewIsShow: audioViewIsShow })),
       updateVideoViewIsShow: (videoViewIsShow) => set(() => ({ videoViewIsShow: videoViewIsShow })),
@@ -38,6 +39,7 @@ const useUiStore = createWithEqualityFn<UiStatus & UiAction>()(
       updateOrderBy: (orderBy) => set(() => ({ orderBy: orderBy })),
       updateFoldersFirst: (foldersFirst) => set(() => ({ foldersFirst: foldersFirst })),
       updateMediaOnly: (mediaOnly) => set(() => ({ mediaOnly: mediaOnly })),
+      updateHDThumbnails: (hdThumbnails) => set(() => ({ hdThumbnails: hdThumbnails })),
     }),
     {
       name: 'ui-store',

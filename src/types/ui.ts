@@ -15,6 +15,7 @@ export interface UiStatus {
   orderBy: 'asc' | 'desc';
   foldersFirst: boolean;
   mediaOnly: boolean;
+  hdThumbnails: boolean;
 }
 
 export interface UiAction {
@@ -34,4 +35,5 @@ export interface UiAction {
   updateOrderBy: (orderBy: UiStatus['orderBy']) => void;
   updateFoldersFirst: (foldersFirst: UiStatus['foldersFirst']) => void;
   updateMediaOnly: (mediaOnly: UiStatus['mediaOnly']) => void;
+  updateHDThumbnails: (hdThumbnails: UiStatus['hdThumbnails']) => void;
 }
