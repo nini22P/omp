@@ -5,6 +5,7 @@ import { useTranslation } from 'react-i18next'
 import Grid from '@mui/material/Unstable_Grid2/Grid2'
 import useTheme from '@/hooks/ui/useTheme'
 import useUtils from '@/hooks/useUtils'
+import { sizeConvert } from '@/utils'
 
 const CommonListItemCard = ({
   item,
@@ -29,7 +30,7 @@ const CommonListItemCard = ({
       sx={{ width: '100%', height: '100%', padding: '0.5rem' }}
       onClick={() => handleClickItem(item)}
     >
-      <Grid container sx={{ flexDirection: 'column', flexWrap: 'nowrap', width: '100%', height: '100%', gap: '0.5rem' }}>
+      <Grid container sx={{ flexDirection: 'column', flexWrap: 'nowrap', width: '100%', height: '100%', gap: '0.25rem' }}>
         <Grid xs={12} sx={{ overflow: 'hidden', width: '100%', flexGrow: 1, borderRadius: '4px', position: 'relative', border: `2px solid ${styles.color.shadow}` }}>
           <Grid container sx={{ justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
             {item.fileType === 'folder' && <FolderOutlined sx={{ width: '50%', height: '50%' }} />}
@@ -52,8 +53,8 @@ const CommonListItemCard = ({
             />
           }
         </Grid>
-        <Grid container xs={12} sx={{ width: '100%', justifyContent: 'space-between', alignItems: 'center' }}>
-          <Grid container sx={{ justifyContent: 'center', alignItems: 'center', width: '34px', height: '34px' }} >
+        <Grid container xs={12} sx={{ width: '100%', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem' }}>
+          <Grid container sx={{ justifyContent: 'center', alignItems: 'center', width: '24px', height: '24px' }} >
             {item.fileType === 'folder' && <FolderOutlined />}
             {item.fileType === 'audio' && <MusicNote />}
             {item.fileType === 'video' && <Movie />}
@@ -61,7 +62,8 @@ const CommonListItemCard = ({
             {item.fileType === 'other' && <InsertDriveFileOutlined />}
           </Grid>
           <Grid container xs sx={{ justifyContent: 'center', alignItems: 'center' }} >
-            <span style={{ display: 'block', width: '100%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', fontSize: 'small' }}>{item.fileName}</span>
+            <span style={{ display: 'block', width: '100%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', fontSize: 'smaller', lineHeight: '1.5' }}>{item.fileName}</span>
+            <span style={{ display: 'block', width: '100%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', fontSize: 'x-small', fontWeight: 'lighter' }}>{sizeConvert(item.fileSize)}</span>
           </Grid>
           <Grid xs='auto'>
             {
@@ -70,6 +72,7 @@ const CommonListItemCard = ({
               <IconButton
                 aria-label={t('common.more')}
                 size='small'
+                sx={{ padding: 0 }}
                 onClick={(event) => {
                   event.stopPropagation()
                   handleClickMenu(event,
