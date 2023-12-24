@@ -37,7 +37,7 @@ export async function getFiles(path: string, accessToken: string) {
     headers: headers
   }
 
-  return fetch(`${graphConfig.graphMeEndpoint}/me/drive/root:/${encodeURI(path)}:/children?$top=2147483647&expand=thumbnails`, options)
+  return fetch(`${graphConfig.graphMeEndpoint}/me/drive/root:/${encodeURIComponent(path)}:/children?$top=2147483647&expand=thumbnails`, options)
     .then(response => response.json())
     .catch(error => console.log(error))
 }
@@ -59,7 +59,7 @@ export async function getFile(path: string, accessToken: string) {
     headers: headers
   }
 
-  return fetch(`${graphConfig.graphMeEndpoint}/me/drive/root:/${encodeURI(path)}`, options)
+  return fetch(`${graphConfig.graphMeEndpoint}/me/drive/root:/${encodeURIComponent(path)}`, options)
     .then(response => response.json())
     .catch(error => console.log(error))
 }
@@ -97,7 +97,7 @@ export const getAppRootFiles = async (path: string, accessToken: string) => {
     headers: headers
   }
 
-  return fetch(`${graphConfig.graphMeEndpoint}/me/drive/special/approot/${encodeURI(path)}/children`, options)
+  return fetch(`${graphConfig.graphMeEndpoint}/me/drive/special/approot/${encodeURIComponent(path)}/children`, options)
     .then(response => response.json())
     .catch(error => console.log(error))
 }
