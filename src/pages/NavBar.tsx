@@ -3,11 +3,9 @@ import GitHubIcon from '@mui/icons-material/GitHub'
 import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined'
 import { shallow } from 'zustand/shallow'
 import useUiStore from '../store/useUiStore'
-import useTheme from '../hooks/ui/useTheme'
 import { AccountInfo } from '@azure/msal-browser'
 
 const NavBar = ({ accounts }: { accounts: AccountInfo[] }) => {
-  const { styles } = useTheme()
   const [mobileSideBarOpen, updateMobileSideBarOpen] = useUiStore(
     (state) => [state.mobileSideBarOpen, state.updateMobileSideBarOpen],
     shallow
@@ -20,7 +18,6 @@ const NavBar = ({ accounts }: { accounts: AccountInfo[] }) => {
         top: 0,
         left: 0,
         width: '100%',
-        boxShadow: `0px 2px 2px -1px ${styles.color.shadow}`,
       }}
       className='app-region-drag'
     >

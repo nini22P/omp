@@ -6,7 +6,6 @@ import usePlayQueueStore from '@/store/usePlayQueueStore'
 import useMediaSession from '@/hooks/player/useMediaSession'
 import usePlayerCore from '@/hooks/player/usePlayerCore'
 import usePlayerControl from '@/hooks/player/usePlayerControl'
-import useTheme from '@/hooks/ui/useTheme'
 import useControlHide from '@/hooks/ui/useControlHide'
 import VideoPlayer from './VideoPlayer'
 import Audio from './Audio/Audio'
@@ -14,8 +13,6 @@ import PlayerControl from './PlayerControl'
 import PlayQueue from './PlayQueue'
 
 const Player = () => {
-
-  const { styles } = useTheme()
 
   const [
     currentMetaData,
@@ -79,18 +76,15 @@ const Player = () => {
   return (
     <div>
       <VideoPlayer url={url} onEnded={onEnded} ref={playerRef} />
-      <Box
-        sx={{ position: 'fixed', bottom: '0', width: '100%', boxShadow: `0px -2px 2px -1px ${styles.color.shadow}` }}
-      // style={(videoViewIsShow) ? { backgroundColor: '#ffffffee' } : { backgroundColor: '#ffffff' }}
-      >
+      <Box sx={{ position: 'fixed', bottom: '0', width: '100%', zIndex: 10 }}>
         <Container maxWidth={false} disableGutters={true}>
-          <Box sx={(controlIsShow) ? {} : { display: 'none' }}>
+          <Box sx={(controlIsShow) ? { padding: '0 0.5rem 0.5rem 0.5rem', display: 'block' } : { display: 'none' }}>
             <PlayerControl player={player} />
           </Box>
           <Audio player={player} />
           <PlayQueue />
         </Container>
-      </Box >
+      </Box>
     </div>
   )
 }

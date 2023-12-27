@@ -1,5 +1,5 @@
 import { useTranslation } from 'react-i18next'
-import { Box, Divider, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
+import { Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import { NavLink } from 'react-router-dom'
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined'
 import HistoryOutlinedIcon from '@mui/icons-material/HistoryOutlined'
@@ -7,12 +7,12 @@ import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
 import { shallow } from 'zustand/shallow'
 import useUiStore from '../../store/useUiStore'
 import Playlists from './Playlists'
-import useTheme from '../../hooks/ui/useTheme'
+import useStyles from '@/hooks/ui/useStyles'
 
 const SideBar = () => {
 
   const { t } = useTranslation()
-  const { styles } = useTheme()
+  const styles = useStyles()
 
   const [mobileSideBarOpen, updateMobileSideBarOpen] = useUiStore(
     (state) => [state.mobileSideBarOpen, state.updateMobileSideBarOpen],
@@ -32,7 +32,7 @@ const SideBar = () => {
       height: '100%',
       overflow: 'auto',
     }}>
-      <List>
+      <List sx={{ padding: 0 }}>
         {navData.map((item, index) =>
           <ListItem
             disablePadding
@@ -53,7 +53,6 @@ const SideBar = () => {
         )
         }
       </List>
-      <Divider />
       <Playlists closeSideBar={closeSideBar} />
     </Box>
   )

@@ -86,10 +86,7 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
   }
 
   return (
-    <Paper
-      elevation={0}
-      square={true}
-    >
+    <Paper>
       <Container maxWidth={'xl'} disableGutters={true}>
         <Grid container
           sx={{ justifyContent: 'space-between', alignItems: 'center', textAlign: 'center', }}

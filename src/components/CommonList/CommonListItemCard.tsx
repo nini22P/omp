@@ -3,9 +3,9 @@ import { File } from '@/types/file'
 import { FolderOutlined, InsertDriveFileOutlined, InsertPhotoOutlined, MoreVertOutlined, Movie, MusicNote } from '@mui/icons-material'
 import { useTranslation } from 'react-i18next'
 import Grid from '@mui/material/Unstable_Grid2/Grid2'
-import useTheme from '@/hooks/ui/useTheme'
 import useUtils from '@/hooks/useUtils'
 import { sizeConvert } from '@/utils'
+import useStyles from '@/hooks/ui/useStyles'
 
 const CommonListItemCard = ({
   item,
@@ -19,7 +19,7 @@ const CommonListItemCard = ({
   handleClickMenu: (event: React.MouseEvent<HTMLElement>, currentFile: File) => void,
 }) => {
 
-  const { styles } = useTheme()
+  const styles = useStyles()
   const { t } = useTranslation()
   const { getThumbnailUrl } = useUtils()
 

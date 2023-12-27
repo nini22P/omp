@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { useNavigate, useParams } from 'react-router-dom'
-import { Button, ListItemText, Typography, Dialog, DialogTitle, DialogActions, Menu, MenuItem, DialogContent, TextField, Box } from '@mui/material'
+import { Button, ListItemText, Typography, Dialog, DialogTitle, DialogActions, Menu, MenuItem, DialogContent, TextField, Box, useTheme } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import usePlaylistsStore from '../../store/usePlaylistsStore'
 import CommonList from '../../components/CommonList/CommonList'
@@ -13,6 +13,7 @@ const Playlist = () => {
   const { t } = useTranslation()
   const navigate = useNavigate()
   const { id } = useParams()
+  const theme = useTheme()
 
   const [playlists, renamePlaylist, removePlaylist, removeFilesFromPlaylist] = usePlaylistsStore(
     (state) => [state.playlists, state.renamePlaylist, state.removePlaylist, state.removeFilesFromPlaylist])
@@ -81,7 +82,8 @@ const Playlist = () => {
               <Grid xs={12} container
                 sx={{
                   padding: '4rem 2rem 2rem 2rem',
-                  background: 'linear-gradient(0deg, rgb(255 255 255), rgb(255 255 255 / 60%)),rgb(255 255 255 / 0%)'
+                  background: `linear-gradient(0deg, ${theme.palette.background.default}ff, ${theme.palette.background.default}99,${theme.palette.background.default}00)`,
+                  zIndex: 1,
                 }}
               >
                 <Grid xs={12}>
@@ -101,7 +103,7 @@ const Playlist = () => {
                 </Grid>
               </Grid>
 
-              <Box sx={{ position: 'absolute', height: '100%', width: '100%', zIndex: -1 }}>
+              <Box sx={{ position: 'absolute', height: '100%', width: '100%' }}>
                 {
                   metaDataList[0] && metaDataList[0].cover && 'data' in metaDataList[0].cover[0].data &&
                   <img

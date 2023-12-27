@@ -5,12 +5,12 @@ import { List, ListItem, ListItemText, ListItemIcon, ListItemButton, Button } fr
 import ListOutlinedIcon from '@mui/icons-material/ListOutlined'
 import PlaylistAddOutlinedIcon from '@mui/icons-material/PlaylistAddOutlined'
 import usePlaylistsStore from '../../store/usePlaylistsStore'
-import useTheme from '../../hooks/ui/useTheme'
+import useStyles from '@/hooks/ui/useStyles'
 
 const Playlists = ({ closeSideBar }: { closeSideBar: () => void }) => {
 
   const { t } = useTranslation()
-  const { styles } = useTheme()
+  const styles = useStyles()
   const navigate = useNavigate()
   const [playlists, insertPlaylist] = usePlaylistsStore((state) => [state.playlists, state.insertPlaylist])
 

@@ -310,7 +310,7 @@ const CommonList = (
       {
         canShuffle &&
         <Fab
-          sx={{ position: 'absolute', bottom: '4rem', right: '4rem' }}
+          sx={{ position: 'absolute', bottom: '3rem', right: '4rem' }}
           onClick={() => handleClickShuffleAll()}
         >
           <ShuffleOutlined />

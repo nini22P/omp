@@ -1,10 +1,10 @@
-import useTheme from '@/hooks/ui/useTheme'
+import useStyles from '@/hooks/ui/useStyles'
 import { File } from '@/types/file'
 import { Paper } from '@mui/material'
 
 const PictureListItem = ({ picture, isCurrent }: { picture: File, isCurrent: boolean }) => {
 
-  const { styles } = useTheme()
+  const styles = useStyles()
 
   return (
     <Paper

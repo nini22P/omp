@@ -1,4 +1,3 @@
-import useTheme from '@/hooks/ui/useTheme'
 import { File } from '@/types/file'
 import { sizeConvert } from '@/utils'
 import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined'
@@ -9,6 +8,7 @@ import MovieIcon from '@mui/icons-material/Movie'
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined'
 import { ListItem, IconButton, ListItemButton, ListItemAvatar, Avatar, ListItemText, ListItemIcon } from '@mui/material'
 import { useTranslation } from 'react-i18next'
+import useStyles from '@/hooks/ui/useStyles'
 
 const CommonListItem = ({
   item,
@@ -22,7 +22,7 @@ const CommonListItem = ({
   handleClickMenu: (event: React.MouseEvent<HTMLElement>, currentFile: File) => void,
 }) => {
 
-  const { styles } = useTheme()
+  const styles = useStyles()
   const { t } = useTranslation()
 
   return (

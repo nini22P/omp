@@ -4,11 +4,11 @@ import KeyboardArrowRightOutlinedIcon from '@mui/icons-material/KeyboardArrowRig
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import useUiStore from '@/store/useUiStore'
 import CommonList from '@/components/CommonList/CommonList'
-import useTheme from '@/hooks/ui/useTheme'
+import useStyles from '@/hooks/ui/useStyles'
 
 const PlayQueue = () => {
 
-  const { styles } = useTheme()
+  const styles = useStyles()
 
   const [
     currentIndex,

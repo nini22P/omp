@@ -1,41 +1,27 @@
 import { Avatar, Button, Divider, List, ListItem, ListItemAvatar, ListItemButton, ListItemText } from '@mui/material'
 import useUser from '../hooks/graph/useUser'
 import { useTranslation } from 'react-i18next'
-import useTheme from '../hooks/ui/useTheme'
 import { licenses } from '../data/licenses'
 import { useState } from 'react'
 import useLocalMetaDataStore from '../store/useLocalMetaDataStore'
+import useStyles from '@/hooks/ui/useStyles'
 
 const Setting = () => {
   const { accounts, logout } = useUser()
   const { t } = useTranslation()
-  const { styles } = useTheme()
+  const styles = useStyles()
 
-  const { getAllLocalMetaData, clearLocalMetaData } = useLocalMetaDataStore()
+  const { clearLocalMetaData } = useLocalMetaDataStore()
 
   const [localMetaDataSize, setLocalMetaDataSize] = useState<string | null>(null)
   const [localMetaDataButton, setLocalMetaDataButton] = useState<'calculate' | 'clear'>('calculate')
 
-  const getLocalMetaDataSize = async () => {
-    const allLocalMetaData = await getAllLocalMetaData()
-    if (allLocalMetaData) {
-      const blob = new Blob([JSON.stringify(allLocalMetaData)], { type: 'application/json' })
-      return (blob.size / 1024 / 1024).toFixed(2)
-    }
-  }
-
-  const handleLocalMetaDataButton = async () => {
-    if (localMetaDataButton === 'calculate') {
-      const size = await getLocalMetaDataSize()
-      setLocalMetaDataSize(size || null)
-      setLocalMetaDataButton('clear')
-    }
+  const handleClickClearLocalMetaData = () => {
     if (localMetaDataButton === 'clear') {
       clearLocalMetaData()
       setLocalMetaDataSize(null)
       setLocalMetaDataButton('calculate')
     }
-
   }
 
   return (
@@ -65,8 +51,8 @@ const Setting = () => {
       </ListItem>
       <ListItem
         secondaryAction={
-          <Button onClick={() => handleLocalMetaDataButton()}>
-            {localMetaDataButton === 'calculate' ? t('common.calculate') : t('common.clear')}
+          <Button onClick={() => handleClickClearLocalMetaData()}>
+            {t('common.clear')}
           </Button>
         }
       >

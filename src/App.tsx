@@ -1,6 +1,6 @@
 import { AuthenticatedTemplate, UnauthenticatedTemplate } from '@azure/msal-react'
 import { Outlet } from 'react-router-dom'
-import { Container, Divider, ThemeProvider, Box } from '@mui/material'
+import { Container, ThemeProvider, Box, Paper } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import NavBar from './pages/NavBar'
 import Player from './pages/Player/Player'
@@ -13,37 +13,39 @@ import useThemeColor from './hooks/ui/useThemeColor'
 import SignIn from './pages/SignIn'
 
 const App = () => {
-  const { theme } = useTheme()
+  const theme = useTheme()
   const { accounts } = useUser()
   useSync(accounts)
   useThemeColor()
 
   return (
     <ThemeProvider theme={theme}>
-      <NavBar accounts={accounts} />
-
-      <AuthenticatedTemplate>
-        <Box sx={{ position: 'absolute', height: 'calc(100dvh - 6rem - env(titlebar-area-height, 3rem))', width: '100%', top: 'env(titlebar-area-height, 3rem)', }}>
-          <Container maxWidth="xl" disableGutters={true} sx={{ height: '100%' }}>
-            <MobileSideBar />
-            <Grid container pt={'2px'} flexDirection={'row'} height={'100%'}  >
-              <Grid xs={0} sm={3} lg={2} height={'100%'} sx={{ overflowY: 'auto', display: { xs: 'none', sm: 'block' }, }} pb={1} borderRight={`1px solid ${theme.palette.divider}`} borderLeft={`1px solid ${theme.palette.divider}`} >
-                <SideBar />
-                <Divider orientation="vertical" flexItem />
+      <Box sx={{ width: '100vw', height: '100dvh', background: theme.palette.background.default }}>
+        <NavBar accounts={accounts} />
+        <AuthenticatedTemplate>
+          <Box sx={{ position: 'absolute', height: 'calc(100dvh - 6.5rem - env(titlebar-area-height, 3rem))', width: '100%', top: 'env(titlebar-area-height, 3rem)', }}>
+            <Container maxWidth="xl" disableGutters={true} sx={{ height: '100%' }}>
+              <MobileSideBar />
+              <Grid container sx={{ flexDirection: 'row', height: '100%', paddingTop: '0.25rem' }}>
+                <Grid xs={0} sm={3} lg={2} height={'100%'} sx={{ overflowY: 'auto', display: { xs: 'none', sm: 'block' }, }} pb={1} >
+                  <SideBar />
+                </Grid>
+                <Grid xs={12} sm={9} lg={10} height={'100%'} sx={{ padding: '0 0.5rem 0.5rem 0.5rem' }}>
+                  <Paper sx={{ width: '100%', height: '100%', overflowY: 'auto' }}>
+                    <Outlet />
+                  </Paper>
+                </Grid>
               </Grid>
-              <Grid xs={12} sm={9} lg={10} height={'100%'} sx={{ overflowY: 'auto' }} borderRight={`1px solid ${theme.palette.divider}`} >
-                <Outlet />
-              </Grid>
-            </Grid>
-          </Container>
-        </Box>
-        <Player />
-      </AuthenticatedTemplate>
+            </Container>
+          </Box>
+          <Player />
+        </AuthenticatedTemplate>
 
-      <UnauthenticatedTemplate>
-        <SignIn />
-      </UnauthenticatedTemplate>
+        <UnauthenticatedTemplate>
+          <SignIn />
+        </UnauthenticatedTemplate>
 
+      </Box>
     </ThemeProvider>
   )
 }
