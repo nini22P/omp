@@ -84,6 +84,7 @@ const Playlist = () => {
                   padding: '4rem 2rem 2rem 2rem',
                   background: `linear-gradient(0deg, ${theme.palette.background.default}ff, ${theme.palette.background.default}99,${theme.palette.background.default}00)`,
                   zIndex: 1,
+                  gap: '0.25rem',
                 }}
               >
                 <Grid xs={12}>

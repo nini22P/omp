@@ -20,8 +20,7 @@ const useThemeColor = () => {
         }
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [audioViewIsShow, videoViewIsShow]
+    [audioViewIsShow, theme.palette.background.default, videoViewIsShow]
   )
 }
 
