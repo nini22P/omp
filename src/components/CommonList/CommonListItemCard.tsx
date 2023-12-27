@@ -73,6 +73,9 @@ const CommonListItemCard = ({
                 aria-label={t('common.more')}
                 size='small'
                 sx={{ padding: 0 }}
+                onMouseDown={(event) => event.stopPropagation()}
+                onTouchStart={(event) => event.stopPropagation()}
+                onKeyDown={(event) => event.stopPropagation()}
                 onClick={(event) => {
                   event.stopPropagation()
                   handleClickMenu(event,

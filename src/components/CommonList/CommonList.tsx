@@ -9,10 +9,10 @@ import CommonMenu from './CommonMenu'
 import { PlayQueueItem } from '../../types/playQueue'
 import { File } from '../../types/file'
 import CommonListItem from './CommonListItem'
-import ShuffleAll from './ShuffleAll'
-import { Box, useMediaQuery, useTheme } from '@mui/material'
+import { Box, Fab, useMediaQuery, useTheme } from '@mui/material'
 import { AutoSizer, List } from 'react-virtualized'
 import CommonListItemCard from './CommonListItemCard'
+import { ShuffleOutlined } from '@mui/icons-material'
 
 const CommonList = (
   {
@@ -235,39 +235,15 @@ const CommonList = (
     []
   )
 
+  const canShuffle = listData && listData.length !== 0 && listData.find((item) => item.fileType === 'audio') && !isPlayQueueView
+
   return (
     listData
     &&
-    <Box sx={{
-      height: '100%',
-      width: '100%',
-    }}>
-      {/* 菜单 */}
-      <CommonMenu
-        anchorEl={anchorEl}
-        menuOpen={menuOpen}
-        dialogOpen={dialogOpen}
-        currentFile={currentFile}
-        setAnchorEl={setAnchorEl}
-        setMenuOpen={setMenuOpen}
-        setDialogOpen={setDialogOpen}
-        handleClickRemove={func?.handleClickRemove}
-        isPlayQueueView={isPlayQueueView}
-      />
+    <Box sx={{ height: '100%', width: '100%' }}>
 
       {/* 文件列表 */}
       <Grid container sx={{ flexDirection: 'column', flexWrap: 'nowrap', height: '100%' }}>
-        {
-          (
-            listData.length !== 0
-            && listData.find((item) => item.fileType === 'audio')
-            && !isPlayQueueView
-          )
-          &&
-          <Grid xs={12}>
-            <ShuffleAll handleClickShuffleAll={handleClickShuffleAll} />
-          </Grid>
-        }
         <Grid xs={12}
           sx={{
             flexGrow: 1,
@@ -300,7 +276,6 @@ const CommonList = (
             <AutoSizer onResize={() => updateListRowHeight()}>
               {
                 ({ height, width }) =>
-
                   <List
                     ref={(ref => (listRef.current = ref))}
                     height={height}
@@ -318,6 +293,30 @@ const CommonList = (
           }
         </Grid>
       </Grid>
+
+      {/* 菜单 */}
+      <CommonMenu
+        anchorEl={anchorEl}
+        menuOpen={menuOpen}
+        dialogOpen={dialogOpen}
+        currentFile={currentFile}
+        setAnchorEl={setAnchorEl}
+        setMenuOpen={setMenuOpen}
+        setDialogOpen={setDialogOpen}
+        handleClickRemove={func?.handleClickRemove}
+        isPlayQueueView={isPlayQueueView}
+      />
+
+      {
+        canShuffle &&
+        <Fab
+          sx={{ position: 'absolute', bottom: '4rem', right: '4rem' }}
+          onClick={() => handleClickShuffleAll()}
+        >
+          <ShuffleOutlined />
+        </Fab>
+      }
+
     </Box>
   )
 }
