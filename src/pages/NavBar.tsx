@@ -29,8 +29,8 @@ const NavBar = ({ accounts }: { accounts: AccountInfo[] }) => {
             alignItems: 'center',
             left: 'env(titlebar-area-x, 0)',
             height: 'env(titlebar-area-height, 3rem)',
-            pl: 1,
-            pr: 1
+            pl: 2,
+            pr: 2,
           }}>
           <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} >
             {

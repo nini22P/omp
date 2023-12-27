@@ -19,6 +19,7 @@
   },
   "playlist": {
     "newPlaylist": "新播放列表",
+    "playAll": "全部播放",
     "shuffleAll": "全部随机播放",
     "addPlaylist": "新建播放列表",
     "addToPlaylist": "添加到播放列表",

@@ -19,6 +19,7 @@
   },
   "playlist": {
     "newPlaylist": "New Playlist",
+    "playAll": "Play all",
     "shuffleAll": "Shuffle all",
     "addPlaylist": "Add playlist",
     "addToPlaylist": "Add to playlist",

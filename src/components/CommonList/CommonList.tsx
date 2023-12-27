@@ -12,7 +12,8 @@ import CommonListItem from './CommonListItem'
 import { Box, Fab, useMediaQuery, useTheme } from '@mui/material'
 import { AutoSizer, List } from 'react-virtualized'
 import CommonListItemCard from './CommonListItemCard'
-import { ShuffleOutlined } from '@mui/icons-material'
+import { PlayArrowOutlined, ShuffleOutlined } from '@mui/icons-material'
+import { useTranslation } from 'react-i18next'
 
 const CommonList = (
   {
@@ -31,6 +32,7 @@ const CommonList = (
     },
   }) => {
 
+  const { t } = useTranslation()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [menuOpen, setMenuOpen] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -116,11 +118,18 @@ const CommonList = (
     updateCurrentIndex(index)
   }
 
+  const handleClickPlayAll = () => {
+    if (listData) {
+      const list = listData.filter((item) => checkFileType(item.fileName) === 'audio')
+      handleClickItem(list[0])
+    }
+  }
+
   // 点击随机播放全部
   const handleClickShuffleAll = () => {
     if (listData) {
       const list = listData
-        .filter((item) => checkFileType(item.fileName) === 'audio')
+        .filter((item) => item.fileType === 'audio')
         .map((item, index) => { return { index, ...item } })
       if (!shuffle)
         updateShuffle(true)
@@ -263,6 +272,9 @@ const CommonList = (
                     rowHeight={width / gridCols / 4 * 5}
                     rowRenderer={gridRenderer}
                     scrollToAlignment={'center'}
+                    style={{
+                      paddingBottom: '6rem'
+                    }}
                   />
               }
             </AutoSizer>
@@ -281,6 +293,9 @@ const CommonList = (
                     rowHeight={72}
                     rowRenderer={rowRenderer}
                     scrollToAlignment={'center'}
+                    style={{
+                      paddingBottom: '6rem'
+                    }}
                   />
               }
             </AutoSizer>
@@ -303,12 +318,28 @@ const CommonList = (
 
       {
         canShuffle &&
-        <Fab
-          sx={{ position: 'absolute', bottom: '3rem', right: '4rem', zIndex: 1 }}
-          onClick={() => handleClickShuffleAll()}
+        <Box
+          sx={{
+            position: 'absolute',
+            bottom: '2rem',
+            right: '4rem',
+            zIndex: 1,
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '0.5rem',
+          }}
         >
-          <ShuffleOutlined />
-        </Fab>
+          <Fab size='small' onClick={() => handleClickShuffleAll()}>
+            <ShuffleOutlined />
+          </Fab>
+          <Fab variant='extended' color='primary' onClick={() => handleClickPlayAll()}>
+            <PlayArrowOutlined />
+            {t('playlist.playAll')}
+          </Fab>
+        </Box>
+
       }
 
     </Box>
