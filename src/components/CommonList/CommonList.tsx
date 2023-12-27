@@ -263,9 +263,6 @@ const CommonList = (
                     rowHeight={width / gridCols / 4 * 5}
                     rowRenderer={gridRenderer}
                     scrollToAlignment={'center'}
-                    style={{
-                      paddingBottom: '0.5rem',
-                    }}
                   />
               }
             </AutoSizer>
@@ -284,9 +281,6 @@ const CommonList = (
                     rowHeight={72}
                     rowRenderer={rowRenderer}
                     scrollToAlignment={'center'}
-                    style={{
-                      paddingBottom: '1rem',
-                    }}
                   />
               }
             </AutoSizer>

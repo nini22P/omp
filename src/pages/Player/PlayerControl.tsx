@@ -86,7 +86,7 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
   }
 
   return (
-    <Paper>
+    <Paper sx={{ borderRadius: '0.5rem' }}>
       <Container maxWidth={'xl'} disableGutters={true}>
         <Grid container
           sx={{ justifyContent: 'space-between', alignItems: 'center', textAlign: 'center', }}
@@ -118,6 +118,7 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
                 max={1000}
                 value={(!duration) ? 0 : currentTime / duration * 1000}
                 onChange={(_, current) => handleTimeRangeonChange(current)}
+                sx={{ padding: '13px 0 !important', }}
               />
             </Grid>
             <Grid
@@ -147,7 +148,7 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
                   wrap={'nowrap'} >
                   {(type === 'audio') &&
                     <Grid xs="auto" textAlign={'center'} width={'4rem'} height={'4rem'}>
-                      <img src={cover} alt='Cover' style={{ width: '4rem', height: '4rem', objectFit: 'cover', borderRadius: '0 0 0 4px' }} />
+                      <img src={cover} alt='Cover' style={{ width: '4rem', height: '4rem', objectFit: 'cover', borderRadius: '0 0 0 0.5rem' }} />
                     </Grid>}
                   <Grid xs sx={{ pl: 1 }} minWidth={0}>
                     <Typography variant="body1" component="div" noWrap>

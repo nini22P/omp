@@ -45,7 +45,7 @@ const PlayQueue = () => {
           // paddingTop: 'env(titlebar-area-height, 0)',
           marginTop: 'calc(env(titlebar-area-height, 0) + 1px)',
           boxShadow: `-5px 5px 10px 0px ${styles.color.shadow}`,
-          borderRadius: '10px 0 0 10px',
+          borderRadius: '0.5rem 0 0 0.5rem',
           height: '-webkit-fill-available',
           borderLeft: `${styles.color.shadow} solid 1px`,
         },

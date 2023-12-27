@@ -8,6 +8,7 @@ import { shallow } from 'zustand/shallow'
 import useUiStore from '../../store/useUiStore'
 import Playlists from './Playlists'
 import useStyles from '@/hooks/ui/useStyles'
+import { useRef } from 'react'
 
 const SideBar = () => {
 
@@ -27,11 +28,34 @@ const SideBar = () => {
 
   const closeSideBar = () => (mobileSideBarOpen) && updateMobileSideBarOpen(false)
 
+  const boxRef = useRef<HTMLDivElement | null>(null)
+
+  const handleTouchStart = () => {
+    const element = boxRef.current
+    element && element.classList.add('show-scrollbar')
+  }
+
+  const handleTouchEnd = () => {
+    const element = boxRef.current
+    element && element.classList.remove('show-scrollbar')
+  }
+
   return (
-    <Box sx={{
-      height: '100%',
-      overflow: 'auto',
-    }}>
+    <Box
+      sx={{
+        height: '100%',
+        overflow: 'auto',
+        '&::-webkit-scrollbar-thumb': {
+          visibility: 'hidden',
+        },
+        '&:hover::-webkit-scrollbar-thumb': {
+          visibility: 'visible',
+        },
+      }}
+      ref={boxRef}
+      onTouchStart={() => handleTouchStart()}
+      onTouchEnd={() => handleTouchEnd()}
+    >
       <List sx={{ padding: 0 }}>
         {navData.map((item, index) =>
           <ListItem

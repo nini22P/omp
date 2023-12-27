@@ -112,7 +112,11 @@ const FilterMenu = () => {
         >
           <FormControlLabel control={<Checkbox checked={foldersFirst} />} label={t('files.foldersFirst')} onChange={() => updateFoldersFirst(!foldersFirst)} />
           <FormControlLabel control={<Checkbox checked={mediaOnly} />} label={t('files.mediaOnly')} onChange={() => updateMediaOnly(!mediaOnly)} />
-          <FormControlLabel control={<Checkbox checked={hdThumbnails} />} label={t('files.hdThumbnails')} onChange={() => updateHDThumbnails(!hdThumbnails)} />
+          {
+            display === 'grid' &&
+            <FormControlLabel control={<Checkbox checked={hdThumbnails} />} label={t('files.hdThumbnails')} onChange={() => updateHDThumbnails(!hdThumbnails)} />
+          }
+
         </FormGroup>
 
       </Menu>

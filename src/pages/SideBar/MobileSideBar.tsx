@@ -30,7 +30,7 @@ const MobileSideBar = () => {
           // paddingTop: 'env(titlebar-area-height, 0)',
           marginTop: 'calc(env(titlebar-area-height, 0) + 1px)',
           boxShadow: `5px 5px 10px 0px ${styles.color.shadow}`,
-          borderRadius: '0 10px 10px 0',
+          borderRadius: '0 0.5rem 0.5rem 0',
           height: '-webkit-fill-available',
           borderRight: `${styles.color.shadow} solid 1px`,
         },
