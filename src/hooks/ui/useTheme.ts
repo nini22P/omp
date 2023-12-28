@@ -39,14 +39,13 @@ const useTheme = () => {
             bottom: '0.25rem',
             height: 'auto',
             border: `${prefersDarkMode ? '#f7f7f722' : '#3b3b3b22'} solid 1px`,
+            boxShadow: `0px 5px 5px -3px ${prefersDarkMode ? '#f7f7f733' : '#3b3b3b33'}, 0px 8px 10px 1px ${prefersDarkMode ? '#f7f7f722' : '#3b3b3b22'}, 0px 3px 14px 2px ${prefersDarkMode ? '#f7f7f720' : '#3b3b3b20'}`,
           },
           paperAnchorLeft: {
             left: '0.25rem',
-            boxShadow: `5px 5px 10px 0px ${prefersDarkMode ? '#f7f7f722' : '#3b3b3b22'}`,
           },
           paperAnchorRight: {
             right: '0.25rem',
-            boxShadow: `-5px 5px 10px 0px ${prefersDarkMode ? '#f7f7f722' : '#3b3b3b22'}`,
           }
         },
       },

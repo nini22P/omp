@@ -38,7 +38,7 @@ const PlayQueue = () => {
       onClose={() => updatePlayQueueIsShow(false)}
       elevation={0}
     >
-      <Grid container wrap='nowrap' height={'100%'} width={{ xs: '100vw', sm: '400px', md: '500px' }}>
+      <Grid container wrap='nowrap' height={'100%'} width={{ xs: 'calc(100vw - 0.5rem)', sm: '400px', md: '500px' }}>
         <Grid height={'100%'} className='app-region-no-drag'>
           <Button sx={{ height: '100%' }} onClick={() => updatePlayQueueIsShow(false)}>
             <KeyboardArrowRightOutlinedIcon />

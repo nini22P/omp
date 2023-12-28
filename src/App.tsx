@@ -26,8 +26,9 @@ const App = () => {
         sx={{
           width: '100vw',
           height: '100dvh',
-          background: `linear-gradient(40deg, ${color}33, ${color}15, ${color}05, ${theme.palette.background.default})`
-        }}>
+          background: `linear-gradient(45deg, ${color}33, ${color}15, ${color}05, ${theme.palette.background.default})`
+        }}
+      >
         <NavBar accounts={accounts} />
         <AuthenticatedTemplate>
           <Box sx={{ position: 'absolute', height: 'calc(100dvh - 6.5rem - env(titlebar-area-height, 3rem))', width: '100%', top: 'env(titlebar-area-height, 3rem)', }}>

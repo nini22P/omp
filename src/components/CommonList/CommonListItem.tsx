@@ -88,7 +88,7 @@ const CommonListItem = ({
                 position: 'absolute',
                 left: 0,
                 top: -6,
-                borderRadius: '0.25rem',
+                borderRadius: '0.5rem',
               }}
               onError={({ currentTarget }) => {
                 currentTarget.onerror = null

@@ -58,7 +58,7 @@ const SideBar = () => {
         {navData.map((item, index) =>
           <ListItem
             key={index}
-            sx={{ padding: '0.25rem 0.25rem 0 0.25rem' }}
+            sx={{ padding: '0 0.25rem 0.25rem 0.25rem' }}
           >
             <ListItemButton
               component={NavLink}

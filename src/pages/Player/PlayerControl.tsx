@@ -22,7 +22,6 @@ import { timeShift } from '@/utils'
 const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
 
   const theme = useTheme()
-  const islight = theme.palette.mode === 'light'
   const [type, playQueue] = usePlayQueueStore((state) => [state.type, state.playQueue])
 
   const [
@@ -145,9 +144,9 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
                 sx={{ height: '4rem', width: '100%', borderRadius: '0.5rem' }}
                 onClick={() => handleClickMediaInfo()}>
                 <Grid xs container sx={{ justifyContent: 'space-between', alignItems: 'center', textAlign: 'left', overflow: 'hidden', flexGrow: 'nowrap' }}>
-                  {
-                    (type === 'audio') &&
-                    <Grid xs="auto" sx={{ width: '4rem', height: '4rem', padding: '0.5rem' }}>
+                  <Grid xs="auto" sx={{ width: '4rem', height: '4rem', padding: '0.5rem' }}>
+                    {
+                      (type === 'audio') &&
                       <img
                         src={cover}
                         alt='Cover'
@@ -156,11 +155,11 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
                           height: '100%',
                           objectFit: 'cover',
                           borderRadius: '0.5rem',
-                          filter: (islight && cover === './cover.webp') ? 'invert(1)' : 'none'
+                          // filter: (theme.palette.mode === 'light' && cover === './cover.webp') ? 'invert(1)' : 'none',
                         }}
                       />
-                    </Grid>
-                  }
+                    }
+                  </Grid>
                   <Grid xs sx={{ pl: 1 }} minWidth={0}>
                     <Typography variant="body1" component="div" noWrap>
                       {(!playQueue || !currentMetaData) ? 'Not playing' : currentMetaData.title}

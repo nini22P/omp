@@ -339,7 +339,6 @@ const CommonList = (
             {t('playlist.playAll')}
           </Fab>
         </Box>
-
       }
 
     </Box>

@@ -30,7 +30,7 @@ const CommonListItemCard = ({
       onClick={() => handleClickItem(item)}
     >
       <Grid container sx={{ flexDirection: 'column', flexWrap: 'nowrap', width: '100%', height: '100%', gap: '0.25rem' }}>
-        <Grid xs={12} sx={{ overflow: 'hidden', width: '100%', flexGrow: 1, borderRadius: '0.25rem', position: 'relative', border: `2px solid ${theme.palette.divider}` }}>
+        <Grid xs={12} sx={{ overflow: 'hidden', width: '100%', flexGrow: 1, borderRadius: '0.5rem', position: 'relative', border: `2px solid ${theme.palette.divider}` }}>
           <Grid container sx={{ justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
             {item.fileType === 'folder' && <FolderOutlined sx={{ width: '50%', height: '50%' }} />}
             {item.fileType === 'audio' && <MusicNote sx={{ width: '50%', height: '50%' }} />}

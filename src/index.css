@@ -8,12 +8,6 @@ html {
   background-color: #f7f7f7;
 }
 
-@media (prefers-color-scheme: dark) {
-  html {
-    background-color: #3b3b3b;
-  }
-}
-
 :root {
   color-scheme: light dark;
   font-synthesis: none;
@@ -72,4 +66,23 @@ a {
 
 .show-scrollbar::-webkit-scrollbar-thumb {
   visibility: visible !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    background-color: #3b3b3b;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #a15db4;
+    border-radius: 16px;
+    border: 4px solid transparent;
+    background-clip: content-box;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #df7ef9;
+    border: 4px solid transparent;
+    background-clip: content-box;
+  }
 }
