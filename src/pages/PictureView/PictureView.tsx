@@ -53,9 +53,6 @@ const PictureView = () => {
           boxShadow: 'none',
           height: '-webkit-fill-available',
         },
-        '& .MuiBackdrop-root': {
-          background: 'transparent',
-        }
       }}
     >
       <Box

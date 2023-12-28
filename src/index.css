@@ -4,6 +4,16 @@
   margin: 0;
 }
 
+html {
+  background-color: #f7f7f7;
+}
+
+@media (prefers-color-scheme: dark) {
+  html {
+    background-color: #3b3b3b;
+  }
+}
+
 :root {
   color-scheme: light dark;
   font-synthesis: none;

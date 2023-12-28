@@ -7,13 +7,11 @@ import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
 import { shallow } from 'zustand/shallow'
 import useUiStore from '../../store/useUiStore'
 import Playlists from './Playlists'
-import useStyles from '@/hooks/ui/useStyles'
 import { useRef } from 'react'
 
 const SideBar = () => {
 
   const { t } = useTranslation()
-  const styles = useStyles()
 
   const [mobileSideBarOpen, updateMobileSideBarOpen] = useUiStore(
     (state) => [state.mobileSideBarOpen, state.updateMobileSideBarOpen],
@@ -56,15 +54,14 @@ const SideBar = () => {
       onTouchStart={() => handleTouchStart()}
       onTouchEnd={() => handleTouchEnd()}
     >
-      <List sx={{ padding: 0 }}>
+      <List disablePadding>
         {navData.map((item, index) =>
           <ListItem
-            disablePadding
             key={index}
+            sx={{ padding: '0.25rem 0.25rem 0 0.25rem' }}
           >
             <ListItemButton
               component={NavLink}
-              sx={styles.navListItem}
               to={item.router}
               onClick={closeSideBar}
             >

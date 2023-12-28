@@ -160,15 +160,7 @@ const CommonMenu = (
                 <ListItemIcon>
                   <ListOutlinedIcon />
                 </ListItemIcon>
-                <ListItemText
-                  primary={item.title}
-                  primaryTypographyProps={{
-                    style: {
-                      whiteSpace: 'nowrap',
-                      overflow: 'hidden',
-                      textOverflow: 'ellipsis'
-                    }
-                  }} />
+                <ListItemText primary={item.title} />
               </ListItemButton>
             </ListItem>
           )}

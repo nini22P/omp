@@ -5,12 +5,10 @@ import { List, ListItem, ListItemText, ListItemIcon, ListItemButton, Button } fr
 import ListOutlinedIcon from '@mui/icons-material/ListOutlined'
 import PlaylistAddOutlinedIcon from '@mui/icons-material/PlaylistAddOutlined'
 import usePlaylistsStore from '../../store/usePlaylistsStore'
-import useStyles from '@/hooks/ui/useStyles'
 
 const Playlists = ({ closeSideBar }: { closeSideBar: () => void }) => {
 
   const { t } = useTranslation()
-  const styles = useStyles()
   const navigate = useNavigate()
   const [playlists, insertPlaylist] = usePlaylistsStore((state) => [state.playlists, state.insertPlaylist])
 
@@ -26,28 +24,18 @@ const Playlists = ({ closeSideBar }: { closeSideBar: () => void }) => {
       {
         playlists?.map((playlist, index) =>
           <ListItem
-            disablePadding
             key={index}
+            sx={{ padding: '0.25rem 0.25rem 0 0.25rem' }}
           >
             <ListItemButton
               component={NavLink}
-              sx={styles.navListItem}
               to={`/playlist/${playlist.id}`}
               onClick={closeSideBar}
             >
               <ListItemIcon>
                 <ListOutlinedIcon />
               </ListItemIcon>
-              <ListItemText
-                primary={playlist.title}
-                primaryTypographyProps={{
-                  style: {
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis'
-                  }
-                }}
-              />
+              <ListItemText primary={playlist.title} />
             </ListItemButton>
           </ListItem >
         )

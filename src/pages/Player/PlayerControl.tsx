@@ -1,4 +1,4 @@
-import { Box, ButtonBase, CircularProgress, Container, IconButton, Paper, Slider, Typography } from '@mui/material'
+import { Box, ButtonBase, CircularProgress, Container, IconButton, Paper, Slider, Typography, useTheme } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import SkipPreviousIcon from '@mui/icons-material/SkipPrevious'
 import SkipNextIcon from '@mui/icons-material/SkipNext'
@@ -21,6 +21,8 @@ import { timeShift } from '@/utils'
 
 const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
 
+  const theme = useTheme()
+  const islight = theme.palette.mode === 'light'
   const [type, playQueue] = usePlayQueueStore((state) => [state.type, state.playQueue])
 
   const [
@@ -86,7 +88,7 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
   }
 
   return (
-    <Paper sx={{ borderRadius: '0.5rem' }}>
+    <Paper sx={{ backgroundColor: `${theme.palette.background.paper}99`, backdropFilter: 'blur(2px)' }}>
       <Container maxWidth={'xl'} disableGutters={true}>
         <Grid container
           sx={{ justifyContent: 'space-between', alignItems: 'center', textAlign: 'center', }}
@@ -140,16 +142,25 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
               xs
               textAlign={'left'} minWidth={0}>
               <ButtonBase
-                sx={{ height: '4rem', width: '100%' }}
+                sx={{ height: '4rem', width: '100%', borderRadius: '0.5rem' }}
                 onClick={() => handleClickMediaInfo()}>
-                <Grid container
-                  xs
-                  sx={{ justifyContent: 'space-between', alignItems: 'center', textAlign: 'left', overflow: 'hidden' }}
-                  wrap={'nowrap'} >
-                  {(type === 'audio') &&
-                    <Grid xs="auto" textAlign={'center'} width={'4rem'} height={'4rem'}>
-                      <img src={cover} alt='Cover' style={{ width: '4rem', height: '4rem', objectFit: 'cover', borderRadius: '0 0 0 0.5rem' }} />
-                    </Grid>}
+                <Grid xs container sx={{ justifyContent: 'space-between', alignItems: 'center', textAlign: 'left', overflow: 'hidden', flexGrow: 'nowrap' }}>
+                  {
+                    (type === 'audio') &&
+                    <Grid xs="auto" sx={{ width: '4rem', height: '4rem', padding: '0.5rem' }}>
+                      <img
+                        src={cover}
+                        alt='Cover'
+                        style={{
+                          width: '100%',
+                          height: '100%',
+                          objectFit: 'cover',
+                          borderRadius: '0.5rem',
+                          filter: (islight && cover === './cover.webp') ? 'invert(1)' : 'none'
+                        }}
+                      />
+                    </Grid>
+                  }
                   <Grid xs sx={{ pl: 1 }} minWidth={0}>
                     <Typography variant="body1" component="div" noWrap>
                       {(!playQueue || !currentMetaData) ? 'Not playing' : currentMetaData.title}

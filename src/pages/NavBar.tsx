@@ -29,10 +29,10 @@ const NavBar = ({ accounts }: { accounts: AccountInfo[] }) => {
             alignItems: 'center',
             left: 'env(titlebar-area-x, 0)',
             height: 'env(titlebar-area-height, 3rem)',
-            pl: 2,
-            pr: 2,
+            px: 2.25,
+            pt: 0.5,
           }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }} >
+          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '100%', }} >
             {
               (accounts.length !== 0) &&
               <IconButton
@@ -43,7 +43,7 @@ const NavBar = ({ accounts }: { accounts: AccountInfo[] }) => {
                 <MenuOutlinedIcon />
               </IconButton>
             }
-            <img src='./logo.svg' alt='logo' style={{ height: '1.25rem', marginLeft: '0.6rem', marginRight: '0.75rem' }} ></img>
+            <img src='./logo.svg' alt='logo' style={{ height: '100%', marginLeft: '0.5rem', marginRight: '0.75rem' }} ></img>
             <Typography variant="h6" component="div" >
               OMP
             </Typography>

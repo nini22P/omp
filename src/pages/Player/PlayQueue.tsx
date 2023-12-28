@@ -4,11 +4,8 @@ import KeyboardArrowRightOutlinedIcon from '@mui/icons-material/KeyboardArrowRig
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import useUiStore from '@/store/useUiStore'
 import CommonList from '@/components/CommonList/CommonList'
-import useStyles from '@/hooks/ui/useStyles'
 
 const PlayQueue = () => {
-
-  const styles = useStyles()
 
   const [
     currentIndex,
@@ -40,23 +37,10 @@ const PlayQueue = () => {
       open={playQueueIsShow}
       onClose={() => updatePlayQueueIsShow(false)}
       elevation={0}
-      sx={{
-        '& .MuiDrawer-paper': {
-          // paddingTop: 'env(titlebar-area-height, 0)',
-          marginTop: 'calc(env(titlebar-area-height, 0) + 1px)',
-          boxShadow: `-5px 5px 10px 0px ${styles.color.shadow}`,
-          borderRadius: '0.5rem 0 0 0.5rem',
-          height: '-webkit-fill-available',
-          borderLeft: `${styles.color.shadow} solid 1px`,
-        },
-        '& .MuiBackdrop-root': {
-          background: 'transparent',
-        }
-      }}
     >
-      <Grid container wrap='nowrap' height={'-webkit-fill-available'} width={{ xs: '100vw', sm: '400px', md: '500px' }}>
+      <Grid container wrap='nowrap' height={'100%'} width={{ xs: '100vw', sm: '400px', md: '500px' }}>
         <Grid height={'100%'} className='app-region-no-drag'>
-          <Button sx={{ height: '-webkit-fill-available' }} onClick={() => updatePlayQueueIsShow(false)}>
+          <Button sx={{ height: '100%' }} onClick={() => updatePlayQueueIsShow(false)}>
             <KeyboardArrowRightOutlinedIcon />
           </Button>
         </Grid>

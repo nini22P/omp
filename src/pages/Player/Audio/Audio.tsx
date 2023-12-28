@@ -88,7 +88,7 @@ const Audio = ({ player }: { player: HTMLVideoElement | null }) => {
 
   // 从专辑封面提取颜色
   useMemo(
-    () => (cover !== './cover.png')
+    () => (cover !== './cover.webp')
       && extractColors(cover).then(color => updateColor(color[0].hex)).catch(console.error),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [cover]
@@ -105,7 +105,7 @@ const Audio = ({ player }: { player: HTMLVideoElement | null }) => {
         transition: 'top 0.35s ease-in-out',
         transform: 'translateZ(0)',
         background:
-          (!backgroundIsShow || cover === './cover.png')
+          (!backgroundIsShow || cover === './cover.webp')
             ? `linear-gradient(rgba(50, 50, 50, 0.6), ${color}bb), #000`
             : `linear-gradient(rgba(50, 50, 50, 0.3), rgba(50, 50, 50, 0.3) ), url(${cover})  no-repeat center, #000`,
         backgroundSize: 'cover',
@@ -117,7 +117,7 @@ const Audio = ({ player }: { player: HTMLVideoElement | null }) => {
       }}
       style={(audioViewIsShow) ? { top: 0 } : { top: '100vh' }}
     >
-      <Box sx={{ backdropFilter: (!backgroundIsShow || cover === './cover.png') ? '' : 'blur(30px)' }}>
+      <Box sx={{ backdropFilter: (!backgroundIsShow || cover === './cover.webp') ? '' : 'blur(30px)' }}>
         <Container
           maxWidth={'xl'}
           disableGutters={true}

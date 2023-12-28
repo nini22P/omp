@@ -6,9 +6,8 @@ import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined'
 import MusicNoteIcon from '@mui/icons-material/MusicNote'
 import MovieIcon from '@mui/icons-material/Movie'
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined'
-import { ListItem, IconButton, ListItemButton, ListItemAvatar, Avatar, ListItemText, ListItemIcon } from '@mui/material'
+import { ListItem, IconButton, ListItemButton, ListItemAvatar, Avatar, ListItemText, ListItemIcon, useTheme } from '@mui/material'
 import { useTranslation } from 'react-i18next'
-import useStyles from '@/hooks/ui/useStyles'
 
 const CommonListItem = ({
   item,
@@ -22,7 +21,7 @@ const CommonListItem = ({
   handleClickMenu: (event: React.MouseEvent<HTMLElement>, currentFile: File) => void,
 }) => {
 
-  const styles = useStyles()
+  const theme = useTheme()
   const { t } = useTranslation()
 
   return (
@@ -31,7 +30,6 @@ const CommonListItem = ({
       sx={{
         '& .MuiListItemButton-root': {
           paddingLeft: 3,
-          // paddingRight: 9,
         },
         '& .MuiListItemSecondaryAction-root': {
           right: '4px',
@@ -63,10 +61,10 @@ const CommonListItem = ({
         onClick={() => handleClickItem(item)}
         sx={{
           '.MuiListItemText-root': {
-            color: active ? styles.color.primary : ''
+            color: active ? theme.palette.primary.main : ''
           },
           '.MuiListItemText-secondary': {
-            color: active ? styles.color.primary : ''
+            color: active ? theme.palette.primary.main : ''
           },
         }}
       >
@@ -90,6 +88,7 @@ const CommonListItem = ({
                 position: 'absolute',
                 left: 0,
                 top: -6,
+                borderRadius: '0.25rem',
               }}
               onError={({ currentTarget }) => {
                 currentTarget.onerror = null
@@ -111,21 +110,6 @@ const CommonListItem = ({
                 minute: 'numeric',
               })} • `
               : ''}${sizeConvert(item.fileSize)}`}
-          primaryTypographyProps={{
-            style: {
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis'
-            }
-          }}
-          secondaryTypographyProps={{
-            style: {
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              fontWeight: 'lighter',
-            }
-          }}
         />
       </ListItemButton>
     </ListItem>

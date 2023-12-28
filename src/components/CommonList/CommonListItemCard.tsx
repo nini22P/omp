@@ -1,11 +1,10 @@
-import { IconButton, ListItemButton } from '@mui/material'
+import { IconButton, ListItemButton, useTheme } from '@mui/material'
 import { File } from '@/types/file'
 import { FolderOutlined, InsertDriveFileOutlined, InsertPhotoOutlined, MoreVertOutlined, Movie, MusicNote } from '@mui/icons-material'
 import { useTranslation } from 'react-i18next'
 import Grid from '@mui/material/Unstable_Grid2/Grid2'
 import useUtils from '@/hooks/useUtils'
 import { sizeConvert } from '@/utils'
-import useStyles from '@/hooks/ui/useStyles'
 
 const CommonListItemCard = ({
   item,
@@ -19,7 +18,7 @@ const CommonListItemCard = ({
   handleClickMenu: (event: React.MouseEvent<HTMLElement>, currentFile: File) => void,
 }) => {
 
-  const styles = useStyles()
+  const theme = useTheme()
   const { t } = useTranslation()
   const { getThumbnailUrl } = useUtils()
 
@@ -31,7 +30,7 @@ const CommonListItemCard = ({
       onClick={() => handleClickItem(item)}
     >
       <Grid container sx={{ flexDirection: 'column', flexWrap: 'nowrap', width: '100%', height: '100%', gap: '0.25rem' }}>
-        <Grid xs={12} sx={{ overflow: 'hidden', width: '100%', flexGrow: 1, borderRadius: '4px', position: 'relative', border: `2px solid ${styles.color.shadow}` }}>
+        <Grid xs={12} sx={{ overflow: 'hidden', width: '100%', flexGrow: 1, borderRadius: '0.25rem', position: 'relative', border: `2px solid ${theme.palette.divider}` }}>
           <Grid container sx={{ justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
             {item.fileType === 'folder' && <FolderOutlined sx={{ width: '50%', height: '50%' }} />}
             {item.fileType === 'audio' && <MusicNote sx={{ width: '50%', height: '50%' }} />}
