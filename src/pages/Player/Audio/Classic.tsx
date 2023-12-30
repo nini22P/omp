@@ -7,6 +7,7 @@ import { timeShift } from '@/utils'
 import { CloseFullscreen, FastForward, FastRewind, KeyboardArrowDownOutlined, OpenInFull, PanoramaOutlined, PauseCircleOutlined, PlayCircleOutlined, QueueMusicOutlined, Repeat, RepeatOne, Shuffle, SkipNext, SkipPrevious } from '@mui/icons-material'
 import { Container, Box, IconButton, Typography, Slider, CircularProgress } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
+import MenuButton from './MenuButton'
 
 const Classic = ({ player }: { player: HTMLVideoElement | null }) => {
 
@@ -114,7 +115,7 @@ const Classic = ({ player }: { player: HTMLVideoElement | null }) => {
               </IconButton>
             </Grid>
 
-            <Grid xs={6} pr={{ xs: 1, sm: 0 }} textAlign={'right'}>
+            <Grid xs={6} pr={{ xs: 1, sm: 0 }} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
               <IconButton
                 aria-label="PlayQueue"
                 onClick={() => updatePlayQueueIsShow(true)}
@@ -140,6 +141,7 @@ const Classic = ({ player }: { player: HTMLVideoElement | null }) => {
                     : <OpenInFull style={{ height: 20, width: 20 }} />
                 }
               </IconButton>
+              <MenuButton />
             </Grid>
 
             {/* 封面和音频信息 */}
@@ -165,16 +167,15 @@ const Classic = ({ player }: { player: HTMLVideoElement | null }) => {
                 justifyContent={'center'}
                 alignItems={'center'}
                 overflow={'hidden'}
-                sx={{ objectFit: 'cover' }}
               >
                 <img
                   src={cover}
                   alt='Cover'
                   style={{
                     height: '100%',
-                    maxHeight: '80dvh',
+                    maxHeight: '70dvh',
                     width: '100%',
-                    objectFit: 'cover',
+                    objectFit: 'contain',
                   }}
                 />
               </Grid>

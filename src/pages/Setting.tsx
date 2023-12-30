@@ -16,6 +16,7 @@ const ListItemTitle = ({ title }: { title: string }) => {
 
 const Setting = () => {
   const { accounts, logout } = useUser()
+  const account = accounts[0]
   const { t } = useTranslation()
 
   const { clearLocalMetaData } = useLocalMetaDataStore()
@@ -42,9 +43,9 @@ const Setting = () => {
         }
       >
         <ListItemAvatar>
-          <Avatar aria-label={accounts[0].name}>{accounts[0].name?.split(' ')[0]}</Avatar>
+          <Avatar aria-label={account.name && account.name}>{account.name && account.name.split(' ')[0]}</Avatar>
         </ListItemAvatar>
-        <ListItemText primary={accounts[0].name} secondary={accounts[0].username} />
+        <ListItemText primary={account.username} secondary={account.username} />
       </ListItem>
 
       <Divider sx={{ m: 1 }} />

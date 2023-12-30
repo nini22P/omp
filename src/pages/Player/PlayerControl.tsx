@@ -30,6 +30,7 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
     fullscreen,
     shuffle,
     repeat,
+    color,
     updateAudioViewIsShow,
     updateVideoViewIsShow,
     updatePlayQueueIsShow,
@@ -41,6 +42,7 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
       state.fullscreen,
       state.shuffle,
       state.repeat,
+      state.color,
       state.updateAudioViewIsShow,
       state.updateVideoViewIsShow,
       state.updatePlayQueueIsShow,
@@ -119,7 +121,7 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
                 max={1000}
                 value={(!duration) ? 0 : currentTime / duration * 1000}
                 onChange={(_, current) => handleTimeRangeonChange(current)}
-                sx={{ padding: '13px 0 !important', }}
+                sx={{ padding: '13px 0 !important', color: color }}
               />
             </Grid>
             <Grid

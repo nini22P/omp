@@ -1,6 +1,6 @@
 import { AuthenticatedTemplate, UnauthenticatedTemplate } from '@azure/msal-react'
 import { Outlet } from 'react-router-dom'
-import { Container, ThemeProvider, Box, Paper } from '@mui/material'
+import { Container, ThemeProvider, Paper } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import NavBar from './pages/NavBar'
 import Player from './pages/Player/Player'
@@ -12,40 +12,76 @@ import useSync from './hooks/graph/useSync'
 import useThemeColor from './hooks/ui/useThemeColor'
 import SignIn from './pages/SignIn'
 import useUiStore from './store/useUiStore'
+import { useSpring, animated } from '@react-spring/web'
+import { useMemo } from 'react'
 
 const App = () => {
   const theme = useTheme()
   const { accounts } = useUser()
   useSync(accounts)
   useThemeColor()
+
   const [color] = useUiStore((state) => [state.color])
+  const [{ background }, api] = useSpring(
+    () => ({
+      background: `linear-gradient(45deg, ${color}33, ${color}15, ${color}05, ${theme.palette.background.default})`,
+    })
+  )
+  useMemo(
+    () => api.start({
+      background: `linear-gradient(45deg, ${color}33, ${color}15, ${color}05, ${theme.palette.background.default})`
+    }),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [color, theme.palette.background.default]
+  )
 
   return (
     <ThemeProvider theme={theme}>
-      <Box
-        sx={{
+      <animated.div
+        style={{
           width: '100vw',
           height: '100dvh',
-          background: `linear-gradient(45deg, ${color}33, ${color}15, ${color}05, ${theme.palette.background.default})`
+          background: background,
         }}
       >
         <NavBar accounts={accounts} />
         <AuthenticatedTemplate>
-          <Box sx={{ position: 'absolute', height: 'calc(100dvh - 6.5rem - env(titlebar-area-height, 3rem))', width: '100%', top: 'env(titlebar-area-height, 3rem)', }}>
-            <Container maxWidth="xl" disableGutters={true} sx={{ height: '100%' }}>
-              <MobileSideBar />
-              <Grid container sx={{ flexDirection: 'row', height: '100%', paddingTop: '0.5rem' }}>
-                <Grid xs={0} sm={3} lg={2} height={'100%'} sx={{ overflowY: 'auto', display: { xs: 'none', sm: 'block' }, paddingLeft: { xs: '0', sm: '0.5rem' } }}>
-                  <SideBar />
-                </Grid>
-                <Grid xs={12} sm={9} lg={10} height={'100%'} sx={{ padding: '0 0.5rem 0.5rem 0.5rem' }}>
-                  <Paper sx={{ width: '100%', height: '100%', overflowY: 'auto', backgroundColor: `${theme.palette.background.paper}99`, backdropFilter: 'blur(2px)' }}>
-                    <Outlet />
-                  </Paper>
-                </Grid>
+          <Container maxWidth="xl" disableGutters={true} sx={{ height: '100%' }}>
+            <MobileSideBar />
+            <Grid container>
+              <Grid
+                xs={0}
+                sm={3}
+                lg={2}
+                sx={{
+                  overflowY: 'auto',
+                  display: { xs: 'none', sm: 'block' },
+                  padding: '0 0 0.5rem 0.5rem',
+                  paddingTop: 'calc(env(titlebar-area-height, 3rem) + 0.5rem)',
+                  height: 'calc(100dvh - 4.5rem - env(titlebar-area-height, 2rem))',
+                }}
+              >
+                <SideBar />
               </Grid>
-            </Container>
-          </Box>
+              <Grid
+                xs={12}
+                sm={9}
+                lg={10}
+                sx={{
+                  padding: '0 0.5rem 0.5rem 0.5rem',
+                  paddingTop: {
+                    xs: 'calc(env(titlebar-area-height, 3rem) + 0.5rem)',
+                    sm: 'calc(env(titlebar-area-height, 0rem) + 0.5rem)'
+                  },
+                  height: 'calc(100dvh - 4.5rem - env(titlebar-area-height, 2rem))',
+                }}
+              >
+                <Paper sx={{ width: '100%', height: '100%', overflowY: 'auto', backgroundColor: `${theme.palette.background.paper}99`, backdropFilter: 'blur(2px)' }}>
+                  <Outlet />
+                </Paper>
+              </Grid>
+            </Grid>
+          </Container>
           <Player />
         </AuthenticatedTemplate>
 
@@ -53,7 +89,7 @@ const App = () => {
           <SignIn />
         </UnauthenticatedTemplate>
 
-      </Box>
+      </animated.div>
     </ThemeProvider>
   )
 }

@@ -36,15 +36,19 @@ const PlayQueue = () => {
       anchor={'right'}
       open={playQueueIsShow}
       onClose={() => updatePlayQueueIsShow(false)}
-      elevation={0}
+      sx={{
+        '& .MuiDrawer-paper': {
+          width: { xs: 'calc(100vw - 0.5rem)', sm: '400px', md: '500px' }
+        },
+      }}
     >
-      <Grid container wrap='nowrap' height={'100%'} width={{ xs: 'calc(100vw - 0.5rem)', sm: '400px', md: '500px' }}>
-        <Grid height={'100%'} className='app-region-no-drag'>
+      <Grid container wrap='nowrap' height={'100%'} >
+        <Grid height={'100%'}>
           <Button sx={{ height: '100%' }} onClick={() => updatePlayQueueIsShow(false)}>
             <KeyboardArrowRightOutlinedIcon />
           </Button>
         </Grid>
-        <Grid xs sx={{ height: '100%', overflowY: 'auto', paddingY: '1rem' }}>
+        <Grid xs sx={{ height: '100%', overflowY: 'auto' }}>
           {
             playQueue &&
             <CommonList

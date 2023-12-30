@@ -29,7 +29,7 @@ const Playlist = () => {
 
   useEffect(
     () => {
-      getManyLocalMetaData(playlist?.fileList.map(file => file.filePath) || [])
+      getManyLocalMetaData(playlist?.fileList.slice(0, 10).map(file => file.filePath) || [])
         .then(metaDataList => metaDataList && setMetaDataList(metaDataList.filter(metaData => metaData)))
       return () => {
         setMetaDataList([])
@@ -81,11 +81,11 @@ const Playlist = () => {
             >
               <Grid xs={12} container
                 sx={{
-                  padding: '4rem 2rem 2rem 2rem',
+                  padding: '3rem 1rem 1rem 1rem',
                   background: `linear-gradient(0deg, ${theme.palette.background.default}ff, ${theme.palette.background.default}99,${theme.palette.background.default}00)`,
                   zIndex: 1,
                   gap: '0.25rem',
-                  backdropFilter: 'blur(1px)',
+                  backdropFilter: 'blur(2px)',
                 }}
               >
                 <Grid xs={12}>

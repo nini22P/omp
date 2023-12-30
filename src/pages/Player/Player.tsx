@@ -77,8 +77,8 @@ const Player = () => {
     <div>
       <VideoPlayer url={url} onEnded={onEnded} ref={playerRef} />
       <Box sx={{ position: 'fixed', bottom: '0', width: '100%', zIndex: 10 }}>
-        <Container maxWidth={false} disableGutters={true}>
-          <Box sx={(controlIsShow) ? { padding: '0 0.5rem 0.5rem 0.5rem', display: 'block' } : { display: 'none' }}>
+        <Container maxWidth={'xl'} disableGutters={true}>
+          <Box padding={'0 0.5rem 0.5rem 0.5rem'} sx={(controlIsShow) ? { visibility: 'visible' } : { visibility: 'hidden' }}>
             <PlayerControl player={player} />
           </Box>
           <Audio player={player} />

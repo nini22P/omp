@@ -24,7 +24,6 @@ const MobileSideBar = () => {
           boxSizing: 'border-box',
           minWidth: 260,
           maxWidth: 280,
-          paddingTop: '0.25rem',
         },
       }}
     >

@@ -1,6 +1,7 @@
 export interface UiStatus {
   folderTree: string[];
   audioViewIsShow: boolean;
+  audioViewTheme: 'classic' | 'modern';
   videoViewIsShow: boolean;
   controlIsShow: boolean;
   playQueueIsShow: boolean;
@@ -21,6 +22,7 @@ export interface UiStatus {
 export interface UiAction {
   updateFolderTree: (folderTree: UiStatus['folderTree']) => void;
   updateAudioViewIsShow: (audioViewIsShow: UiStatus['audioViewIsShow']) => void;
+  updateAudioViewTheme: (audioViewTheme: UiStatus['audioViewTheme']) => void;
   updateVideoViewIsShow: (videoViewIsShow: UiStatus['videoViewIsShow']) => void;
   updateControlIsShow: (controlIsShow: UiStatus['controlIsShow']) => void;
   updatePlayQueueIsShow: (PlayQueueIsShow: UiStatus['playQueueIsShow']) => void;

@@ -8,6 +8,7 @@ const useUiStore = createWithEqualityFn<UiStatus & UiAction>()(
     (set) => ({
       folderTree: ['/'],
       audioViewIsShow: false,
+      audioViewTheme: 'classic',
       videoViewIsShow: false,
       controlIsShow: true,
       playQueueIsShow: false,
@@ -25,6 +26,7 @@ const useUiStore = createWithEqualityFn<UiStatus & UiAction>()(
       hdThumbnails: false,
       updateFolderTree: (folderTree) => set(() => ({ folderTree: folderTree })),
       updateAudioViewIsShow: (audioViewIsShow) => set(() => ({ audioViewIsShow: audioViewIsShow })),
+      updateAudioViewTheme: (audioViewTheme) => set(() => ({ audioViewTheme: audioViewTheme })),
       updateVideoViewIsShow: (videoViewIsShow) => set(() => ({ videoViewIsShow: videoViewIsShow })),
       updateControlIsShow: (controlIsShow) => set(() => ({ controlIsShow: controlIsShow })),
       updatePlayQueueIsShow: (playQueueIsShow) => set(() => ({ playQueueIsShow: playQueueIsShow })),

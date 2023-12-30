@@ -9,8 +9,8 @@ import CommonMenu from './CommonMenu'
 import { PlayQueueItem } from '../../types/playQueue'
 import { File } from '../../types/file'
 import CommonListItem from './CommonListItem'
-import { Box, Fab, useMediaQuery, useTheme } from '@mui/material'
-import { AutoSizer, List } from 'react-virtualized'
+import { Box, Fab, List, useMediaQuery, useTheme } from '@mui/material'
+import { AutoSizer, List as VirtualList } from 'react-virtualized'
 import CommonListItemCard from './CommonListItemCard'
 import { PlayArrowOutlined, ShuffleOutlined } from '@mui/icons-material'
 import { useTranslation } from 'react-i18next'
@@ -227,7 +227,7 @@ const CommonList = (
     )
   }
 
-  const listRef = useRef<List | null>(null)
+  const listRef = useRef<VirtualList | null>(null)
   const updateListRowHeight = () => listRef.current && listRef.current.recomputeRowHeights()
 
   const isPlayQueueView = listData?.some((item) => typeof (item as PlayQueueItem).index === 'number')
@@ -258,24 +258,27 @@ const CommonList = (
             flexGrow: 1,
             overflow: 'hidden',
           }}>
+
           {
             display === 'grid'
             &&
             <AutoSizer onResize={() => updateListRowHeight()}>
               {
                 ({ height, width }) =>
-                  <List
-                    ref={(ref => (listRef.current = ref))}
-                    height={height}
-                    width={width}
-                    rowCount={Math.ceil(listData.length / gridCols)}
-                    rowHeight={width / gridCols / 4 * 5}
-                    rowRenderer={gridRenderer}
-                    scrollToAlignment={'center'}
-                    style={{
-                      paddingBottom: '6rem'
-                    }}
-                  />
+                  <List>
+                    <VirtualList
+                      ref={(ref => (listRef.current = ref))}
+                      height={height - 8}
+                      width={width - 8}
+                      rowCount={Math.ceil(listData.length / gridCols)}
+                      rowHeight={width / gridCols / 4 * 5}
+                      rowRenderer={gridRenderer}
+                      scrollToAlignment={'center'}
+                      style={{
+                        paddingBottom: '6rem'
+                      }}
+                    />
+                  </List>
               }
             </AutoSizer>
           }
@@ -285,18 +288,20 @@ const CommonList = (
             <AutoSizer onResize={() => updateListRowHeight()}>
               {
                 ({ height, width }) =>
-                  <List
-                    ref={(ref => (listRef.current = ref))}
-                    height={height}
-                    width={width}
-                    rowCount={Math.ceil(listData.length / listCols)}
-                    rowHeight={72}
-                    rowRenderer={rowRenderer}
-                    scrollToAlignment={'center'}
-                    style={{
-                      paddingBottom: '6rem'
-                    }}
-                  />
+                  <List>
+                    <VirtualList
+                      ref={(ref => (listRef.current = ref))}
+                      height={height - 8}
+                      width={width - 8}
+                      rowCount={Math.ceil(listData.length / listCols)}
+                      rowHeight={72}
+                      rowRenderer={rowRenderer}
+                      scrollToAlignment={'center'}
+                      style={{
+                        paddingBottom: '6rem'
+                      }}
+                    />
+                  </List>
               }
             </AutoSizer>
           }

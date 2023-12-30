@@ -15,48 +15,59 @@ const NavBar = ({ accounts }: { accounts: AccountInfo[] }) => {
     <Box
       sx={{
         position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
+        top: 'env(titlebar-area-y, 0)',
+        left: 'env(titlebar-area-x, 0rem)',
+        width: 'env(titlebar-area-width, 100%)',
+        height: 'env(titlebar-area-height, 3.5rem)',
       }}
       className='app-region-drag'
     >
-      <Container maxWidth={'xl'} disableGutters={true}>
-        <Box
-          sx={{
-            display: 'flex',
-            justifyContent: 'space-between',
-            alignItems: 'center',
-            left: 'env(titlebar-area-x, 0)',
-            height: 'env(titlebar-area-height, 3rem)',
-            px: 2.25,
-            pt: 0.5,
-          }}>
-          <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: '100%', }} >
-            {
-              (accounts.length !== 0) &&
-              <IconButton
-                onClick={() => updateMobileSideBarOpen(!mobileSideBarOpen)}
-                sx={{ display: { xs: '', sm: 'none' } }}
-                className='app-region-no-drag'
-              >
-                <MenuOutlinedIcon />
-              </IconButton>
-            }
-            <img src='./logo.svg' alt='logo' style={{ height: '100%', marginLeft: '0.5rem', marginRight: '0.75rem' }} ></img>
-            <Typography variant="h6" component="div" >
-              OMP
-            </Typography>
-          </Box>
-          <div >
-            {
-              (accounts.length == 0) &&
-              <IconButton component={Link} href='https://github.com/nini22P/omp'>
-                <GitHubIcon />
-              </IconButton>
-            }
-          </div>
+      <Container
+        maxWidth={'xl'}
+        disableGutters={true}
+        sx={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          height: '100%',
+          px: 'calc(env(titlebar-area-height, 1.25rem) - env(titlebar-area-height, 0rem) + 0.25rem)',
+          py: 'calc(env(titlebar-area-height, 0.5rem) - env(titlebar-area-height, 0rem) + 0.25rem)',
+        }}
+      >
+        <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', height: '100%', }} >
+          {
+            (accounts.length !== 0) &&
+            <IconButton
+              onClick={() => updateMobileSideBarOpen(!mobileSideBarOpen)}
+              sx={{ display: { xs: '', sm: 'none' } }}
+              className='app-region-no-drag'
+            >
+              <MenuOutlinedIcon />
+            </IconButton>
+          }
+          <img
+            src='./logo.svg'
+            alt='logo'
+            style={{
+              height: '100%',
+              marginRight: 'calc(env(titlebar-area-height, 0.5rem) - env(titlebar-area-height, 0rem) + 0.125rem)',
+            }}
+          />
+          <Typography
+            component="div"
+            fontSize={'calc(env(titlebar-area-height, 0.25rem) - env(titlebar-area-height, 0rem) + 1rem)'}
+          >
+            OMP
+          </Typography>
         </Box>
+        <div >
+          {
+            (accounts.length == 0) &&
+            <IconButton component={Link} href='https://github.com/nini22P/omp'>
+              <GitHubIcon />
+            </IconButton>
+          }
+        </div>
       </Container>
     </Box>
   )

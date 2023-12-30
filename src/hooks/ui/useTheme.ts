@@ -35,7 +35,7 @@ const useTheme = () => {
       MuiDrawer: {
         styleOverrides: {
           paper: {
-            top: 'calc(env(titlebar-area-height, 0.25rem) + 0.25rem)',
+            top: 'calc(env(titlebar-area-height, 0rem) + 0.25rem)',
             bottom: '0.25rem',
             height: 'auto',
             border: `${prefersDarkMode ? '#f7f7f722' : '#3b3b3b22'} solid 1px`,
@@ -63,6 +63,14 @@ const useTheme = () => {
           }
         }
       },
+      MuiList: {
+        styleOverrides: {
+          root: {
+            padding: '0.25rem',
+            borderRadius: '0.5rem',
+          }
+        }
+      },
       MuiListItemButton: {
         styleOverrides: {
           root: {
@@ -70,12 +78,14 @@ const useTheme = () => {
             paddingLeft: '1rem',
             paddingRight: '1rem',
             '&.active': {
-              color: color.primary,
               backgroundColor: prefersDarkMode ? '#f7f7f711' : '#3b3b3b11',
             },
             '&.active .MuiListItemIcon-root': {
               color: color.primary,
             },
+            '&.active .MuiListItemText-root': {
+              color: color.primary,
+            }
           },
         },
       },
@@ -102,11 +112,25 @@ const useTheme = () => {
           },
         }
       },
+      MuiListItemSecondaryAction: {
+        styleOverrides: {
+          root: {
+            right: '0.5rem',
+          }
+        }
+      },
       MuiDialog: {
         styleOverrides: {
           paper: {
             border: `${prefersDarkMode ? '#f7f7f722' : '#3b3b3b22'} solid 1px`,
             boxShadow: `5px 5px 10px 0px ${prefersDarkMode ? '#f7f7f722' : '#3b3b3b22'}`,
+          }
+        }
+      },
+      MuiMenuItem: {
+        styleOverrides: {
+          root: {
+            borderRadius: '0.5rem',
           }
         }
       }

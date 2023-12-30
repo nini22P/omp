@@ -6,7 +6,7 @@ import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined'
 import MusicNoteIcon from '@mui/icons-material/MusicNote'
 import MovieIcon from '@mui/icons-material/Movie'
 import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined'
-import { ListItem, IconButton, ListItemButton, ListItemAvatar, Avatar, ListItemText, ListItemIcon, useTheme } from '@mui/material'
+import { ListItem, IconButton, ListItemButton, ListItemAvatar, Avatar, ListItemText, ListItemIcon } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 
 const CommonListItem = ({
@@ -21,20 +21,11 @@ const CommonListItem = ({
   handleClickMenu: (event: React.MouseEvent<HTMLElement>, currentFile: File) => void,
 }) => {
 
-  const theme = useTheme()
   const { t } = useTranslation()
 
   return (
     <ListItem
       disablePadding
-      sx={{
-        '& .MuiListItemButton-root': {
-          paddingLeft: 3,
-        },
-        '& .MuiListItemSecondaryAction-root': {
-          right: '4px',
-        }
-      }}
       secondaryAction={
         (item.fileType === 'audio' || item.fileType === 'video')
         &&
@@ -59,14 +50,7 @@ const CommonListItem = ({
     >
       <ListItemButton
         onClick={() => handleClickItem(item)}
-        sx={{
-          '.MuiListItemText-root': {
-            color: active ? theme.palette.primary.main : ''
-          },
-          '.MuiListItemText-secondary': {
-            color: active ? theme.palette.primary.main : ''
-          },
-        }}
+        className={active ? 'active' : ''}
       >
         <ListItemAvatar sx={{ position: 'relative' }}>
           <ListItemIcon sx={{ paddingLeft: 1 }}>
@@ -101,15 +85,17 @@ const CommonListItem = ({
         <ListItemText
           primary={item.fileName}
           secondary={
-            `${item.lastModifiedDateTime
-              ? `${new Date(item.lastModifiedDateTime).toLocaleString(undefined, {
+            `${sizeConvert(item.fileSize)}
+            ${item.lastModifiedDateTime
+              ? ` • ${new Date(item.lastModifiedDateTime).toLocaleString(undefined, {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric',
                 hour: 'numeric',
                 minute: 'numeric',
-              })} • `
-              : ''}${sizeConvert(item.fileSize)}`}
+              })}`
+              : ''}`
+          }
         />
       </ListItemButton>
     </ListItem>

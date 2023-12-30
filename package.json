@@ -17,6 +17,8 @@
     "@fontsource/roboto": "^5.0.8",
     "@mui/icons-material": "^5.15.2",
     "@mui/material": "^5.15.2",
+    "@react-spring/web": "^9.7.3",
+    "@use-gesture/react": "^10.3.0",
     "buffer": "^6.0.3",
     "extract-colors": "^4.0.2",
     "i18next": "^23.7.11",

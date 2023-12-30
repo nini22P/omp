@@ -57,8 +57,9 @@ const SideBar = () => {
       <List disablePadding>
         {navData.map((item, index) =>
           <ListItem
+            disablePadding
             key={index}
-            sx={{ padding: '0 0.25rem 0.25rem 0.25rem' }}
+            sx={{ paddingBottom: '0.25rem' }}
           >
             <ListItemButton
               component={NavLink}

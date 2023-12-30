@@ -24,8 +24,9 @@ const Playlists = ({ closeSideBar }: { closeSideBar: () => void }) => {
       {
         playlists?.map((playlist, index) =>
           <ListItem
+            disablePadding
             key={index}
-            sx={{ padding: '0.25rem 0.25rem 0 0.25rem' }}
+            sx={{ paddingTop: '0.25rem' }}
           >
             <ListItemButton
               component={NavLink}
