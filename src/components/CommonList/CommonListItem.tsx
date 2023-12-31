@@ -1,12 +1,11 @@
-import useTheme from '@/hooks/ui/useTheme'
 import { File } from '@/types/file'
 import { sizeConvert } from '@/utils'
-import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined'
-import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined'
-import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined'
-import MusicNoteIcon from '@mui/icons-material/MusicNote'
-import MovieIcon from '@mui/icons-material/Movie'
-import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined'
+import InsertDriveFileRoundedIcon from '@mui/icons-material/InsertDriveFileRounded'
+import InsertPhotoRoundedIcon from '@mui/icons-material/InsertPhotoRounded'
+import FolderOpenRoundedIcon from '@mui/icons-material/FolderOpenRounded'
+import MusicNoteRoundedIcon from '@mui/icons-material/MusicNoteRounded'
+import MovieRoundedIcon from '@mui/icons-material/MovieRounded'
+import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded'
 import { ListItem, IconButton, ListItemButton, ListItemAvatar, Avatar, ListItemText, ListItemIcon } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 
@@ -22,21 +21,11 @@ const CommonListItem = ({
   handleClickMenu: (event: React.MouseEvent<HTMLElement>, currentFile: File) => void,
 }) => {
 
-  const { styles } = useTheme()
   const { t } = useTranslation()
 
   return (
     <ListItem
       disablePadding
-      sx={{
-        '& .MuiListItemButton-root': {
-          paddingLeft: 3,
-          // paddingRight: 9,
-        },
-        '& .MuiListItemSecondaryAction-root': {
-          right: '4px',
-        }
-      }}
       secondaryAction={
         (item.fileType === 'audio' || item.fileType === 'video')
         &&
@@ -54,29 +43,22 @@ const CommonListItem = ({
                 }
               )}
           >
-            <MoreVertOutlinedIcon />
+            <MoreVertRoundedIcon />
           </IconButton>
         </div>
       }
     >
       <ListItemButton
         onClick={() => handleClickItem(item)}
-        sx={{
-          '.MuiListItemText-root': {
-            color: active ? styles.color.primary : ''
-          },
-          '.MuiListItemText-secondary': {
-            color: active ? styles.color.primary : ''
-          },
-        }}
+        className={active ? 'active' : ''}
       >
         <ListItemAvatar sx={{ position: 'relative' }}>
           <ListItemIcon sx={{ paddingLeft: 1 }}>
-            {item.fileType === 'folder' && <FolderOutlinedIcon />}
-            {item.fileType === 'audio' && <MusicNoteIcon />}
-            {item.fileType === 'video' && <MovieIcon />}
-            {item.fileType === 'picture' && <InsertPhotoOutlinedIcon />}
-            {item.fileType === 'other' && <InsertDriveFileOutlinedIcon />}
+            {item.fileType === 'folder' && <FolderOpenRoundedIcon />}
+            {item.fileType === 'audio' && <MusicNoteRoundedIcon />}
+            {item.fileType === 'video' && <MovieRoundedIcon />}
+            {item.fileType === 'picture' && <InsertPhotoRoundedIcon />}
+            {item.fileType === 'other' && <InsertDriveFileRoundedIcon />}
           </ListItemIcon>
           {
             (item.thumbnails && item.thumbnails[0])
@@ -90,6 +72,7 @@ const CommonListItem = ({
                 position: 'absolute',
                 left: 0,
                 top: -6,
+                borderRadius: '0.5rem',
               }}
               onError={({ currentTarget }) => {
                 currentTarget.onerror = null
@@ -102,30 +85,17 @@ const CommonListItem = ({
         <ListItemText
           primary={item.fileName}
           secondary={
-            `${item.lastModifiedDateTime
-              ? `${new Date(item.lastModifiedDateTime).toLocaleString(undefined, {
+            `${sizeConvert(item.fileSize)}
+            ${item.lastModifiedDateTime
+              ? ` • ${new Date(item.lastModifiedDateTime).toLocaleString(undefined, {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric',
                 hour: 'numeric',
                 minute: 'numeric',
-              })} • `
-              : ''}${sizeConvert(item.fileSize)}`}
-          primaryTypographyProps={{
-            style: {
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis'
-            }
-          }}
-          secondaryTypographyProps={{
-            style: {
-              whiteSpace: 'nowrap',
-              overflow: 'hidden',
-              textOverflow: 'ellipsis',
-              fontWeight: 'lighter',
-            }
-          }}
+              })}`
+              : ''}`
+          }
         />
       </ListItemButton>
     </ListItem>

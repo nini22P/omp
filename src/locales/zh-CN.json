@@ -19,6 +19,7 @@
   },
   "playlist": {
     "newPlaylist": "新播放列表",
+    "playAll": "全部播放",
     "shuffleAll": "全部随机播放",
     "addPlaylist": "新建播放列表",
     "addToPlaylist": "添加到播放列表",
@@ -27,13 +28,21 @@
     "playlistWillBeDeleted": "播放列表将会被删除"
   },
   "nav": {
-    "home": "主页",
+    "files": "文件",
     "history": "历史",
     "setting": "设置"
   },
   "data": {
     "data": "数据",
     "localMetaDataCache": "本地元数据缓存"
+  },
+  "customize": {
+    "customize": "定制",
+    "colorMode": "颜色模式",
+    "auto": "自动",
+    "light": "浅色",
+    "dark": "深色",
+    "CoverThemeColor": "使用专辑封面主题色"
   },
   "files": {
     "display": {

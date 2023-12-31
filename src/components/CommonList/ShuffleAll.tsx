@@ -1,6 +1,6 @@
 import { ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import { useTranslation } from 'react-i18next'
-import { ShuffleOutlined } from '@mui/icons-material'
+import ShuffleRoundedIcon from '@mui/icons-material/ShuffleRounded'
 
 const ShuffleAll = ({ handleClickShuffleAll }: { handleClickShuffleAll: () => void }) => {
 
@@ -21,7 +21,7 @@ const ShuffleAll = ({ handleClickShuffleAll }: { handleClickShuffleAll: () => vo
     >
       <ListItemButton onClick={handleClickShuffleAll}>
         <ListItemIcon>
-          <ShuffleOutlined />
+          <ShuffleRoundedIcon />
         </ListItemIcon>
         <ListItemText primary={t('playlist.shuffleAll')} />
       </ListItemButton>

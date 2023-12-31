@@ -19,6 +19,7 @@
   },
   "playlist": {
     "newPlaylist": "New Playlist",
+    "playAll": "Play all",
     "shuffleAll": "Shuffle all",
     "addPlaylist": "Add playlist",
     "addToPlaylist": "Add to playlist",
@@ -27,13 +28,21 @@
     "playlistWillBeDeleted": "The playlist will be deleted"
   },
   "nav": {
-    "home": "Home",
+    "files": "Files",
     "history": "History",
     "setting": "Setting"
   },
   "data": {
     "data": "Data",
     "metaDataCache": "Local MetaData Cache"
+  },
+  "customize": {
+    "customize": "Customize",
+    "colorMode": "Color Mode",
+    "auto": "Auto",
+    "light": "Light",
+    "dark": "Dark",
+    "CoverThemeColor": "Use the album cover theme color"
   },
   "files": {
     "display": {

@@ -9,10 +9,12 @@ import CommonMenu from './CommonMenu'
 import { PlayQueueItem } from '../../types/playQueue'
 import { File } from '../../types/file'
 import CommonListItem from './CommonListItem'
-import ShuffleAll from './ShuffleAll'
-import { Box, useMediaQuery, useTheme } from '@mui/material'
-import { AutoSizer, List } from 'react-virtualized'
+import { Box, Fab, List, useMediaQuery, useTheme } from '@mui/material'
+import { AutoSizer, List as VirtualList } from 'react-virtualized'
 import CommonListItemCard from './CommonListItemCard'
+import { useTranslation } from 'react-i18next'
+import ShuffleRoundedIcon from '@mui/icons-material/ShuffleRounded'
+import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded'
 
 const CommonList = (
   {
@@ -31,6 +33,7 @@ const CommonList = (
     },
   }) => {
 
+  const { t } = useTranslation()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [menuOpen, setMenuOpen] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -116,11 +119,18 @@ const CommonList = (
     updateCurrentIndex(index)
   }
 
+  const handleClickPlayAll = () => {
+    if (listData) {
+      const list = listData.filter((item) => checkFileType(item.fileName) === 'audio')
+      handleClickItem(list[0])
+    }
+  }
+
   // 点击随机播放全部
   const handleClickShuffleAll = () => {
     if (listData) {
       const list = listData
-        .filter((item) => checkFileType(item.fileName) === 'audio')
+        .filter((item) => item.fileType === 'audio')
         .map((item, index) => { return { index, ...item } })
       if (!shuffle)
         updateShuffle(true)
@@ -218,7 +228,7 @@ const CommonList = (
     )
   }
 
-  const listRef = useRef<List | null>(null)
+  const listRef = useRef<VirtualList | null>(null)
   const updateListRowHeight = () => listRef.current && listRef.current.recomputeRowHeights()
 
   const isPlayQueueView = listData?.some((item) => typeof (item as PlayQueueItem).index === 'number')
@@ -235,13 +245,70 @@ const CommonList = (
     []
   )
 
+  const canShuffle = listData && listData.length !== 0 && listData.find((item) => item.fileType === 'audio') && !isPlayQueueView
+
   return (
     listData
     &&
-    <Box sx={{
-      height: '100%',
-      width: '100%',
-    }}>
+    <Box sx={{ height: '100%', width: '100%' }}>
+
+      {/* 文件列表 */}
+      <Grid container sx={{ flexDirection: 'column', flexWrap: 'nowrap', height: '100%' }}>
+        <Grid xs={12}
+          sx={{
+            flexGrow: 1,
+            overflow: 'hidden',
+          }}>
+
+          {
+            display === 'grid'
+            &&
+            <AutoSizer onResize={() => updateListRowHeight()}>
+              {
+                ({ height, width }) =>
+                  <List>
+                    <VirtualList
+                      ref={(ref => (listRef.current = ref))}
+                      height={height - 8}
+                      width={width - 8}
+                      rowCount={Math.ceil(listData.length / gridCols)}
+                      rowHeight={width / gridCols / 4 * 5}
+                      rowRenderer={gridRenderer}
+                      scrollToAlignment={'center'}
+                      style={{
+                        paddingBottom: isPlayQueueView ? 0 : '6rem',
+                      }}
+                    />
+                  </List>
+              }
+            </AutoSizer>
+          }
+          {
+            (display === 'list' || display === 'multicolumnList')
+            &&
+            <AutoSizer onResize={() => updateListRowHeight()}>
+              {
+                ({ height, width }) =>
+                  <List>
+                    <VirtualList
+                      ref={(ref => (listRef.current = ref))}
+                      height={height - 8}
+                      width={width - 8}
+                      rowCount={Math.ceil(listData.length / listCols)}
+                      rowHeight={72}
+                      rowRenderer={rowRenderer}
+                      scrollToAlignment={'center'}
+                      style={{
+                        paddingBottom: isPlayQueueView ? 0 : '6rem',
+                      }}
+                    />
+                  </List>
+              }
+            </AutoSizer>
+          }
+        </Grid>
+      </Grid>
+
       {/* 菜单 */}
       <CommonMenu
         anchorEl={anchorEl}
@@ -255,69 +322,31 @@ const CommonList = (
         isPlayQueueView={isPlayQueueView}
       />
 
-      {/* 文件列表 */}
-      <Grid container sx={{ flexDirection: 'column', flexWrap: 'nowrap', height: '100%' }}>
-        {
-          (
-            listData.length !== 0
-            && listData.find((item) => item.fileType === 'audio')
-            && !isPlayQueueView
-          )
-          &&
-          <Grid xs={12}>
-            <ShuffleAll handleClickShuffleAll={handleClickShuffleAll} />
-          </Grid>
-        }
-        <Grid xs={12}
+      {
+        canShuffle &&
+        <Box
           sx={{
-            flexGrow: 1,
-            overflow: 'hidden',
-          }}>
-          {
-            display === 'grid'
-            &&
-            <AutoSizer onResize={() => updateListRowHeight()}>
-              {
-                ({ height, width }) =>
-                  <List
-                    ref={(ref => (listRef.current = ref))}
-                    height={height}
-                    width={width}
-                    rowCount={Math.ceil(listData.length / gridCols)}
-                    rowHeight={width / gridCols / 4 * 5}
-                    rowRenderer={gridRenderer}
-                    scrollToAlignment={'center'}
-                    style={{
-                      paddingBottom: '0.5rem',
-                    }}
-                  />
-              }
-            </AutoSizer>
-          }
-          {
-            (display === 'list' || display === 'multicolumnList')
-            &&
-            <AutoSizer onResize={() => updateListRowHeight()}>
-              {
-                ({ height, width }) =>
+            position: 'absolute',
+            bottom: '2rem',
+            right: '4rem',
+            zIndex: 1,
+            display: 'flex',
+            flexDirection: 'row',
+            justifyContent: 'center',
+            alignItems: 'center',
+            gap: '0.5rem',
+          }}
+        >
+          <Fab size='small' onClick={() => handleClickShuffleAll()}>
+            <ShuffleRoundedIcon />
+          </Fab>
+          <Fab variant='extended' color='primary' onClick={() => handleClickPlayAll()}>
+            <PlayArrowRoundedIcon />
+            {t('playlist.playAll')}
+          </Fab>
+        </Box>
+      }
 
-                  <List
-                    ref={(ref => (listRef.current = ref))}
-                    height={height}
-                    width={width}
-                    rowCount={Math.ceil(listData.length / listCols)}
-                    rowHeight={72}
-                    rowRenderer={rowRenderer}
-                    scrollToAlignment={'center'}
-                    style={{
-                      paddingBottom: '1rem',
-                    }}
-                  />
-              }
-            </AutoSizer>
-          }
-        </Grid>
-      </Grid>
     </Box>
   )
 }

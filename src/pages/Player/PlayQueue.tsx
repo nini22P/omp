@@ -1,14 +1,11 @@
 import { Button, Drawer } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
-import KeyboardArrowRightOutlinedIcon from '@mui/icons-material/KeyboardArrowRightOutlined'
+import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import useUiStore from '@/store/useUiStore'
 import CommonList from '@/components/CommonList/CommonList'
-import useTheme from '@/hooks/ui/useTheme'
 
 const PlayQueue = () => {
-
-  const { styles } = useTheme()
 
   const [
     currentIndex,
@@ -39,28 +36,19 @@ const PlayQueue = () => {
       anchor={'right'}
       open={playQueueIsShow}
       onClose={() => updatePlayQueueIsShow(false)}
-      elevation={0}
       sx={{
         '& .MuiDrawer-paper': {
-          // paddingTop: 'env(titlebar-area-height, 0)',
-          marginTop: 'calc(env(titlebar-area-height, 0) + 1px)',
-          boxShadow: `-5px 5px 10px 0px ${styles.color.shadow}`,
-          borderRadius: '10px 0 0 10px',
-          height: '-webkit-fill-available',
-          borderLeft: `${styles.color.shadow} solid 1px`,
+          width: { xs: 'calc(100vw - 0.5rem)', sm: '400px', md: '500px' }
         },
-        '& .MuiBackdrop-root': {
-          background: 'transparent',
-        }
       }}
     >
-      <Grid container wrap='nowrap' height={'-webkit-fill-available'} width={{ xs: '100vw', sm: '400px', md: '500px' }}>
-        <Grid height={'100%'} className='app-region-no-drag'>
-          <Button sx={{ height: '-webkit-fill-available' }} onClick={() => updatePlayQueueIsShow(false)}>
-            <KeyboardArrowRightOutlinedIcon />
+      <Grid container wrap='nowrap' height={'100%'} >
+        <Grid height={'100%'}>
+          <Button sx={{ height: '100%' }} onClick={() => updatePlayQueueIsShow(false)}>
+            <KeyboardArrowRightRoundedIcon />
           </Button>
         </Grid>
-        <Grid xs sx={{ height: '100%', overflowY: 'auto', paddingY: '1rem' }}>
+        <Grid xs sx={{ height: '100%', overflowY: 'auto' }}>
           {
             playQueue &&
             <CommonList

@@ -2,15 +2,13 @@ import { useTranslation } from 'react-i18next'
 import { NavLink, useNavigate } from 'react-router-dom'
 import shortUUID from 'short-uuid'
 import { List, ListItem, ListItemText, ListItemIcon, ListItemButton, Button } from '@mui/material'
-import ListOutlinedIcon from '@mui/icons-material/ListOutlined'
-import PlaylistAddOutlinedIcon from '@mui/icons-material/PlaylistAddOutlined'
+import ListRoundedIcon from '@mui/icons-material/ListRounded'
+import PlaylistAddRoundedIcon from '@mui/icons-material/PlaylistAddRounded'
 import usePlaylistsStore from '../../store/usePlaylistsStore'
-import useTheme from '../../hooks/ui/useTheme'
 
 const Playlists = ({ closeSideBar }: { closeSideBar: () => void }) => {
 
   const { t } = useTranslation()
-  const { styles } = useTheme()
   const navigate = useNavigate()
   const [playlists, insertPlaylist] = usePlaylistsStore((state) => [state.playlists, state.insertPlaylist])
 
@@ -28,26 +26,17 @@ const Playlists = ({ closeSideBar }: { closeSideBar: () => void }) => {
           <ListItem
             disablePadding
             key={index}
+            sx={{ paddingTop: '0.25rem' }}
           >
             <ListItemButton
               component={NavLink}
-              sx={styles.navListItem}
               to={`/playlist/${playlist.id}`}
               onClick={closeSideBar}
             >
               <ListItemIcon>
-                <ListOutlinedIcon />
+                <ListRoundedIcon />
               </ListItemIcon>
-              <ListItemText
-                primary={playlist.title}
-                primaryTypographyProps={{
-                  style: {
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis'
-                  }
-                }}
-              />
+              <ListItemText primary={playlist.title} />
             </ListItemButton>
           </ListItem >
         )
@@ -55,7 +44,7 @@ const Playlists = ({ closeSideBar }: { closeSideBar: () => void }) => {
       <ListItem>
         <ListItemText>
           <Button
-            startIcon={<PlaylistAddOutlinedIcon />}
+            startIcon={<PlaylistAddRoundedIcon />}
             onClick={addPlaylist}
           >
             {t('playlist.addPlaylist')}

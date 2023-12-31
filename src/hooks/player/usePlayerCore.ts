@@ -212,7 +212,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
                 path: currentMetaData?.filePath,
               }
             )
-            updateCover('./cover.png')
+            updateCover('./cover.webp')
           }
 
           if (
@@ -234,6 +234,8 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
               else if (cover) {
                 updateCover(URL.createObjectURL(new Blob([new Uint8Array(cover as ArrayBufferLike)], { type: 'image/png' })))
               }
+            } else {
+              updateCover('./cover.webp')
             }
           }
         }
