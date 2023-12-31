@@ -7,13 +7,13 @@ const useThemeColor = () => {
     audioViewIsShow,
     audioViewTheme,
     videoViewIsShow,
-    color,
+    coverColor,
   ] = useUiStore(
     (state) => [
       state.audioViewIsShow,
       state.audioViewTheme,
       state.videoViewIsShow,
-      state.color,
+      state.coverColor,
     ]
   )
 
@@ -34,12 +34,12 @@ const useThemeColor = () => {
           themeColorDark.content = '#1e1e1e'
         }
         else if (audioViewIsShow && audioViewTheme === 'modern') {
-          themeColorLight.content = color
-          themeColorDark.content = color
+          themeColorLight.content = coverColor
+          themeColorDark.content = coverColor
         }
       }
     },
-    [audioViewIsShow, audioViewTheme, color, theme.palette.background.default, videoViewIsShow]
+    [audioViewIsShow, audioViewTheme, coverColor, theme.palette.background.default, videoViewIsShow]
   )
 
 }

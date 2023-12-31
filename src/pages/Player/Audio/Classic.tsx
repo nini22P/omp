@@ -8,8 +8,9 @@ import { CloseFullscreen, FastForward, FastRewind, KeyboardArrowDownOutlined, Op
 import { Container, Box, IconButton, Typography, Slider, CircularProgress } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import MenuButton from './MenuButton'
+import { SpringValue, animated } from '@react-spring/web'
 
-const Classic = ({ player }: { player: HTMLVideoElement | null }) => {
+const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: { borderRadius: SpringValue<string> } }) => {
 
   const [playQueue] = usePlayQueueStore((state) => [state.playQueue])
 
@@ -18,7 +19,7 @@ const Classic = ({ player }: { player: HTMLVideoElement | null }) => {
     backgroundIsShow,
     shuffle,
     repeat,
-    color,
+    coverColor,
     updateAudioViewIsShow,
     updatePlayQueueIsShow,
     updateBackgroundIsShow,
@@ -29,7 +30,7 @@ const Classic = ({ player }: { player: HTMLVideoElement | null }) => {
       state.backgroundIsShow,
       state.shuffle,
       state.repeat,
-      state.color,
+      state.coverColor,
       state.updateAudioViewIsShow,
       state.updatePlayQueueIsShow,
       state.updateBackgroundIsShow,
@@ -69,29 +70,27 @@ const Classic = ({ player }: { player: HTMLVideoElement | null }) => {
   const { handleClickFullscreen } = useFullscreen()
 
   return (
-    <Container
-      maxWidth={false}
-      disableGutters={true}
-      sx={{
+    <animated.div
+      style={{
         width: '100%',
         height: '100dvh',
         background:
           (!backgroundIsShow || cover === './cover.webp')
-            ? `linear-gradient(rgba(50, 50, 50, 0.6), ${color}bb), #000`
+            ? `linear-gradient(rgba(50, 50, 50, 0.6), ${coverColor}bb), #000`
             : `linear-gradient(rgba(50, 50, 50, 0.3), rgba(50, 50, 50, 0.3) ), url(${cover})  no-repeat center, #000`,
         backgroundSize: 'cover',
         color: '#fff',
         overflow: 'hidden',
-        '.MuiSvgIcon-root': {
-          color: '#fff',
-        },
+        ...styles,
       }}
     >
-      <Box sx={{ backdropFilter: (!backgroundIsShow || cover === './cover.webp') ? '' : 'blur(30px)' }}>
+
+      <Box sx={{ width: '100%', height: '100%', backdropFilter: (!backgroundIsShow || cover === './cover.webp') ? '' : 'blur(30px)' }}>
         <Container
           maxWidth={'xl'}
           disableGutters={true}
           className='pt-titlebar-area-height'
+          sx={{ height: '100%' }}
         >
           <Grid container
             pt={{ xs: 1, sm: 2 }}
@@ -100,9 +99,12 @@ const Classic = ({ player }: { player: HTMLVideoElement | null }) => {
             pr={{ xs: 0, sm: 2 }}
             sx={{
               width: '100%',
-              height: '100dvh',
+              height: '100%',
               justifyContent: 'space-evenly',
               alignItems: 'start',
+              '.MuiSvgIcon-root': {
+                color: '#fff',
+              },
             }}
           >
             <Grid xs={6} pl={{ xs: 1, sm: 0 }} >
@@ -202,7 +204,7 @@ const Classic = ({ player }: { player: HTMLVideoElement | null }) => {
                     max={1000}
                     value={(!duration) ? 0 : currentTime / duration * 1000}
                     onChange={(_, current) => handleTimeRangeonChange(current)}
-                    style={{ color: '#fff', width: '100%' }}
+                    sx={{ color: '#fff', width: '100%' }}
                   />
                   <Typography style={{ color: '#fff' }} sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }} >
                     <span>{timeShift(currentTime)}</span>
@@ -261,7 +263,8 @@ const Classic = ({ player }: { player: HTMLVideoElement | null }) => {
         </Container>
       </Box>
 
-    </Container>
+    </animated.div>
+
   )
 }
 

@@ -10,7 +10,9 @@ export interface UiStatus {
   backgroundIsShow: boolean;
   shuffle: boolean;
   repeat: 'off' | 'all' | 'one';
-  color: string;
+  coverColor: string;
+  CoverThemeColor: boolean;
+  colorMode: 'auto' | 'light' | 'dark';
   display: 'list' | 'multicolumnList' | 'grid';
   sortBy: 'name' | 'size' | 'datetime';
   orderBy: 'asc' | 'desc';
@@ -31,7 +33,9 @@ export interface UiAction {
   updateBackgroundIsShow: (backgroundIsShow: UiStatus['backgroundIsShow']) => void;
   updateShuffle: (shuffle: UiStatus['shuffle']) => void;
   updateRepeat: (loop: UiStatus['repeat']) => void;
-  updateColor: (color: UiStatus['color']) => void;
+  updateCoverColor: (coverColor: UiStatus['coverColor']) => void;
+  updateCoverThemeColor: (CoverThemeColor: UiStatus['CoverThemeColor']) => void;
+  updateColorMode: (colorMode: UiStatus['colorMode']) => void;
   updateDisplay: (display: UiStatus['display']) => void;
   updateSortBy: (sortBy: UiStatus['sortBy']) => void;
   updateOrderBy: (orderBy: UiStatus['orderBy']) => void;

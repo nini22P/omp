@@ -2,8 +2,8 @@ import { useTranslation } from 'react-i18next'
 import { NavLink, useNavigate } from 'react-router-dom'
 import shortUUID from 'short-uuid'
 import { List, ListItem, ListItemText, ListItemIcon, ListItemButton, Button } from '@mui/material'
-import ListOutlinedIcon from '@mui/icons-material/ListOutlined'
-import PlaylistAddOutlinedIcon from '@mui/icons-material/PlaylistAddOutlined'
+import ListRoundedIcon from '@mui/icons-material/ListRounded'
+import PlaylistAddRoundedIcon from '@mui/icons-material/PlaylistAddRounded'
 import usePlaylistsStore from '../../store/usePlaylistsStore'
 
 const Playlists = ({ closeSideBar }: { closeSideBar: () => void }) => {
@@ -34,7 +34,7 @@ const Playlists = ({ closeSideBar }: { closeSideBar: () => void }) => {
               onClick={closeSideBar}
             >
               <ListItemIcon>
-                <ListOutlinedIcon />
+                <ListRoundedIcon />
               </ListItemIcon>
               <ListItemText primary={playlist.title} />
             </ListItemButton>
@@ -44,7 +44,7 @@ const Playlists = ({ closeSideBar }: { closeSideBar: () => void }) => {
       <ListItem>
         <ListItemText>
           <Button
-            startIcon={<PlaylistAddOutlinedIcon />}
+            startIcon={<PlaylistAddRoundedIcon />}
             onClick={addPlaylist}
           >
             {t('playlist.addPlaylist')}

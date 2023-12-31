@@ -1,6 +1,6 @@
 import { Box, Typography, Link, Container, IconButton } from '@mui/material'
 import GitHubIcon from '@mui/icons-material/GitHub'
-import MenuOutlinedIcon from '@mui/icons-material/MenuOutlined'
+import MenuRoundedIcon from '@mui/icons-material/MenuRounded'
 import { shallow } from 'zustand/shallow'
 import useUiStore from '../store/useUiStore'
 import { AccountInfo } from '@azure/msal-browser'
@@ -30,7 +30,7 @@ const NavBar = ({ accounts }: { accounts: AccountInfo[] }) => {
           justifyContent: 'space-between',
           alignItems: 'center',
           height: '100%',
-          px: 'calc(env(titlebar-area-height, 1.25rem) - env(titlebar-area-height, 0rem) + 0.25rem)',
+          px: { xs: '0.5rem', sm: 'calc(env(titlebar-area-height, 1.25rem) - env(titlebar-area-height, 0rem) + 0.25rem)' },
           py: 'calc(env(titlebar-area-height, 0.5rem) - env(titlebar-area-height, 0rem) + 0.25rem)',
         }}
       >
@@ -42,7 +42,7 @@ const NavBar = ({ accounts }: { accounts: AccountInfo[] }) => {
               sx={{ display: { xs: '', sm: 'none' } }}
               className='app-region-no-drag'
             >
-              <MenuOutlinedIcon />
+              <MenuRoundedIcon />
             </IconButton>
           }
           <img

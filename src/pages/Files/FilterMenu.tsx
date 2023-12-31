@@ -1,5 +1,5 @@
 import useUiStore from '@/store/useUiStore'
-import { SortOutlined } from '@mui/icons-material'
+import FilterListRoundedIcon from '@mui/icons-material/FilterListRounded'
 import { Checkbox, Divider, FormControlLabel, FormGroup, IconButton, Menu, Radio, RadioGroup } from '@mui/material'
 import React from 'react'
 import { useTranslation } from 'react-i18next'
@@ -55,7 +55,7 @@ const FilterMenu = () => {
         aria-expanded={open ? 'true' : undefined}
         onClick={handleClick}
       >
-        <SortOutlined />
+        <FilterListRoundedIcon />
       </IconButton>
 
       <Menu

@@ -1,11 +1,11 @@
 import { File } from '@/types/file'
 import { sizeConvert } from '@/utils'
-import InsertDriveFileOutlinedIcon from '@mui/icons-material/InsertDriveFileOutlined'
-import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined'
-import FolderOutlinedIcon from '@mui/icons-material/FolderOutlined'
-import MusicNoteIcon from '@mui/icons-material/MusicNote'
-import MovieIcon from '@mui/icons-material/Movie'
-import MoreVertOutlinedIcon from '@mui/icons-material/MoreVertOutlined'
+import InsertDriveFileRoundedIcon from '@mui/icons-material/InsertDriveFileRounded'
+import InsertPhotoRoundedIcon from '@mui/icons-material/InsertPhotoRounded'
+import FolderOpenRoundedIcon from '@mui/icons-material/FolderOpenRounded'
+import MusicNoteRoundedIcon from '@mui/icons-material/MusicNoteRounded'
+import MovieRoundedIcon from '@mui/icons-material/MovieRounded'
+import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded'
 import { ListItem, IconButton, ListItemButton, ListItemAvatar, Avatar, ListItemText, ListItemIcon } from '@mui/material'
 import { useTranslation } from 'react-i18next'
 
@@ -43,7 +43,7 @@ const CommonListItem = ({
                 }
               )}
           >
-            <MoreVertOutlinedIcon />
+            <MoreVertRoundedIcon />
           </IconButton>
         </div>
       }
@@ -54,11 +54,11 @@ const CommonListItem = ({
       >
         <ListItemAvatar sx={{ position: 'relative' }}>
           <ListItemIcon sx={{ paddingLeft: 1 }}>
-            {item.fileType === 'folder' && <FolderOutlinedIcon />}
-            {item.fileType === 'audio' && <MusicNoteIcon />}
-            {item.fileType === 'video' && <MovieIcon />}
-            {item.fileType === 'picture' && <InsertPhotoOutlinedIcon />}
-            {item.fileType === 'other' && <InsertDriveFileOutlinedIcon />}
+            {item.fileType === 'folder' && <FolderOpenRoundedIcon />}
+            {item.fileType === 'audio' && <MusicNoteRoundedIcon />}
+            {item.fileType === 'video' && <MovieRoundedIcon />}
+            {item.fileType === 'picture' && <InsertPhotoRoundedIcon />}
+            {item.fileType === 'other' && <InsertDriveFileRoundedIcon />}
           </ListItemIcon>
           {
             (item.thumbnails && item.thumbnails[0])

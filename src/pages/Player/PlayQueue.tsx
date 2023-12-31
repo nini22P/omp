@@ -1,6 +1,6 @@
 import { Button, Drawer } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
-import KeyboardArrowRightOutlinedIcon from '@mui/icons-material/KeyboardArrowRightOutlined'
+import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import useUiStore from '@/store/useUiStore'
 import CommonList from '@/components/CommonList/CommonList'
@@ -45,7 +45,7 @@ const PlayQueue = () => {
       <Grid container wrap='nowrap' height={'100%'} >
         <Grid height={'100%'}>
           <Button sx={{ height: '100%' }} onClick={() => updatePlayQueueIsShow(false)}>
-            <KeyboardArrowRightOutlinedIcon />
+            <KeyboardArrowRightRoundedIcon />
           </Button>
         </Grid>
         <Grid xs sx={{ height: '100%', overflowY: 'auto' }}>

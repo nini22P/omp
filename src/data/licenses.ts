@@ -39,6 +39,18 @@ export const licenses = [
     'author': 'MUI Team'
   },
   {
+    'name': '@react-spring/web',
+    'licenseType': 'MIT',
+    'link': 'https://github.com/pmndrs/react-spring',
+    'author': 'Poimandres'
+  },
+  {
+    'name': '@use-gesture/react',
+    'licenseType': 'MIT',
+    'link': 'https://github.com/pmndrs/use-gesture',
+    'author': 'Poimandres'
+  },
+  {
     'name': 'buffer',
     'licenseType': 'MIT',
     'link': 'https://github.com/feross/buffer',
@@ -114,12 +126,12 @@ export const licenses = [
     'name': 'swr',
     'licenseType': 'MIT',
     'link': 'https://github.com/vercel/swr',
-    'author': 'n/a'
+    'author': 'Vercel'
   },
   {
     'name': 'zustand',
     'licenseType': 'MIT',
     'link': 'https://github.com/pmndrs/zustand',
-    'author': 'Paul Henschel'
+    'author': 'Poimandres'
   }
 ]

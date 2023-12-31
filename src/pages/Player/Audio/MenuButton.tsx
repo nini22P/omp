@@ -1,5 +1,5 @@
 import useUiStore from '@/store/useUiStore'
-import { MoreVert } from '@mui/icons-material'
+import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded'
 import { Box, IconButton, ListItemText, Menu, MenuItem } from '@mui/material'
 import { useState } from 'react'
 
@@ -30,7 +30,7 @@ const MenuButton = () => {
   return (
     <Box>
       <IconButton onClick={(event) => handleClickMenu(event)}>
-        <MoreVert />
+        <MoreVertRoundedIcon />
       </IconButton>
       <Menu
         anchorEl={anchorEl}

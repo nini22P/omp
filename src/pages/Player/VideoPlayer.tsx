@@ -1,6 +1,6 @@
 import { Ref, forwardRef } from 'react'
 import { Container, Grid, IconButton } from '@mui/material'
-import KeyboardArrowDownOutlinedIcon from '@mui/icons-material/KeyboardArrowDownOutlined'
+import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded'
 import useFullscreen from '@/hooks/ui/useFullscreen'
 import useUiStore from '@/store/useUiStore'
 
@@ -64,7 +64,7 @@ const VideoPlayer = forwardRef(
               }}
               className='app-region-no-drag'
             >
-              <KeyboardArrowDownOutlinedIcon sx={{ color: '#fff' }} />
+              <KeyboardArrowDownRoundedIcon sx={{ color: '#fff' }} />
             </IconButton>
           </Grid>
 

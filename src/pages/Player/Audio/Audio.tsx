@@ -16,13 +16,13 @@ const Audio = ({ player }: { player: HTMLVideoElement | null }) => {
     audioViewIsShow,
     audioViewTheme,
     updateAudioViewIsShow,
-    updateColor,
+    updateCoverColor,
   ] = useUiStore(
     (state) => [
       state.audioViewIsShow,
       state.audioViewTheme,
       state.updateAudioViewIsShow,
-      state.updateColor,
+      state.updateCoverColor,
     ]
   )
 
@@ -31,15 +31,37 @@ const Audio = ({ player }: { player: HTMLVideoElement | null }) => {
   // 从专辑封面提取颜色
   useMemo(
     () => (cover !== './cover.webp') &&
-      extractColors(cover).then(color => updateColor(color[0].hex)).catch(console.error),
+      extractColors(cover).then(color => updateCoverColor(color[0].hex)).catch(console.error),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [cover]
   )
 
-  const immediateRef = useRef(false)
-  const [{ top }, api] = useSpring(() => ({ top: audioViewIsShow ? '0' : '100dvh' }))
-  const show = () => api.start({ top: '0' })
-  const hide = () => api.start({ top: '100dvh', immediate: immediateRef.current })
+  const topRef = useRef(0)
+  const [{ top, borderRadius }, api] = useSpring(() => ({
+    from: {
+      top: audioViewIsShow ? '0' : '100dvh',
+      borderRadius: audioViewIsShow ? '0' : '0.5rem',
+    },
+    // config: {
+    //   mass: 1,
+    //   tension: 190,
+    //   friction: 20,
+    // }
+  }))
+
+  const show = () => api.start({
+    to: { top: '0', borderRadius: '0' },
+    // config: { clamp: false },
+  })
+
+  const hide = () => {
+    api.start({
+      from: { top: `${topRef.current}` },
+      to: { top: '100dvh' },
+      // config: { clamp: true },
+    })
+    topRef.current = 0
+  }
 
   useMemo(
     () => audioViewIsShow ? show() : hide(),
@@ -52,12 +74,12 @@ const Audio = ({ player }: { player: HTMLVideoElement | null }) => {
       if (my > window.innerHeight * 0.5) {
         updateAudioViewIsShow(false)
       } else {
-        immediateRef.current = false
+        topRef.current = 0
         show()
       }
     } else if (down) {
-      immediateRef.current = true
-      api.start({ top: my > 0 ? `${my}px` : '0' })
+      topRef.current = my
+      api.start({ top: my > 0 ? `${my}px` : '0', borderRadius: '0.5rem' })
     }
   })
 
@@ -66,15 +88,16 @@ const Audio = ({ player }: { player: HTMLVideoElement | null }) => {
       {...bind()}
       style={{
         width: '100%',
-        height: '100dvh',
+        maxHeight: '100dvh',
         position: 'fixed',
         backgroundColor: theme.palette.background.paper,
         top: top,
+        bottom: 0,
         touchAction: 'pan-x',
       }}
     >
-      {audioViewTheme === 'classic' && <Classic player={player} />}
-      {audioViewTheme === 'modern' && <Modern player={player} />}
+      {audioViewTheme === 'classic' && <Classic player={player} styles={{ borderRadius: borderRadius }} />}
+      {audioViewTheme === 'modern' && <Modern player={player} styles={{ borderRadius: borderRadius }} />}
     </animated.div>
 
   )

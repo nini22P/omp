@@ -2,8 +2,8 @@ import { useTranslation } from 'react-i18next'
 import { useNavigate } from 'react-router-dom'
 import shortUUID from 'short-uuid'
 import { Menu, MenuItem, ListItemText, Button, Dialog, DialogActions, DialogTitle, List, ListItem, ListItemButton, ListItemIcon } from '@mui/material'
-import PlaylistAddOutlinedIcon from '@mui/icons-material/PlaylistAddOutlined'
-import ListOutlinedIcon from '@mui/icons-material/ListOutlined'
+import PlaylistAddRoundedIcon from '@mui/icons-material/PlaylistAddRounded'
+import ListRoundedIcon from '@mui/icons-material/ListRounded'
 import { shallow } from 'zustand/shallow'
 import usePlayQueueStore from '../../store/usePlayQueueStore'
 import usePlaylistsStore from '../../store/usePlaylistsStore'
@@ -158,7 +158,7 @@ const CommonMenu = (
                 onClick={() => addToPlaylist(item.id)}
               >
                 <ListItemIcon>
-                  <ListOutlinedIcon />
+                  <ListRoundedIcon />
                 </ListItemIcon>
                 <ListItemText primary={item.title} />
               </ListItemButton>
@@ -170,7 +170,7 @@ const CommonMenu = (
               onClick={addNewPlaylist}
             >
               <ListItemIcon>
-                <PlaylistAddOutlinedIcon />
+                <PlaylistAddRoundedIcon />
               </ListItemIcon>
               <ListItemText primary={t('playlist.addPlaylist')} />
             </ListItemButton>

@@ -1,5 +1,5 @@
 import usePictureStore from '@/store/usePictureStore'
-import { CloseOutlined } from '@mui/icons-material'
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
 import { Box, Dialog, IconButton } from '@mui/material'
 import PictureList from './PictureList'
 import { useEffect, useRef } from 'react'
@@ -65,7 +65,7 @@ const PictureView = () => {
         }}
       >
         <Box padding='0.5rem' display='flex' alignItems={'center'} gap={2} overflow={'hidden'}>
-          <IconButton onClick={(handleClose)}><CloseOutlined /></IconButton>
+          <IconButton onClick={(handleClose)}><CloseRoundedIcon /></IconButton>
           {currentPicture?.fileName}
         </Box>
         <Box sx={{ height: 0, flexGrow: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>

@@ -1,39 +1,38 @@
 import { useTranslation } from 'react-i18next'
-import { Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
+import { Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText, useTheme } from '@mui/material'
 import { NavLink } from 'react-router-dom'
-import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined'
-import HistoryOutlinedIcon from '@mui/icons-material/HistoryOutlined'
-import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined'
-import { shallow } from 'zustand/shallow'
+import HistoryRoundedIcon from '@mui/icons-material/HistoryOutlined'
+import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded'
+import FolderRoundedIcon from '@mui/icons-material/FolderRounded'
 import useUiStore from '../../store/useUiStore'
 import Playlists from './Playlists'
 import { useRef } from 'react'
 
 const SideBar = () => {
 
+  const theme = useTheme()
+
   const { t } = useTranslation()
 
   const [mobileSideBarOpen, updateMobileSideBarOpen] = useUiStore(
-    (state) => [state.mobileSideBarOpen, state.updateMobileSideBarOpen],
-    shallow
-  )
+    (state) => [state.mobileSideBarOpen, state.updateMobileSideBarOpen])
 
   const navData = [
-    { router: '/', icon: <HomeOutlinedIcon />, label: t('nav.home') },
-    { router: '/history', icon: <HistoryOutlinedIcon />, label: t('nav.history') },
-    { router: '/setting', icon: <SettingsOutlinedIcon />, label: t('nav.setting') },
+    { router: '/', icon: <FolderRoundedIcon />, label: t('nav.files') },
+    { router: '/history', icon: <HistoryRoundedIcon />, label: t('nav.history') },
+    { router: '/setting', icon: <SettingsRoundedIcon />, label: t('nav.setting') },
   ]
 
   const closeSideBar = () => (mobileSideBarOpen) && updateMobileSideBarOpen(false)
 
   const boxRef = useRef<HTMLDivElement | null>(null)
 
-  const handleTouchStart = () => {
+  const showScrollbar = () => {
     const element = boxRef.current
     element && element.classList.add('show-scrollbar')
   }
 
-  const handleTouchEnd = () => {
+  const hiddenScrollbar = () => {
     const element = boxRef.current
     element && element.classList.remove('show-scrollbar')
   }
@@ -43,7 +42,18 @@ const SideBar = () => {
       sx={{
         height: '100%',
         overflow: 'auto',
+        '&::-webkit-scrollbar': {
+          width: '12px',
+          height: '12px',
+        },
+        '&::-webkit-scrollbar-track': {
+          backgroundColor: 'transparent',
+        },
         '&::-webkit-scrollbar-thumb': {
+          background: theme.palette.primary.main,
+          borderRadius: '16px',
+          border: '3.5px solid transparent',
+          backgroundClip: 'content-box',
           visibility: 'hidden',
         },
         '&:hover::-webkit-scrollbar-thumb': {
@@ -51,8 +61,8 @@ const SideBar = () => {
         },
       }}
       ref={boxRef}
-      onTouchStart={() => handleTouchStart()}
-      onTouchEnd={() => handleTouchEnd()}
+      onTouchStart={() => showScrollbar()}
+      onTouchEnd={() => hiddenScrollbar()}
     >
       <List disablePadding>
         {navData.map((item, index) =>
@@ -76,7 +86,7 @@ const SideBar = () => {
         }
       </List>
       <Playlists closeSideBar={closeSideBar} />
-    </Box>
+    </Box >
   )
 }
 export default SideBar

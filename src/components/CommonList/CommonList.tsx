@@ -12,8 +12,9 @@ import CommonListItem from './CommonListItem'
 import { Box, Fab, List, useMediaQuery, useTheme } from '@mui/material'
 import { AutoSizer, List as VirtualList } from 'react-virtualized'
 import CommonListItemCard from './CommonListItemCard'
-import { PlayArrowOutlined, ShuffleOutlined } from '@mui/icons-material'
 import { useTranslation } from 'react-i18next'
+import ShuffleRoundedIcon from '@mui/icons-material/ShuffleRounded'
+import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded'
 
 const CommonList = (
   {
@@ -275,7 +276,7 @@ const CommonList = (
                       rowRenderer={gridRenderer}
                       scrollToAlignment={'center'}
                       style={{
-                        paddingBottom: '6rem'
+                        paddingBottom: isPlayQueueView ? 0 : '6rem',
                       }}
                     />
                   </List>
@@ -298,7 +299,7 @@ const CommonList = (
                       rowRenderer={rowRenderer}
                       scrollToAlignment={'center'}
                       style={{
-                        paddingBottom: '6rem'
+                        paddingBottom: isPlayQueueView ? 0 : '6rem',
                       }}
                     />
                   </List>
@@ -337,10 +338,10 @@ const CommonList = (
           }}
         >
           <Fab size='small' onClick={() => handleClickShuffleAll()}>
-            <ShuffleOutlined />
+            <ShuffleRoundedIcon />
           </Fab>
           <Fab variant='extended' color='primary' onClick={() => handleClickPlayAll()}>
-            <PlayArrowOutlined />
+            <PlayArrowRoundedIcon />
             {t('playlist.playAll')}
           </Fab>
         </Box>

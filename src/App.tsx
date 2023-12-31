@@ -21,18 +21,18 @@ const App = () => {
   useSync(accounts)
   useThemeColor()
 
-  const [color] = useUiStore((state) => [state.color])
+  const [coverColor] = useUiStore((state) => [state.coverColor])
   const [{ background }, api] = useSpring(
     () => ({
-      background: `linear-gradient(45deg, ${color}33, ${color}15, ${color}05, ${theme.palette.background.default})`,
+      background: `linear-gradient(45deg, ${coverColor}33, ${coverColor}15, ${coverColor}05, ${theme.palette.background.default})`,
     })
   )
   useMemo(
     () => api.start({
-      background: `linear-gradient(45deg, ${color}33, ${color}15, ${color}05, ${theme.palette.background.default})`
+      background: `linear-gradient(45deg, ${coverColor}33, ${coverColor}15, ${coverColor}05, ${theme.palette.background.default})`
     }),
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [color, theme.palette.background.default]
+    [coverColor, theme.palette.background.default]
   )
 
   return (
@@ -76,7 +76,26 @@ const App = () => {
                   height: 'calc(100dvh - 4.5rem - env(titlebar-area-height, 2rem))',
                 }}
               >
-                <Paper sx={{ width: '100%', height: '100%', overflowY: 'auto', backgroundColor: `${theme.palette.background.paper}99`, backdropFilter: 'blur(2px)' }}>
+                <Paper
+                  sx={{
+                    width: '100%',
+                    height: '100%',
+                    overflowY: 'auto',
+                    backgroundColor: `${theme.palette.background.paper}99`, backdropFilter: 'blur(2px)',
+                    '& ::-webkit-scrollbar': {
+                      width: '12px',
+                      height: '12px',
+                    },
+                    '& ::-webkit-scrollbar-track': {
+                      backgroundColor: 'transparent',
+                    },
+                    '& ::-webkit-scrollbar-thumb': {
+                      background: theme.palette.primary.main,
+                      borderRadius: '16px',
+                      border: '3.5px solid transparent',
+                      backgroundClip: 'content-box',
+                    },
+                  }}>
                   <Outlet />
                 </Paper>
               </Grid>

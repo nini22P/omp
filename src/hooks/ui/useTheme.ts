@@ -1,13 +1,28 @@
+import useUiStore from '@/store/useUiStore'
 import { createTheme, useMediaQuery } from '@mui/material'
+import { useEffect, useMemo } from 'react'
 
 const useTheme = () => {
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
+  const [coverColor, CoverThemeColor, colorMode] = useUiStore(state => [state.coverColor, state.CoverThemeColor, state.colorMode])
 
-  const color = {
-    primary: prefersDarkMode ? '#df7ef9' : '#8e24aa',
+  useEffect(() => {
+    if (colorMode === 'dark' || colorMode === 'light')
+      document.documentElement.setAttribute('data-theme', colorMode)
+    if (colorMode === 'auto')
+      document.documentElement.removeAttribute('data-theme')
+    return () => {
+      document.documentElement.removeAttribute('data-theme')
+    }
+  }, [colorMode])
+
+  const prefersColorSchemeDark = useMediaQuery('(prefers-color-scheme: dark)')
+  const prefersDarkMode = colorMode === 'light' ? false : prefersColorSchemeDark || colorMode === 'dark'
+
+  const colors = {
+    primary: CoverThemeColor ? coverColor : prefersDarkMode ? '#df7ef9' : '#8e24aa',
   }
 
-  const theme = createTheme({
+  const theme = useMemo(() => createTheme({
     palette: {
       mode: prefersDarkMode ? 'dark' : 'light',
       background: {
@@ -15,7 +30,7 @@ const useTheme = () => {
         paper: prefersDarkMode ? '#121212' : '#ffffff',
       },
       primary: {
-        main: color.primary,
+        main: colors.primary,
       },
       secondary: {
         main: '#ff3d00',
@@ -81,10 +96,10 @@ const useTheme = () => {
               backgroundColor: prefersDarkMode ? '#f7f7f711' : '#3b3b3b11',
             },
             '&.active .MuiListItemIcon-root': {
-              color: color.primary,
+              color: colors.primary,
             },
             '&.active .MuiListItemText-root': {
-              color: color.primary,
+              color: colors.primary,
             }
           },
         },
@@ -133,9 +148,23 @@ const useTheme = () => {
             borderRadius: '0.5rem',
           }
         }
-      }
+      },
+      MuiInputBase: {
+        styleOverrides: {
+          input: {
+            borderRadius: '0.5rem',
+            padding: '0.25rem',
+            ':focus': {
+              borderRadius: '0.5rem',
+              backgroundColor: '#00000000',
+            }
+          },
+        }
+      },
     },
-  })
+  }),
+    [colors.primary, prefersDarkMode]
+  )
 
   return theme
 }

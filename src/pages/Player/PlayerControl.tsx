@@ -1,17 +1,17 @@
 import { Box, ButtonBase, CircularProgress, Container, IconButton, Paper, Slider, Typography, useTheme } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
-import SkipPreviousIcon from '@mui/icons-material/SkipPrevious'
-import SkipNextIcon from '@mui/icons-material/SkipNext'
-import PlayCircleOutlinedIcon from '@mui/icons-material/PlayCircleOutlined'
-import PauseCircleOutlinedIcon from '@mui/icons-material/PauseCircleOutlined'
-import FastForwardIcon from '@mui/icons-material/FastForward'
-import FastRewindIcon from '@mui/icons-material/FastRewind'
-import ShuffleIcon from '@mui/icons-material/Shuffle'
-import RepeatIcon from '@mui/icons-material/Repeat'
-import RepeatOneIcon from '@mui/icons-material/RepeatOne'
-import OpenInFullIcon from '@mui/icons-material/OpenInFull'
-import CloseFullscreenIcon from '@mui/icons-material/CloseFullscreen'
-import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay'
+import CloseFullscreenRoundedIcon from '@mui/icons-material/CloseFullscreenRounded'
+import OpenInFullRoundedIcon from '@mui/icons-material/OpenInFullRounded'
+import ShuffleRoundedIcon from '@mui/icons-material/ShuffleRounded'
+import SkipPreviousRoundedIcon from '@mui/icons-material/SkipPreviousRounded'
+import FastRewindRoundedIcon from '@mui/icons-material/FastRewindRounded'
+import PlayCircleOutlineRoundedIcon from '@mui/icons-material/PlayCircleOutlineRounded'
+import PauseCircleOutlineRoundedIcon from '@mui/icons-material/PauseCircleOutlineRounded'
+import FastForwardRoundedIcon from '@mui/icons-material/FastForwardRounded'
+import SkipNextRoundedIcon from '@mui/icons-material/SkipNextRounded'
+import RepeatOneRoundedIcon from '@mui/icons-material/RepeatOneRounded'
+import RepeatRoundedIcon from '@mui/icons-material/RepeatRounded'
+import PlaylistPlayRoundedIcon from '@mui/icons-material/PlaylistPlayRounded'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
@@ -30,7 +30,6 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
     fullscreen,
     shuffle,
     repeat,
-    color,
     updateAudioViewIsShow,
     updateVideoViewIsShow,
     updatePlayQueueIsShow,
@@ -42,7 +41,6 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
       state.fullscreen,
       state.shuffle,
       state.repeat,
-      state.color,
       state.updateAudioViewIsShow,
       state.updateVideoViewIsShow,
       state.updatePlayQueueIsShow,
@@ -88,6 +86,11 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
       updateVideoViewIsShow(!videoViewIsShow)
   }
 
+  const iconStyles = {
+    small: { width: 20, height: 20 },
+    large: { width: 38, height: 38 }
+  }
+
   return (
     <Paper sx={{ backgroundColor: `${theme.palette.background.paper}99`, backdropFilter: 'blur(2px)' }}>
       <Container maxWidth={'xl'} disableGutters={true}>
@@ -121,7 +124,10 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
                 max={1000}
                 value={(!duration) ? 0 : currentTime / duration * 1000}
                 onChange={(_, current) => handleTimeRangeonChange(current)}
-                sx={{ padding: '13px 0 !important', color: color }}
+                sx={{
+                  padding: '12px 0 !important',
+                  height: '0.2rem',
+                }}
               />
             </Grid>
             <Grid
@@ -186,11 +192,11 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
                 aria-label="shuffle"
                 onClick={() => updateShuffle(!shuffle)}
               >
-                <ShuffleIcon sx={{ height: 20, width: 20 }} style={(shuffle) ? {} : { color: '#aaa' }} />
+                <ShuffleRoundedIcon sx={iconStyles.small} style={(shuffle) ? {} : { color: '#aaa' }} />
               </IconButton>
 
               <IconButton aria-label="previous" onClick={handleClickPrev} >
-                <SkipPreviousIcon />
+                <SkipPreviousRoundedIcon />
               </IconButton>
 
               <IconButton
@@ -198,19 +204,19 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
                 aria-label="backward"
                 onClick={() => handleClickSeekbackward(10)}
               >
-                <FastRewindIcon />
+                <FastRewindRoundedIcon sx={iconStyles.small} />
               </IconButton>
 
               {
                 (!isLoading && playStatu === 'paused') &&
                 <IconButton aria-label="play" onClick={() => handleClickPlay()}>
-                  <PlayCircleOutlinedIcon sx={{ height: 38, width: 38 }} />
+                  <PlayCircleOutlineRoundedIcon sx={iconStyles.large} />
                 </IconButton>
               }
               {
                 (!isLoading && playStatu === 'playing') &&
                 <IconButton aria-label="pause" onClick={() => handleClickPause()}>
-                  <PauseCircleOutlinedIcon sx={{ height: 38, width: 38 }} />
+                  <PauseCircleOutlineRoundedIcon sx={iconStyles.large} />
                 </IconButton>
               }
               {
@@ -225,11 +231,11 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
                 aria-label="forward"
                 onClick={() => handleClickSeekforward(10)}
               >
-                <FastForwardIcon />
+                <FastForwardRoundedIcon sx={iconStyles.small} />
               </IconButton>
 
               <IconButton aria-label="next" onClick={handleClickNext} >
-                <SkipNextIcon />
+                <SkipNextRoundedIcon />
               </IconButton>
 
               <IconButton
@@ -239,13 +245,8 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
               >
                 {
                   (repeat === 'one')
-                    ?
-                    <RepeatOneIcon sx={{ height: 20, width: 20, }} />
-                    :
-                    <RepeatIcon
-                      sx={{ height: 20, width: 20 }}
-                      style={(repeat === 'off') ? { color: '#aaa' } : {}}
-                    />
+                    ? <RepeatOneRoundedIcon sx={iconStyles.small} />
+                    : <RepeatRoundedIcon sx={iconStyles.small} style={(repeat === 'off') ? { color: '#aaa' } : {}} />
                 }
 
               </IconButton>
@@ -259,13 +260,13 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
               pr={1}
             >
               <IconButton onClick={() => updatePlayQueueIsShow(!playQueueIsShow)}>
-                <PlaylistPlayIcon sx={{ display: { sm: 'inline-grid', xs: 'none' } }} />
+                <PlaylistPlayRoundedIcon sx={{ display: { sm: 'inline-grid', xs: 'none' } }} />
               </IconButton>
               <IconButton onClick={() => handleClickFullscreen()} >
                 {
                   fullscreen
-                    ? <CloseFullscreenIcon sx={{ height: 18, width: 18, display: { sm: 'inline-grid', xs: 'none' } }} />
-                    : <OpenInFullIcon sx={{ height: 18, width: 18, display: { sm: 'inline-grid', xs: 'none' } }} />
+                    ? <CloseFullscreenRoundedIcon sx={{ height: 18, width: 18, display: { sm: 'inline-grid', xs: 'none' } }} />
+                    : <OpenInFullRoundedIcon sx={{ height: 18, width: 18, display: { sm: 'inline-grid', xs: 'none' } }} />
                 }
               </IconButton>
             </Grid>
