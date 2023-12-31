@@ -1,4 +1,4 @@
-<img height="100px" width="100px" alt="logo" src="https://github.com/nini22P/omp/assets/60903333/4c4ac2b7-1002-478a-bb15-a5756e352fec"/>
+<img height="100px" width="100px" alt="logo" src="https://github.com/nini22P/omp/assets/60903333/e2c099c6-15ad-46f1-a716-cb440b06c13e"/>
 
 # OMP - OneDrive 媒体播放器
 
@@ -21,10 +21,10 @@
 
 ## 截图
 
-![203825](https://github.com/nini22P/omp/assets/60903333/83ee1913-ed11-4a73-add0-d5655eb451e9)
-![203915](https://github.com/nini22P/omp/assets/60903333/35b0e1ce-8441-4b70-9ddb-96023b1c4f60)
-![204043](https://github.com/nini22P/omp/assets/60903333/efdf3f0a-fd79-4875-ba51-c421d8730589)
-![204226](https://github.com/nini22P/omp/assets/60903333/6c532070-8f77-4dc0-81a5-7c3efb2543bf)
+![235829](https://github.com/nini22P/omp/assets/60903333/b059e954-f389-41ba-9b7e-5b4796d26db3)
+![235819](https://github.com/nini22P/omp/assets/60903333/ea6b9ec2-d52f-4243-9450-d9cbab633fac)
+![000122](https://github.com/nini22P/omp/assets/60903333/bd776c79-ec3c-4f35-9b8b-534927ff980b)
+![000452](https://github.com/nini22P/omp/assets/60903333/5ad2565b-ff8c-439b-9f91-b1edcb7e24fa)
 
 ## FAQ
 
