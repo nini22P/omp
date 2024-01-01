@@ -2,7 +2,7 @@
   "name": "omp",
   "description": "OneDrive Media Player",
   "private": true,
-  "version": "1.5.0",
+  "version": "1.5.1",
   "scripts": {
     "dev": "webpack serve",
     "build": "webpack --mode=production --node-env=production",
