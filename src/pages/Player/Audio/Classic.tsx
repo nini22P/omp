@@ -75,7 +75,7 @@ const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: 
         width: '100%',
         height: '100dvh',
         background:
-          (!backgroundIsShow || cover === './cover.webp')
+          (!backgroundIsShow || cover === './cover.svg')
             ? `linear-gradient(rgba(50, 50, 50, 0.6), ${coverColor}bb), #000`
             : `linear-gradient(rgba(50, 50, 50, 0.3), rgba(50, 50, 50, 0.3) ), url(${cover})  no-repeat center, #000`,
         backgroundSize: 'cover',
@@ -85,7 +85,7 @@ const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: 
       }}
     >
 
-      <Box sx={{ width: '100%', height: '100%', backdropFilter: (!backgroundIsShow || cover === './cover.webp') ? '' : 'blur(30px)' }}>
+      <Box sx={{ width: '100%', height: '100%', backdropFilter: (!backgroundIsShow || cover === './cover.svg') ? '' : 'blur(30px)' }}>
         <Container
           maxWidth={'xl'}
           disableGutters={true}
@@ -171,7 +171,7 @@ const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: 
                 overflow={'hidden'}
               >
                 <img
-                  src={cover}
+                  src={cover === './cover.svg' ? './cover.webp' : cover}
                   alt='Cover'
                   style={{
                     height: '100%',

@@ -15,7 +15,7 @@
     "account": "Account",
     "signIn": "Sign in",
     "signOut": "Sign out",
-    "signInAlert": "Please sign in to your Microsoft account to view your files"
+    "signInAlert": "Please use Microsoft account authorization to log in"
   },
   "playlist": {
     "newPlaylist": "New Playlist",

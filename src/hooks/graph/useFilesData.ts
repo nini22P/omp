@@ -1,9 +1,11 @@
 import { getAppRootFiles, getFile, getFileThumbnails, getFiles, uploadAppRootJson } from '@/graph/graph'
 import { loginRequest } from '@/graph/authConfig'
 import useUser from './useUser'
+import { useMsal } from '@azure/msal-react'
 
 const useFilesData = () => {
-  const { instance, accounts } = useUser()
+  const { account } = useUser()
+  const { instance } = useMsal()
 
   /**
 * 获取文件夹数据
@@ -11,7 +13,8 @@ const useFilesData = () => {
 * @returns
 */
   const getFilesData = async (path: string) => {
-    const acquireToken = await instance.acquireTokenSilent({ ...loginRequest, account: accounts[0] })
+    await instance.initialize()
+    const acquireToken = await instance.acquireTokenSilent({ ...loginRequest, account: account })
     const response = await getFiles(path, acquireToken.accessToken)
     return response.value
   }
@@ -22,7 +25,8 @@ const useFilesData = () => {
    * @returns 
    */
   const getFileData = async (filePath: string) => {
-    const acquireToken = await instance.acquireTokenSilent({ ...loginRequest, account: accounts[0] })
+    await instance.initialize()
+    const acquireToken = await instance.acquireTokenSilent({ ...loginRequest, account: account })
     const response = await getFile(filePath, acquireToken.accessToken)
     return response
   }
@@ -33,19 +37,22 @@ const useFilesData = () => {
    * @returns 
    */
   const getFileThumbnailsData = async (itemId: string) => {
-    const acquireToken = await instance.acquireTokenSilent({ ...loginRequest, account: accounts[0] })
+    await instance.initialize()
+    const acquireToken = await instance.acquireTokenSilent({ ...loginRequest, account: account })
     const response = await getFileThumbnails(itemId, acquireToken.accessToken)
     return response
   }
 
   const getAppRootFilesData = async (filePath: string) => {
-    const acquireToken = await instance.acquireTokenSilent({ ...loginRequest, account: accounts[0] })
+    await instance.initialize()
+    const acquireToken = await instance.acquireTokenSilent({ ...loginRequest, account: account })
     const response = await getAppRootFiles(filePath, acquireToken.accessToken)
     return response
   }
 
   const uploadAppRootJsonData = async (fileName: string, fileContent: BodyInit) => {
-    const acquireToken = await instance.acquireTokenSilent({ ...loginRequest, account: accounts[0] })
+    await instance.initialize()
+    const acquireToken = await instance.acquireTokenSilent({ ...loginRequest, account: account })
     const response = await uploadAppRootJson(fileName, fileContent, acquireToken.accessToken)
     return response
   }

@@ -2,6 +2,7 @@ import { useMsal } from '@azure/msal-react'
 import { loginRequest } from '@/graph/authConfig'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import useUiStore from '@/store/useUiStore'
+import { AccountInfo } from '@azure/msal-browser'
 
 const useUser = () => {
   const { instance, accounts } = useMsal()
@@ -23,7 +24,9 @@ const useUser = () => {
     })
   }
 
-  return { instance, accounts, login, logout }
+  const account: AccountInfo | null = accounts[0] || null
+
+  return { account, login, logout }
 }
 
 export default useUser

@@ -178,7 +178,6 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
               gridTemplateRows: { xs: '1fr 1fr', sm: '1fr' },
               gap: { xs: '0', sm: '1rem' },
               alignItems: 'center',
-              justifyItems: 'start',
             }}
           >
 

@@ -10,7 +10,7 @@ import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 import 'react-virtualized/styles.css'
-import router from './routers'
+import router from './router'
 import './i18n'
 
 const msalInstance = new PublicClientApplication(msalConfig)

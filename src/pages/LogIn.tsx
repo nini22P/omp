@@ -1,15 +1,16 @@
-import { Button, Container, Link, Typography } from '@mui/material'
+import { Button, Container, IconButton, Link, Typography } from '@mui/material'
+import GitHubIcon from '@mui/icons-material/GitHub'
 import { useTranslation } from 'react-i18next'
 import useUser from '../hooks/graph/useUser'
 
-const SignIn = () => {
+const LogIn = () => {
   const { t } = useTranslation()
   const { login } = useUser()
 
   return (
     <Container
       style={{
-        height: 'calc(100dvh)',
+        height: '100%',
         display: 'flex',
         flexDirection: 'column',
         justifyContent: 'space-between',
@@ -17,7 +18,9 @@ const SignIn = () => {
         padding: '1rem',
         textAlign: 'center',
       }}>
-      <div>{/* Don't delete this */}</div>
+      <IconButton component={Link} href='https://github.com/nini22P/omp'>
+        <GitHubIcon />
+      </IconButton>
       <div>
         <Typography variant="h5" pb={2} >
           {t('account.signInAlert')}
@@ -31,4 +34,4 @@ const SignIn = () => {
   )
 }
 
-export default SignIn 
+export default LogIn 
