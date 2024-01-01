@@ -1,4 +1,4 @@
-import { Box, Typography, Container, IconButton } from '@mui/material'
+import { Box, Typography, Container, IconButton, useMediaQuery } from '@mui/material'
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded'
 import useUiStore from '../store/useUiStore'
 import useUser from '@/hooks/graph/useUser'
@@ -8,6 +8,7 @@ const NavBar = () => {
   const [mobileSideBarOpen, updateMobileSideBarOpen] = useUiStore(
     (state) => [state.mobileSideBarOpen, state.updateMobileSideBarOpen]
   )
+  const windowControlsOverlayOpen = useMediaQuery('(display-mode: window-controls-overlay)')
 
   return (
     <Box
@@ -28,7 +29,7 @@ const NavBar = () => {
           justifyContent: 'flex-start',
           alignItems: 'center',
           height: '100%',
-          px: { xs: '0.5rem', sm: 'calc(env(titlebar-area-height, 1.25rem) - env(titlebar-area-height, 0rem) + 0.25rem)' },
+          px: { xs: '0.5rem', sm: windowControlsOverlayOpen ? '0.25rem' : '1.5rem' },
           py: 'calc(env(titlebar-area-height, 0.5rem) - env(titlebar-area-height, 0rem) + 0.25rem)',
         }}
       >
@@ -47,12 +48,12 @@ const NavBar = () => {
           alt='logo'
           style={{
             height: '100%',
-            marginRight: 'calc(env(titlebar-area-height, 0.5rem) - env(titlebar-area-height, 0rem) + 0.125rem)',
+            marginRight: windowControlsOverlayOpen ? '0.125rem' : '0.6125rem',
           }}
         />
         <Typography
           component="div"
-          fontSize={'calc(env(titlebar-area-height, 0.25rem) - env(titlebar-area-height, 0rem) + 1rem)'}
+          fontSize={windowControlsOverlayOpen ? '1rem' : '1.25rem'}
         >
           OMP
         </Typography>

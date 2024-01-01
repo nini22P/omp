@@ -12,7 +12,7 @@
     "openSourceDependencies": "开源库"
   },
   "account": {
-    "account": "账号",
+    "account": "账户",
     "signIn": "登录",
     "signOut": "注销",
     "signInAlert": "请使用微软账户授权登录"

@@ -20,8 +20,9 @@ const useUser = () => {
     usePlayQueueStore.persist.clearStorage()
     useUiStore.persist.clearStorage()
     instance.logoutRedirect({
-      postLogoutRedirectUri: '/'
+      postLogoutRedirectUri: '/',
     })
+    location.reload()
   }
 
   const account: AccountInfo | null = accounts[0] || null
