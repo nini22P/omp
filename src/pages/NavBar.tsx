@@ -33,16 +33,15 @@ const NavBar = () => {
           py: 'calc(env(titlebar-area-height, 0.5rem) - env(titlebar-area-height, 0rem) + 0.25rem)',
         }}
       >
-        {
-          account &&
-          <IconButton
-            onClick={() => updateMobileSideBarOpen(!mobileSideBarOpen)}
-            sx={{ display: { xs: '', sm: 'none' } }}
-            className='app-region-no-drag'
-          >
-            <MenuRoundedIcon />
-          </IconButton>
-        }
+
+        <IconButton
+          onClick={() => updateMobileSideBarOpen(!mobileSideBarOpen)}
+          sx={{ display: { xs: '', sm: 'none' } }}
+          className='app-region-no-drag'
+        >
+          <MenuRoundedIcon />
+        </IconButton>
+
         <img
           src='./logo.svg'
           alt='logo'
