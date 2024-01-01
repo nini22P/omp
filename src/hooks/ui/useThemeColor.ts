@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import useUiStore from '../../store/useUiStore'
 import useTheme from './useTheme'
+import { blendHex } from '@/utils'
 const useThemeColor = () => {
 
   const [
@@ -34,8 +35,9 @@ const useThemeColor = () => {
           themeColorDark.content = '#1e1e1e'
         }
         else if (audioViewIsShow && audioViewTheme === 'modern') {
-          themeColorLight.content = coverColor
-          themeColorDark.content = coverColor
+          const color = blendHex(`${theme.palette.background.default}`, `${coverColor}33`)
+          themeColorLight.content = color
+          themeColorDark.content = color
         }
       }
     },
