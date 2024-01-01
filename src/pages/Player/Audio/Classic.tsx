@@ -77,8 +77,7 @@ const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: 
         background:
           (!backgroundIsShow || cover === './cover.svg')
             ? `linear-gradient(rgba(50, 50, 50, 0.6), ${coverColor}bb), #000`
-            : `linear-gradient(rgba(50, 50, 50, 0.3), rgba(50, 50, 50, 0.3) ), url(${cover})  no-repeat center, #000`,
-        backgroundSize: 'cover',
+            : `linear-gradient(rgba(50, 50, 50, 0.3), rgba(50, 50, 50, 0.3)), url(${cover}) no-repeat center / cover, #000`,
         color: '#fff',
         overflow: 'hidden',
         ...styles,
