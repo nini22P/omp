@@ -205,6 +205,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
 
           if (!metaData) {
             const currentMetaData = playQueue.filter(item => item.index === currentIndex)[0]
+            updateCover('./cover.svg')
             updateCurrentMetaData(
               {
                 title: currentMetaData?.fileName || 'Not playing',
@@ -212,7 +213,6 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
                 path: currentMetaData?.filePath,
               }
             )
-            updateCover('./cover.webp')
           }
 
           if (
@@ -235,7 +235,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
                 updateCover(URL.createObjectURL(new Blob([new Uint8Array(cover as ArrayBufferLike)], { type: 'image/png' })))
               }
             } else {
-              updateCover('./cover.webp')
+              updateCover('./cover.svg')
             }
           }
         }

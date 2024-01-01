@@ -3,17 +3,16 @@ import useSWR from 'swr'
 import usePlaylistsStore from '@/store/usePlaylistsStore'
 import useHistoryStore from '@/store/useHistoryStore'
 import useFilesData from './useFilesData'
-import { AccountInfo } from '@azure/msal-browser'
 import { File } from '@/types/file'
 import { Playlist } from '@/types/playlist'
 import { fetchJson } from '@/utils'
+import useUser from './useUser'
 
-const useSync = (accounts: AccountInfo[]) => {
+const useSync = () => {
+  const { account } = useUser()
   const [historyList, updateHistoryList] = useHistoryStore((state) => [state.historyList, state.updateHistoryList])
   const [playlists, updatePlaylists] = usePlaylistsStore((state) => [state.playlists, state.updatePlaylists])
   const { getAppRootFilesData, uploadAppRootJsonData } = useFilesData()
-
-  const isLoggedIn = accounts.length > 0
 
   // 自动从 OneDrive 获取应用数据
   const appDatafetcher = async () => {
@@ -36,7 +35,7 @@ const useSync = (accounts: AccountInfo[]) => {
     }
   }
 
-  const { data, error, isLoading } = useSWR<{ history: File[], playlists: Playlist[] }>(isLoggedIn ? 'fetchAppData' : null, appDatafetcher)
+  const { data, error, isLoading } = useSWR<{ history: File[], playlists: Playlist[] }>(account ? 'fetchAppData' : null, appDatafetcher)
 
   // 自动更新播放历史
   useMemo(

@@ -16,8 +16,7 @@ const ListItemTitle = ({ title }: { title: string }) => {
 }
 
 const Setting = () => {
-  const { accounts, logout } = useUser()
-  const account = accounts[0]
+  const { account, login, logout } = useUser()
   const { t } = useTranslation()
 
   const { clearLocalMetaData } = useLocalMetaDataStore()
@@ -43,15 +42,20 @@ const Setting = () => {
         <ListItemTitle title={t('account.account')} />
         <ListItem
           secondaryAction={
-            <Button onClick={() => logout()}>
-              {t('account.signOut')}
-            </Button>
+            account
+              ? <Button onClick={() => logout()}>{t('account.signOut')}</Button>
+              : <Button onClick={() => login()}>{t('account.signIn')}</Button>
           }
         >
           <ListItemAvatar>
-            <Avatar aria-label={account.name && account.name}>{account.name && account.name.split(' ')[0]}</Avatar>
+            {account && <Avatar aria-label={account.name}>{account.name?.split(' ')[0]}</Avatar>}
           </ListItemAvatar>
-          <ListItemText primary={account.username} secondary={account.username} />
+          {
+            account
+              ? <ListItemText primary={account.name} secondary={account.username} />
+              : <ListItemText primary={t('account.signInAlert')} secondary={' '} />
+          }
+
         </ListItem>
 
         <Divider sx={{ m: 1 }} />

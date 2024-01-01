@@ -17,7 +17,7 @@ const useUiStore = createWithEqualityFn<UiStatus & UiAction>()(
       backgroundIsShow: true,
       shuffle: false,
       repeat: 'off',
-      coverColor: '#ffffff',
+      coverColor: '#8e24aa',
       CoverThemeColor: false,
       colorMode: 'auto',
       display: 'list',

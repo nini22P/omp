@@ -1,22 +1,58 @@
+import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
 import { createTheme, useMediaQuery } from '@mui/material'
-import { useEffect, useMemo } from 'react'
+import { extractColors } from 'extract-colors'
+import { useMemo } from 'react'
 
 const useTheme = () => {
-  const [coverColor, CoverThemeColor, colorMode] = useUiStore(state => [state.coverColor, state.CoverThemeColor, state.colorMode])
+  const [
+    coverColor,
+    CoverThemeColor,
+    colorMode,
+    updateCoverColor,
+  ] = useUiStore(
+    state => [
+      state.coverColor,
+      state.CoverThemeColor,
+      state.colorMode,
+      state.updateCoverColor,
+    ]
+  )
 
-  useEffect(() => {
-    if (colorMode === 'dark' || colorMode === 'light')
-      document.documentElement.setAttribute('data-theme', colorMode)
-    if (colorMode === 'auto')
-      document.documentElement.removeAttribute('data-theme')
-    return () => {
-      document.documentElement.removeAttribute('data-theme')
-    }
-  }, [colorMode])
+  const [cover] = usePlayerStore((state) => [state.cover])
+
+  useMemo(
+    () => {
+      if (colorMode === 'dark' || colorMode === 'light')
+        document.documentElement.setAttribute('data-theme', colorMode)
+      if (colorMode === 'auto')
+        document.documentElement.removeAttribute('data-theme')
+      return () => {
+        document.documentElement.removeAttribute('data-theme')
+      }
+    },
+    [colorMode]
+  )
 
   const prefersColorSchemeDark = useMediaQuery('(prefers-color-scheme: dark)')
   const prefersDarkMode = colorMode === 'light' ? false : prefersColorSchemeDark || colorMode === 'dark'
+
+  // 从专辑封面提取颜色
+  useMemo(
+    async () => {
+      if (cover !== './cover.svg') {
+        const colors = await extractColors(cover)
+        const lightColors = colors.filter(color => color.lightness < 0.7)
+        const darkColors = colors.filter(color => color.lightness > 0.5)
+        if (prefersDarkMode && darkColors.length > 0)
+          updateCoverColor(darkColors[0].hex)
+        else if (!prefersDarkMode && lightColors.length > 0)
+          updateCoverColor(lightColors[0].hex)
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [cover, prefersDarkMode]
+  )
 
   const colors = {
     primary: CoverThemeColor ? coverColor : prefersDarkMode ? '#df7ef9' : '#8e24aa',

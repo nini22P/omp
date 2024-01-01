@@ -7,7 +7,7 @@ const usePlayerStore = createWithEqualityFn<PlayerStatus & PlayerAction>((set) =
   metadataUpdate: false,
   playStatu: 'paused',
   isLoading: false,
-  cover: './cover.webp',
+  cover: './cover.svg',
   currentTime: 0,
   duration: 0,
   updateCurrentMetaData: (currentMetaData) => set(() => ({ currentMetaData: currentMetaData })),

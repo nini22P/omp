@@ -1,6 +1,8 @@
 import { useEffect } from 'react'
 import useUiStore from '../../store/useUiStore'
 import useTheme from './useTheme'
+import { blendHex } from '@/utils'
+import { useMediaQuery } from '@mui/material'
 const useThemeColor = () => {
 
   const [
@@ -19,6 +21,8 @@ const useThemeColor = () => {
 
   const theme = useTheme()
 
+  const windowControlsOverlayOpen = useMediaQuery('(display-mode: window-controls-overlay)')
+
   useEffect(
     () => {
       const themeColorLight = document.getElementById('themeColorLight') as HTMLMetaElement
@@ -34,12 +38,14 @@ const useThemeColor = () => {
           themeColorDark.content = '#1e1e1e'
         }
         else if (audioViewIsShow && audioViewTheme === 'modern') {
-          themeColorLight.content = coverColor
-          themeColorDark.content = coverColor
+
+          const color = blendHex(`${theme.palette.background.default}`, windowControlsOverlayOpen ? `${coverColor}30` : `${coverColor}33`)
+          themeColorLight.content = color
+          themeColorDark.content = color
         }
       }
     },
-    [audioViewIsShow, audioViewTheme, coverColor, theme.palette.background.default, videoViewIsShow]
+    [audioViewIsShow, audioViewTheme, coverColor, theme.palette.background.default, videoViewIsShow, windowControlsOverlayOpen]
   )
 
 }

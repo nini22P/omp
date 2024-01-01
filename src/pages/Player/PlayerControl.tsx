@@ -163,7 +163,6 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
                           height: '100%',
                           objectFit: 'cover',
                           borderRadius: '0.5rem',
-                          // filter: (theme.palette.mode === 'light' && cover === './cover.webp') ? 'invert(1)' : 'none',
                         }}
                       />
                     }

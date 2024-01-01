@@ -1,15 +1,14 @@
-import { Box, Typography, Link, Container, IconButton } from '@mui/material'
-import GitHubIcon from '@mui/icons-material/GitHub'
+import { Box, Typography, Container, IconButton, useMediaQuery } from '@mui/material'
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded'
-import { shallow } from 'zustand/shallow'
 import useUiStore from '../store/useUiStore'
-import { AccountInfo } from '@azure/msal-browser'
+import useUser from '@/hooks/graph/useUser'
 
-const NavBar = ({ accounts }: { accounts: AccountInfo[] }) => {
+const NavBar = () => {
+  const { account } = useUser()
   const [mobileSideBarOpen, updateMobileSideBarOpen] = useUiStore(
-    (state) => [state.mobileSideBarOpen, state.updateMobileSideBarOpen],
-    shallow
+    (state) => [state.mobileSideBarOpen, state.updateMobileSideBarOpen]
   )
+  const windowControlsOverlayOpen = useMediaQuery('(display-mode: window-controls-overlay)')
 
   return (
     <Box
@@ -27,47 +26,37 @@ const NavBar = ({ accounts }: { accounts: AccountInfo[] }) => {
         disableGutters={true}
         sx={{
           display: 'flex',
-          justifyContent: 'space-between',
+          justifyContent: 'flex-start',
           alignItems: 'center',
           height: '100%',
-          px: { xs: '0.5rem', sm: 'calc(env(titlebar-area-height, 1.25rem) - env(titlebar-area-height, 0rem) + 0.25rem)' },
+          px: { xs: '0.5rem', sm: windowControlsOverlayOpen ? '0.25rem' : '1.5rem' },
           py: 'calc(env(titlebar-area-height, 0.5rem) - env(titlebar-area-height, 0rem) + 0.25rem)',
         }}
       >
-        <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: 'center', height: '100%', }} >
-          {
-            (accounts.length !== 0) &&
-            <IconButton
-              onClick={() => updateMobileSideBarOpen(!mobileSideBarOpen)}
-              sx={{ display: { xs: '', sm: 'none' } }}
-              className='app-region-no-drag'
-            >
-              <MenuRoundedIcon />
-            </IconButton>
-          }
-          <img
-            src='./logo.svg'
-            alt='logo'
-            style={{
-              height: '100%',
-              marginRight: 'calc(env(titlebar-area-height, 0.5rem) - env(titlebar-area-height, 0rem) + 0.125rem)',
-            }}
-          />
-          <Typography
-            component="div"
-            fontSize={'calc(env(titlebar-area-height, 0.25rem) - env(titlebar-area-height, 0rem) + 1rem)'}
+        {
+          account &&
+          <IconButton
+            onClick={() => updateMobileSideBarOpen(!mobileSideBarOpen)}
+            sx={{ display: { xs: '', sm: 'none' } }}
+            className='app-region-no-drag'
           >
-            OMP
-          </Typography>
-        </Box>
-        <div >
-          {
-            (accounts.length == 0) &&
-            <IconButton component={Link} href='https://github.com/nini22P/omp'>
-              <GitHubIcon />
-            </IconButton>
-          }
-        </div>
+            <MenuRoundedIcon />
+          </IconButton>
+        }
+        <img
+          src='./logo.svg'
+          alt='logo'
+          style={{
+            height: '100%',
+            marginRight: windowControlsOverlayOpen ? '0.125rem' : '0.6125rem',
+          }}
+        />
+        <Typography
+          component="div"
+          fontSize={windowControlsOverlayOpen ? '1rem' : '1.25rem'}
+        >
+          OMP
+        </Typography>
       </Container>
     </Box>
   )

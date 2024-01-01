@@ -12,10 +12,10 @@
     "openSourceDependencies": "开源库"
   },
   "account": {
-    "account": "账号",
+    "account": "账户",
     "signIn": "登录",
     "signOut": "注销",
-    "signInAlert": "请登录微软账户以查看你的文件"
+    "signInAlert": "请使用微软账户授权登录"
   },
   "playlist": {
     "newPlaylist": "新播放列表",
