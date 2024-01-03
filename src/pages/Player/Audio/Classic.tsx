@@ -73,7 +73,7 @@ const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: 
     <animated.div
       style={{
         width: '100%',
-        height: '100dvh',
+        height: '100%',
         background:
           (!backgroundIsShow || cover === './cover.svg')
             ? `linear-gradient(rgba(50, 50, 50, 0.6), ${coverColor}bb), #000`

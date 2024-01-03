@@ -92,7 +92,7 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
   }
 
   return (
-    <Paper sx={{ backgroundColor: `${theme.palette.background.paper}99`, backdropFilter: 'blur(2px)' }}>
+    <Paper sx={{ backgroundColor: `${theme.palette.background.paper}99`, backdropFilter: 'blur(8px)' }}>
       <Container maxWidth={'xl'} disableGutters={true}>
         <Grid container
           sx={{ justifyContent: 'space-between', alignItems: 'center', textAlign: 'center', }}
@@ -125,8 +125,8 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
                 value={(!duration) ? 0 : currentTime / duration * 1000}
                 onChange={(_, current) => handleTimeRangeonChange(current)}
                 sx={{
-                  padding: '12px 0 !important',
-                  height: '0.2rem',
+                  padding: '11px 0 !important',
+                  height: '0.25rem',
                 }}
               />
             </Grid>
