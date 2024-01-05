@@ -249,6 +249,22 @@ const CommonList = (
     []
   )
 
+  // 滚动到之前点击过的文件夹
+  useEffect(
+    () => {
+      if (listType === 'files' && listRef.current && scrollFilePath) {
+        let index = listData?.findIndex((item) => pathConvert(scrollFilePath) === pathConvert(item.filePath))
+        if (index && display === 'grid')
+          index = Math.ceil(index / gridCols) - 1
+        if (index && (display === 'list' || display === 'multicolumnList'))
+          index = Math.ceil(index / listCols) - 1
+        listRef.current?.scrollToRow(index)
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [scrollFilePath]
+  )
+
   const fabDisplay = listData && listData.length !== 0 && listData.find((item) => item.fileType === 'audio') && listType !== 'playQueue'
 
   const scrollRef = useRef<HTMLDivElement | null>(null)
