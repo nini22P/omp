@@ -21,7 +21,7 @@ const CommonMenu = (
     setMenuOpen,
     setDialogOpen,
     handleClickRemove,
-    isPlayQueueView,
+    listType,
   }
     :
     {
@@ -33,7 +33,7 @@ const CommonMenu = (
       setMenuOpen: (menuOpen: boolean) => void,
       setDialogOpen: (dialogOpen: boolean) => void,
       handleClickRemove?: (filePathArray: string[][]) => void,
-      isPlayQueueView?: boolean,
+      listType: 'files' | 'playlist' | 'playQueue',
     }
 ) => {
 
@@ -127,7 +127,7 @@ const CommonMenu = (
           (
             handleClickRemove
             && currentFile
-            && !(isPlayQueueView && currentFile?.filePath === playQueue?.find((item) => item.index === currentIndex)?.filePath)
+            && !(listType === 'playQueue' && currentFile?.filePath === playQueue?.find((item) => item.index === currentIndex)?.filePath)
           ) &&
           <MenuItem
             onClick={() => {

@@ -137,6 +137,7 @@ const Files = () => {
             : <CommonList
               display={display}
               listData={sortedFileList}
+              listType='files'
             />
         }
       </Grid>

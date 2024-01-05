@@ -53,6 +53,7 @@ const PlayQueue = () => {
             playQueue &&
             <CommonList
               listData={playQueue}
+              listType='playQueue'
               activeFilePath={currentFile?.filePath}
               scrollFilePath={currentFile?.filePath}
               func={{ handleClickRemove: removeFilesFromPlayQueue }}
