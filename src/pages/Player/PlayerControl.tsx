@@ -33,7 +33,6 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
     updateAudioViewIsShow,
     updateVideoViewIsShow,
     updatePlayQueueIsShow,
-    updateShuffle,
   ] = useUiStore(
     (state) => [
       state.videoViewIsShow,
@@ -44,7 +43,6 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
       state.updateAudioViewIsShow,
       state.updateVideoViewIsShow,
       state.updatePlayQueueIsShow,
-      state.updateShuffle,
     ]
   )
 
@@ -74,6 +72,7 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
     handleClickSeekforward,
     handleClickSeekbackward,
     handleTimeRangeonChange,
+    handleClickShuffle,
     handleClickRepeat,
   } = usePlayerControl(player)
 
@@ -189,7 +188,7 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
               <IconButton
                 sx={{ display: { sm: 'inline-grid', xs: 'none' } }}
                 aria-label="shuffle"
-                onClick={() => updateShuffle(!shuffle)}
+                onClick={() => handleClickShuffle()}
               >
                 <ShuffleRoundedIcon sx={iconStyles.small} style={(shuffle) ? {} : { color: '#aaa' }} />
               </IconButton>

@@ -5,7 +5,7 @@ import useLocalMetaDataStore from '@/store/useLocalMetaDataStore'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
-import { pathConvert, shufflePlayQueue } from '@/utils'
+import { pathConvert } from '@/utils'
 import useFilesData from '../graph/useFilesData'
 
 const usePlayerCore = (player: HTMLVideoElement | null) => {
@@ -17,14 +17,12 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
     playQueue,
     currentIndex,
     updateCurrentIndex,
-    updatePlayQueue,
   ] = usePlayQueueStore(
     (state) => [
       state.type,
       state.playQueue,
       state.currentIndex,
       state.updateCurrentIndex,
-      state.updatePlayQueue
     ]
   )
 
@@ -142,21 +140,6 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [playStatu, isLoading]
-  )
-
-  // 随机
-  useEffect(
-    () => {
-      if (shuffle && playQueue) {
-        const randomPlayQueue = shufflePlayQueue(playQueue, currentIndex)
-        updatePlayQueue(randomPlayQueue)
-      }
-      if (!shuffle && playQueue) {
-        updatePlayQueue([...playQueue].sort((a, b) => a.index - b.index))
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [shuffle]
   )
 
   // 设置当前播放进度

@@ -38,7 +38,7 @@ export const shufflePlayQueue = (playQueue: PlayQueueItem[], currentIndex?: Play
     const j = Math.floor(Math.random() * (i + 1));
     [randomPlayQueue[i], randomPlayQueue[j]] = [randomPlayQueue[j], randomPlayQueue[i]]
   }
-  if (currentIndex)
+  if (currentIndex !== undefined)
     return randomPlayQueue.filter(item => item.index === currentIndex).concat(randomPlayQueue.filter(item => item.index !== currentIndex))
   else return randomPlayQueue
 }

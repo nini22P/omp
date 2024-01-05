@@ -23,7 +23,6 @@ const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: 
     updateAudioViewIsShow,
     updatePlayQueueIsShow,
     updateBackgroundIsShow,
-    updateShuffle,
   ] = useUiStore(
     (state) => [
       state.fullscreen,
@@ -34,7 +33,6 @@ const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: 
       state.updateAudioViewIsShow,
       state.updatePlayQueueIsShow,
       state.updateBackgroundIsShow,
-      state.updateShuffle,
     ]
   )
 
@@ -64,6 +62,7 @@ const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: 
     handleClickSeekforward,
     handleClickSeekbackward,
     handleTimeRangeonChange,
+    handleClickShuffle,
     handleClickRepeat,
   } = usePlayerControl(player)
 
@@ -212,7 +211,7 @@ const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: 
                 </Grid>
 
                 <Grid xs={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', wrap: 'nowrap' }}>
-                  <IconButton aria-label="shuffle" onClick={() => updateShuffle(!shuffle)}>
+                  <IconButton aria-label="shuffle" onClick={() => handleClickShuffle()}>
                     <Shuffle sx={{ height: 28, width: 28 }} style={(shuffle) ? { color: '#fff' } : { color: '#ccc' }} />
                   </IconButton>
                   <IconButton aria-label="previous" onClick={() => handleClickPrev()} >
