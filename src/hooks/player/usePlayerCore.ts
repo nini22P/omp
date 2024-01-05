@@ -57,11 +57,9 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
   )
 
   const [
-    shuffle,
     repeat,
   ] = useUiStore(
     (state) => [
-      state.shuffle,
       state.repeat,
     ]
   )
@@ -157,23 +155,17 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
   const onEnded = () => {
     if (playQueue) {
       const next = playQueue[(playQueue.findIndex(item => item.index === currentIndex) + 1)]
+      const isPlayQueueEnd = currentIndex + 1 === playQueue?.length
       if (repeat === 'one') {
         player?.play()
-      } else if (currentIndex + 1 === playQueue?.length || !next) { // 播放到队列结束时
-        if (repeat === 'all')
-          if (shuffle)
-            updateCurrentIndex(playQueue[playQueue.findIndex(item => item.index === playQueue[0].index)].index)
-          else
-            updateCurrentIndex(0)
-        else {
-          updatePlayStatu('paused')
-          updateCurrentTime(0)
-        }
-      } else if (repeat === 'off' || repeat === 'all')
-        if (shuffle)
+      } else if (repeat === 'off' || repeat === 'all') {
+        if (isPlayQueueEnd || !next) {
+          if (repeat === 'off')
+            updatePlayStatu('paused')
+          updateCurrentIndex(playQueue[0].index)
+        } else
           updateCurrentIndex(next.index)
-        else
-          updateCurrentIndex(currentIndex + 1)
+      }
     }
   }
 
