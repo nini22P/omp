@@ -258,7 +258,8 @@ const CommonList = (
           index = Math.ceil(index / gridCols) - 1
         if (index && (display === 'list' || display === 'multicolumnList'))
           index = Math.ceil(index / listCols) - 1
-        listRef.current?.scrollToRow(index)
+
+        index && index >= 0 && listRef.current?.scrollToRow(index)
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
