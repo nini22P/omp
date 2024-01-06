@@ -1,43 +1,62 @@
-import { useEffect } from 'react'
+import { useCallback, useEffect } from 'react'
+import usePlayerControl from './usePlayerControl'
+import usePlayerStore from '@/store/usePlayerStore'
 
-const useMediaSession = (
-  player: HTMLVideoElement | null,
-  cover: string,
-  album: string | undefined,
-  artist: string | undefined,
-  title: string | undefined,
-  handleClickPlay: () => void,
-  handleClickPause: () => void,
-  handleClickNext: () => void,
-  handleClickPrev: () => void,
-  handleClickSeekbackward: (skipTime: number) => void,
-  handleClickSeekforward: (skipTime: number) => void,
-  SeekTo: (seekTime: number) => void,
-) => {
+const useMediaSession = (player: HTMLVideoElement | null) => {
+
+  const [
+    currentMetaData,
+    cover,
+  ] = usePlayerStore(
+    (state) => [
+      state.currentMetaData,
+      state.cover,
+    ]
+  )
+
+  const {
+    seekTo,
+    handleClickPlay,
+    handleClickPause,
+    handleClickNext,
+    handleClickPrev,
+    handleClickSeekforward,
+    handleClickSeekbackward,
+  } = usePlayerControl(player)
+
   const defaultSkipTime = 10
   // 向 mediaSession 发送当前播放进度
-  const updatePositionState = () => {
-    if ('setPositionState' in navigator.mediaSession && player && !isNaN(player.duration)) {
-      navigator.mediaSession.setPositionState({
-        duration: player.duration,
-        playbackRate: player.playbackRate,
-        position: player.currentTime,
-      })
-    }
-  }
+  const updatePositionState = useCallback(
+    () => {
+      if ('setPositionState' in navigator.mediaSession && player && !isNaN(player.duration)) {
+        navigator.mediaSession.setPositionState({
+          duration: player.duration,
+          playbackRate: player.playbackRate,
+          position: player.currentTime,
+        })
+      }
+    },
+    [player]
+  )
 
-  if (player)
-    player.onplaying = () => {
-      updatePositionState()
-    }
+  useEffect(
+    () => {
+      if (player)
+        player.onplaying = () => {
+          updatePositionState()
+        }
+    },
+    [player, updatePositionState]
+  )
+
   // 添加 mediaSession
   useEffect(
     () => {
       if ('mediaSession' in navigator) {
         navigator.mediaSession.metadata = new MediaMetadata({
-          title: title,
-          artist: artist,
-          album: album,
+          title: currentMetaData?.title,
+          artist: currentMetaData?.artist,
+          album: currentMetaData?.album,
           artwork: [{ src: cover }]
         })
         navigator.mediaSession.setActionHandler('play', () => handleClickPlay())
@@ -54,10 +73,12 @@ const useMediaSession = (
         })
         navigator.mediaSession.setActionHandler('seekto', (details) => {
           if (details.seekTime) {
-            SeekTo(details.seekTime)
+            seekTo(details.seekTime)
           }
         })
         return () => {
+          navigator.mediaSession.metadata = null
+          navigator.mediaSession.setPositionState(undefined)
           navigator.mediaSession.setActionHandler('play', null)
           navigator.mediaSession.setActionHandler('pause', null)
           navigator.mediaSession.setActionHandler('nexttrack', null)
@@ -68,7 +89,7 @@ const useMediaSession = (
         }
       }
     },
-    [cover, album, artist, title, handleClickPlay, handleClickPause, handleClickNext, handleClickPrev, handleClickSeekbackward, handleClickSeekforward, SeekTo]
+    [cover, handleClickPlay, handleClickPause, handleClickNext, handleClickPrev, handleClickSeekbackward, handleClickSeekforward, seekTo, currentMetaData?.title, currentMetaData?.artist, currentMetaData?.album, updatePositionState]
   )
 }
 

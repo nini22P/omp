@@ -1,8 +1,9 @@
-import { Ref, forwardRef } from 'react'
-import { Container, Grid, IconButton } from '@mui/material'
+import { Ref, forwardRef, useMemo } from 'react'
+import { Box, IconButton } from '@mui/material'
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded'
 import useFullscreen from '@/hooks/ui/useFullscreen'
 import useUiStore from '@/store/useUiStore'
+import { animated, useSpring } from '@react-spring/web'
 
 const VideoPlayer = forwardRef(
   ({ url, onEnded }: { url: string; onEnded: () => void }, ref: Ref<HTMLVideoElement> | null) => {
@@ -23,56 +24,73 @@ const VideoPlayer = forwardRef(
 
     const { handleClickFullscreen } = useFullscreen()
 
+    const [{ top, borderRadius }, api] = useSpring(() => ({
+      from: {
+        top: videoViewIsShow ? '0' : '100dvh',
+        borderRadius: videoViewIsShow ? '0' : '0.5rem',
+      },
+    }))
+
+    const show = () => api.start({
+      to: { top: '0', borderRadius: '0' },
+    })
+
+    const hide = () => {
+      api.start({
+        to: { top: '100dvh' },
+      })
+    }
+
+    useMemo(
+      () => videoViewIsShow ? show() : hide(),
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+      [videoViewIsShow]
+    )
+
     return (
-      <Container
-        maxWidth={false}
-        disableGutters={true}
-        sx={{ width: '100%', height: '100dvh', position: 'fixed', transition: 'top 0.35s' }}
-        style={(videoViewIsShow) ? { top: '0' } : { top: '100vh' }}
+      <animated.div
+        style={{
+          width: '100%',
+          height: '100dvh',
+          position: 'fixed',
+          backgroundColor: 'black',
+          top: top,
+          borderRadius: borderRadius,
+        }}
       >
-        <Grid container
+        <video
+          width={'100%'}
+          height={'100%'}
+          src={url}
+          ref={ref}
+          onEnded={() => onEnded()}
+          onDoubleClick={() => handleClickFullscreen()}
+        />
+
+        {/* 视频播放顶栏 */}
+        <Box
           sx={{
-            width: '100%',
-            height: '100%',
-            justifyContent: 'center',
-            alignItems: 'start',
-            backgroundColor: '#000'
+            position: 'absolute',
+            top: 16,
+            left: 16,
+            width: 'auto',
+            display: controlIsShow ? 'block' : 'none',
           }}
+          className='pt-titlebar-area-height'
         >
-          <Grid sx={{ width: '100%', height: '100%' }}>
-            <video
-              width={'100%'}
-              height={'100%'}
-              src={url}
-              // autoPlay
-              ref={ref}
-              onEnded={() => onEnded()}
-              onDoubleClick={() => handleClickFullscreen()} />
-          </Grid>
-
-          {/* 视频播放顶栏 */}
-          <Grid
-            position={'absolute'}
-            sx={controlIsShow ? { top: 16, left: 16, borderRadius: '0 0 5px 0', width: 'auto' } : { display: 'none' }}
-            className='pt-titlebar-area-height'
+          <IconButton
+            aria-label="close"
+            onClick={() => {
+              updateVideoViewIsShow(false)
+              updateControlIsShow(true)
+            }}
+            className='app-region-no-drag'
           >
-            <IconButton
-              aria-label="close"
-              onClick={() => {
-                updateVideoViewIsShow(false)
-                updateControlIsShow(true)
-              }}
-              className='app-region-no-drag'
-            >
-              <KeyboardArrowDownRoundedIcon sx={{ color: '#fff' }} />
-            </IconButton>
-          </Grid>
-
-        </Grid>
-
-      </Container>
+            <KeyboardArrowDownRoundedIcon sx={{ color: '#fff' }} />
+          </IconButton>
+        </Box>
+      </animated.div>
     )
   }
 )
-
 export default VideoPlayer

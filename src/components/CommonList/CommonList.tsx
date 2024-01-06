@@ -15,16 +15,19 @@ import CommonListItemCard from './CommonListItemCard'
 import { useTranslation } from 'react-i18next'
 import ShuffleRoundedIcon from '@mui/icons-material/ShuffleRounded'
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded'
+import { useNavigate } from 'react-router-dom'
 
 const CommonList = (
   {
     listData,
+    listType,
     display = 'list',
     scrollFilePath,
     activeFilePath,
     func,
   }: {
     listData?: File[] | PlayQueueItem[],
+    listType: 'files' | 'playlist' | 'playQueue',
     display?: 'list' | 'multicolumnList' | 'grid',
     scrollFilePath?: File['filePath'],
     activeFilePath?: File['filePath'],
@@ -34,20 +37,19 @@ const CommonList = (
   }) => {
 
   const { t } = useTranslation()
+  const navigate = useNavigate()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [menuOpen, setMenuOpen] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
   const [currentFile, setCurrentFile] = useState<null | File>(null)
 
   const [
-    folderTree,
     shuffle,
     updateVideoViewIsShow,
     updateFolderTree,
     updateShuffle
   ] = useUiStore(
     (state) => [
-      state.folderTree,
       state.shuffle,
       state.updateVideoViewIsShow,
       state.updateFolderTree,
@@ -81,7 +83,9 @@ const CommonList = (
       const currentFile = listData.find(item => item.filePath === filePath)
 
       if (currentFile && currentFile.fileType === 'folder') {
-        updateFolderTree([...folderTree, currentFile.fileName])
+        updateFolderTree(currentFile.filePath)
+        if (listType === 'playlist')
+          navigate('/')
       }
 
       if (currentFile && currentFile.fileType === 'picture') {
@@ -142,11 +146,13 @@ const CommonList = (
     }
   }
 
-  const handleClickItem = (item: PlayQueueItem | File) =>
-    ((item as PlayQueueItem).index)
-      ? handleClickPlayQueueItem((item as PlayQueueItem).index)
-      : handleClickListItem(item.filePath)
-
+  const handleClickItem = (item: PlayQueueItem | File) => {
+    if (listType === 'playQueue')
+      handleClickPlayQueueItem((item as PlayQueueItem).index)
+    else {
+      handleClickListItem(item.filePath)
+    }
+  }
 
   const theme = useTheme()
   const xs = useMediaQuery(theme.breakpoints.up('xs'))
@@ -231,12 +237,10 @@ const CommonList = (
   const listRef = useRef<VirtualList | null>(null)
   const updateListRowHeight = () => listRef.current && listRef.current.recomputeRowHeights()
 
-  const isPlayQueueView = listData?.some((item) => typeof (item as PlayQueueItem).index === 'number')
-
   // 打开播放队列时滚动到当前播放文件
   useEffect(
     () => {
-      if (isPlayQueueView && listRef.current && scrollFilePath) {
+      if (listType === 'playQueue' && listRef.current && scrollFilePath) {
         const index = listData?.findIndex((item) => pathConvert(scrollFilePath) === pathConvert(item.filePath))
         setTimeout(() => listRef.current?.scrollToRow(index), 100)
       }
@@ -245,20 +249,77 @@ const CommonList = (
     []
   )
 
-  const canShuffle = listData && listData.length !== 0 && listData.find((item) => item.fileType === 'audio') && !isPlayQueueView
+  // 滚动到之前点击过的文件夹
+  useEffect(
+    () => {
+      if (listType === 'files' && listRef.current && scrollFilePath) {
+        let index = listData?.findIndex((item) => pathConvert(scrollFilePath) === pathConvert(item.filePath))
+        if (index && display === 'grid')
+          index = Math.ceil(index / gridCols) - 1
+        if (index && (display === 'list' || display === 'multicolumnList'))
+          index = Math.ceil(index / listCols) - 1
+        listRef.current?.scrollToRow(index)
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [scrollFilePath, gridCols, listCols]
+  )
+
+  const fabDisplay = listData && listData.length !== 0 && listData.find((item) => item.fileType === 'audio') && listType !== 'playQueue'
+
+  const scrollRef = useRef<HTMLDivElement | null>(null)
+  const fabRef = useRef<HTMLDivElement | null>(null)
+  const touchStartYRef = useRef(0)
+  useEffect(() => {
+    const scroll = scrollRef.current
+    const fab = fabRef.current
+    if (scroll && fab) {
+      const onWheel = (e: WheelEvent) => {
+        if (e.deltaY > 0)
+          fab.style.visibility = 'hidden'
+        else
+          fab.style.visibility = 'visible'
+      }
+      const onTouchStart = (e: TouchEvent) => {
+        touchStartYRef.current = (e.touches[0].clientY)
+      }
+      const onTouchMove = (e: TouchEvent) => {
+        if (e.touches[0].clientY > touchStartYRef.current) {
+          fab.style.visibility = 'visible'
+          touchStartYRef.current = (e.touches[0].clientY)
+        }
+        else {
+          fab.style.visibility = 'hidden'
+          touchStartYRef.current = (e.touches[0].clientY)
+        }
+
+      }
+      scroll.addEventListener('wheel', onWheel)
+      scroll.addEventListener('touchstart', onTouchStart)
+      scroll.addEventListener('touchmove', onTouchMove)
+      return () => {
+        scroll.removeEventListener('wheel', onWheel)
+        scroll.removeEventListener('touchstart', onTouchStart)
+        scroll.removeEventListener('touchmove', onTouchMove)
+      }
+    }
+  }, [])
 
   return (
     listData
     &&
-    <Box sx={{ height: '100%', width: '100%' }}>
+    <Box sx={{ height: '100%', width: '100%' }} >
 
       {/* 文件列表 */}
       <Grid container sx={{ flexDirection: 'column', flexWrap: 'nowrap', height: '100%' }}>
-        <Grid xs={12}
+        <Grid
+          xs={12}
           sx={{
             flexGrow: 1,
             overflow: 'hidden',
-          }}>
+          }}
+          ref={scrollRef}
+        >
 
           {
             display === 'grid'
@@ -275,9 +336,6 @@ const CommonList = (
                       rowHeight={width / gridCols / 4 * 5}
                       rowRenderer={gridRenderer}
                       scrollToAlignment={'center'}
-                      style={{
-                        paddingBottom: isPlayQueueView ? 0 : '6rem',
-                      }}
                     />
                   </List>
               }
@@ -298,9 +356,6 @@ const CommonList = (
                       rowHeight={72}
                       rowRenderer={rowRenderer}
                       scrollToAlignment={'center'}
-                      style={{
-                        paddingBottom: isPlayQueueView ? 0 : '6rem',
-                      }}
                     />
                   </List>
               }
@@ -319,16 +374,17 @@ const CommonList = (
         setMenuOpen={setMenuOpen}
         setDialogOpen={setDialogOpen}
         handleClickRemove={func?.handleClickRemove}
-        isPlayQueueView={isPlayQueueView}
+        listType={listType}
       />
 
       {
-        canShuffle &&
+        fabDisplay &&
         <Box
+          ref={fabRef}
           sx={{
             position: 'absolute',
             bottom: '2rem',
-            right: '4rem',
+            right: '2rem',
             zIndex: 1,
             display: 'flex',
             flexDirection: 'row',

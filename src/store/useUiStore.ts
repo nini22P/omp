@@ -20,7 +20,7 @@ const useUiStore = createWithEqualityFn<UiStatus & UiAction>()(
       coverColor: '#8e24aa',
       CoverThemeColor: false,
       colorMode: 'auto',
-      display: 'list',
+      display: 'multicolumnList',
       sortBy: 'name',
       orderBy: 'asc',
       foldersFirst: true,

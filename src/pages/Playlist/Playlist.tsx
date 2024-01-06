@@ -120,6 +120,7 @@ const Playlist = () => {
             <Grid sx={{ flexGrow: 1 }}>
               <CommonList
                 listData={playlist.fileList}
+                listType='playlist'
                 func={{ handleClickRemove: removeFiles }}
               />
             </Grid>

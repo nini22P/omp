@@ -1,6 +1,8 @@
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
+import { shufflePlayQueue } from '@/utils'
+import { useEffect } from 'react'
 
 const usePlayerControl = (player: HTMLVideoElement | null) => {
 
@@ -8,11 +10,13 @@ const usePlayerControl = (player: HTMLVideoElement | null) => {
     playQueue,
     currentIndex,
     updateCurrentIndex,
+    updatePlayQueue,
   ] = usePlayQueueStore(
     (state) => [
       state.playQueue,
       state.currentIndex,
       state.updateCurrentIndex,
+      state.updatePlayQueue,
     ]
   )
 
@@ -29,11 +33,13 @@ const usePlayerControl = (player: HTMLVideoElement | null) => {
   const [
     shuffle,
     repeat,
+    updateShuffle,
     updateRepeat,
   ] = useUiStore(
     (state) => [
       state.shuffle,
       state.repeat,
+      state.updateShuffle,
       state.updateRepeat,
     ]
   )
@@ -115,6 +121,22 @@ const usePlayerControl = (player: HTMLVideoElement | null) => {
     }
   }
 
+  // 随机
+  useEffect(
+    () => {
+      if (shuffle && playQueue) {
+        const randomPlayQueue = shufflePlayQueue(playQueue, currentIndex)
+        updatePlayQueue(randomPlayQueue)
+      } else if (!shuffle && playQueue) {
+        updatePlayQueue([...playQueue].sort((a, b) => a.index - b.index))
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [shuffle]
+  )
+
+  const handleClickShuffle = () => updateShuffle(!shuffle)
+
   // 重复
   const handleClickRepeat = () => {
     if (repeat === 'off')
@@ -134,6 +156,7 @@ const usePlayerControl = (player: HTMLVideoElement | null) => {
     handleClickSeekforward,
     handleClickSeekbackward,
     handleTimeRangeonChange,
+    handleClickShuffle,
     handleClickRepeat,
   }
 

@@ -1,11 +1,9 @@
 import { useRef } from 'react'
 import { Box, Container } from '@mui/material'
-import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import useMediaSession from '@/hooks/player/useMediaSession'
 import usePlayerCore from '@/hooks/player/usePlayerCore'
-import usePlayerControl from '@/hooks/player/usePlayerControl'
 import useControlHide from '@/hooks/ui/useControlHide'
 import VideoPlayer from './VideoPlayer'
 import Audio from './Audio/Audio'
@@ -14,15 +12,6 @@ import PlayQueue from './PlayQueue'
 
 const Player = () => {
 
-  const [
-    currentMetaData,
-    cover,
-  ] = usePlayerStore(
-    (state) => [
-      state.currentMetaData,
-      state.cover,
-    ]
-  )
 
   const [
     videoViewIsShow,
@@ -42,31 +31,8 @@ const Player = () => {
     onEnded,
   } = usePlayerCore(player)
 
-  const {
-    seekTo,
-    handleClickPlay,
-    handleClickPause,
-    handleClickNext,
-    handleClickPrev,
-    handleClickSeekforward,
-    handleClickSeekbackward,
-  } = usePlayerControl(player)
-
   // 向 mediaSession 发送当前播放进度
-  useMediaSession(
-    player,
-    cover,
-    currentMetaData?.album,
-    currentMetaData?.artist,
-    currentMetaData?.title,
-    handleClickPlay,
-    handleClickPause,
-    handleClickNext,
-    handleClickPrev,
-    handleClickSeekbackward,
-    handleClickSeekforward,
-    seekTo,
-  )
+  useMediaSession(player)
 
   const [type] = usePlayQueueStore((state) => [state.type])
 
@@ -76,9 +42,14 @@ const Player = () => {
   return (
     <div>
       <VideoPlayer url={url} onEnded={onEnded} ref={playerRef} />
-      <Box sx={{ position: 'fixed', bottom: '0', width: '100%', zIndex: 10 }}>
-        <Container maxWidth={'xl'} disableGutters={true}>
-          <Box padding={'0 0.5rem 0.5rem 0.5rem'} sx={{ visibility: controlIsShow ? 'visible' : 'hidden' }}>
+      <Box sx={{ position: 'fixed', bottom: '0', width: '100%' }}>
+        <Container maxWidth={'xl'} disableGutters>
+          <Box
+            sx={{
+              padding: '0 0.5rem 0.5rem 0.5rem',
+              visibility: controlIsShow ? 'visible' : 'hidden',
+            }}
+          >
             <PlayerControl player={player} />
           </Box>
           <Audio player={player} />

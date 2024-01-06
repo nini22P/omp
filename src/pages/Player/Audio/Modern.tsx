@@ -36,7 +36,6 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
     coverColor,
     updateAudioViewIsShow,
     updatePlayQueueIsShow,
-    updateShuffle,
   ] = useUiStore(
     (state) => [
       state.fullscreen,
@@ -45,7 +44,6 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
       state.coverColor,
       state.updateAudioViewIsShow,
       state.updatePlayQueueIsShow,
-      state.updateShuffle,
     ]
   )
 
@@ -75,6 +73,7 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
     handleClickSeekforward,
     handleClickSeekbackward,
     handleTimeRangeonChange,
+    handleClickShuffle,
     handleClickRepeat,
   } = usePlayerControl(player)
 
@@ -176,7 +175,7 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
               display: 'grid',
               gridTemplateColumns: { xs: '1fr', sm: 'fit-content(40%) 1fr' },
               gridTemplateRows: { xs: '1fr 1fr', sm: '1fr' },
-              gap: { xs: '0', sm: '1rem' },
+              // gap: { xs: '0', sm: '1rem' },
               alignItems: 'center',
             }}
           >
@@ -248,7 +247,7 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
                   width: '100%'
                 }}
               >
-                <IconButton aria-label="shuffle" onClick={() => updateShuffle(!shuffle)}>
+                <IconButton aria-label="shuffle" onClick={() => handleClickShuffle()}>
                   <ShuffleRoundedIcon sx={{ height: 28, width: 28 }} style={(shuffle) ? {} : { color: '#aaa' }} />
                 </IconButton>
                 <IconButton aria-label="previous" onClick={() => handleClickPrev()} >

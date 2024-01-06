@@ -10,6 +10,7 @@ import Grid from '@mui/material/Unstable_Grid2/Grid2'
 import FilterMenu from './FilterMenu'
 import PictureView from '../PictureView/PictureView'
 import { Divider } from '@mui/material'
+import { useRef } from 'react'
 
 const Files = () => {
 
@@ -101,8 +102,11 @@ const Files = () => {
       } else return 0
     })
 
+  const scrollFilePathRef = useRef<string[] | null>(null)
+
   const handleListNavClick = (index: number) => {
     if (index < folderTree.length - 1) {
+      scrollFilePathRef.current = folderTree.slice(0, index + 2)
       updateFolderTree(folderTree.slice(0, index + 1))
     }
   }
@@ -137,6 +141,8 @@ const Files = () => {
             : <CommonList
               display={display}
               listData={sortedFileList}
+              listType='files'
+              scrollFilePath={scrollFilePathRef.current || undefined}
             />
         }
       </Grid>
