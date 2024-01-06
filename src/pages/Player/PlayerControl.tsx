@@ -124,7 +124,7 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
                 value={(!duration) ? 0 : currentTime / duration * 1000}
                 onChange={(_, current) => handleTimeRangeonChange(current)}
                 sx={{
-                  padding: '11px 0 !important',
+                  padding: '12px 0 !important',
                   height: '0.25rem',
                 }}
               />

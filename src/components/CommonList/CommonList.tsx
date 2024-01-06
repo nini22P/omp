@@ -262,7 +262,7 @@ const CommonList = (
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [scrollFilePath]
+    [scrollFilePath, gridCols, listCols]
   )
 
   const fabDisplay = listData && listData.length !== 0 && listData.find((item) => item.fileType === 'audio') && listType !== 'playQueue'
