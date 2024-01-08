@@ -34,7 +34,7 @@
   },
   "data": {
     "data": "Data",
-    "metaDataCache": "Local MetaData Cache"
+    "localMetaDataCache": "Local MetaData Cache"
   },
   "customize": {
     "customize": "Customize",
@@ -42,7 +42,7 @@
     "auto": "Auto",
     "light": "Light",
     "dark": "Dark",
-    "CoverThemeColor": "Use the album cover theme color"
+    "CoverThemeColor": "Use album cover theme color"
   },
   "files": {
     "display": {
