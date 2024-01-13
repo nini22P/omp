@@ -1,4 +1,3 @@
-import { useTheme } from '@mui/material'
 import useUiStore from '@/store/useUiStore'
 import { useMemo, useRef } from 'react'
 import Classic from './Classic'
@@ -7,8 +6,6 @@ import { animated, useSpring } from '@react-spring/web'
 import { useDrag } from '@use-gesture/react'
 
 const Audio = ({ player }: { player: HTMLVideoElement | null }) => {
-
-  const theme = useTheme()
 
   const [
     audioViewIsShow,
@@ -23,10 +20,11 @@ const Audio = ({ player }: { player: HTMLVideoElement | null }) => {
   )
 
   const topRef = useRef(0)
-  const [{ top, borderRadius }, api] = useSpring(() => ({
+  const [{ top, leftRightbottom, borderRadius }, api] = useSpring(() => ({
     from: {
       top: audioViewIsShow ? '0' : '100dvh',
-      borderRadius: audioViewIsShow ? '0' : '0.5rem',
+      leftRightbottom: audioViewIsShow ? '0' : '0.5rem',
+      borderRadius: '0.5rem',
     },
     // config: {
     //   mass: 1,
@@ -36,14 +34,14 @@ const Audio = ({ player }: { player: HTMLVideoElement | null }) => {
   }))
 
   const show = () => api.start({
-    to: { top: '0', borderRadius: '0' },
+    to: { top: '0', leftRightbottom: '0', borderRadius: '0' },
     // config: { clamp: false },
   })
 
   const hide = () => {
     api.start({
       from: { top: `${topRef.current}` },
-      to: { top: '100dvh' },
+      to: { top: '100dvh', leftRightbottom: '0.5rem', borderRadius: '0.5rem' },
       // config: { clamp: true },
     })
     topRef.current = 0
@@ -77,12 +75,13 @@ const Audio = ({ player }: { player: HTMLVideoElement | null }) => {
     <animated.div
       {...bind()}
       style={{
-        width: '100%',
+        maxWidth: '100%',
         maxHeight: '100dvh',
         position: 'fixed',
-        backgroundColor: theme.palette.background.paper,
         top: top,
-        bottom: 0,
+        left: leftRightbottom,
+        right: leftRightbottom,
+        bottom: leftRightbottom,
         touchAction: 'pan-x',
       }}
     >

@@ -30,6 +30,7 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
   const [playQueue] = usePlayQueueStore((state) => [state.playQueue])
 
   const [
+    audioViewIsShow,
     fullscreen,
     shuffle,
     repeat,
@@ -38,6 +39,7 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
     updatePlayQueueIsShow,
   ] = useUiStore(
     (state) => [
+      state.audioViewIsShow,
       state.fullscreen,
       state.shuffle,
       state.repeat,
@@ -131,7 +133,7 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
               width: '100%',
               height: 'auto',
             }}>
-            <IconButton aria-label="close" onClick={() => updateAudioViewIsShow(false)}>
+            <IconButton aria-label="close" onClick={() => updateAudioViewIsShow(!audioViewIsShow)}>
               <KeyboardArrowDownRoundedIcon />
             </IconButton>
             <Grid

@@ -15,6 +15,7 @@ const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: 
   const [playQueue] = usePlayQueueStore((state) => [state.playQueue])
 
   const [
+    audioViewIsShow,
     fullscreen,
     backgroundIsShow,
     shuffle,
@@ -25,6 +26,7 @@ const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: 
     updateBackgroundIsShow,
   ] = useUiStore(
     (state) => [
+      state.audioViewIsShow,
       state.fullscreen,
       state.backgroundIsShow,
       state.shuffle,
@@ -108,7 +110,7 @@ const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: 
             <Grid xs={6} pl={{ xs: 1, sm: 0 }} >
               <IconButton
                 aria-label="close"
-                onClick={() => updateAudioViewIsShow(false)}
+                onClick={() => updateAudioViewIsShow(!audioViewIsShow)}
                 className='app-region-no-drag'
               >
                 <KeyboardArrowDownOutlined />
