@@ -1,10 +1,8 @@
 import { Box, Typography, Container, IconButton, useMediaQuery } from '@mui/material'
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded'
 import useUiStore from '../store/useUiStore'
-import useUser from '@/hooks/graph/useUser'
 
 const NavBar = () => {
-  const { account } = useUser()
   const [mobileSideBarOpen, updateMobileSideBarOpen] = useUiStore(
     (state) => [state.mobileSideBarOpen, state.updateMobileSideBarOpen]
   )

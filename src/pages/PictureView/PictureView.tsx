@@ -1,5 +1,5 @@
 import usePictureStore from '@/store/usePictureStore'
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded';
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 import { Box, Dialog, IconButton } from '@mui/material'
 import PictureList from './PictureList'
 import { useEffect, useRef } from 'react'
