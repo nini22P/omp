@@ -386,7 +386,7 @@ const CommonList = (
             position: 'absolute',
             bottom: '2rem',
             right: '2rem',
-            zIndex: 1,
+            zIndex: 0,
             display: 'flex',
             flexDirection: 'row',
             justifyContent: 'center',
