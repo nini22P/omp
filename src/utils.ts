@@ -1,6 +1,7 @@
 import { IPicture } from 'music-metadata-browser'
 import { File } from './types/file'
 import { PlayQueueItem, PlayQueueStatus } from './types/playQueue'
+import { Cover } from './types/MetaData'
 
 /**
  * 将时间转换为分钟
@@ -92,29 +93,29 @@ export const blendHex = (colorHex1: string, colorHex2: string) => {
   return `rgb(${color.join(', ')})`
 }
 
-export const compressImage = (image: IPicture): Promise<IPicture> => {
+export const compressImage = (image: IPicture): Promise<Cover> => {
   return new Promise((resolve, reject) => {
     const img = new Image()
     const url = URL.createObjectURL(new Blob([new Uint8Array(image.data as ArrayBufferLike)], { type: image.format }))
     img.src = url
     img.onload = () => {
-      if ('width' in image && typeof image.width === 'number' && 'height' in image && typeof image.height === 'number') {
-        const canvas = document.createElement('canvas')
-        const ctx = canvas.getContext('2d')
-        canvas.width = image.width
-        canvas.height = image.height
-        ctx?.drawImage(img, 0, 0, image.width, image.height)
-        canvas.toBlob((blob) => {
-          URL.revokeObjectURL(url)
-          blob?.arrayBuffer().then((buffer) => {
-            resolve({
-              ...image,
-              format: 'image/webp',
-              data: Buffer.from(new Uint8Array(buffer)),
-            })
+      const canvas = document.createElement('canvas')
+      const ctx = canvas.getContext('2d')
+      canvas.width = img.width
+      canvas.height = img.height
+      ctx?.drawImage(img, 0, 0, img.width, img.height)
+      canvas.toBlob((blob) => {
+        URL.revokeObjectURL(url)
+        blob?.arrayBuffer().then((buffer) => {
+          resolve({
+            ...image,
+            format: 'image/webp',
+            data: Buffer.from(new Uint8Array(buffer)),
+            width: img.width,
+            height: img.height,
           })
-        }, 'image/webp', 0.95)
-      }
+        })
+      }, 'image/webp', 0.95)
     }
     img.onerror = (error) => {
       reject(error)

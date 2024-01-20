@@ -204,10 +204,10 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
             updateCurrentMetaData(metaData)
             if (metaData.cover?.length) {
               const cover = metaData.cover[0]
-              if (cover && 'format' in cover && 'data' in cover.data && Array.isArray(cover.data.data)) {
+              if (cover && 'data' in cover.data && Array.isArray(cover.data.data)) {
                 updateCover(URL.createObjectURL(new Blob([new Uint8Array(cover.data.data as unknown as ArrayBufferLike)], { type: cover.format })))
               }
-              else if (cover && 'format' in cover) {
+              else if (cover) {
                 updateCover(URL.createObjectURL(new Blob([new Uint8Array(cover.data as ArrayBufferLike)], { type: cover.format })))
               }
             } else {
@@ -231,9 +231,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
         try {
           const metadata = await mm.fetchFromUrl(url)
           if (metadata && metadata.common.title !== undefined) {
-            const cover = !metadata.common.picture
-              ? undefined
-              : await Promise.all(metadata.common.picture.map(async (item) => await compressImage(item)))
+            const cover = !metadata.common.picture ? undefined : await Promise.all(metadata.common.picture.map(async (item) => await compressImage(item)))
             const metaData: MetaData = {
               path: path,
               title: metadata.common.title,
