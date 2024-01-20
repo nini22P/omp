@@ -1,4 +1,3 @@
-import { IPicture } from 'music-metadata-browser'
 import { File } from './types/file'
 import { PlayQueueItem, PlayQueueStatus } from './types/playQueue'
 import { Cover } from './types/MetaData'
@@ -93,7 +92,7 @@ export const blendHex = (colorHex1: string, colorHex2: string) => {
   return `rgb(${color.join(', ')})`
 }
 
-export const compressImage = (image: IPicture): Promise<Cover> => {
+export const compressImage = (image: Cover): Promise<Cover> => {
   return new Promise((resolve, reject) => {
     const img = new Image()
     const url = URL.createObjectURL(new Blob([new Uint8Array(image.data as ArrayBufferLike)], { type: image.format }))

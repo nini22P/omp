@@ -309,7 +309,7 @@ const CommonList = (
   return (
     listData
     &&
-    <Box sx={{ height: '100%', width: '100%' }} >
+    <Box sx={{ height: '100%', width: '100%', position: 'relative' }} >
 
       {/* 文件列表 */}
       <Grid container sx={{ flexDirection: 'column', flexWrap: 'nowrap', height: '100%' }}>

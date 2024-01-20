@@ -9,7 +9,9 @@
     "calculate": "Calculate",
     "more": "More",
     "about": "About",
-    "openSourceDependencies": "Open source dependencies"
+    "openSourceDependencies": "Open source dependencies",
+    "search": "Search",
+    "close": "Close"
   },
   "account": {
     "account": "Account",

@@ -87,7 +87,6 @@ const App = () => {
                   height: '100%',
                   overflowY: 'auto',
                   backgroundColor: `${theme.palette.background.paper}99`,
-                  backdropFilter: 'blur(8px)',
                   '& ::-webkit-scrollbar': {
                     width: '12px',
                     height: '12px',
