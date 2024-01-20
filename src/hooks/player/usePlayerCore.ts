@@ -5,8 +5,9 @@ import useLocalMetaDataStore from '@/store/useLocalMetaDataStore'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
-import { pathConvert } from '@/utils'
+import { compressImage, pathConvert } from '@/utils'
 import useFilesData from '../graph/useFilesData'
+import { MetaData } from '@/types/MetaData'
 
 const usePlayerCore = (player: HTMLVideoElement | null) => {
 
@@ -176,7 +177,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
 
         if (playQueue) {
 
-          const metaData = await getLocalMetaData(playQueue.filter(item => item.index === currentIndex)[0]?.filePath)
+          const metaData: MetaData = await getLocalMetaData(playQueue.filter(item => item.index === currentIndex)[0]?.filePath)
 
           if (!metaData) {
             const currentMetaData = playQueue.filter(item => item.index === currentIndex)[0]
@@ -199,15 +200,15 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
             &&
             pathConvert(metaData.path) === pathConvert(playQueue.filter(item => item.index === currentIndex)[0].filePath)
           ) {
-            console.log('Update current metaData: ', metaData.title)
+            console.log('Update current metaData: ', metaData)
             updateCurrentMetaData(metaData)
             if (metaData.cover?.length) {
-              const cover = metaData.cover[0].data
-              if (cover && 'data' in cover && Array.isArray(cover.data)) {
-                updateCover(URL.createObjectURL(new Blob([new Uint8Array(cover.data as unknown as ArrayBufferLike)], { type: 'image/png' })))
+              const cover = metaData.cover[0]
+              if (cover && 'data' in cover.data && Array.isArray(cover.data.data)) {
+                updateCover(URL.createObjectURL(new Blob([new Uint8Array(cover.data.data as unknown as ArrayBufferLike)], { type: cover.format })))
               }
               else if (cover) {
-                updateCover(URL.createObjectURL(new Blob([new Uint8Array(cover as ArrayBufferLike)], { type: 'image/png' })))
+                updateCover(URL.createObjectURL(new Blob([new Uint8Array(cover.data as ArrayBufferLike)], { type: cover.format })))
               }
             } else {
               updateCover('./cover.svg')
@@ -230,7 +231,8 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
         try {
           const metadata = await mm.fetchFromUrl(url)
           if (metadata && metadata.common.title !== undefined) {
-            const metaData = {
+            const cover = !metadata.common.picture ? undefined : await Promise.all(metadata.common.picture.map(async (item) => await compressImage(item)))
+            const metaData: MetaData = {
               path: path,
               title: metadata.common.title,
               artist: metadata.common.artist,
@@ -238,8 +240,9 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
               album: metadata.common.album,
               year: metadata.common.year,
               genre: metadata.common.genre,
-              cover: metadata.common.picture,
+              cover: cover,
             }
+            console.log('Get net metadata: ', metaData)
             return metaData
           }
         } catch (error) {
@@ -255,10 +258,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
 
           if (!localMetaData) {
             const netMetaData = await getNetMetaData(currentMetaData?.path)
-            console.log('Get net metadata: ', netMetaData?.title)
-            if (netMetaData) {
-              setLocalMetaData(netMetaData).then(() => updateMetadataUpdate())
-            }
+            netMetaData && setLocalMetaData(netMetaData).then(() => updateMetadataUpdate())
           }
         }
       }

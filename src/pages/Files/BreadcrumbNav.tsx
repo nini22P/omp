@@ -1,7 +1,7 @@
 import { Breadcrumbs, Button } from '@mui/material'
 import useUiStore from '../../store/useUiStore'
 
-const BreadcrumbNav = ({ handleListNavClick }: { handleListNavClick: (index: number) => void }) => {
+const BreadcrumbNav = ({ handleClickNav }: { handleClickNav: (index: number) => void }) => {
 
   const [folderTree] = useUiStore((state) => [state.folderTree])
 
@@ -17,7 +17,7 @@ const BreadcrumbNav = ({ handleListNavClick }: { handleListNavClick: (index: num
             key={index}
             color="inherit"
             size='small'
-            onClick={() => handleListNavClick(index)}
+            onClick={() => handleClickNav(index)}
           >
 
             <span style={{

@@ -9,7 +9,9 @@
     "calculate": "计算",
     "more": "更多",
     "about": "关于",
-    "openSourceDependencies": "开源库"
+    "openSourceDependencies": "开源库",
+    "search": "搜索",
+    "close": "关闭"
   },
   "account": {
     "account": "账户",

@@ -9,8 +9,11 @@ import { File, Thumbnail } from '../../types/file'
 import Grid from '@mui/material/Unstable_Grid2/Grid2'
 import FilterMenu from './FilterMenu'
 import PictureView from '../PictureView/PictureView'
-import { Divider } from '@mui/material'
-import { useRef } from 'react'
+import { Divider, IconButton, InputBase } from '@mui/material'
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
+import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
+import { useEffect, useRef, useState } from 'react'
+import { useTranslation } from 'react-i18next'
 
 const Files = () => {
 
@@ -35,6 +38,11 @@ const Files = () => {
   )
 
   const { getFilesData } = useFilesData()
+
+  const { t } = useTranslation()
+
+  const [searchIsShow, setSearchIsShow] = useState(false)
+  const [searchValue, setSearchValue] = useState('')
 
   const fileListFetcher = async (path: string): Promise<File[]> => {
     interface ResItem {
@@ -66,9 +74,12 @@ const Files = () => {
   const { data: fileListData, error: fileListError, isLoading: fileListIsLoading } =
     useSWR<File[], Error>(pathConvert(folderTree), fileListFetcher, { revalidateOnFocus: false })
 
-  const filteredFileList = (!fileListData)
-    ? []
-    : fileListData.filter((item) => mediaOnly ? item.fileType !== 'other' : true)
+  const filteredFileList =
+    !fileListData
+      ? []
+      : fileListData
+        .filter((item) => item.fileName.toLocaleLowerCase().includes(searchValue.toLocaleLowerCase()))
+        .filter((item) => mediaOnly ? item.fileType !== 'other' : true)
 
   const sortedFileList = (!filteredFileList)
     ? []
@@ -104,12 +115,25 @@ const Files = () => {
 
   const scrollFilePathRef = useRef<string[] | null>(null)
 
-  const handleListNavClick = (index: number) => {
+  const handleClickNav = (index: number) => {
     if (index < folderTree.length - 1) {
       scrollFilePathRef.current = folderTree.slice(0, index + 2)
       updateFolderTree(folderTree.slice(0, index + 1))
     }
   }
+
+  const handleClickSearch = () => {
+    setSearchIsShow(!searchIsShow)
+    setSearchValue('')
+  }
+
+  useEffect(
+    () => {
+      setSearchValue('')
+      setSearchIsShow(false)
+    },
+    [folderTree]
+  )
 
   return (
     <Grid container
@@ -125,11 +149,33 @@ const Files = () => {
         justifyContent='space-between'
         alignItems='center'
         wrap='nowrap'
+        padding='0.25rem 0.5rem'
+        gap='0.25rem'
+        minHeight='3.5rem'
       >
-        <Grid>
-          <BreadcrumbNav handleListNavClick={handleListNavClick} />
+        <Grid xs>
+          {
+            searchIsShow
+              ?
+              <InputBase
+                autoFocus
+                fullWidth
+                aria-label={t('common.search')}
+                placeholder={t('common.search')}
+                defaultValue={searchValue}
+                onChange={(e) => setSearchValue(e.target.value)}
+                sx={{ marginX: '0.5rem' }}
+              />
+              :
+              <BreadcrumbNav handleClickNav={handleClickNav} />
+          }
         </Grid>
-        <Grid xs={'auto'} paddingRight={2}>
+        <Grid xs={'auto'} sx={{ display: 'flex', flexDirection: 'row', justifyItems: 'center', alignItems: 'center' }}>
+          <IconButton
+            onClick={handleClickSearch}
+            aria-label={searchIsShow ? `${t('common.close')} ${t('common.search')}` : t('common.search')}>
+            {searchIsShow ? <CloseRoundedIcon /> : <SearchRoundedIcon />}
+          </IconButton>
           <FilterMenu />
         </Grid>
       </Grid>
