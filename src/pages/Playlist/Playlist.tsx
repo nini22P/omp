@@ -83,7 +83,6 @@ const Playlist = () => {
                 sx={{
                   padding: '3rem 1rem 1rem 1rem',
                   background: `linear-gradient(0deg, ${theme.palette.background.default}ff, ${theme.palette.background.default}99,${theme.palette.background.default}00)`,
-                  zIndex: 1,
                   gap: '0.25rem',
                   backdropFilter: 'blur(2px)',
                 }}
@@ -105,7 +104,7 @@ const Playlist = () => {
                 </Grid>
               </Grid>
 
-              <Box sx={{ position: 'absolute', height: '100%', width: '100%' }}>
+              <Box sx={{ position: 'absolute', height: '100%', width: '100%', zIndex: -1 }}>
                 {
                   metaDataList[0] && metaDataList[0].cover && 'data' in metaDataList[0].cover[0].data &&
                   <img
