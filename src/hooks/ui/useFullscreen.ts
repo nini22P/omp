@@ -19,10 +19,23 @@ const useFullscreen = () => {
   const handleClickFullscreen = () => {
     if (!document.fullscreenElement) {
       document.documentElement.requestFullscreen()
-    } else {
+    } else if (document.fullscreenElement) {
       document.exitFullscreen()
     }
   }
+
+  useEffect(() => {
+    const handleClickF11 = (e: KeyboardEvent) => {
+      if (e.code === 'F11') {
+        e.preventDefault()
+        handleClickFullscreen()
+      }
+    }
+    document.addEventListener('keydown', handleClickF11)
+    return () => {
+      document.removeEventListener('keydown', handleClickF11)
+    }
+  })
 
   return { handleClickFullscreen }
 }
