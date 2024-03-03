@@ -2,6 +2,10 @@
 
 # OMP - OneDrive Media Player
 
+![ci](https://github.com/nini22P/omp/actions/workflows/ci.yml/badge.svg)
+<a href="https://afdian.net/a/nini22P"><img alt="Afdaian" style="height: 30px;" src="https://pic1.afdiancdn.com/static/img/welcome/button-sponsorme.png"></a>
+[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/nini22p)
+
 English | [中文](./readme_cn.md)
 
 **[Now Playing](https://nini22p.github.io/omp/)**
