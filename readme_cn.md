@@ -71,3 +71,7 @@ REDIRECT_URI=<redirectUri>
 ## 许可
 
 [AGPL 3.0](https://github.com/nini22P/omp/blob/main/LICENSE)
+
+## Star History
+
+[![Star History Chart](https://api.star-history.com/svg?repos=nini22P/omp&type=Date)](https://star-history.com/#nini22P/omp&Date)
