@@ -11,6 +11,7 @@ const History = () => {
         (!historyList) ? <Loading />
           : <CommonList
             listData={historyList}
+            listType='files'
             func={{ handleClickRemove: removeHistory }}
           />
       }
