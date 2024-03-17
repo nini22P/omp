@@ -1,4 +1,4 @@
-import { Box, ButtonBase, CircularProgress, Container, IconButton, Paper, Slider, Typography, useTheme } from '@mui/material'
+import { Box, ButtonBase, CircularProgress, Container, IconButton, Paper, Popover, Slider, Typography, useTheme } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import CloseFullscreenRoundedIcon from '@mui/icons-material/CloseFullscreenRounded'
 import OpenInFullRoundedIcon from '@mui/icons-material/OpenInFullRounded'
@@ -12,12 +12,16 @@ import SkipNextRoundedIcon from '@mui/icons-material/SkipNextRounded'
 import RepeatOneRoundedIcon from '@mui/icons-material/RepeatOneRounded'
 import RepeatRoundedIcon from '@mui/icons-material/RepeatRounded'
 import PlaylistPlayRoundedIcon from '@mui/icons-material/PlaylistPlayRounded'
+import VolumeUpIcon from '@mui/icons-material/VolumeUp'
+import VolumeDownIcon from '@mui/icons-material/VolumeDown'
+import VolumeOffIcon from '@mui/icons-material/VolumeOff'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
 import useFullscreen from '@/hooks/ui/useFullscreen'
 import usePlayerControl from '@/hooks/player/usePlayerControl'
 import { timeShift } from '@/utils'
+import { useState } from 'react'
 
 const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
 
@@ -30,9 +34,11 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
     fullscreen,
     shuffle,
     repeat,
+    volume,
     updateAudioViewIsShow,
     updateVideoViewIsShow,
     updatePlayQueueIsShow,
+    updateVolume,
   ] = useUiStore(
     (state) => [
       state.videoViewIsShow,
@@ -40,9 +46,11 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
       state.fullscreen,
       state.shuffle,
       state.repeat,
+      state.volume,
       state.updateAudioViewIsShow,
       state.updateVideoViewIsShow,
       state.updatePlayQueueIsShow,
+      state.updateVolume,
     ]
   )
 
@@ -89,6 +97,9 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
     small: { width: 20, height: 20 },
     large: { width: 38, height: 38 }
   }
+
+  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
+  const volumeOpen = Boolean(anchorEl)
 
   return (
     <Paper sx={{ backgroundColor: `${theme.palette.background.paper}99`, backdropFilter: 'blur(8px)' }}>
@@ -257,6 +268,52 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
               sx={{ display: { sm: 'block', xs: 'none' } }}
               pr={1}
             >
+              <IconButton onClick={(event: React.MouseEvent<HTMLButtonElement>) => setAnchorEl(event.currentTarget)} >
+                {
+                  volume === 0
+                    ? <VolumeOffIcon sx={{ display: 'inline-grid' }} />
+                    : volume < 50
+                      ? <VolumeDownIcon sx={{ display: 'inline-grid' }} />
+                      : <VolumeUpIcon sx={{ display: 'inline-grid' }} />
+                }
+              </IconButton>
+              <Popover
+                open={volumeOpen}
+                onClose={() => setAnchorEl(null)}
+                anchorEl={anchorEl}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'center',
+                }}
+                transformOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'center',
+                }}
+              >
+                <Box
+                  sx={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    padding: '1.5rem 1rem 2rem 1rem',
+                    gap: '1.5em',
+                  }}
+                >
+                  {volume}
+                  <Slider
+                    aria-label="Volume"
+                    orientation="vertical"
+                    value={volume}
+                    min={0}
+                    max={100}
+                    onChange={(_, value) => updateVolume(value as number)}
+                    sx={{
+                      minHeight: '200px',
+                    }}
+                  />
+                </Box>
+              </Popover>
               <IconButton onClick={() => updatePlayQueueIsShow(!playQueueIsShow)}>
                 <PlaylistPlayRoundedIcon sx={{ display: { sm: 'inline-grid', xs: 'none' } }} />
               </IconButton>

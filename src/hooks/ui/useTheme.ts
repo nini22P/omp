@@ -1,6 +1,7 @@
 import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
-import { createTheme, useMediaQuery } from '@mui/material'
+import { useMediaQuery } from '@mui/material'
+import createTheme from '@mui/material/styles/createTheme'
 import { extractColors } from 'extract-colors'
 import { useMemo } from 'react'
 
