@@ -10,6 +10,7 @@ export interface UiStatus {
   backgroundIsShow: boolean;
   shuffle: boolean;
   repeat: 'off' | 'all' | 'one';
+  volume: number;
   coverColor: string;
   CoverThemeColor: boolean;
   colorMode: 'auto' | 'light' | 'dark';
@@ -33,6 +34,7 @@ export interface UiAction {
   updateBackgroundIsShow: (backgroundIsShow: UiStatus['backgroundIsShow']) => void;
   updateShuffle: (shuffle: UiStatus['shuffle']) => void;
   updateRepeat: (loop: UiStatus['repeat']) => void;
+  updateVolume: (volume: UiStatus['volume']) => void;
   updateCoverColor: (coverColor: UiStatus['coverColor']) => void;
   updateCoverThemeColor: (CoverThemeColor: UiStatus['CoverThemeColor']) => void;
   updateColorMode: (colorMode: UiStatus['colorMode']) => void;

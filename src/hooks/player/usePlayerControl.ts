@@ -35,12 +35,14 @@ const usePlayerControl = (player: HTMLVideoElement | null) => {
     repeat,
     updateShuffle,
     updateRepeat,
+    volume,
   ] = useUiStore(
     (state) => [
       state.shuffle,
       state.repeat,
       state.updateShuffle,
       state.updateRepeat,
+      state.volume,
     ]
   )
 
@@ -146,6 +148,15 @@ const usePlayerControl = (player: HTMLVideoElement | null) => {
     if (repeat === 'one')
       updateRepeat('off')
   }
+
+  useEffect(
+    () => {
+      if (player) {
+        player.volume = (isNaN(volume / 100) || volume < 0 || volume > 100) ? 0.8 : (volume / 100)
+      }
+    },
+    [player, volume]
+  )
 
   return {
     seekTo,
