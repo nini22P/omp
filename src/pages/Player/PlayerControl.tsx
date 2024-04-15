@@ -296,8 +296,8 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
                     flexDirection: 'column',
                     justifyContent: 'center',
                     alignItems: 'center',
-                    padding: '1.5rem 1rem 2rem 1rem',
-                    gap: '1.5em',
+                    padding: '1rem 0.5rem 1rem 0.5rem',
+                    gap: '1em',
                   }}
                 >
                   {volume}
@@ -309,7 +309,7 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
                     max={100}
                     onChange={(_, value) => updateVolume(value as number)}
                     sx={{
-                      minHeight: '200px',
+                      minHeight: '160px',
                     }}
                   />
                 </Box>
