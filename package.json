@@ -2,7 +2,7 @@
   "name": "omp",
   "description": "OneDrive Media Player",
   "private": true,
-  "version": "1.6.5",
+  "version": "1.7.0",
   "scripts": {
     "dev": "lingui extract & lingui compile --typescript & webpack serve",
     "build": "lingui extract & lingui compile --typescript & webpack --mode=production --node-env=production",
