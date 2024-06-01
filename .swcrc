@@ -1,6 +1,11 @@
 {
   "$schema": "https://json.schemastore.org/swcrc",
   "jsc": {
+    "experimental": {
+      "plugins": [
+          ["@lingui/swc-plugin",{}]
+      ]
+    },
     "parser": {
       "syntax": "typescript"
     },

@@ -7,6 +7,7 @@ import NavigateNextRoundedIcon from '@mui/icons-material/NavigateNextRounded'
 import CheckRoundedIcon from '@mui/icons-material/CheckRounded'
 import { Box, IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material'
 import { useState } from 'react'
+import { t } from '@lingui/macro'
 
 const MenuButton = () => {
 
@@ -61,14 +62,14 @@ const MenuButton = () => {
               <ListItemIcon>
                 <SyncAltRoundedIcon />
               </ListItemIcon>
-              <ListItemText primary={'切换主题'} />
+              <ListItemText primary={t`Switch theme`} />
             </MenuItem>
             <MenuItem onClick={() => setMenuStatus('playbackRate')}>
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                 <ListItemIcon>
                   <SpeedRoundedIcon />
                 </ListItemIcon>
-                <ListItemText primary={'播放速度'} />
+                <ListItemText primary={t`Playback rate`} />
               </Box>
               <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', marginLeft: '0.5rem' }}>
                 {playbackRate.toFixed(2)} <NavigateNextRoundedIcon />
@@ -84,7 +85,7 @@ const MenuButton = () => {
               <ListItemIcon>
                 <NavigateBeforeRoundedIcon />
               </ListItemIcon>
-              <ListItemText primary={'播放速度'} />
+              <ListItemText primary={t`Playback rate`} />
             </MenuItem>
             {
               [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 3, 4].map((speed) => (

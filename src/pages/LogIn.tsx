@@ -1,10 +1,9 @@
 import { Button, Container, IconButton, Link, Typography } from '@mui/material'
 import GitHubIcon from '@mui/icons-material/GitHub'
-import { useTranslation } from 'react-i18next'
+import { t } from '@lingui/macro'
 import useUser from '../hooks/graph/useUser'
 
 const LogIn = () => {
-  const { t } = useTranslation()
   const { login } = useUser()
 
   return (
@@ -23,9 +22,9 @@ const LogIn = () => {
       </IconButton>
       <div>
         <Typography variant="h5" pb={2} >
-          {t('account.signInAlert')}
+          {t`Please use Microsoft account authorization to log in`}
         </Typography>
-        <Button size="large" onClick={() => login()}>{t('account.signIn')}</Button>
+        <Button size="large" onClick={() => login()}>{t`Sign in`}</Button>
       </div>
       <footer>
         Made with ❤ from <Link underline='none' href='https://github.com/nini22P'>22</Link>

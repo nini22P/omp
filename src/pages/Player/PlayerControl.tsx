@@ -27,6 +27,7 @@ import useFullscreen from '@/hooks/ui/useFullscreen'
 import usePlayerControl from '@/hooks/player/usePlayerControl'
 import { timeShift } from '@/utils'
 import { useState } from 'react'
+import { t } from '@lingui/macro'
 
 const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
 
@@ -373,7 +374,7 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
                       <ListItemIcon>
                         <SpeedRoundedIcon />
                       </ListItemIcon>
-                      <ListItemText primary={'播放速度'} />
+                      <ListItemText primary={t`Playback rate`} />
                     </Box>
                     <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', marginLeft: '0.5rem' }}>
                       {playbackRate.toFixed(2)} <NavigateNextRoundedIcon />
@@ -387,7 +388,7 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
                       <ListItemIcon>
                         <NavigateBeforeRoundedIcon />
                       </ListItemIcon>
-                      <ListItemText primary={'播放速度'} />
+                      <ListItemText primary={t`Playback rate`} />
                     </MenuItem>
                     {
                       [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 3, 4].map((speed) => (

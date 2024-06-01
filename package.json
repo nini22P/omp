@@ -4,10 +4,11 @@
   "private": true,
   "version": "1.6.5",
   "scripts": {
-    "dev": "webpack serve",
-    "build": "webpack --mode=production --node-env=production",
+    "dev": "lingui extract & lingui compile --typescript & webpack serve",
+    "build": "lingui extract & lingui compile --typescript & webpack --mode=production --node-env=production",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
-    "watch": "webpack --watch"
+    "watch": "webpack --watch",
+    "lingui": "lingui extract & lingui compile --typescript"
   },
   "dependencies": {
     "@azure/msal-browser": "^3.10.0",
@@ -15,19 +16,18 @@
     "@emotion/react": "^11.11.3",
     "@emotion/styled": "^11.11.0",
     "@fontsource/roboto": "^5.0.8",
+    "@lingui/macro": "^4.11.1",
+    "@lingui/react": "^4.11.1",
     "@mui/icons-material": "^5.15.10",
     "@mui/material": "^5.15.10",
     "@react-spring/web": "^9.7.3",
     "@use-gesture/react": "^10.3.0",
     "buffer": "^6.0.3",
     "extract-colors": "^4.0.2",
-    "i18next": "^23.9.0",
-    "i18next-browser-languagedetector": "^7.2.0",
     "idb-keyval": "^6.2.1",
     "music-metadata-browser": "^2.5.10",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-i18next": "^14.0.5",
     "react-router-dom": "^6.22.1",
     "react-virtualized": "^9.22.5",
     "short-uuid": "^4.2.2",
@@ -35,6 +35,8 @@
     "zustand": "^4.5.1"
   },
   "devDependencies": {
+    "@lingui/cli": "^4.11.1",
+    "@lingui/swc-plugin": "^4.0.8",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.11",
     "@swc/core": "^1.4.2",
     "@types/extract-colors": "^1.1.4",

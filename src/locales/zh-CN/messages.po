@@ -1,0 +1,219 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2024-06-01 23:36+0800\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: zh-CN\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/pages/Setting.tsx:109
+msgid "About"
+msgstr "关于"
+
+#: src/pages/Setting.tsx:41
+msgid "Account"
+msgstr "账户"
+
+#: src/components/CommonList/CommonMenu.tsx:174
+#: src/pages/SideBar/Playlists.tsx:49
+msgid "Add playlist"
+msgstr "新建播放列表"
+
+#: src/components/CommonList/CommonMenu.tsx:114
+msgid "Add to play queue"
+msgstr "添加到播放队列"
+
+#: src/components/CommonList/CommonMenu.tsx:107
+#: src/components/CommonList/CommonMenu.tsx:148
+msgid "Add to playlist"
+msgstr "添加到播放列表"
+
+#: src/pages/Files/FilterMenu.tsx:102
+msgid "Ascending"
+msgstr "正序"
+
+#: src/pages/Setting.tsx:85
+msgid "Auto"
+msgstr "自动"
+
+#: src/components/CommonList/CommonMenu.tsx:179
+#: src/pages/Playlist/Playlist.tsx:168
+#: src/pages/Playlist/Playlist.tsx:191
+msgid "Cancel"
+msgstr "取消"
+
+#: src/pages/Setting.tsx:66
+msgid "Clear"
+msgstr "清除"
+
+#: src/pages/Files/Files.tsx:174
+msgid "Close"
+msgstr "关闭"
+
+#: src/pages/Setting.tsx:92
+msgid "Color mode"
+msgstr "颜色模式"
+
+#: src/pages/Setting.tsx:75
+msgid "Customize"
+msgstr "定制"
+
+#: src/pages/Setting.tsx:87
+msgid "Dark"
+msgstr "深色"
+
+#: src/pages/Setting.tsx:62
+msgid "Data"
+msgstr "数据"
+
+#: src/pages/Playlist/Playlist.tsx:145
+msgid "Delete"
+msgstr "删除"
+
+#: src/pages/Files/FilterMenu.tsx:103
+msgid "Descending"
+msgstr "倒序"
+
+#: src/pages/SideBar/SideBar.tsx:19
+msgid "Files"
+msgstr "文件"
+
+#: src/pages/Files/FilterMenu.tsx:111
+msgid "Folders first"
+msgstr "文件夹优先"
+
+#: src/pages/Files/FilterMenu.tsx:78
+msgid "Grid"
+msgstr "网格"
+
+#: src/pages/Files/FilterMenu.tsx:115
+msgid "HD thumbnails"
+msgstr "高清缩略图"
+
+#: src/pages/SideBar/SideBar.tsx:20
+msgid "History"
+msgstr "历史"
+
+#: src/pages/Files/FilterMenu.tsx:91
+msgid "Last modified"
+msgstr "最后修改"
+
+#: src/pages/Setting.tsx:86
+msgid "Light"
+msgstr "浅色"
+
+#: src/pages/Files/FilterMenu.tsx:76
+msgid "List"
+msgstr "列表"
+
+#: src/pages/Setting.tsx:70
+msgid "Local metaData cache"
+msgstr "本地元数据缓存"
+
+#: src/pages/Files/FilterMenu.tsx:112
+msgid "Media only"
+msgstr "仅限媒体"
+
+#: src/components/CommonList/CommonListItem.tsx:32
+#: src/components/CommonList/CommonListItemCard.tsx:76
+#: src/pages/Playlist/Playlist.tsx:101
+msgid "More"
+msgstr "更多"
+
+#: src/pages/Files/FilterMenu.tsx:77
+msgid "Multicolumn list"
+msgstr "多列列表"
+
+#: src/pages/Files/FilterMenu.tsx:89
+msgid "Name"
+msgstr "名称"
+
+#: src/components/CommonList/CommonMenu.tsx:63
+#: src/pages/SideBar/Playlists.tsx:16
+msgid "New playlist"
+msgstr "新播放列表"
+
+#: src/pages/Playlist/Playlist.tsx:175
+#: src/pages/Playlist/Playlist.tsx:192
+msgid "OK"
+msgstr "确定"
+
+#: src/components/CommonList/CommonMenu.tsx:121
+msgid "Open in folder"
+msgstr "打开所在文件夹"
+
+#: src/pages/Setting.tsx:118
+msgid "Open source dependencies"
+msgstr "开源库"
+
+#: src/components/CommonList/CommonList.tsx:401
+msgid "Play all"
+msgstr "全部播放"
+
+#: src/pages/Player/Audio/MenuButton.tsx:72
+#: src/pages/Player/Audio/MenuButton.tsx:88
+#: src/pages/Player/PlayerControl.tsx:377
+#: src/pages/Player/PlayerControl.tsx:391
+msgid "Playback rate"
+msgstr "播放速度"
+
+#: src/pages/LogIn.tsx:25
+#: src/pages/Setting.tsx:55
+msgid "Please use Microsoft account authorization to log in"
+msgstr "请使用微软账户授权登录"
+
+#: src/components/CommonList/CommonMenu.tsx:137
+msgid "Remove"
+msgstr "移除"
+
+#: src/pages/Playlist/Playlist.tsx:139
+#: src/pages/Playlist/Playlist.tsx:156
+msgid "Rename"
+msgstr "重命名"
+
+#: src/pages/Files/Files.tsx:161
+#: src/pages/Files/Files.tsx:162
+#: src/pages/Files/Files.tsx:174
+#: src/pages/Files/Files.tsx:174
+msgid "Search"
+msgstr "搜索"
+
+#: src/pages/SideBar/SideBar.tsx:21
+msgid "Setting"
+msgstr "设置"
+
+#: src/components/CommonList/ShuffleAll.tsx:24
+msgid "Shuffle all"
+msgstr "全部随机播放"
+
+#: src/pages/LogIn.tsx:27
+#: src/pages/Setting.tsx:46
+msgid "Sign in"
+msgstr "登录"
+
+#: src/pages/Setting.tsx:45
+msgid "Sign out"
+msgstr "注销"
+
+#: src/pages/Files/FilterMenu.tsx:90
+msgid "Size"
+msgstr "大小"
+
+#: src/pages/Player/Audio/MenuButton.tsx:65
+msgid "Switch theme"
+msgstr "切换主题"
+
+#: src/pages/Playlist/Playlist.tsx:188
+msgid "The playlist will be deleted"
+msgstr "播放列表将会被删除"
+
+#: src/pages/Setting.tsx:104
+msgid "Use album cover theme color"
+msgstr "使用专辑封面主题色"

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { t } from '@lingui/macro'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Button, ListItemText, Typography, Dialog, DialogTitle, DialogActions, Menu, MenuItem, DialogContent, TextField, Box, useTheme } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
@@ -10,7 +10,6 @@ import useLocalMetaDataStore from '@/store/useLocalMetaDataStore'
 import { MetaData } from '@/types/MetaData'
 
 const Playlist = () => {
-  const { t } = useTranslation()
   const navigate = useNavigate()
   const { id } = useParams()
   const theme = useTheme()
@@ -99,7 +98,7 @@ const Playlist = () => {
                     // startIcon={<MoreVertOutlined />}
                     onClick={handleClickMenu}
                   >
-                    {t('common.more')}
+                    {t`More`}
                   </Button>
                 </Grid>
               </Grid>
@@ -137,13 +136,13 @@ const Playlist = () => {
           setRenameDialogOpen(true)
           handleCloseMenu()
         }}>
-          <ListItemText primary={t('common.rename')} />
+          <ListItemText primary={t`Rename`} />
         </MenuItem>
         <MenuItem onClick={() => {
           setDeleteDiaLogOpen(true)
           handleCloseMenu()
         }}>
-          <ListItemText primary={t('common.delete')} />
+          <ListItemText primary={t`Delete`} />
         </MenuItem>
       </Menu>
 
@@ -154,7 +153,7 @@ const Playlist = () => {
         fullWidth
         maxWidth='xs'
       >
-        <DialogTitle>{t('common.rename')}</DialogTitle>
+        <DialogTitle>{t`Rename`}</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
@@ -166,14 +165,14 @@ const Playlist = () => {
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setRenameDialogOpen(false)}>{t('common.cancel')}</Button>
+          <Button onClick={() => setRenameDialogOpen(false)}>{t`Cancel`}</Button>
           <Button onClick={() => {
             if (id && newTitle) {
               renamePlaylist(id, newTitle)
               setRenameDialogOpen(false)
             }
           }} >
-            {t('common.ok')}
+            {t`OK`}
           </Button>
         </DialogActions>
       </Dialog>
@@ -186,11 +185,11 @@ const Playlist = () => {
         maxWidth='xs'
       >
         <DialogContent>
-          {t('playlist.playlistWillBeDeleted')}
+          {t`The playlist will be deleted`}
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setDeleteDiaLogOpen(false)}>{t('common.cancel')}</Button>
-          <Button onClick={deletePlaylist} >{t('common.ok')}</Button>
+          <Button onClick={() => setDeleteDiaLogOpen(false)}>{t`Cancel`}</Button>
+          <Button onClick={deletePlaylist} >{t`OK`}</Button>
         </DialogActions>
       </Dialog>
 
