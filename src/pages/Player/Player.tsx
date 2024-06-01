@@ -12,7 +12,6 @@ import PlayQueue from './PlayQueue'
 
 const Player = () => {
 
-
   const [
     videoViewIsShow,
     controlIsShow,

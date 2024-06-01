@@ -144,7 +144,7 @@ const useTheme = () => {
       MuiListItemIcon: {
         styleOverrides: {
           root: {
-            minWidth: 0,
+            minWidth: '0px !important',
             marginRight: '1rem',
           },
         }

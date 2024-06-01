@@ -11,6 +11,7 @@ export interface UiStatus {
   shuffle: boolean;
   repeat: 'off' | 'all' | 'one';
   volume: number;
+  playbackRate: number;
   coverColor: string;
   CoverThemeColor: boolean;
   colorMode: 'auto' | 'light' | 'dark';
@@ -35,6 +36,7 @@ export interface UiAction {
   updateShuffle: (shuffle: UiStatus['shuffle']) => void;
   updateRepeat: (loop: UiStatus['repeat']) => void;
   updateVolume: (volume: UiStatus['volume']) => void;
+  updatePlaybackRate: (playbackRate: UiStatus['playbackRate']) => void;
   updateCoverColor: (coverColor: UiStatus['coverColor']) => void;
   updateCoverThemeColor: (CoverThemeColor: UiStatus['CoverThemeColor']) => void;
   updateColorMode: (colorMode: UiStatus['colorMode']) => void;
