@@ -6,10 +6,10 @@ import FolderOpenRoundedIcon from '@mui/icons-material/FolderOpenRounded'
 import MusicNoteRoundedIcon from '@mui/icons-material/MusicNoteRounded'
 import MovieRoundedIcon from '@mui/icons-material/MovieRounded'
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded'
-import { useTranslation } from 'react-i18next'
 import Grid from '@mui/material/Unstable_Grid2/Grid2'
 import useUtils from '@/hooks/useUtils'
 import { sizeConvert } from '@/utils'
+import { t } from '@lingui/macro'
 
 const CommonListItemCard = ({
   item,
@@ -24,7 +24,6 @@ const CommonListItemCard = ({
 }) => {
 
   const theme = useTheme()
-  const { t } = useTranslation()
   const { getThumbnailUrl } = useUtils()
 
   const thumbnailUrl = getThumbnailUrl(item)
@@ -74,7 +73,7 @@ const CommonListItemCard = ({
               (item.fileType === 'audio' || item.fileType === 'video')
               &&
               <IconButton
-                aria-label={t('common.more')}
+                aria-label={t`More`}
                 size='small'
                 sx={{ padding: 0 }}
                 onMouseDown={(event) => event.stopPropagation()}

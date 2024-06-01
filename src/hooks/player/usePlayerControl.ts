@@ -33,16 +33,18 @@ const usePlayerControl = (player: HTMLVideoElement | null) => {
   const [
     shuffle,
     repeat,
+    volume,
+    playbackRate,
     updateShuffle,
     updateRepeat,
-    volume,
   ] = useUiStore(
     (state) => [
       state.shuffle,
       state.repeat,
+      state.volume,
+      state.playbackRate,
       state.updateShuffle,
       state.updateRepeat,
-      state.volume,
     ]
   )
 
@@ -155,7 +157,19 @@ const usePlayerControl = (player: HTMLVideoElement | null) => {
         player.volume = (isNaN(volume / 100) || volume < 0 || volume > 100) ? 0.8 : (volume / 100)
       }
     },
-    [player, volume]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [player && player.src, volume]
+  )
+
+  // 播放速度
+  useEffect(
+    () => {
+      if (player) {
+        player.playbackRate = playbackRate
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [player && player.src, playbackRate]
   )
 
   return {

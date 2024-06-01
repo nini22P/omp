@@ -12,10 +12,10 @@ import CommonListItem from './CommonListItem'
 import { Box, Fab, List, useMediaQuery, useTheme } from '@mui/material'
 import { AutoSizer, List as VirtualList } from 'react-virtualized'
 import CommonListItemCard from './CommonListItemCard'
-import { useTranslation } from 'react-i18next'
 import ShuffleRoundedIcon from '@mui/icons-material/ShuffleRounded'
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded'
 import { useNavigate } from 'react-router-dom'
+import { t } from '@lingui/macro'
 
 const CommonList = (
   {
@@ -36,7 +36,6 @@ const CommonList = (
     },
   }) => {
 
-  const { t } = useTranslation()
   const navigate = useNavigate()
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -399,7 +398,7 @@ const CommonList = (
           </Fab>
           <Fab variant='extended' color='primary' onClick={() => handleClickPlayAll()}>
             <PlayArrowRoundedIcon />
-            {t('playlist.playAll')}
+            <span style={{ marginLeft: '0.5rem' }}>{t`Play all`}</span>
           </Fab>
         </Box>
       }

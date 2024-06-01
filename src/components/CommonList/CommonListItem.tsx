@@ -7,7 +7,7 @@ import MusicNoteRoundedIcon from '@mui/icons-material/MusicNoteRounded'
 import MovieRoundedIcon from '@mui/icons-material/MovieRounded'
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded'
 import { ListItem, IconButton, ListItemButton, ListItemAvatar, Avatar, ListItemText, ListItemIcon } from '@mui/material'
-import { useTranslation } from 'react-i18next'
+import { t } from '@lingui/macro'
 
 const CommonListItem = ({
   item,
@@ -21,8 +21,6 @@ const CommonListItem = ({
   handleClickMenu: (event: React.MouseEvent<HTMLElement>, currentFile: File) => void,
 }) => {
 
-  const { t } = useTranslation()
-
   return (
     <ListItem
       disablePadding
@@ -31,7 +29,7 @@ const CommonListItem = ({
         &&
         <div>
           <IconButton
-            aria-label={t('common.more')}
+            aria-label={t`More`}
             onClick={(event) =>
               handleClickMenu(event,
                 {

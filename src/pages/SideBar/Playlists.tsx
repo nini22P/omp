@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next'
+import { t } from '@lingui/macro'
 import { NavLink, useNavigate } from 'react-router-dom'
 import shortUUID from 'short-uuid'
 import { List, ListItem, ListItemText, ListItemIcon, ListItemButton, Button } from '@mui/material'
@@ -8,13 +8,12 @@ import usePlaylistsStore from '../../store/usePlaylistsStore'
 
 const Playlists = ({ closeSideBar }: { closeSideBar: () => void }) => {
 
-  const { t } = useTranslation()
   const navigate = useNavigate()
   const [playlists, insertPlaylist] = usePlaylistsStore((state) => [state.playlists, state.insertPlaylist])
 
   const addPlaylist = async () => {
     const id = shortUUID().generate()
-    insertPlaylist({ id, title: t('playlist.newPlaylist'), fileList: [] })
+    insertPlaylist({ id, title: t`New playlist`, fileList: [] })
     return navigate(`/playlist/${id}`)
   }
 
@@ -47,7 +46,7 @@ const Playlists = ({ closeSideBar }: { closeSideBar: () => void }) => {
             startIcon={<PlaylistAddRoundedIcon />}
             onClick={addPlaylist}
           >
-            {t('playlist.addPlaylist')}
+            {t`Add playlist`}
           </Button>
         </ListItemText>
       </ListItem >

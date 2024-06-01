@@ -1,4 +1,4 @@
-import { Box, ButtonBase, CircularProgress, Container, IconButton, Paper, Popover, Slider, Typography, useTheme } from '@mui/material'
+import { Box, ButtonBase, CircularProgress, Container, IconButton, ListItemIcon, ListItemText, Menu, MenuItem, Paper, Popover, Slider, Typography, useTheme } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import CloseFullscreenRoundedIcon from '@mui/icons-material/CloseFullscreenRounded'
 import OpenInFullRoundedIcon from '@mui/icons-material/OpenInFullRounded'
@@ -15,6 +15,11 @@ import PlaylistPlayRoundedIcon from '@mui/icons-material/PlaylistPlayRounded'
 import VolumeUpIcon from '@mui/icons-material/VolumeUp'
 import VolumeDownIcon from '@mui/icons-material/VolumeDown'
 import VolumeOffIcon from '@mui/icons-material/VolumeOff'
+import MoreHorizRoundedIcon from '@mui/icons-material/MoreHorizRounded'
+import SpeedRoundedIcon from '@mui/icons-material/SpeedRounded'
+import NavigateBeforeRoundedIcon from '@mui/icons-material/NavigateBeforeRounded'
+import NavigateNextRoundedIcon from '@mui/icons-material/NavigateNextRounded'
+import CheckRoundedIcon from '@mui/icons-material/CheckRounded'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
@@ -22,6 +27,7 @@ import useFullscreen from '@/hooks/ui/useFullscreen'
 import usePlayerControl from '@/hooks/player/usePlayerControl'
 import { timeShift } from '@/utils'
 import { useState } from 'react'
+import { t } from '@lingui/macro'
 
 const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
 
@@ -35,10 +41,12 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
     shuffle,
     repeat,
     volume,
+    playbackRate,
     updateAudioViewIsShow,
     updateVideoViewIsShow,
     updatePlayQueueIsShow,
     updateVolume,
+    updatePlaybackRate,
   ] = useUiStore(
     (state) => [
       state.videoViewIsShow,
@@ -47,10 +55,12 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
       state.shuffle,
       state.repeat,
       state.volume,
+      state.playbackRate,
       state.updateAudioViewIsShow,
       state.updateVideoViewIsShow,
       state.updatePlayQueueIsShow,
       state.updateVolume,
+      state.updatePlaybackRate,
     ]
   )
 
@@ -98,8 +108,21 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
     large: { width: 38, height: 38 }
   }
 
-  const [anchorEl, setAnchorEl] = useState<HTMLButtonElement | null>(null)
-  const volumeOpen = Boolean(anchorEl)
+  const [volumeAnchorEl, setVolumeAnchorEl] = useState<HTMLElement | null>(null)
+  const volumeOpen = Boolean(volumeAnchorEl)
+
+  const [menuAnchorEl, setMemuAnchorEl] = useState<HTMLElement | null>(null)
+  const menuOpen = Boolean(menuAnchorEl)
+  const [menuStatus, setMenuStatus] = useState<'playbackRate' | null>(null)
+
+  const handleClickMenu = (event: React.MouseEvent<HTMLElement>) => {
+    setMemuAnchorEl(event.currentTarget)
+  }
+
+  const handleCloseMenu = () => {
+    setMemuAnchorEl(null)
+    setMenuStatus(null)
+  }
 
   return (
     <Paper sx={{ backgroundColor: `${theme.palette.background.paper}99`, backdropFilter: 'blur(8px)' }}>
@@ -209,7 +232,7 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
               </IconButton>
 
               <IconButton
-                sx={{ display: { sm: 'inline-grid', xs: 'none' } }}
+                sx={{ display: { md: 'inline-grid', xs: 'none' } }}
                 aria-label="backward"
                 onClick={() => handleClickSeekbackward(10)}
               >
@@ -236,7 +259,7 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
               }
 
               <IconButton
-                sx={{ display: { sm: 'inline-grid', xs: 'none' } }}
+                sx={{ display: { md: 'inline-grid', xs: 'none' } }}
                 aria-label="forward"
                 onClick={() => handleClickSeekforward(10)}
               >
@@ -265,10 +288,11 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
             <Grid
               xs
               textAlign={'right'}
+              wrap='nowrap'
               sx={{ display: { sm: 'block', xs: 'none' } }}
               pr={1}
             >
-              <IconButton onClick={(event: React.MouseEvent<HTMLButtonElement>) => setAnchorEl(event.currentTarget)} >
+              <IconButton onClick={(event: React.MouseEvent<HTMLButtonElement>) => setVolumeAnchorEl(event.currentTarget)} >
                 {
                   volume === 0
                     ? <VolumeOffIcon sx={{ display: 'inline-grid' }} />
@@ -279,8 +303,8 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
               </IconButton>
               <Popover
                 open={volumeOpen}
-                onClose={() => setAnchorEl(null)}
-                anchorEl={anchorEl}
+                onClose={() => setVolumeAnchorEl(null)}
+                anchorEl={volumeAnchorEl}
                 anchorOrigin={{
                   vertical: 'top',
                   horizontal: 'center',
@@ -314,9 +338,11 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
                   />
                 </Box>
               </Popover>
+
               <IconButton onClick={() => updatePlayQueueIsShow(!playQueueIsShow)}>
                 <PlaylistPlayRoundedIcon sx={{ display: { sm: 'inline-grid', xs: 'none' } }} />
               </IconButton>
+
               <IconButton onClick={() => handleClickFullscreen()} >
                 {
                   fullscreen
@@ -324,6 +350,65 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
                     : <OpenInFullRoundedIcon sx={{ height: 18, width: 18, display: { sm: 'inline-grid', xs: 'none' } }} />
                 }
               </IconButton>
+
+              <IconButton onClick={handleClickMenu}>
+                <MoreHorizRoundedIcon sx={{ display: { sm: 'inline-grid', xs: 'none' } }} />
+              </IconButton>
+              <Menu
+                anchorEl={menuAnchorEl}
+                open={menuOpen}
+                onClose={handleCloseMenu}
+                anchorOrigin={{
+                  vertical: 'top',
+                  horizontal: 'center',
+                }}
+                transformOrigin={{
+                  vertical: 'bottom',
+                  horizontal: 'center',
+                }}
+              >
+                {
+                  (!menuStatus) &&
+                  <MenuItem onClick={() => setMenuStatus('playbackRate')}>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                      <ListItemIcon>
+                        <SpeedRoundedIcon />
+                      </ListItemIcon>
+                      <ListItemText primary={t`Playback rate`} />
+                    </Box>
+                    <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', marginLeft: '0.5rem' }}>
+                      {playbackRate.toFixed(2)} <NavigateNextRoundedIcon />
+                    </Box>
+                  </MenuItem>
+                }
+                {
+                  (menuStatus === 'playbackRate') &&
+                  <div>
+                    <MenuItem onClick={() => setMenuStatus(null)}>
+                      <ListItemIcon>
+                        <NavigateBeforeRoundedIcon />
+                      </ListItemIcon>
+                      <ListItemText primary={t`Playback rate`} />
+                    </MenuItem>
+                    {
+                      [0.25, 0.5, 0.75, 1, 1.25, 1.5, 1.75, 2, 3, 4].map((speed) => (
+                        <MenuItem
+                          key={speed}
+                          onClick={() => {
+                            updatePlaybackRate(speed)
+                            setMenuStatus(null)
+                          }}
+                        >
+                          <ListItemIcon>
+                            <CheckRoundedIcon sx={{ visibility: speed === playbackRate ? 'visible' : 'hidden' }} />
+                          </ListItemIcon>
+                          {speed.toFixed(2)}
+                        </MenuItem>
+                      ))
+                    }
+                  </div>
+                }
+              </Menu>
             </Grid>
 
           </Grid>

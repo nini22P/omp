@@ -27,6 +27,12 @@ export const licenses = [
     'author': 'Google Inc.'
   },
   {
+    'name': '@lingui',
+    'licenseType': 'MIT',
+    'link': 'https://github.com/lingui/js-lingui',
+    'author': 'Lingui',
+  },
+  {
     'name': '@mui/icons-material',
     'licenseType': 'MIT',
     'link': 'https://github.com/mui/material-ui',
@@ -63,18 +69,6 @@ export const licenses = [
     'author': 'damien@doussaud.fr'
   },
   {
-    'name': 'i18next',
-    'licenseType': 'MIT',
-    'link': 'https://github.com/i18next/i18next',
-    'author': 'Jan Mühlemann <jan.muehlemann@gmail.com> (https://github.com/jamuhl)'
-  },
-  {
-    'name': 'i18next-browser-languagedetector',
-    'licenseType': 'MIT',
-    'link': 'https://github.com/i18next/i18next-browser-languageDetector',
-    'author': 'Jan Mühlemann <jan.muehlemann@gmail.com> (https://github.com/jamuhl)'
-  },
-  {
     'name': 'idb-keyval',
     'licenseType': 'Apache-2.0',
     'link': 'https://github.com/jakearchibald/idb-keyval',
@@ -97,12 +91,6 @@ export const licenses = [
     'licenseType': 'MIT',
     'link': 'https://github.com/facebook/react',
     'author': 'n/a'
-  },
-  {
-    'name': 'react-i18next',
-    'licenseType': 'MIT',
-    'link': 'https://github.com/i18next/react-i18next',
-    'author': 'Jan Mühlemann <jan.muehlemann@gmail.com> (https://github.com/jamuhl)'
   },
   {
     'name': 'react-router-dom',

@@ -1,0 +1,219 @@
+msgid ""
+msgstr ""
+"POT-Creation-Date: 2024-06-01 23:36+0800\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"X-Generator: @lingui/cli\n"
+"Language: en\n"
+"Project-Id-Version: \n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: \n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"Plural-Forms: \n"
+
+#: src/pages/Setting.tsx:109
+msgid "About"
+msgstr "About"
+
+#: src/pages/Setting.tsx:41
+msgid "Account"
+msgstr "Account"
+
+#: src/components/CommonList/CommonMenu.tsx:174
+#: src/pages/SideBar/Playlists.tsx:49
+msgid "Add playlist"
+msgstr "Add playlist"
+
+#: src/components/CommonList/CommonMenu.tsx:114
+msgid "Add to play queue"
+msgstr "Add to play queue"
+
+#: src/components/CommonList/CommonMenu.tsx:107
+#: src/components/CommonList/CommonMenu.tsx:148
+msgid "Add to playlist"
+msgstr "Add to playlist"
+
+#: src/pages/Files/FilterMenu.tsx:102
+msgid "Ascending"
+msgstr "Ascending"
+
+#: src/pages/Setting.tsx:85
+msgid "Auto"
+msgstr "Auto"
+
+#: src/components/CommonList/CommonMenu.tsx:179
+#: src/pages/Playlist/Playlist.tsx:168
+#: src/pages/Playlist/Playlist.tsx:191
+msgid "Cancel"
+msgstr "Cancel"
+
+#: src/pages/Setting.tsx:66
+msgid "Clear"
+msgstr "Clear"
+
+#: src/pages/Files/Files.tsx:174
+msgid "Close"
+msgstr "Close"
+
+#: src/pages/Setting.tsx:92
+msgid "Color mode"
+msgstr "Color mode"
+
+#: src/pages/Setting.tsx:75
+msgid "Customize"
+msgstr "Customize"
+
+#: src/pages/Setting.tsx:87
+msgid "Dark"
+msgstr "Dark"
+
+#: src/pages/Setting.tsx:62
+msgid "Data"
+msgstr "Data"
+
+#: src/pages/Playlist/Playlist.tsx:145
+msgid "Delete"
+msgstr "Delete"
+
+#: src/pages/Files/FilterMenu.tsx:103
+msgid "Descending"
+msgstr "Descending"
+
+#: src/pages/SideBar/SideBar.tsx:19
+msgid "Files"
+msgstr "Files"
+
+#: src/pages/Files/FilterMenu.tsx:111
+msgid "Folders first"
+msgstr "Folders first"
+
+#: src/pages/Files/FilterMenu.tsx:78
+msgid "Grid"
+msgstr "Grid"
+
+#: src/pages/Files/FilterMenu.tsx:115
+msgid "HD thumbnails"
+msgstr "HD thumbnails"
+
+#: src/pages/SideBar/SideBar.tsx:20
+msgid "History"
+msgstr "History"
+
+#: src/pages/Files/FilterMenu.tsx:91
+msgid "Last modified"
+msgstr "Last modified"
+
+#: src/pages/Setting.tsx:86
+msgid "Light"
+msgstr "Light"
+
+#: src/pages/Files/FilterMenu.tsx:76
+msgid "List"
+msgstr "List"
+
+#: src/pages/Setting.tsx:70
+msgid "Local metaData cache"
+msgstr "Local metaData cache"
+
+#: src/pages/Files/FilterMenu.tsx:112
+msgid "Media only"
+msgstr "Media only"
+
+#: src/components/CommonList/CommonListItem.tsx:32
+#: src/components/CommonList/CommonListItemCard.tsx:76
+#: src/pages/Playlist/Playlist.tsx:101
+msgid "More"
+msgstr "More"
+
+#: src/pages/Files/FilterMenu.tsx:77
+msgid "Multicolumn list"
+msgstr "Multicolumn list"
+
+#: src/pages/Files/FilterMenu.tsx:89
+msgid "Name"
+msgstr "Name"
+
+#: src/components/CommonList/CommonMenu.tsx:63
+#: src/pages/SideBar/Playlists.tsx:16
+msgid "New playlist"
+msgstr "New playlist"
+
+#: src/pages/Playlist/Playlist.tsx:175
+#: src/pages/Playlist/Playlist.tsx:192
+msgid "OK"
+msgstr "OK"
+
+#: src/components/CommonList/CommonMenu.tsx:121
+msgid "Open in folder"
+msgstr "Open in folder"
+
+#: src/pages/Setting.tsx:118
+msgid "Open source dependencies"
+msgstr "Open source dependencies"
+
+#: src/components/CommonList/CommonList.tsx:401
+msgid "Play all"
+msgstr "Play all"
+
+#: src/pages/Player/Audio/MenuButton.tsx:72
+#: src/pages/Player/Audio/MenuButton.tsx:88
+#: src/pages/Player/PlayerControl.tsx:377
+#: src/pages/Player/PlayerControl.tsx:391
+msgid "Playback rate"
+msgstr "Playback rate"
+
+#: src/pages/LogIn.tsx:25
+#: src/pages/Setting.tsx:55
+msgid "Please use Microsoft account authorization to log in"
+msgstr "Please use Microsoft account authorization to log in"
+
+#: src/components/CommonList/CommonMenu.tsx:137
+msgid "Remove"
+msgstr "Remove"
+
+#: src/pages/Playlist/Playlist.tsx:139
+#: src/pages/Playlist/Playlist.tsx:156
+msgid "Rename"
+msgstr "Rename"
+
+#: src/pages/Files/Files.tsx:161
+#: src/pages/Files/Files.tsx:162
+#: src/pages/Files/Files.tsx:174
+#: src/pages/Files/Files.tsx:174
+msgid "Search"
+msgstr "Search"
+
+#: src/pages/SideBar/SideBar.tsx:21
+msgid "Setting"
+msgstr "Setting"
+
+#: src/components/CommonList/ShuffleAll.tsx:24
+msgid "Shuffle all"
+msgstr "Shuffle all"
+
+#: src/pages/LogIn.tsx:27
+#: src/pages/Setting.tsx:46
+msgid "Sign in"
+msgstr "Sign in"
+
+#: src/pages/Setting.tsx:45
+msgid "Sign out"
+msgstr "Sign out"
+
+#: src/pages/Files/FilterMenu.tsx:90
+msgid "Size"
+msgstr "Size"
+
+#: src/pages/Player/Audio/MenuButton.tsx:65
+msgid "Switch theme"
+msgstr "Switch theme"
+
+#: src/pages/Playlist/Playlist.tsx:188
+msgid "The playlist will be deleted"
+msgstr "The playlist will be deleted"
+
+#: src/pages/Setting.tsx:104
+msgid "Use album cover theme color"
+msgstr "Use album cover theme color"

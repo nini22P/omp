@@ -13,7 +13,7 @@ import { Divider, IconButton, InputBase } from '@mui/material'
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 import { useEffect, useRef, useState } from 'react'
-import { useTranslation } from 'react-i18next'
+import { t } from '@lingui/macro'
 
 const Files = () => {
 
@@ -38,8 +38,6 @@ const Files = () => {
   )
 
   const { getFilesData } = useFilesData()
-
-  const { t } = useTranslation()
 
   const [searchIsShow, setSearchIsShow] = useState(false)
   const [searchValue, setSearchValue] = useState('')
@@ -160,8 +158,8 @@ const Files = () => {
               <InputBase
                 autoFocus
                 fullWidth
-                aria-label={t('common.search')}
-                placeholder={t('common.search')}
+                aria-label={t`Search`}
+                placeholder={t`Search`}
                 defaultValue={searchValue}
                 onChange={(e) => setSearchValue(e.target.value)}
                 sx={{ marginX: '0.5rem' }}
@@ -173,7 +171,7 @@ const Files = () => {
         <Grid xs={'auto'} sx={{ display: 'flex', flexDirection: 'row', justifyItems: 'center', alignItems: 'center' }}>
           <IconButton
             onClick={handleClickSearch}
-            aria-label={searchIsShow ? `${t('common.close')} ${t('common.search')}` : t('common.search')}>
+            aria-label={searchIsShow ? `${t`Close`} ${t`Search`}` : t`Search`}>
             {searchIsShow ? <CloseRoundedIcon /> : <SearchRoundedIcon />}
           </IconButton>
           <FilterMenu />

@@ -2,7 +2,7 @@ import useUiStore from '@/store/useUiStore'
 import FilterListRoundedIcon from '@mui/icons-material/FilterListRounded'
 import { Checkbox, Divider, FormControlLabel, FormGroup, IconButton, Menu, Radio, RadioGroup } from '@mui/material'
 import React from 'react'
-import { useTranslation } from 'react-i18next'
+import { t } from '@lingui/macro'
 
 const FilterMenu = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
@@ -44,8 +44,6 @@ const FilterMenu = () => {
     ]
   )
 
-  const { t } = useTranslation()
-
   return (
     <div>
       <IconButton
@@ -75,9 +73,9 @@ const FilterMenu = () => {
           name='display-radio-buttons-group'
           sx={{ paddingLeft: 2 }}
         >
-          <FormControlLabel value={'list'} control={<Radio />} label={t('files.display.list')} onChange={() => updateDisplay('list')} />
-          <FormControlLabel value={'multicolumnList'} control={<Radio />} label={t('files.display.multicolumnList')} onChange={() => updateDisplay('multicolumnList')} />
-          <FormControlLabel value={'grid'} control={<Radio />} label={t('files.display.grid')} onChange={() => updateDisplay('grid')} />
+          <FormControlLabel value={'list'} control={<Radio />} label={t`List`} onChange={() => updateDisplay('list')} />
+          <FormControlLabel value={'multicolumnList'} control={<Radio />} label={t`Multicolumn list`} onChange={() => updateDisplay('multicolumnList')} />
+          <FormControlLabel value={'grid'} control={<Radio />} label={t`Grid`} onChange={() => updateDisplay('grid')} />
         </RadioGroup>
 
         <Divider />
@@ -88,9 +86,9 @@ const FilterMenu = () => {
           name="sort-radio-buttons-group"
           sx={{ paddingLeft: 2 }}
         >
-          <FormControlLabel value="name" control={<Radio />} label={t('files.sortBy.name')} onChange={() => updateSortBy('name')} />
-          <FormControlLabel value="size" control={<Radio />} label={t('files.sortBy.size')} onChange={() => updateSortBy('size')} />
-          <FormControlLabel value="datetime" control={<Radio />} label={t('files.sortBy.lastModified')} onChange={() => updateSortBy('datetime')} />
+          <FormControlLabel value="name" control={<Radio />} label={t`Name`} onChange={() => updateSortBy('name')} />
+          <FormControlLabel value="size" control={<Radio />} label={t`Size`} onChange={() => updateSortBy('size')} />
+          <FormControlLabel value="datetime" control={<Radio />} label={t`Last modified`} onChange={() => updateSortBy('datetime')} />
         </RadioGroup>
 
         <Divider />
@@ -101,8 +99,8 @@ const FilterMenu = () => {
           name="order-radio-buttons-group"
           sx={{ paddingLeft: 2 }}
         >
-          <FormControlLabel value="asc" control={<Radio />} label={t('files.orderBy.asc')} onChange={() => updateOrderBy('asc')} />
-          <FormControlLabel value="desc" control={<Radio />} label={t('files.orderBy.desc')} onChange={() => updateOrderBy('desc')} />
+          <FormControlLabel value="asc" control={<Radio />} label={t`Ascending`} onChange={() => updateOrderBy('asc')} />
+          <FormControlLabel value="desc" control={<Radio />} label={t`Descending`} onChange={() => updateOrderBy('desc')} />
         </RadioGroup>
 
         <Divider />
@@ -110,11 +108,11 @@ const FilterMenu = () => {
         <FormGroup
           sx={{ paddingLeft: 2 }}
         >
-          <FormControlLabel control={<Checkbox checked={foldersFirst} />} label={t('files.foldersFirst')} onChange={() => updateFoldersFirst(!foldersFirst)} />
-          <FormControlLabel control={<Checkbox checked={mediaOnly} />} label={t('files.mediaOnly')} onChange={() => updateMediaOnly(!mediaOnly)} />
+          <FormControlLabel control={<Checkbox checked={foldersFirst} />} label={t`Folders first`} onChange={() => updateFoldersFirst(!foldersFirst)} />
+          <FormControlLabel control={<Checkbox checked={mediaOnly} />} label={t`Media only`} onChange={() => updateMediaOnly(!mediaOnly)} />
           {
             display === 'grid' &&
-            <FormControlLabel control={<Checkbox checked={hdThumbnails} />} label={t('files.hdThumbnails')} onChange={() => updateHDThumbnails(!hdThumbnails)} />
+            <FormControlLabel control={<Checkbox checked={hdThumbnails} />} label={t`HD thumbnails`} onChange={() => updateHDThumbnails(!hdThumbnails)} />
           }
 
         </FormGroup>

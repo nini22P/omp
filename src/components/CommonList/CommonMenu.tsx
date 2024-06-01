@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next'
+import { t } from '@lingui/macro'
 import { useNavigate } from 'react-router-dom'
 import shortUUID from 'short-uuid'
 import { Menu, MenuItem, ListItemText, Button, Dialog, DialogActions, DialogTitle, List, ListItem, ListItemButton, ListItemIcon } from '@mui/material'
@@ -37,7 +37,6 @@ const CommonMenu = (
     }
 ) => {
 
-  const { t } = useTranslation()
   const navigate = useNavigate()
 
   const [updateFolderTree] = useUiStore((state) => [state.updateFolderTree])
@@ -61,7 +60,7 @@ const CommonMenu = (
   // 新建播放列表
   const addNewPlaylist = () => {
     const id = shortUUID().generate()
-    insertPlaylist({ id, title: t('playlist.newPlaylist'), fileList: [] })
+    insertPlaylist({ id, title: t`New playlist`, fileList: [] })
   }
 
   // 添加到播放列表
@@ -105,21 +104,21 @@ const CommonMenu = (
           setDialogOpen(true)
           handleCloseMenu()
         }}>
-          <ListItemText primary={t('playlist.addToPlaylist')} />
+          <ListItemText primary={t`Add to playlist`} />
         </MenuItem>
         {  // 当前选择文件不在播放队列中时显示
           (currentFile && !playQueue?.find((file) => {
             return pathConvert(file.filePath) === pathConvert(currentFile?.filePath)
           })) &&
           <MenuItem onClick={handleClickAddToPlayQueue}>
-            <ListItemText primary={t('playlist.addToPlayQueue')} />
+            <ListItemText primary={t`Add to play queue`} />
           </MenuItem>
         }
 
         {  // 在 Files 组件中隐藏
           handleClickRemove &&
           <MenuItem onClick={handleClickOpenInFolder}>
-            <ListItemText primary={t('playlist.openInFolder')} />
+            <ListItemText primary={t`Open in folder`} />
           </MenuItem>
         }
 
@@ -135,7 +134,7 @@ const CommonMenu = (
               handleCloseMenu()
             }}
           >
-            <ListItemText primary={t('common.remove')} />
+            <ListItemText primary={t`Remove`} />
           </MenuItem>
         }
       </Menu>
@@ -146,7 +145,7 @@ const CommonMenu = (
         fullWidth
         maxWidth='xs'
       >
-        <DialogTitle>{t('playlist.addToPlaylist')}</DialogTitle>
+        <DialogTitle>{t`Add to playlist`}</DialogTitle>
         <List>
           {playlists?.map((item, index) =>
             <ListItem
@@ -172,12 +171,12 @@ const CommonMenu = (
               <ListItemIcon>
                 <PlaylistAddRoundedIcon />
               </ListItemIcon>
-              <ListItemText primary={t('playlist.addPlaylist')} />
+              <ListItemText primary={t`Add playlist`} />
             </ListItemButton>
           </ListItem>
         </List>
         <DialogActions>
-          <Button onClick={() => setDialogOpen(false)}>{t('common.cancel')}</Button>
+          <Button onClick={() => setDialogOpen(false)}>{t`Cancel`}</Button>
         </DialogActions>
       </Dialog>
     </>

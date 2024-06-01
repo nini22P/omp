@@ -1,6 +1,6 @@
 import { Avatar, Button, Checkbox, Divider, FormControl, FormControlLabel, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, MenuItem, Select, SelectChangeEvent, useTheme } from '@mui/material'
 import useUser from '../hooks/graph/useUser'
-import { useTranslation } from 'react-i18next'
+import { t } from '@lingui/macro'
 import { licenses } from '../data/licenses'
 import useLocalMetaDataStore from '../store/useLocalMetaDataStore'
 import useUiStore from '@/store/useUiStore'
@@ -17,7 +17,6 @@ const ListItemTitle = ({ title }: { title: string }) => {
 
 const Setting = () => {
   const { account, login, logout } = useUser()
-  const { t } = useTranslation()
 
   const { clearLocalMetaData } = useLocalMetaDataStore()
 
@@ -39,12 +38,12 @@ const Setting = () => {
     <div style={{ width: '100%', height: '100%', overflow: 'auto' }}>
 
       <List>
-        <ListItemTitle title={t('account.account')} />
+        <ListItemTitle title={t`Account`} />
         <ListItem
           secondaryAction={
             account
-              ? <Button onClick={() => logout()}>{t('account.signOut')}</Button>
-              : <Button onClick={() => login()}>{t('account.signIn')}</Button>
+              ? <Button onClick={() => logout()}>{t`Sign out`}</Button>
+              : <Button onClick={() => login()}>{t`Sign in`}</Button>
           }
         >
           <ListItemAvatar>
@@ -53,27 +52,27 @@ const Setting = () => {
           {
             account
               ? <ListItemText primary={account.name} secondary={account.username} />
-              : <ListItemText primary={t('account.signInAlert')} secondary={' '} />
+              : <ListItemText primary={t`Please use Microsoft account authorization to log in`} secondary={' '} />
           }
 
         </ListItem>
 
         <Divider sx={{ m: 1 }} />
 
-        <ListItemTitle title={t('data.data')} />
+        <ListItemTitle title={t`Data`} />
         <ListItem
           secondaryAction={
             <Button onClick={() => clearLocalMetaData()}>
-              {t('common.clear')}
+              {t`Clear`}
             </Button>
           }
         >
-          <ListItemText inset primary={t('data.localMetaDataCache')} secondary=' ' />
+          <ListItemText inset primary={t`Local metaData cache`} secondary=' ' />
         </ListItem>
 
         <Divider sx={{ m: 1 }} />
 
-        <ListItemTitle title={t('customize.customize')} />
+        <ListItemTitle title={t`Customize`} />
         <ListItem
           secondaryAction={
             <FormControl variant="standard">
@@ -83,14 +82,14 @@ const Setting = () => {
                 value={colorMode}
                 onChange={(event: SelectChangeEvent) => updateColorMode(event.target.value as UiStatus['colorMode'])}
               >
-                <MenuItem value={'auto'}> {t('customize.auto')} </MenuItem>
-                <MenuItem value={'light'}> {t('customize.light')} </MenuItem>
-                <MenuItem value={'dark'}> {t('customize.dark')} </MenuItem>
+                <MenuItem value={'auto'}> {t`Auto`} </MenuItem>
+                <MenuItem value={'light'}> {t`Light`} </MenuItem>
+                <MenuItem value={'dark'}> {t`Dark`} </MenuItem>
               </Select>
             </FormControl>
           }
         >
-          <ListItemText inset primary={t('customize.colorMode')} secondary=' ' />
+          <ListItemText inset primary={t`Color mode`} secondary=' ' />
         </ListItem>
 
         <ListItem
@@ -102,12 +101,12 @@ const Setting = () => {
             />
           }
         >
-          <ListItemText inset primary={t('customize.CoverThemeColor')} secondary=' ' />
+          <ListItemText inset primary={t`Use album cover theme color`} secondary=' ' />
         </ListItem>
 
         <Divider sx={{ m: 1 }} />
 
-        <ListItemTitle title={t('common.about')} />
+        <ListItemTitle title={t`About`} />
         <ListItem disablePadding>
           <ListItemButton onClick={() => window.open('https://github.com/nini22P/omp', '_blank')}>
             <ListItemText inset primary='OMP - OneDrive Media Player' secondary='AGPL-3.0' />
@@ -116,7 +115,7 @@ const Setting = () => {
 
         <Divider sx={{ m: 1 }} />
 
-        <ListItemTitle title={t('common.openSourceDependencies')} />
+        <ListItemTitle title={t`Open source dependencies`} />
         {
           licenses.map((license) =>
             <ListItem key={license.name} disablePadding>

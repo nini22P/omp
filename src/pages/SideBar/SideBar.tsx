@@ -1,4 +1,4 @@
-import { useTranslation } from 'react-i18next'
+import { t } from '@lingui/macro'
 import { Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText, useTheme } from '@mui/material'
 import { NavLink } from 'react-router-dom'
 import HistoryRoundedIcon from '@mui/icons-material/HistoryOutlined'
@@ -12,15 +12,13 @@ const SideBar = () => {
 
   const theme = useTheme()
 
-  const { t } = useTranslation()
-
   const [mobileSideBarOpen, updateMobileSideBarOpen] = useUiStore(
     (state) => [state.mobileSideBarOpen, state.updateMobileSideBarOpen])
 
   const navData = [
-    { router: '/', icon: <FolderRoundedIcon />, label: t('nav.files') },
-    { router: '/history', icon: <HistoryRoundedIcon />, label: t('nav.history') },
-    { router: '/setting', icon: <SettingsRoundedIcon />, label: t('nav.setting') },
+    { router: '/', icon: <FolderRoundedIcon />, label: t`Files` },
+    { router: '/history', icon: <HistoryRoundedIcon />, label: t`History` },
+    { router: '/setting', icon: <SettingsRoundedIcon />, label: t`Setting` },
   ]
 
   const closeSideBar = () => (mobileSideBarOpen) && updateMobileSideBarOpen(false)
