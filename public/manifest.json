@@ -8,7 +8,6 @@
   ],
   "description": "OneDrive Media Player",
   "dir": "auto",
-  "orientation": "any",
   "icons": [
     {
       "src": "./favicon.ico",
