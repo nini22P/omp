@@ -21,17 +21,20 @@ msgstr "About"
 msgid "Account"
 msgstr "Account"
 
-#: src/components/CommonList/CommonMenu.tsx:174
+#: src/components/CommonList/CommonMenu.tsx:171
+#: src/pages/Player/Audio/MenuButton.tsx:306
 #: src/pages/SideBar/Playlists.tsx:49
 msgid "Add playlist"
 msgstr "Add playlist"
 
-#: src/components/CommonList/CommonMenu.tsx:114
+#: src/components/CommonList/CommonMenu.tsx:111
 msgid "Add to play queue"
 msgstr "Add to play queue"
 
-#: src/components/CommonList/CommonMenu.tsx:107
-#: src/components/CommonList/CommonMenu.tsx:148
+#: src/components/CommonList/CommonMenu.tsx:104
+#: src/components/CommonList/CommonMenu.tsx:145
+#: src/pages/Player/Audio/MenuButton.tsx:194
+#: src/pages/Player/Audio/MenuButton.tsx:280
 msgid "Add to playlist"
 msgstr "Add to playlist"
 
@@ -43,11 +46,16 @@ msgstr "Ascending"
 msgid "Auto"
 msgstr "Auto"
 
-#: src/components/CommonList/CommonMenu.tsx:179
+#: src/components/CommonList/CommonMenu.tsx:176
+#: src/pages/Player/Audio/MenuButton.tsx:311
 #: src/pages/Playlist/Playlist.tsx:168
 #: src/pages/Playlist/Playlist.tsx:191
 msgid "Cancel"
 msgstr "Cancel"
+
+#: src/pages/Player/Audio/MenuButton.tsx:238
+msgid "Classic"
+msgstr "Classic"
 
 #: src/pages/Setting.tsx:66
 msgid "Clear"
@@ -121,6 +129,10 @@ msgstr "Local metaData cache"
 msgid "Media only"
 msgstr "Media only"
 
+#: src/pages/Player/Audio/MenuButton.tsx:226
+msgid "Modern"
+msgstr "Modern"
+
 #: src/components/CommonList/CommonListItem.tsx:32
 #: src/components/CommonList/CommonListItemCard.tsx:76
 #: src/pages/Playlist/Playlist.tsx:101
@@ -135,7 +147,8 @@ msgstr "Multicolumn list"
 msgid "Name"
 msgstr "Name"
 
-#: src/components/CommonList/CommonMenu.tsx:63
+#: src/components/CommonList/CommonMenu.tsx:60
+#: src/pages/Player/Audio/MenuButton.tsx:112
 #: src/pages/SideBar/Playlists.tsx:16
 msgid "New playlist"
 msgstr "New playlist"
@@ -145,7 +158,8 @@ msgstr "New playlist"
 msgid "OK"
 msgstr "OK"
 
-#: src/components/CommonList/CommonMenu.tsx:121
+#: src/components/CommonList/CommonMenu.tsx:118
+#: src/pages/Player/Audio/MenuButton.tsx:184
 msgid "Open in folder"
 msgstr "Open in folder"
 
@@ -157,10 +171,12 @@ msgstr "Open source dependencies"
 msgid "Play all"
 msgstr "Play all"
 
-#: src/pages/Player/Audio/MenuButton.tsx:72
-#: src/pages/Player/Audio/MenuButton.tsx:88
-#: src/pages/Player/PlayerControl.tsx:377
-#: src/pages/Player/PlayerControl.tsx:391
+#: src/pages/Player/Audio/MenuButton.tsx:177
+msgid "Play queue"
+msgstr "Play queue"
+
+#: src/pages/Player/Audio/MenuButton.tsx:166
+#: src/pages/Player/Audio/MenuButton.tsx:251
 msgid "Playback rate"
 msgstr "Playback rate"
 
@@ -169,7 +185,7 @@ msgstr "Playback rate"
 msgid "Please use Microsoft account authorization to log in"
 msgstr "Please use Microsoft account authorization to log in"
 
-#: src/components/CommonList/CommonMenu.tsx:137
+#: src/components/CommonList/CommonMenu.tsx:134
 msgid "Remove"
 msgstr "Remove"
 
@@ -206,7 +222,12 @@ msgstr "Sign out"
 msgid "Size"
 msgstr "Size"
 
-#: src/pages/Player/Audio/MenuButton.tsx:65
+#: src/pages/Player/Audio/MenuButton.tsx:201
+msgid "Switch fullscreen"
+msgstr "Switch fullscreen"
+
+#: src/pages/Player/Audio/MenuButton.tsx:157
+#: src/pages/Player/Audio/MenuButton.tsx:214
 msgid "Switch theme"
 msgstr "Switch theme"
 

@@ -4,7 +4,6 @@ import shortUUID from 'short-uuid'
 import { Menu, MenuItem, ListItemText, Button, Dialog, DialogActions, DialogTitle, List, ListItem, ListItemButton, ListItemIcon } from '@mui/material'
 import PlaylistAddRoundedIcon from '@mui/icons-material/PlaylistAddRounded'
 import ListRoundedIcon from '@mui/icons-material/ListRounded'
-import { shallow } from 'zustand/shallow'
 import usePlayQueueStore from '../../store/usePlayQueueStore'
 import usePlaylistsStore from '../../store/usePlaylistsStore'
 import useUiStore from '../../store/useUiStore'
@@ -41,12 +40,10 @@ const CommonMenu = (
 
   const [updateFolderTree] = useUiStore((state) => [state.updateFolderTree])
   const [playQueue, currentIndex, updatePlayQueue] = usePlayQueueStore(
-    (state) => [state.playQueue, state.currentIndex, state.updatePlayQueue],
-    shallow
+    (state) => [state.playQueue, state.currentIndex, state.updatePlayQueue]
   )
   const [playlists, insertPlaylist, insertFilesToPlaylist] = usePlaylistsStore(
-    (state) => [state.playlists, state.insertPlaylist, state.insertFilesToPlaylist],
-    shallow
+    (state) => [state.playlists, state.insertPlaylist, state.insertFilesToPlaylist]
   )
   const [updateAudioViewIsShow, updateVideoViewIsShow, updatePlayQueueIsShow] = useUiStore(
     (state) => [state.updateAudioViewIsShow, state.updateVideoViewIsShow, state.updatePlayQueueIsShow]
