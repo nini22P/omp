@@ -21,17 +21,20 @@ msgstr "关于"
 msgid "Account"
 msgstr "账户"
 
-#: src/components/CommonList/CommonMenu.tsx:174
+#: src/components/CommonList/CommonMenu.tsx:171
+#: src/pages/Player/Audio/MenuButton.tsx:306
 #: src/pages/SideBar/Playlists.tsx:49
 msgid "Add playlist"
 msgstr "新建播放列表"
 
-#: src/components/CommonList/CommonMenu.tsx:114
+#: src/components/CommonList/CommonMenu.tsx:111
 msgid "Add to play queue"
 msgstr "添加到播放队列"
 
-#: src/components/CommonList/CommonMenu.tsx:107
-#: src/components/CommonList/CommonMenu.tsx:148
+#: src/components/CommonList/CommonMenu.tsx:104
+#: src/components/CommonList/CommonMenu.tsx:145
+#: src/pages/Player/Audio/MenuButton.tsx:194
+#: src/pages/Player/Audio/MenuButton.tsx:280
 msgid "Add to playlist"
 msgstr "添加到播放列表"
 
@@ -43,11 +46,16 @@ msgstr "正序"
 msgid "Auto"
 msgstr "自动"
 
-#: src/components/CommonList/CommonMenu.tsx:179
+#: src/components/CommonList/CommonMenu.tsx:176
+#: src/pages/Player/Audio/MenuButton.tsx:311
 #: src/pages/Playlist/Playlist.tsx:168
 #: src/pages/Playlist/Playlist.tsx:191
 msgid "Cancel"
 msgstr "取消"
+
+#: src/pages/Player/Audio/MenuButton.tsx:238
+msgid "Classic"
+msgstr "经典"
 
 #: src/pages/Setting.tsx:66
 msgid "Clear"
@@ -121,6 +129,10 @@ msgstr "本地元数据缓存"
 msgid "Media only"
 msgstr "仅限媒体"
 
+#: src/pages/Player/Audio/MenuButton.tsx:226
+msgid "Modern"
+msgstr "现代"
+
 #: src/components/CommonList/CommonListItem.tsx:32
 #: src/components/CommonList/CommonListItemCard.tsx:76
 #: src/pages/Playlist/Playlist.tsx:101
@@ -135,7 +147,8 @@ msgstr "多列列表"
 msgid "Name"
 msgstr "名称"
 
-#: src/components/CommonList/CommonMenu.tsx:63
+#: src/components/CommonList/CommonMenu.tsx:60
+#: src/pages/Player/Audio/MenuButton.tsx:112
 #: src/pages/SideBar/Playlists.tsx:16
 msgid "New playlist"
 msgstr "新播放列表"
@@ -145,7 +158,8 @@ msgstr "新播放列表"
 msgid "OK"
 msgstr "确定"
 
-#: src/components/CommonList/CommonMenu.tsx:121
+#: src/components/CommonList/CommonMenu.tsx:118
+#: src/pages/Player/Audio/MenuButton.tsx:184
 msgid "Open in folder"
 msgstr "打开所在文件夹"
 
@@ -157,10 +171,12 @@ msgstr "开源库"
 msgid "Play all"
 msgstr "全部播放"
 
-#: src/pages/Player/Audio/MenuButton.tsx:72
-#: src/pages/Player/Audio/MenuButton.tsx:88
-#: src/pages/Player/PlayerControl.tsx:377
-#: src/pages/Player/PlayerControl.tsx:391
+#: src/pages/Player/Audio/MenuButton.tsx:177
+msgid "Play queue"
+msgstr "播放队列"
+
+#: src/pages/Player/Audio/MenuButton.tsx:166
+#: src/pages/Player/Audio/MenuButton.tsx:251
 msgid "Playback rate"
 msgstr "播放速度"
 
@@ -169,7 +185,7 @@ msgstr "播放速度"
 msgid "Please use Microsoft account authorization to log in"
 msgstr "请使用微软账户授权登录"
 
-#: src/components/CommonList/CommonMenu.tsx:137
+#: src/components/CommonList/CommonMenu.tsx:134
 msgid "Remove"
 msgstr "移除"
 
@@ -206,7 +222,12 @@ msgstr "注销"
 msgid "Size"
 msgstr "大小"
 
-#: src/pages/Player/Audio/MenuButton.tsx:65
+#: src/pages/Player/Audio/MenuButton.tsx:201
+msgid "Switch fullscreen"
+msgstr "切换全屏"
+
+#: src/pages/Player/Audio/MenuButton.tsx:157
+#: src/pages/Player/Audio/MenuButton.tsx:214
 msgid "Switch theme"
 msgstr "切换主题"
 
