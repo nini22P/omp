@@ -72,6 +72,9 @@ const Setting = () => {
     if (account.username === accounts[currentAccount].username) {
       resetPlayQueue()
       resetPlayer()
+      updateHistoryList(null)
+      updatePlaylists(null)
+      updateFolderTree(['/'])
     }
     if (currentAccount === accounts.length - 1) {
       updateCurrentAccount((accounts.length - 1) <= 1 ? 0 : (accounts.length - 1))
