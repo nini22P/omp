@@ -15,4 +15,5 @@ export interface PlayQueueAction {
   updatePlayQueue: (PlayQueue: PlayQueueStatus['playQueue']) => void;
   updateCurrentIndex: (index: PlayQueueStatus['currentIndex']) => void;
   removeFilesFromPlayQueue: (filePathArray: File['filePath'][]) => void;
+  resetPlayQueue: () => void;
 }

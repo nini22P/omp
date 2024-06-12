@@ -1,4 +1,5 @@
 export interface UiStatus {
+  currentAccount: number;
   folderTree: string[];
   audioViewIsShow: boolean;
   audioViewTheme: 'classic' | 'modern';
@@ -24,6 +25,7 @@ export interface UiStatus {
 }
 
 export interface UiAction {
+  updateCurrentAccount: (currentAccount: UiStatus['currentAccount']) => void;
   updateFolderTree: (folderTree: UiStatus['folderTree']) => void;
   updateAudioViewIsShow: (audioViewIsShow: UiStatus['audioViewIsShow']) => void;
   updateAudioViewTheme: (audioViewTheme: UiStatus['audioViewTheme']) => void;

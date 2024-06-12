@@ -18,7 +18,7 @@ import useUiStore from '@/store/useUiStore'
 import useFullscreen from '@/hooks/ui/useFullscreen'
 import usePlayerControl from '@/hooks/player/usePlayerControl'
 import { timeShift } from '@/utils'
-import MenuButton from './Audio/MenuButton'
+import PlayerMenu from './PlayerMenu'
 import VolumeControl from './VolumeControl'
 
 const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
@@ -278,7 +278,7 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
               </IconButton>
 
               <Box sx={{ display: 'inline-grid' }} >
-                <MenuButton />
+                <PlayerMenu />
               </Box>
             </Grid>
 

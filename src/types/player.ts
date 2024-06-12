@@ -18,4 +18,5 @@ export interface PlayerAction {
   updateCover: (cover: PlayerStatus['cover']) => void;
   updateCurrentTime: (currentTime: PlayerStatus['currentTime']) => void;
   updateDuration: (duration: PlayerStatus['duration']) => void;
+  resetPlayer: () => void;
 }

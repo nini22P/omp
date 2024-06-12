@@ -104,7 +104,7 @@ const useTheme = () => {
       MuiBackdrop: {
         styleOverrides: {
           root: {
-            backgroundColor: 'transparent',
+            // backgroundColor: 'transparent',
           },
         },
       },
