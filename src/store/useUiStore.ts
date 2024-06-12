@@ -6,6 +6,7 @@ import { createJSONStorage, persist } from 'zustand/middleware'
 const useUiStore = createWithEqualityFn<UiStatus & UiAction>()(
   persist(
     (set) => ({
+      currentAccount: 0,
       folderTree: ['/'],
       audioViewIsShow: false,
       audioViewTheme: 'modern',
@@ -20,7 +21,7 @@ const useUiStore = createWithEqualityFn<UiStatus & UiAction>()(
       volume: 80,
       playbackRate: 1,
       coverColor: '#8e24aa',
-      CoverThemeColor: false,
+      CoverThemeColor: true,
       colorMode: 'auto',
       display: 'multicolumnList',
       sortBy: 'name',
@@ -28,6 +29,7 @@ const useUiStore = createWithEqualityFn<UiStatus & UiAction>()(
       foldersFirst: true,
       mediaOnly: true,
       hdThumbnails: false,
+      updateCurrentAccount: (currentAccount) => set(() => ({ currentAccount: currentAccount })),
       updateFolderTree: (folderTree) => set(() => ({ folderTree: folderTree })),
       updateAudioViewIsShow: (audioViewIsShow) => set(() => ({ audioViewIsShow: audioViewIsShow })),
       updateAudioViewTheme: (audioViewTheme) => set(() => ({ audioViewTheme: audioViewTheme })),

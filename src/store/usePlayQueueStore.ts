@@ -4,11 +4,15 @@ import { createWithEqualityFn } from 'zustand/traditional'
 import { shallow } from 'zustand/shallow'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
+const initialState: PlayQueueStatus = {
+  type: 'audio',
+  playQueue: null,
+  currentIndex: 0,
+}
+
 const usePlayQueueStore = createWithEqualityFn<PlayQueueStatus & PlayQueueAction>()(
   persist((set) => ({
-    type: 'audio',
-    playQueue: null,
-    currentIndex: 0,
+    ...initialState,
     updateType: (type) => set(() => ({ type: type })),
     updatePlayQueue: (playQueue) => set(() => ({ playQueue: playQueue })),
     updateCurrentIndex: (currentIndex) => set(() => ({ currentIndex: currentIndex })),
@@ -28,12 +32,15 @@ const usePlayQueueStore = createWithEqualityFn<PlayQueueStatus & PlayQueueAction
           currentIndex: newCurrentIndex,
         }
       }
-    )
+    ),
+    resetPlayQueue: () => set(() => ({ ...initialState })),
   }),
     {
       name: 'playqueue-store',
       storage: createJSONStorage(() => localStorage),
     }
-  ), shallow)
+  ),
+  shallow
+)
 
 export default usePlayQueueStore

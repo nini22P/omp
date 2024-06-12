@@ -14,6 +14,7 @@ import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 import { useEffect, useRef, useState } from 'react'
 import { t } from '@lingui/macro'
+import useUser from '@/hooks/graph/useUser'
 
 const Files = () => {
 
@@ -39,6 +40,8 @@ const Files = () => {
 
   const { getFilesData } = useFilesData()
 
+  const { account } = useUser()
+
   const [searchIsShow, setSearchIsShow] = useState(false)
   const [searchValue, setSearchValue] = useState('')
 
@@ -52,7 +55,7 @@ const Files = () => {
       '@microsoft.graph.downloadUrl'?: string;
       folder?: { childCount: number, view: { sortBy: string, sortOrder: string, viewType: string } };
     }
-    const res: ResItem[] = await getFilesData(path)
+    const res: ResItem[] = await getFilesData(account, path)
 
     return res
       .map((item) => {
@@ -70,7 +73,7 @@ const Files = () => {
   }
 
   const { data: fileListData, error: fileListError, isLoading: fileListIsLoading } =
-    useSWR<File[], Error>(pathConvert(folderTree), fileListFetcher, { revalidateOnFocus: false })
+    useSWR<File[], Error>(`${account.username}/${pathConvert(folderTree)}`, () => fileListFetcher(pathConvert(folderTree)), { revalidateOnFocus: false })
 
   const filteredFileList =
     !fileListData

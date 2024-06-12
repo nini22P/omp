@@ -8,8 +8,11 @@ import useUiStore from '@/store/useUiStore'
 import { compressImage, pathConvert } from '@/utils'
 import useFilesData from '../graph/useFilesData'
 import { MetaData } from '@/types/MetaData'
+import useUser from '../graph/useUser'
 
 const usePlayerCore = (player: HTMLVideoElement | null) => {
+
+  const { account } = useUser()
 
   const { getFileData } = useFilesData()
 
@@ -77,7 +80,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
       }
       if (playQueue !== null && playQueue.length !== 0) {
         try {
-          getFileData(pathConvert(playQueue.filter(item => item.index === currentIndex)[0].filePath)).then((res) => {
+          getFileData(account, pathConvert(playQueue.filter(item => item.index === currentIndex)[0].filePath)).then((res) => {
             setUrl(res['@microsoft.graph.downloadUrl'])
             updateIsLoading(true)
           })

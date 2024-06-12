@@ -63,7 +63,12 @@ const CommonMenu = (
   // 添加到播放列表
   const addToPlaylist = (id: string) => {
     if (currentFile) {
-      insertFilesToPlaylist(id, [currentFile])
+      insertFilesToPlaylist(id, [{
+        fileName: currentFile.fileName,
+        filePath: currentFile.filePath,
+        fileSize: currentFile.fileSize,
+        fileType: currentFile.fileType,
+      }])
       setDialogOpen(false)
     }
   }

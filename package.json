@@ -2,10 +2,10 @@
   "name": "omp",
   "description": "OneDrive Media Player",
   "private": true,
-  "version": "1.7.2",
+  "version": "1.7.3",
   "scripts": {
-    "dev": "lingui extract & lingui compile --typescript & webpack serve",
-    "build": "lingui extract & lingui compile --typescript & webpack --mode=production --node-env=production",
+    "dev": "webpack serve",
+    "build": "webpack --mode=production --node-env=production",
     "lint": "eslint src --ext ts,tsx --report-unused-disable-directives --max-warnings 0",
     "watch": "webpack --watch",
     "lingui": "lingui extract & lingui compile --typescript"

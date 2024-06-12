@@ -7,7 +7,7 @@ import { timeShift } from '@/utils'
 import { CloseFullscreen, FastForward, FastRewind, KeyboardArrowDownOutlined, OpenInFull, PanoramaOutlined, PauseCircleOutlined, PlayCircleOutlined, QueueMusicOutlined, Repeat, RepeatOne, Shuffle, SkipNext, SkipPrevious } from '@mui/icons-material'
 import { Container, Box, IconButton, Typography, Slider, CircularProgress } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
-import MenuButton from './MenuButton'
+import PlayerMenu from '../PlayerMenu'
 import { SpringValue, animated } from '@react-spring/web'
 
 const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: { borderRadius: SpringValue<string> } }) => {
@@ -143,7 +143,7 @@ const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: 
                     : <OpenInFull style={{ height: 20, width: 20 }} />
                 }
               </IconButton>
-              <MenuButton />
+              <PlayerMenu />
             </Grid>
 
             {/* 封面和音频信息 */}

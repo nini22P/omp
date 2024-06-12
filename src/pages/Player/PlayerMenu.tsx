@@ -20,7 +20,7 @@ import usePlaylistsStore from '@/store/usePlaylistsStore'
 import shortUUID from 'short-uuid'
 import useFullscreen from '@/hooks/ui/useFullscreen'
 
-const MenuButton = () => {
+const PlayerMenu = () => {
 
   const navigate = useNavigate()
 
@@ -115,7 +115,12 @@ const MenuButton = () => {
   // 添加到播放列表
   const addToPlaylist = (id: string) => {
     if (currentFile) {
-      insertFilesToPlaylist(id, [currentFile])
+      insertFilesToPlaylist(id, [{
+        fileName: currentFile.fileName,
+        filePath: currentFile.filePath,
+        fileSize: currentFile.fileSize,
+        fileType: currentFile.fileType,
+      }])
       setAddToPlaylistDialogOpen(false)
     }
   }
@@ -170,6 +175,16 @@ const MenuButton = () => {
                 </Box>
               </MenuItem>
 
+              {
+                currentFile &&
+                <MenuItem onClick={handleClickOpenInFolder}>
+                  <ListItemIcon>
+                    <FolderOpenRoundedIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={t`Open in folder`} />
+                </MenuItem>
+              }
+
               <MenuItem onClick={handleClickOpenPlayQueue}>
                 <ListItemIcon>
                   <PlaylistPlayRoundedIcon />
@@ -177,22 +192,18 @@ const MenuButton = () => {
                 <ListItemText primary={t`Play queue`} />
               </MenuItem>
 
-              <MenuItem onClick={handleClickOpenInFolder}>
-                <ListItemIcon>
-                  <FolderOpenRoundedIcon />
-                </ListItemIcon>
-                <ListItemText primary={t`Open in folder`} />
-              </MenuItem>
-
-              <MenuItem onClick={() => {
-                setAddToPlaylistDialogOpen(true)
-                handleCloseMenu()
-              }}>
-                <ListItemIcon>
-                  <PlaylistAddRoundedIcon />
-                </ListItemIcon>
-                <ListItemText primary={t`Add to playlist`} />
-              </MenuItem>
+              {
+                currentFile &&
+                <MenuItem onClick={() => {
+                  setAddToPlaylistDialogOpen(true)
+                  handleCloseMenu()
+                }}>
+                  <ListItemIcon>
+                    <PlaylistAddRoundedIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={t`Add to playlist`} />
+                </MenuItem>
+              }
 
               <MenuItem onClick={handleClickSwitchFullscreen} >
                 <ListItemIcon>
@@ -316,4 +327,4 @@ const MenuButton = () => {
   )
 }
 
-export default MenuButton
+export default PlayerMenu

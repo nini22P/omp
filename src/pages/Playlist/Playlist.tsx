@@ -22,7 +22,7 @@ const Playlist = () => {
   const [menuOpen, setMenuOpen] = useState(false)
   const [renameDialogOpen, setRenameDialogOpen] = useState(false)
   const [deleteDiaLogOpen, setDeleteDiaLogOpen] = useState(false)
-  const [newTitle, setNewTitle] = useState('')
+  const [newTitle, setNewTitle] = useState(playlist?.title)
   const { getManyLocalMetaData } = useLocalMetaDataStore()
   const [metaDataList, setMetaDataList] = useState<MetaData[]>([])
 
@@ -46,6 +46,11 @@ const Playlist = () => {
   const handleCloseMenu = () => {
     setMenuOpen(false)
     setAnchorEl(null)
+  }
+
+  const handleCloseRenameDialog = () => {
+    setRenameDialogOpen(false)
+    setNewTitle(playlist?.title)
   }
 
   //从播放列表移除文件
@@ -149,23 +154,26 @@ const Playlist = () => {
       {/* 重命名播放列表 */}
       <Dialog
         open={renameDialogOpen}
-        onClose={() => setRenameDialogOpen(false)}
+        onClose={handleCloseRenameDialog}
         fullWidth
+        disableRestoreFocus
         maxWidth='xs'
       >
         <DialogTitle>{t`Rename`}</DialogTitle>
         <DialogContent>
           <TextField
             autoFocus
+            autoComplete='off'
             margin="dense"
             fullWidth
             variant="standard"
             value={newTitle}
             onChange={(event) => setNewTitle(event.target.value)}
+            placeholder={t`Enter new title`}
           />
         </DialogContent>
         <DialogActions>
-          <Button onClick={() => setRenameDialogOpen(false)}>{t`Cancel`}</Button>
+          <Button onClick={handleCloseRenameDialog}>{t`Cancel`}</Button>
           <Button onClick={() => {
             if (id && newTitle) {
               renamePlaylist(id, newTitle)

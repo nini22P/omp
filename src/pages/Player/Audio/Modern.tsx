@@ -20,7 +20,7 @@ import usePlayerControl from '@/hooks/player/usePlayerControl'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
-import MenuButton from './MenuButton'
+import PlayerMenu from '../PlayerMenu'
 import { timeShift } from '@/utils'
 
 const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: { borderRadius: SpringValue<string> } }) => {
@@ -165,7 +165,7 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
                 }
               </IconButton>
 
-              <MenuButton />
+              <PlayerMenu />
             </Grid>
           </Grid>
 
