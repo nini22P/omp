@@ -59,13 +59,14 @@ const Setting = () => {
   const handleCloseAccountsDialog = () => setAccountsDialogOpen(false)
 
   const handleChangeAccount = (index: number) => {
+    handleCloseAccountsDialog()
+    if (currentAccount === index) return
     updateCurrentAccount(index)
     updateFolderTree(['/'])
     updateHistoryList(null)
     updatePlaylists(null)
     resetPlayQueue()
     resetPlayer()
-    handleCloseAccountsDialog()
   }
 
   const handleLogout = (account: AccountInfo) => {
