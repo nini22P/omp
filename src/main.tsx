@@ -18,12 +18,17 @@ import router from './router'
 
 const msalInstance = new PublicClientApplication(msalConfig)
 
-i18n.load({
+const messages = {
   'en': enMessages,
   'zh-CN': zhCNMessages,
-})
+}
 
-i18n.activate(navigator.language)
+const languages = Object.keys(messages)
+const langage = navigator.language
+
+i18n.load(messages)
+
+i18n.activate(languages.includes(langage) ? langage : 'en')
 
 ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
   <React.StrictMode>
