@@ -114,7 +114,7 @@ export const compressImage = (image: Cover): Promise<Cover> => {
             height: img.height,
           })
         })
-      }, 'image/webp', 0.9)
+      }, 'image/webp', 0.8)
     }
     img.onerror = (error) => {
       reject(error)
