@@ -5,7 +5,7 @@ import createTheme from '@mui/material/styles/createTheme'
 import { extractColors } from 'extract-colors'
 import { useMemo } from 'react'
 
-const useTheme = () => {
+const useCustomTheme = () => {
   const [
     coverColor,
     CoverThemeColor,
@@ -59,7 +59,7 @@ const useTheme = () => {
     primary: CoverThemeColor ? coverColor : prefersDarkMode ? '#df7ef9' : '#8e24aa',
   }
 
-  const theme = useMemo(() => createTheme({
+  const customTheme = useMemo(() => createTheme({
     palette: {
       mode: prefersDarkMode ? 'dark' : 'light',
       background: {
@@ -203,7 +203,7 @@ const useTheme = () => {
     [colors.primary, prefersDarkMode]
   )
 
-  return theme
+  return customTheme
 }
 
-export default useTheme
+export default useCustomTheme

@@ -1,8 +1,7 @@
 import { useEffect } from 'react'
 import useUiStore from '../../store/useUiStore'
-import useTheme from './useTheme'
 import { blendHex } from '@/utils'
-import { useMediaQuery } from '@mui/material'
+import { useMediaQuery, useTheme } from '@mui/material'
 const useThemeColor = () => {
 
   const [

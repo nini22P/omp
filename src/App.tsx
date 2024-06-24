@@ -1,24 +1,26 @@
 import { Outlet, useLocation } from 'react-router-dom'
-import { Container, ThemeProvider, Paper } from '@mui/material'
+import { Container, ThemeProvider, Paper, useTheme } from '@mui/material'
 import Grid from '@mui/material/Unstable_Grid2'
 import NavBar from './pages/NavBar'
 import Player from './pages/Player/Player'
 import SideBar from './pages/SideBar/SideBar'
 import MobileSideBar from './pages/SideBar/MobileSideBar'
 import useUser from './hooks/graph/useUser'
-import useTheme from './hooks/ui/useTheme'
 import useSync from './hooks/graph/useSync'
 import useThemeColor from './hooks/ui/useThemeColor'
 import LogIn from './pages/LogIn'
 import useUiStore from './store/useUiStore'
 import { useSpring, animated } from '@react-spring/web'
 import { useMemo } from 'react'
+import useCustomTheme from './hooks/ui/useCustomTheme'
 
 const App = () => {
+  const customTheme = useCustomTheme()
+  useThemeColor()
   const theme = useTheme()
+
   const { account } = useUser()
   useSync()
-  useThemeColor()
 
   const [coverColor] = useUiStore((state) => [state.coverColor])
   const [{ background }, api] = useSpring(
@@ -41,7 +43,7 @@ const App = () => {
   )
 
   return (
-    <ThemeProvider theme={theme}>
+    <ThemeProvider theme={customTheme}>
       <animated.div
         style={{
           width: '100vw',
