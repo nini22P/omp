@@ -7,6 +7,6 @@ export interface HistoryStatus {
 export interface HistoryAction {
   updateHistoryList: (historyList: HistoryStatus['historyList']) => void;
   insertHistory: (file: File) => void;
-  removeHistory: (filePathArray: File['filePath'][]) => void;
+  removeHistory: (indexArray: number[]) => void;
   clearHistoryList: () => void;
 }

@@ -23,17 +23,7 @@ const useHistoryStore = createWithEqualityFn<HistoryStatus & HistoryAction>((set
         : { historyList: [file] }
     )),
 
-  removeHistory: (filePathArray) => set(
-    (state) => (
-      {
-        historyList:
-          state.historyList?.filter((item) =>
-            filePathArray.find(filePath =>
-              pathConvert(filePath) !== pathConvert(item.filePath)
-            )
-          )
-      }
-    )),
+  removeHistory: (indexArray) => set((state) => ({ historyList: state.historyList?.filter((_, index) => !indexArray.includes(index)) })),
 
   clearHistoryList: () => set({ historyList: [] }),
 

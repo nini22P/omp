@@ -12,7 +12,7 @@ const History = () => {
           : <CommonList
             listData={historyList}
             listType='files'
-            func={{ handleClickRemove: removeHistory }}
+            func={{ remove: removeHistory }}
           />
       }
     </div>
