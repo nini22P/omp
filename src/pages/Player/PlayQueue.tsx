@@ -4,18 +4,21 @@ import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRigh
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import useUiStore from '@/store/useUiStore'
 import CommonList from '@/components/CommonList/CommonList'
+import usePlayerStore from '@/store/usePlayerStore'
 
 const PlayQueue = () => {
 
   const [
     currentIndex,
     playQueue,
-    removeFilesFromPlayQueue
+    updateCurrentIndex,
+    updatePlayQueue,
   ] = usePlayQueueStore(
     (state) => [
       state.currentIndex,
       state.playQueue,
-      state.removeFilesFromPlayQueue,
+      state.updateCurrentIndex,
+      state.updatePlayQueue,
     ]
   )
 
@@ -29,7 +32,19 @@ const PlayQueue = () => {
     ]
   )
 
+  const [updatePlayStatu] = usePlayerStore(state => [state.updatePlayStatu])
+
   const currentFile = playQueue?.find((item) => item.index === currentIndex)
+
+  const open = (index: number) => {
+    if (playQueue) {
+      updatePlayStatu('playing')
+      updateCurrentIndex(playQueue[index].index)
+    }
+  }
+
+  const remove = (indexArray: number[]) =>
+    updatePlayQueue(playQueue?.filter(item => !indexArray.map(index => playQueue[index].index).filter(index => index !== currentIndex).includes(item.index)) || [])
 
   return (
     <Drawer
@@ -54,9 +69,9 @@ const PlayQueue = () => {
             <CommonList
               listData={playQueue}
               listType='playQueue'
-              activeFilePath={currentFile?.filePath}
+              activeIndex={playQueue?.findIndex((item) => item.index === currentIndex)}
               scrollFilePath={currentFile?.filePath}
-              func={{ handleClickRemove: removeFilesFromPlayQueue }}
+              func={{ open, remove }}
             />
           }
         </Grid>

@@ -16,5 +16,5 @@ export interface PlaylistsAction {
   renamePlaylist: (id: Playlist['id'], title: Playlist['title']) => void;
   removePlaylist: (id: Playlist['id']) => void;
   insertFilesToPlaylist: (id: Playlist['id'], files: File[]) => void;
-  removeFilesFromPlaylist: (id: Playlist['id'], filePathArray: File['filePath'][]) => void;
+  removeFilesFromPlaylist: (id: Playlist['id'], indexArray: number[]) => void;
 }

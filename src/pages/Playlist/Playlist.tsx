@@ -54,8 +54,8 @@ const Playlist = () => {
   }
 
   //从播放列表移除文件
-  const removeFiles = (filePathArray: string[][]) => {
-    id && removeFilesFromPlaylist(id, filePathArray)
+  const removeFiles = (indexArray: number[]) => {
+    id && removeFilesFromPlaylist(id, indexArray)
   }
 
   // 删除播放列表
@@ -88,7 +88,8 @@ const Playlist = () => {
                   padding: '3rem 1rem 1rem 1rem',
                   background: `linear-gradient(0deg, ${theme.palette.background.default}ff, ${theme.palette.background.default}99,${theme.palette.background.default}00)`,
                   gap: '0.25rem',
-                  backdropFilter: 'blur(2px)',
+                  backdropFilter: 'blur(4px)',
+                  zIndex: 1,
                 }}
               >
                 <Grid xs={12}>
@@ -108,7 +109,7 @@ const Playlist = () => {
                 </Grid>
               </Grid>
 
-              <Box sx={{ position: 'absolute', height: '100%', width: '100%', zIndex: -1 }}>
+              <Box sx={{ position: 'absolute', height: '100%', width: '100%' }}>
                 {
                   metaDataList[0] && metaDataList[0].cover && 'data' in metaDataList[0].cover[0].data &&
                   <img
@@ -124,7 +125,7 @@ const Playlist = () => {
               <CommonList
                 listData={playlist.fileList}
                 listType='playlist'
-                func={{ handleClickRemove: removeFiles }}
+                func={{ remove: removeFiles }}
               />
             </Grid>
 

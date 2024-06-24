@@ -4,9 +4,8 @@ import usePlayQueueStore from '../../store/usePlayQueueStore'
 import usePlayerStore from '../../store/usePlayerStore'
 import useUiStore from '../../store/useUiStore'
 import usePictureStore from '@/store/usePictureStore'
-import { checkFileType, pathConvert, shufflePlayQueue } from '../../utils'
+import { pathConvert, shufflePlayQueue } from '../../utils'
 import CommonMenu from './CommonMenu'
-import { PlayQueueItem } from '../../types/playQueue'
 import { File } from '../../types/file'
 import CommonListItem from './CommonListItem'
 import { Box, Fab, List, useMediaQuery, useTheme } from '@mui/material'
@@ -14,6 +13,7 @@ import { AutoSizer, List as VirtualList } from 'react-virtualized'
 import CommonListItemCard from './CommonListItemCard'
 import ShuffleRoundedIcon from '@mui/icons-material/ShuffleRounded'
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded'
+import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded'
 import { useNavigate } from 'react-router-dom'
 import { t } from '@lingui/macro'
 
@@ -23,16 +23,17 @@ const CommonList = (
     listType,
     display = 'list',
     scrollFilePath,
-    activeFilePath,
+    activeIndex,
     func,
   }: {
-    listData?: File[] | PlayQueueItem[],
+    listData: File[],
     listType: 'files' | 'playlist' | 'playQueue',
     display?: 'list' | 'multicolumnList' | 'grid',
     scrollFilePath?: File['filePath'],
-    activeFilePath?: File['filePath'],
+    activeIndex?: number,
     func?: {
-      handleClickRemove?: (filePathArray: string[][]) => void,
+      open?: (index: number) => void,
+      remove?: (indexArray: number[]) => void,
     },
   }) => {
 
@@ -40,7 +41,9 @@ const CommonList = (
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [menuOpen, setMenuOpen] = useState(false)
   const [dialogOpen, setDialogOpen] = useState(false)
-  const [currentFile, setCurrentFile] = useState<null | File>(null)
+  const [selectIndex, setSelectIndex] = useState<number | null>(null)
+  const [selectIndexArray, setSelectIndexArray] = useState<number[]>([])
+  const isSelectMode = selectIndexArray.length > 0
 
   const [
     shuffle,
@@ -70,16 +73,39 @@ const CommonList = (
     ]
   )
 
-  const handleClickMenu = (event: React.MouseEvent<HTMLElement>, currentFile: File) => {
+  const openMenu = (event: React.MouseEvent<HTMLElement>) => {
     setMenuOpen(true)
-    setCurrentFile(currentFile)
     setAnchorEl(event.currentTarget)
   }
 
+  const handleClickMenu = (event: React.MouseEvent<HTMLElement>, selectIndex: number) => {
+    setSelectIndex(selectIndex)
+    openMenu(event)
+  }
+
+  const handleClickFABMenu = (event: React.MouseEvent<HTMLElement>) => {
+    openMenu(event)
+  }
+
+  const addSelectFile = (index: number) => { setSelectIndexArray([...selectIndexArray, index].sort()) }
+
+  const removeSelectFile = (index: number) => setSelectIndexArray(selectIndexArray.filter((_index) => index !== _index).sort())
+
+  const isSelected = (index: number) => selectIndexArray.includes(index)
+
+  useEffect(
+    () => {
+      setSelectIndexArray([])
+    },
+    [listData]
+  )
+
+  const switchSelect = (index: number) => isSelected(index) ? removeSelectFile(index) : addSelectFile(index)
+
   // 点击列表项
-  const handleClickListItem = (filePath: string[]) => {
+  const handleClickListItem = (index: number) => {
     if (listData) {
-      const currentFile = listData.find(item => item.filePath === filePath)
+      const currentFile = listData[index]
 
       if (currentFile && currentFile.fileType === 'folder') {
         updateFolderTree(currentFile.filePath)
@@ -94,20 +120,14 @@ const CommonList = (
       }
 
       if (currentFile && (currentFile.fileType === 'audio' || currentFile.fileType === 'video')) {
-        let currentIndex = 0
         const list = listData
           .filter((item) => item.fileType === currentFile.fileType)
-          .map((item, index) => {
-            if (currentFile?.filePath === item.filePath)
-              currentIndex = index
-            return { index, ...item }
-          })
+          .map((item, _index) => ({ ...item, index: _index }))
         if (shuffle) {
           updateShuffle(false)
         }
-        updateType(currentFile.fileType)
         updatePlayQueue(list)
-        updateCurrentIndex(currentIndex)
+        updateCurrentIndex(list.find(item => pathConvert(item.filePath) === pathConvert(currentFile.filePath))?.index || 0)
         updatePlayStatu('playing')
         if (currentFile.fileType === 'video') {
           updateVideoViewIsShow(true)
@@ -116,17 +136,8 @@ const CommonList = (
     }
   }
 
-  // 点击播放队列列表
-  const handleClickPlayQueueItem = (index: number) => {
-    updatePlayStatu('playing')
-    updateCurrentIndex(index)
-  }
-
   const handleClickPlayAll = () => {
-    if (listData) {
-      const list = listData.filter((item) => checkFileType(item.fileName) === 'audio')
-      handleClickItem(list[0])
-    }
+    handleClickItem(listData.findIndex(item => item.fileType === 'audio' || item.fileType === 'video'))
   }
 
   // 点击随机播放全部
@@ -138,18 +149,18 @@ const CommonList = (
       if (!shuffle)
         updateShuffle(true)
       updateType('audio')
-      const shuffleList = shufflePlayQueue(list)
+      const shuffleList = shufflePlayQueue(list) || []
       updatePlayQueue(shuffleList)
       updateCurrentIndex(shuffleList[0].index)
       updatePlayStatu('playing')
     }
   }
 
-  const handleClickItem = (item: PlayQueueItem | File) => {
-    if (listType === 'playQueue')
-      handleClickPlayQueueItem((item as PlayQueueItem).index)
+  const handleClickItem = (index: number) => {
+    if (listType === 'playQueue' && func?.open)
+      func.open(index)
     else {
-      handleClickListItem(item.filePath)
+      handleClickListItem(index)
     }
   }
 
@@ -188,15 +199,19 @@ const CommonList = (
       <Grid container key={key} style={style}>
         {
           [...Array(gridCols)].map((_, i) => {
-            const item = listData[index * gridCols + i]
+            const itemIndex = index * gridCols + i
+            const item = listData[itemIndex]
             return (
               item
               &&
               <Grid key={item.fileName} xs={12 / gridCols} sx={{ aspectRatio: '4/5', overflow: 'hidden' }}>
                 <CommonListItemCard
-                  active={activeFilePath ? pathConvert(activeFilePath) === pathConvert(item.filePath) : false}
+                  active={typeof activeIndex === 'number' ? activeIndex === itemIndex : false}
                   item={item}
-                  handleClickItem={handleClickItem}
+                  index={itemIndex}
+                  selected={isSelected(itemIndex)}
+                  isSelectMode={isSelectMode}
+                  handleClickItem={isSelectMode ? () => switchSelect(itemIndex) : handleClickItem}
                   handleClickMenu={handleClickMenu}
                 />
               </Grid>
@@ -214,15 +229,19 @@ const CommonList = (
       <Grid container key={key} style={style}>
         {
           [...Array(listCols)].map((_, i) => {
-            const item = listData[index * listCols + i]
+            const itemIndex = index * listCols + i
+            const item = listData[itemIndex]
             return (
               item
               &&
               <Grid key={item.fileName} xs={12 / listCols}>
                 <CommonListItem
-                  active={activeFilePath ? pathConvert(activeFilePath) === pathConvert(item.filePath) : false}
+                  active={typeof activeIndex === 'number' ? activeIndex === itemIndex : false}
                   item={item}
-                  handleClickItem={handleClickItem}
+                  index={itemIndex}
+                  selected={isSelected(itemIndex)}
+                  isSelectMode={isSelectMode}
+                  handleClickItem={isSelectMode ? () => switchSelect(itemIndex) : handleClickItem}
                   handleClickMenu={handleClickMenu}
                 />
               </Grid>
@@ -265,15 +284,15 @@ const CommonList = (
     [scrollFilePath, gridCols, listCols]
   )
 
-  const fabDisplay = listData && listData.length !== 0 && listData.find((item) => item.fileType === 'audio') && listType !== 'playQueue'
-
   const scrollRef = useRef<HTMLDivElement | null>(null)
   const fabRef = useRef<HTMLDivElement | null>(null)
   const touchStartYRef = useRef(0)
   useEffect(() => {
     const scroll = scrollRef.current
     const fab = fabRef.current
-    if (scroll && fab) {
+    if (fab && isSelectMode) {
+      fab.style.visibility = 'visible'
+    } else if (scroll && fab && !isSelectMode) {
       const onWheel = (e: WheelEvent) => {
         if (e.deltaY > 0)
           fab.style.visibility = 'hidden'
@@ -303,7 +322,7 @@ const CommonList = (
         scroll.removeEventListener('touchmove', onTouchMove)
       }
     }
-  }, [])
+  }, [isSelectMode])
 
   return (
     listData
@@ -336,6 +355,7 @@ const CommonList = (
                       rowHeight={width / gridCols / 4 * 5}
                       rowRenderer={gridRenderer}
                       scrollToAlignment={'center'}
+                      style={{ paddingBottom: isSelectMode ? '6rem' : '0rem' }}
                     />
                   </List>
               }
@@ -356,6 +376,7 @@ const CommonList = (
                       rowHeight={72}
                       rowRenderer={rowRenderer}
                       scrollToAlignment={'center'}
+                      style={{ paddingBottom: isSelectMode ? '6rem' : '0rem' }}
                     />
                   </List>
               }
@@ -366,42 +387,56 @@ const CommonList = (
 
       {/* 菜单 */}
       <CommonMenu
+        listData={listData}
+        listType={listType}
         anchorEl={anchorEl}
         menuOpen={menuOpen}
         dialogOpen={dialogOpen}
-        currentFile={currentFile}
+        selectIndex={selectIndex}
+        selectIndexArray={selectIndexArray}
         setAnchorEl={setAnchorEl}
         setMenuOpen={setMenuOpen}
         setDialogOpen={setDialogOpen}
-        handleClickRemove={func?.handleClickRemove}
-        listType={listType}
+        setSelectIndex={setSelectIndex}
+        setSelectIndexArray={setSelectIndexArray}
+        handleClickRemove={func?.remove}
       />
 
-      {
-        fabDisplay &&
-        <Box
-          ref={fabRef}
-          sx={{
-            position: 'absolute',
-            bottom: '2rem',
-            right: '2rem',
-            zIndex: 0,
-            display: 'flex',
-            flexDirection: 'row',
-            justifyContent: 'center',
-            alignItems: 'center',
-            gap: '0.5rem',
-          }}
-        >
-          <Fab size='small' onClick={() => handleClickShuffleAll()}>
-            <ShuffleRoundedIcon />
+      {/* FAB */}
+      <Box
+        ref={fabRef}
+        sx={{
+          position: 'absolute',
+          bottom: '2rem',
+          right: '2rem',
+          zIndex: 0,
+          display: 'flex',
+          flexDirection: 'row',
+          justifyContent: 'center',
+          alignItems: 'center',
+          gap: '0.5rem',
+        }}
+      >
+        {
+          isSelectMode &&
+          <Fab size='small' onClick={handleClickFABMenu}>
+            <MoreVertRoundedIcon />
           </Fab>
-          <Fab variant='extended' color='primary' onClick={() => handleClickPlayAll()}>
-            <PlayArrowRoundedIcon />
-            <span style={{ marginLeft: '0.5rem' }}>{t`Play all`}</span>
-          </Fab>
-        </Box>
-      }
+        }
+        {
+          (listType !== 'playQueue') && !isSelectMode &&
+          <>
+            <Fab size='small' onClick={handleClickShuffleAll}>
+              <ShuffleRoundedIcon />
+            </Fab>
+            <Fab variant='extended' color='primary' onClick={handleClickPlayAll}>
+              <PlayArrowRoundedIcon />
+              <span style={{ marginLeft: '0.5rem' }}>{t`Play all`}</span>
+            </Fab>
+          </>
+        }
+
+      </Box>
 
     </Box>
   )

@@ -89,19 +89,6 @@ const App = () => {
                   height: '100%',
                   overflowY: 'auto',
                   backgroundColor: `${theme.palette.background.paper}99`,
-                  '& ::-webkit-scrollbar': {
-                    width: '12px',
-                    height: '12px',
-                  },
-                  '& ::-webkit-scrollbar-track': {
-                    backgroundColor: 'transparent',
-                  },
-                  '& ::-webkit-scrollbar-thumb': {
-                    background: theme.palette.primary.main,
-                    borderRadius: '16px',
-                    border: '3.5px solid transparent',
-                    backgroundClip: 'content-box',
-                  },
                 }}>
                 {needLogin ? <LogIn /> : <Outlet />}
               </Paper>

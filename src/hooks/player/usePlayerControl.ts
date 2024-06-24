@@ -63,11 +63,10 @@ const usePlayerControl = (player: HTMLVideoElement | null) => {
     if (player && playQueue) {
       const next = playQueue[(playQueue.findIndex(item => item.index === currentIndex) + 1)]
       // player.pause()
-      if (shuffle && next) {
+      if (next) {
         updateCurrentIndex(next.index)
-      }
-      if (!shuffle && currentIndex + 1 < playQueue?.length)
-        updateCurrentIndex(currentIndex + 1)
+      } else
+        updateCurrentIndex(playQueue[0].index)
     }
   }
 
@@ -76,11 +75,11 @@ const usePlayerControl = (player: HTMLVideoElement | null) => {
     if (player && playQueue) {
       const prev = playQueue[(playQueue.findIndex(item => item.index === currentIndex) - 1)]
       // player.pause()
-      if (shuffle && prev) {
+      console.log(prev, playQueue.at(-1))
+      if (prev) {
         updateCurrentIndex(prev.index)
-      }
-      if (!shuffle && currentIndex > 0)
-        updateCurrentIndex(currentIndex - 1)
+      } else
+        updateCurrentIndex(playQueue[playQueue.length - 1].index)
     }
   }
 

@@ -13,30 +13,30 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/pages/Setting.tsx:153
+#: src/pages/Setting.tsx:157
 msgid "About"
 msgstr "About"
 
-#: src/pages/Setting.tsx:87
+#: src/pages/Setting.tsx:91
 msgid "Account"
 msgstr "Account"
 
-#: src/pages/Setting.tsx:204
+#: src/pages/Setting.tsx:209
 msgid "Add account"
 msgstr "Add account"
 
-#: src/components/CommonList/CommonMenu.tsx:176
+#: src/components/CommonList/CommonMenu.tsx:249
 #: src/pages/Player/PlayerMenu.tsx:317
 #: src/pages/SideBar/Playlists.tsx:49
 msgid "Add playlist"
 msgstr "Add playlist"
 
-#: src/components/CommonList/CommonMenu.tsx:116
+#: src/components/CommonList/CommonMenu.tsx:153
 msgid "Add to play queue"
 msgstr "Add to play queue"
 
-#: src/components/CommonList/CommonMenu.tsx:109
-#: src/components/CommonList/CommonMenu.tsx:150
+#: src/components/CommonList/CommonMenu.tsx:148
+#: src/components/CommonList/CommonMenu.tsx:223
 #: src/pages/Player/PlayerMenu.tsx:204
 #: src/pages/Player/PlayerMenu.tsx:291
 msgid "Add to playlist"
@@ -46,23 +46,27 @@ msgstr "Add to playlist"
 msgid "Ascending"
 msgstr "Ascending"
 
-#: src/pages/Setting.tsx:129
+#: src/pages/Setting.tsx:133
 msgid "Auto"
 msgstr "Auto"
 
-#: src/components/CommonList/CommonMenu.tsx:181
+#: src/components/CommonList/CommonMenu.tsx:254
 #: src/pages/Player/PlayerMenu.tsx:322
 #: src/pages/Playlist/Playlist.tsx:176
 #: src/pages/Playlist/Playlist.tsx:199
-#: src/pages/Setting.tsx:209
+#: src/pages/Setting.tsx:214
 msgid "Cancel"
 msgstr "Cancel"
+
+#: src/components/CommonList/CommonMenu.tsx:212
+msgid "Cancel select"
+msgstr "Cancel select"
 
 #: src/pages/Player/PlayerMenu.tsx:249
 msgid "Classic"
 msgstr "Classic"
 
-#: src/pages/Setting.tsx:110
+#: src/pages/Setting.tsx:114
 msgid "Clear"
 msgstr "Clear"
 
@@ -70,19 +74,19 @@ msgstr "Clear"
 msgid "Close"
 msgstr "Close"
 
-#: src/pages/Setting.tsx:136
+#: src/pages/Setting.tsx:140
 msgid "Color mode"
 msgstr "Color mode"
 
-#: src/pages/Setting.tsx:119
+#: src/pages/Setting.tsx:123
 msgid "Customize"
 msgstr "Customize"
 
-#: src/pages/Setting.tsx:131
+#: src/pages/Setting.tsx:135
 msgid "Dark"
 msgstr "Dark"
 
-#: src/pages/Setting.tsx:106
+#: src/pages/Setting.tsx:110
 msgid "Data"
 msgstr "Data"
 
@@ -122,7 +126,7 @@ msgstr "History"
 msgid "Last modified"
 msgstr "Last modified"
 
-#: src/pages/Setting.tsx:130
+#: src/pages/Setting.tsx:134
 msgid "Light"
 msgstr "Light"
 
@@ -130,11 +134,11 @@ msgstr "Light"
 msgid "List"
 msgstr "List"
 
-#: src/pages/Setting.tsx:114
+#: src/pages/Setting.tsx:118
 msgid "Local metaData cache"
 msgstr "Local metaData cache"
 
-#: src/pages/Setting.tsx:90
+#: src/pages/Setting.tsx:94
 msgid "Manage"
 msgstr "Manage"
 
@@ -146,8 +150,8 @@ msgstr "Media only"
 msgid "Modern"
 msgstr "Modern"
 
-#: src/components/CommonList/CommonListItem.tsx:32
-#: src/components/CommonList/CommonListItemCard.tsx:76
+#: src/components/CommonList/CommonListItem.tsx:39
+#: src/components/CommonList/CommonListItemCard.tsx:88
 #: src/pages/Playlist/Playlist.tsx:106
 msgid "More"
 msgstr "More"
@@ -160,7 +164,7 @@ msgstr "Multicolumn list"
 msgid "Name"
 msgstr "Name"
 
-#: src/components/CommonList/CommonMenu.tsx:60
+#: src/components/CommonList/CommonMenu.tsx:67
 #: src/pages/Player/PlayerMenu.tsx:112
 #: src/pages/SideBar/Playlists.tsx:16
 msgid "New playlist"
@@ -171,16 +175,16 @@ msgstr "New playlist"
 msgid "OK"
 msgstr "OK"
 
-#: src/components/CommonList/CommonMenu.tsx:123
+#: src/components/CommonList/CommonMenu.tsx:160
 #: src/pages/Player/PlayerMenu.tsx:184
 msgid "Open in folder"
 msgstr "Open in folder"
 
-#: src/pages/Setting.tsx:162
+#: src/pages/Setting.tsx:166
 msgid "Open source dependencies"
 msgstr "Open source dependencies"
 
-#: src/components/CommonList/CommonList.tsx:401
+#: src/components/CommonList/CommonList.tsx:434
 msgid "Play all"
 msgstr "Play all"
 
@@ -194,11 +198,11 @@ msgid "Playback rate"
 msgstr "Playback rate"
 
 #: src/pages/LogIn.tsx:25
-#: src/pages/Setting.tsx:99
+#: src/pages/Setting.tsx:103
 msgid "Please use Microsoft account authorization to log in"
 msgstr "Please use Microsoft account authorization to log in"
 
-#: src/components/CommonList/CommonMenu.tsx:139
+#: src/components/CommonList/CommonMenu.tsx:178
 msgid "Remove"
 msgstr "Remove"
 
@@ -214,9 +218,17 @@ msgstr "Rename"
 msgid "Search"
 msgstr "Search"
 
-#: src/pages/Setting.tsx:176
+#: src/components/CommonList/CommonMenu.tsx:191
+msgid "Select"
+msgstr "Select"
+
+#: src/pages/Setting.tsx:180
 msgid "Select account"
 msgstr "Select account"
+
+#: src/components/CommonList/CommonMenu.tsx:201
+msgid "Select all"
+msgstr "Select all"
 
 #: src/pages/SideBar/SideBar.tsx:21
 msgid "Setting"
@@ -230,7 +242,7 @@ msgstr "Shuffle all"
 msgid "Sign in"
 msgstr "Sign in"
 
-#: src/pages/Setting.tsx:183
+#: src/pages/Setting.tsx:188
 msgid "Sign out"
 msgstr "Sign out"
 
@@ -251,6 +263,6 @@ msgstr "Switch theme"
 msgid "The playlist will be deleted"
 msgstr "The playlist will be deleted"
 
-#: src/pages/Setting.tsx:148
+#: src/pages/Setting.tsx:152
 msgid "Use album cover theme color"
 msgstr "Use album cover theme color"

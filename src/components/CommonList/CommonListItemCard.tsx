@@ -13,14 +13,20 @@ import { t } from '@lingui/macro'
 
 const CommonListItemCard = ({
   item,
-  // active,
+  index,
+  active,
+  selected,
+  isSelectMode,
   handleClickItem,
   handleClickMenu,
 }: {
   item: File,
+  index: number,
   active?: boolean,
-  handleClickItem: (item: File) => void,
-  handleClickMenu: (event: React.MouseEvent<HTMLElement>, currentFile: File) => void,
+  selected?: boolean,
+  isSelectMode?: boolean,
+  handleClickItem: (index: number) => void,
+  handleClickMenu: (event: React.MouseEvent<HTMLElement>, index: number) => void,
 }) => {
 
   const theme = useTheme()
@@ -30,8 +36,15 @@ const CommonListItemCard = ({
 
   return (
     <ListItemButton
-      sx={{ width: '100%', height: '100%', padding: '0.5rem' }}
-      onClick={() => handleClickItem(item)}
+      className={active ? 'active' : ''}
+      sx={{
+        width: '100%',
+        height: '100%',
+        padding: '0.5rem',
+        outline: selected ? `3px solid ${theme.palette.primary.main}55` : '',
+        outlineOffset: '-5px'
+      }}
+      onClick={() => handleClickItem(index)}
     >
       <Grid container sx={{ flexDirection: 'column', flexWrap: 'nowrap', width: '100%', height: '100%', gap: '0.25rem' }}>
         <Grid xs={12} sx={{ overflow: 'hidden', width: '100%', flexGrow: 1, borderRadius: '0.5rem', position: 'relative', border: `2px solid ${theme.palette.divider}` }}>
@@ -70,8 +83,7 @@ const CommonListItemCard = ({
           </Grid>
           <Grid xs='auto'>
             {
-              (item.fileType === 'audio' || item.fileType === 'video')
-              &&
+              (item.fileType === 'audio' || item.fileType === 'video') && !isSelectMode &&
               <IconButton
                 aria-label={t`More`}
                 size='small'
@@ -81,15 +93,7 @@ const CommonListItemCard = ({
                 onKeyDown={(event) => event.stopPropagation()}
                 onClick={(event) => {
                   event.stopPropagation()
-                  handleClickMenu(event,
-                    {
-                      fileName: item.fileName,
-                      filePath: item.filePath,
-                      fileSize: item.fileSize,
-                      fileType: item.fileType,
-                      id: item.id,
-                    }
-                  )
+                  handleClickMenu(event, index)
                 }}
               >
                 <MoreVertRoundedIcon />

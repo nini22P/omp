@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { useMemo, useRef } from 'react'
 import { Box, Container } from '@mui/material'
 import useUiStore from '@/store/useUiStore'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
@@ -33,10 +33,12 @@ const Player = () => {
   // 向 mediaSession 发送当前播放进度
   useMediaSession(player)
 
-  const [type] = usePlayQueueStore((state) => [state.type])
+  const [playQueue, currentIndex] = usePlayQueueStore((state) => [state.playQueue, state.currentIndex])
+
+  const type = useMemo(() => playQueue && playQueue.find(item => item.index === currentIndex)?.fileType, [playQueue, currentIndex])
 
   // 播放视频时自动隐藏ui
-  useControlHide(type, videoViewIsShow)
+  useControlHide(type || 'audio', videoViewIsShow)
 
   return (
     <div>
