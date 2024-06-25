@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import useUiStore from '../../store/useUiStore'
 
-const useControlHide = (type: string, videoViewIsShow: boolean) => {
-  const updateControlIsShow = useUiStore((state) => state.updateControlIsShow)
+const useControlHide = (type: string) => {
+  const [videoViewIsShow, updateControlIsShow] = useUiStore((state) => [state.videoViewIsShow, state.updateControlIsShow])
   useEffect(
     () => {
       if (type === 'video' && videoViewIsShow) {
@@ -22,10 +22,11 @@ const useControlHide = (type: string, videoViewIsShow: boolean) => {
           window.removeEventListener('keydown', resetTimer)
           clearTimeout(timer)
         }
+      } else {
+        updateControlIsShow(true)
       }
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [type, videoViewIsShow]
+    [type, updateControlIsShow, videoViewIsShow]
   )
 }
 

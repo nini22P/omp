@@ -4,7 +4,6 @@ import { shallow } from 'zustand/shallow'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
 const initialState: PlayQueueStatus = {
-  type: 'audio',
   playQueue: null,
   currentIndex: 0,
 }
@@ -12,7 +11,6 @@ const initialState: PlayQueueStatus = {
 const usePlayQueueStore = createWithEqualityFn<PlayQueueStatus & PlayQueueAction>()(
   persist((set) => ({
     ...initialState,
-    updateType: (type) => set(() => ({ type: type })),
     updatePlayQueue: (playQueue) => set(() => ({ playQueue: playQueue })),
     updateCurrentIndex: (currentIndex) => set(() => ({ currentIndex: currentIndex })),
     resetPlayQueue: () => set(() => ({ ...initialState })),

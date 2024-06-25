@@ -8,15 +8,24 @@ import CommonList from '../../components/CommonList/CommonList'
 import Loading from '../Loading'
 import useLocalMetaDataStore from '@/store/useLocalMetaDataStore'
 import { MetaData } from '@/types/MetaData'
+import usePlayQueueStore from '@/store/usePlayQueueStore'
+import usePlayerStore from '@/store/usePlayerStore'
+import useUiStore from '@/store/useUiStore'
+import { checkFileType } from '@/utils'
 
 const Playlist = () => {
   const navigate = useNavigate()
   const { id } = useParams()
   const theme = useTheme()
 
+  const [shuffle, updateVideoViewIsShow, updateShuffle,] = useUiStore((state) => [state.shuffle, state.updateVideoViewIsShow, state.updateShuffle])
+  const [updatePlayQueue, updateCurrentIndex] = usePlayQueueStore((state) => [state.updatePlayQueue, state.updateCurrentIndex])
+  const [updatePlayStatu] = usePlayerStore(state => [state.updatePlayStatu])
+
   const [playlists, renamePlaylist, removePlaylist, removeFilesFromPlaylist] = usePlaylistsStore(
     (state) => [state.playlists, state.renamePlaylist, state.removePlaylist, state.removeFilesFromPlaylist])
-  const playlist = playlists?.find(playlistItem => playlistItem.id === id)
+
+  const playlist = playlists?.find(playlistItem => playlistItem.id === id) //当前播放列表
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -28,7 +37,7 @@ const Playlist = () => {
 
   useEffect(
     () => {
-      getManyLocalMetaData(playlist?.fileList.slice(0, 10).map(file => file.filePath) || [])
+      getManyLocalMetaData(playlist?.fileList.slice(0, 5).map(file => file.filePath) || [])
         .then(metaDataList => metaDataList && setMetaDataList(metaDataList.filter(metaData => metaData)))
       return () => {
         setMetaDataList([])
@@ -37,6 +46,26 @@ const Playlist = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [playlist]
   )
+
+  const open = (index: number) => {
+    const listData = playlist?.fileList
+    if (listData) {
+      const currentFile = listData[index]
+      if (currentFile) {
+        const list = listData
+          .map((item, _index) => ({ ...item, index: _index }))
+        if (shuffle) {
+          updateShuffle(false)
+        }
+        updatePlayQueue(list)
+        updateCurrentIndex(list[index].index)
+        updatePlayStatu('playing')
+        if (checkFileType(currentFile.fileName) === 'video') {
+          updateVideoViewIsShow(true)
+        }
+      }
+    }
+  }
 
   const handleClickMenu = (event: React.MouseEvent<HTMLElement>) => {
     setMenuOpen(true)
@@ -83,13 +112,25 @@ const Playlist = () => {
               alignItems={'baseline'}
               gap={1}
             >
+
+              {/* 背景 */}
+              <Box sx={{ position: 'absolute', height: '100%', width: '100%' }}>
+                {
+                  metaDataList[0] && metaDataList[0].cover && 'data' in metaDataList[0].cover[0].data &&
+                  <img
+                    src={URL.createObjectURL(new Blob([new Uint8Array(metaDataList[0].cover[0].data.data as unknown as ArrayBufferLike)], { type: 'image/png' }))}
+                    alt='Cover'
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                }
+              </Box>
+
               <Grid xs={12} container
                 sx={{
                   padding: '3rem 1rem 1rem 1rem',
                   background: `linear-gradient(0deg, ${theme.palette.background.default}ff, ${theme.palette.background.default}99,${theme.palette.background.default}00)`,
                   gap: '0.25rem',
                   backdropFilter: 'blur(4px)',
-                  zIndex: 1,
                 }}
               >
                 <Grid xs={12}>
@@ -109,23 +150,13 @@ const Playlist = () => {
                 </Grid>
               </Grid>
 
-              <Box sx={{ position: 'absolute', height: '100%', width: '100%' }}>
-                {
-                  metaDataList[0] && metaDataList[0].cover && 'data' in metaDataList[0].cover[0].data &&
-                  <img
-                    src={URL.createObjectURL(new Blob([new Uint8Array(metaDataList[0].cover[0].data.data as unknown as ArrayBufferLike)], { type: 'image/png' }))}
-                    alt='Cover'
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                  />
-                }
-              </Box>
             </Grid>
 
             <Grid sx={{ flexGrow: 1 }}>
               <CommonList
                 listData={playlist.fileList}
                 listType='playlist'
-                func={{ remove: removeFiles }}
+                func={{ open, remove: removeFiles }}
               />
             </Grid>
 

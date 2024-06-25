@@ -5,13 +5,11 @@ export interface PlayQueueItem extends File {
 }
 
 export interface PlayQueueStatus {
-  type: 'audio' | 'video';
   playQueue: PlayQueueItem[] | null;
   currentIndex: number;
 }
 
 export interface PlayQueueAction {
-  updateType: (type: PlayQueueStatus['type']) => void,
   updatePlayQueue: (PlayQueue: PlayQueueStatus['playQueue']) => void;
   updateCurrentIndex: (index: PlayQueueStatus['currentIndex']) => void;
   resetPlayQueue: () => void;

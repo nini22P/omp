@@ -15,10 +15,15 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 import { useEffect, useRef, useState } from 'react'
 import { t } from '@lingui/macro'
 import useUser from '@/hooks/graph/useUser'
+import { useNavigate } from 'react-router-dom'
+import usePictureStore from '@/store/usePictureStore'
+import usePlayQueueStore from '@/store/usePlayQueueStore'
+import usePlayerStore from '@/store/usePlayerStore'
 
 const Files = () => {
 
   const [
+    shuffle,
     folderTree,
     display,
     sortBy,
@@ -26,8 +31,11 @@ const Files = () => {
     foldersFirst,
     mediaOnly,
     updateFolderTree,
+    updateVideoViewIsShow,
+    updateShuffle,
   ] = useUiStore(
     (state) => [
+      state.shuffle,
       state.folderTree,
       state.display,
       state.sortBy,
@@ -35,10 +43,17 @@ const Files = () => {
       state.foldersFirst,
       state.mediaOnly,
       state.updateFolderTree,
+      state.updateVideoViewIsShow,
+      state.updateShuffle,
     ]
   )
 
+  const [updatePictureList, updateCurrentPicture] = usePictureStore(state => [state.updatePictureList, state.updateCurrentPicture,])
+  const [updatePlayQueue, updateCurrentIndex] = usePlayQueueStore((state) => [state.updatePlayQueue, state.updateCurrentIndex])
+  const [updatePlayStatu] = usePlayerStore(state => [state.updatePlayStatu])
+
   const { getFilesData } = useFilesData()
+  const navigate = useNavigate()
 
   const { account } = useUser()
 
@@ -136,6 +151,39 @@ const Files = () => {
     [folderTree]
   )
 
+  const open = (index: number) => {
+    const listData = sortedFileList
+    if (listData) {
+      const currentFile = listData[index]
+
+      if (currentFile && currentFile.fileType === 'folder') {
+        updateFolderTree(currentFile.filePath)
+        navigate('/')
+      }
+
+      if (currentFile && currentFile.fileType === 'picture') {
+        const list = listData.filter(item => item.fileType === 'picture')
+        updatePictureList(list)
+        updateCurrentPicture(currentFile)
+      }
+
+      if (currentFile && (currentFile.fileType === 'audio' || currentFile.fileType === 'video')) {
+        const list = listData
+          .filter((item) => item.fileType === 'audio' || item.fileType === 'video')
+          .map((item, _index) => ({ ...item, index: _index }))
+        if (shuffle) {
+          updateShuffle(false)
+        }
+        updatePlayQueue(list)
+        updateCurrentIndex(list.find(item => pathConvert(item.filePath) === pathConvert(currentFile.filePath))?.index || 0)
+        updatePlayStatu('playing')
+        if (currentFile.fileType === 'video') {
+          updateVideoViewIsShow(true)
+        }
+      }
+    }
+  }
+
   return (
     <Grid container
       sx={{
@@ -190,6 +238,7 @@ const Files = () => {
               listData={sortedFileList}
               listType='files'
               scrollFilePath={scrollFilePathRef.current || undefined}
+              func={{ open }}
             />
         }
       </Grid>

@@ -5,7 +5,7 @@ import useLocalMetaDataStore from '@/store/useLocalMetaDataStore'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
-import { compressImage, pathConvert } from '@/utils'
+import { checkFileType, compressImage, pathConvert } from '@/utils'
 import useFilesData from '../graph/useFilesData'
 import { MetaData } from '@/types/MetaData'
 import useUser from '../graph/useUser'
@@ -15,22 +15,6 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
   const { account } = useUser()
 
   const { getFileData } = useFilesData()
-
-  const [
-    type,
-    playQueue,
-    currentIndex,
-    updateCurrentIndex,
-  ] = usePlayQueueStore(
-    (state) => [
-      state.type,
-      state.playQueue,
-      state.currentIndex,
-      state.updateCurrentIndex,
-    ]
-  )
-
-  const { getLocalMetaData, setLocalMetaData } = useLocalMetaDataStore()
 
   const [
     currentMetaData,
@@ -60,17 +44,15 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
     ]
   )
 
-  const [
-    repeat,
-  ] = useUiStore(
-    (state) => [
-      state.repeat,
-    ]
-  )
-
+  const { getLocalMetaData, setLocalMetaData } = useLocalMetaDataStore()
+  const [playQueue, currentIndex, updateCurrentIndex] = usePlayQueueStore((state) => [state.playQueue, state.currentIndex, state.updateCurrentIndex])
+  const repeat = useUiStore((state) => state.repeat)
   const [historyList, insertHistory] = useHistoryStore((state) => [state.historyList, state.insertHistory])
 
   const [url, setUrl] = useState('')
+
+  const currentFile = playQueue?.filter(item => item.index === currentIndex)[0]
+  const fileType = currentFile && checkFileType(currentFile.fileName)
 
   // 获取当前播放文件链接
   useMemo(
@@ -78,9 +60,9 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
       if (player) {
         player.src = ''
       }
-      if (playQueue !== null && playQueue.length !== 0) {
+      if (playQueue !== null && playQueue.length !== 0 && currentFile) {
         try {
-          getFileData(account, pathConvert(playQueue.filter(item => item.index === currentIndex)[0].filePath)).then((res) => {
+          getFileData(account, pathConvert(currentFile.filePath)).then((res) => {
             setUrl(res['@microsoft.graph.downloadUrl'])
             updateIsLoading(true)
           })
@@ -92,7 +74,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
       return true
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [playQueue?.find(item => item.index === currentIndex)?.filePath]
+    [currentFile?.filePath]
   )
 
   useMemo(
@@ -117,18 +99,17 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
   // 播放开始暂停
   useEffect(
     () => {
-      if (player !== null && !isLoading && player.src.includes('1drv.com')) {
+      if (player !== null && !isLoading && player.src.includes('1drv.com') && currentFile) {
         if (playStatu === 'playing') {
-          console.log('Playing', playQueue?.filter(item => item.index === currentIndex)[0].filePath)
-          if (playQueue?.filter(item => item.index === currentIndex)[0].filePath) {
+          console.log('Playing', currentFile.filePath)
+          if (currentFile.filePath) {
             player?.play()
-            const currentItem = playQueue.filter(item => item.index === currentIndex)[0]
             if (historyList !== null) {
               insertHistory({
-                fileName: currentItem.fileName,
-                filePath: currentItem.filePath,
-                fileSize: currentItem.fileSize,
-                fileType: currentItem.fileType,
+                fileName: currentFile.fileName,
+                filePath: currentFile.filePath,
+                fileSize: currentFile.fileSize,
+                fileType: currentFile.fileType,
               })
             }
           }
@@ -141,7 +122,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [playStatu, isLoading]
+    [currentFile, playStatu, isLoading]
   )
 
   // 设置当前播放进度
@@ -158,7 +139,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
   // 播放结束时
   const onEnded = () => {
     if (playQueue) {
-      const next = playQueue[(playQueue.findIndex(item => item.index === currentIndex) + 1)]
+      const next = playQueue[playQueue.findIndex(item => item.index === currentIndex) + 1]
       const isPlayQueueEnd = currentIndex + 1 === playQueue?.length
       if (repeat === 'one') {
         player?.play()
@@ -177,31 +158,26 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
   useEffect(
     () => {
       const updateMetaData = async () => {
-
-        if (playQueue) {
-
-          const metaData: MetaData = await getLocalMetaData(playQueue.filter(item => item.index === currentIndex)[0]?.filePath)
+        if (playQueue && currentFile) {
+          const metaData: MetaData = await getLocalMetaData(currentFile.filePath)
 
           if (!metaData) {
-            const currentMetaData = playQueue.filter(item => item.index === currentIndex)[0]
             updateCover('./cover.svg')
             updateCurrentMetaData(
               {
-                title: currentMetaData?.fileName || 'Not playing',
+                title: currentFile.fileName || 'Not playing',
                 artist: '',
-                path: currentMetaData?.filePath,
+                path: currentFile.filePath,
               }
             )
-          }
-
-          if (
-            type === 'audio'
+          } else if (
+            fileType === 'audio'
             &&
             metaData
             &&
             metaData.path
             &&
-            pathConvert(metaData.path) === pathConvert(playQueue.filter(item => item.index === currentIndex)[0].filePath)
+            pathConvert(metaData.path) === pathConvert(currentFile.filePath)
           ) {
             console.log('Update current metaData: ', metaData)
             updateCurrentMetaData(metaData)
@@ -209,8 +185,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
               const cover = metaData.cover[0]
               if (cover && 'data' in cover.data && Array.isArray(cover.data.data)) {
                 updateCover(URL.createObjectURL(new Blob([new Uint8Array(cover.data.data as unknown as ArrayBufferLike)], { type: cover.format })))
-              }
-              else if (cover) {
+              } else if (cover) {
                 updateCover(URL.createObjectURL(new Blob([new Uint8Array(cover.data as ArrayBufferLike)], { type: cover.format })))
               }
             } else {
@@ -223,7 +198,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
       updateMetaData()
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [playQueue?.filter(item => item.index === currentIndex)[0]?.filePath, metadataUpdate]
+    [currentFile?.filePath, metadataUpdate]
   )
 
   // 获取在线 metadata
@@ -256,7 +231,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
 
       const run = async () => {
 
-        if (playQueue && type === 'audio' && currentMetaData?.path) {
+        if (playQueue && fileType === 'audio' && currentMetaData?.path) {
           const localMetaData = await getLocalMetaData(currentMetaData?.path)
 
           if (!localMetaData) {

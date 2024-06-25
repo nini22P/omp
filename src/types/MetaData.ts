@@ -1,8 +1,8 @@
 import { IPicture } from 'music-metadata-browser'
 
 export interface Cover extends IPicture {
-  width: number;
-  height: number;
+  width?: number;
+  height?: number;
 }
 
 interface LocalStorageCover extends Omit<Cover, 'data'> {
