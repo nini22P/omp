@@ -5,8 +5,11 @@ import usePlayQueueStore from '@/store/usePlayQueueStore'
 import useUiStore from '@/store/useUiStore'
 import CommonList from '@/components/CommonList/CommonList'
 import usePlayerStore from '@/store/usePlayerStore'
+import useCustomTheme from '@/hooks/ui/useCustomTheme'
 
 const PlayQueue = () => {
+
+  const { scrollbarStyle } = useCustomTheme()
 
   const [
     currentIndex,
@@ -55,6 +58,7 @@ const PlayQueue = () => {
         '& .MuiDrawer-paper': {
           width: { xs: 'calc(100vw - 0.5rem)', sm: '400px', md: '500px' }
         },
+        ...scrollbarStyle
       }}
     >
       <Grid container wrap='nowrap' height={'100%'} >

@@ -203,7 +203,29 @@ const useCustomTheme = () => {
     [colors.primary, prefersDarkMode]
   )
 
-  return customTheme
+  const scrollbarStyle = useMemo(() => ({
+    '& ::-webkit-scrollbar': {
+      width: '12px',
+      height: '12px',
+    },
+    '& ::-webkit-scrollbar-track': {
+      backgroundColor: 'transparent',
+    },
+    '& ::-webkit-scrollbar-thumb': {
+      background: customTheme.palette.primary.main,
+      borderRadius: '16px',
+      border: '3.5px solid transparent',
+      backgroundClip: 'content-box',
+      visibility: 'hidden',
+    },
+    '& :hover::-webkit-scrollbar-thumb': {
+      visibility: 'visible',
+    },
+  }),
+    [customTheme.palette.primary.main]
+  )
+
+  return { customTheme, scrollbarStyle }
 }
 
 export default useCustomTheme
