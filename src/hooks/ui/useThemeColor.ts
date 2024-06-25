@@ -1,7 +1,8 @@
 import { useEffect } from 'react'
 import useUiStore from '../../store/useUiStore'
 import { blendHex } from '@/utils'
-import { useMediaQuery, useTheme } from '@mui/material'
+import { useMediaQuery } from '@mui/material'
+import useCustomTheme from './useCustomTheme'
 const useThemeColor = () => {
 
   const [
@@ -18,7 +19,7 @@ const useThemeColor = () => {
     ]
   )
 
-  const theme = useTheme()
+  const { customTheme } = useCustomTheme()
 
   const windowControlsOverlayOpen = useMediaQuery('(display-mode: window-controls-overlay)')
 
@@ -29,8 +30,8 @@ const useThemeColor = () => {
 
       if (themeColorLight && themeColorDark) {
         if (!audioViewIsShow && !videoViewIsShow) {
-          themeColorLight.content = theme.palette.background.default
-          themeColorDark.content = theme.palette.background.default
+          themeColorLight.content = customTheme.palette.background.default
+          themeColorDark.content = customTheme.palette.background.default
         }
         else if (audioViewIsShow && audioViewTheme === 'classic' || videoViewIsShow) {
           themeColorLight.content = '#1e1e1e'
@@ -38,13 +39,13 @@ const useThemeColor = () => {
         }
         else if (audioViewIsShow && audioViewTheme === 'modern') {
 
-          const color = blendHex(`${theme.palette.background.default}`, windowControlsOverlayOpen ? `${coverColor}31` : `${coverColor}33`)
+          const color = blendHex(`${customTheme.palette.background.default}`, windowControlsOverlayOpen ? `${coverColor}31` : `${coverColor}33`)
           themeColorLight.content = color
           themeColorDark.content = color
         }
       }
     },
-    [audioViewIsShow, audioViewTheme, coverColor, theme.palette.background.default, videoViewIsShow, windowControlsOverlayOpen]
+    [audioViewIsShow, audioViewTheme, coverColor, customTheme.palette.background.default, videoViewIsShow, windowControlsOverlayOpen]
   )
 
 }
