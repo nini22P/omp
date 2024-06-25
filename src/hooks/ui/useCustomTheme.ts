@@ -104,7 +104,7 @@ const useCustomTheme = () => {
       MuiBackdrop: {
         styleOverrides: {
           root: {
-            // backgroundColor: 'transparent',
+            backgroundColor: 'transparent',
           },
         },
       },
@@ -175,7 +175,7 @@ const useCustomTheme = () => {
         styleOverrides: {
           paper: {
             border: `${prefersDarkMode ? '#f7f7f722' : '#3b3b3b22'} solid 1px`,
-            // boxShadow: `5px 5px 10px 0px ${prefersDarkMode ? '#f7f7f722' : '#3b3b3b22'}`,
+            boxShadow: `5px 5px 10px 0px ${prefersDarkMode ? '#f7f7f722' : '#3b3b3b22'}`,
           }
         }
       },

@@ -1,4 +1,4 @@
-import { File } from './types/file'
+import { File, GraphResItem } from './types/file'
 import { PlayQueueItem, PlayQueueStatus } from './types/playQueue'
 import { Cover } from './types/MetaData'
 
@@ -121,3 +121,14 @@ export const compressImage = (image: Cover): Promise<Cover> => {
     }
   })
 }
+
+export const getGraphResFile = (res: GraphResItem[]): File[] => res.map((item) => ({
+  fileName: item.name,
+  filePath: ['/', ...item.parentReference.path.replace('/drive/root:', '').split('/').filter(item => item.length > 0).map(item => decodeURIComponent(item)), item.name],
+  fileSize: item.size,
+  fileType: (item.folder) ? 'folder' : checkFileType(item.name),
+  lastModifiedDateTime: item.lastModifiedDateTime,
+  id: item.id,
+  thumbnails: item.thumbnails,
+  url: item['@microsoft.graph.downloadUrl'],
+}))

@@ -4,8 +4,8 @@ import useFilesData from '../../hooks/graph/useFilesData'
 import BreadcrumbNav from './BreadcrumbNav'
 import CommonList from '../../components/CommonList/CommonList'
 import Loading from '../Loading'
-import { checkFileType, pathConvert } from '../../utils'
-import { File, Thumbnail } from '../../types/file'
+import { getGraphResFile, pathConvert } from '../../utils'
+import { File, GraphResItem } from '../../types/file'
 import Grid from '@mui/material/Unstable_Grid2/Grid2'
 import FilterMenu from './FilterMenu'
 import PictureView from '../PictureView/PictureView'
@@ -61,30 +61,8 @@ const Files = () => {
   const [searchValue, setSearchValue] = useState('')
 
   const fileListFetcher = async (path: string): Promise<File[]> => {
-    interface ResItem {
-      name: string;
-      size: number;
-      lastModifiedDateTime: string;
-      id: string;
-      thumbnails: Thumbnail[];
-      '@microsoft.graph.downloadUrl'?: string;
-      folder?: { childCount: number, view: { sortBy: string, sortOrder: string, viewType: string } };
-    }
-    const res: ResItem[] = await getFilesData(account, path)
-
-    return res
-      .map((item) => {
-        return {
-          fileName: item.name,
-          filePath: [...folderTree, item.name],
-          fileSize: item.size,
-          fileType: (item.folder) ? 'folder' : checkFileType(item.name),
-          lastModifiedDateTime: item.lastModifiedDateTime,
-          id: item.id,
-          thumbnails: item.thumbnails,
-          url: item['@microsoft.graph.downloadUrl'],
-        }
-      })
+    const res: GraphResItem[] = await getFilesData(account, path)
+    return getGraphResFile(res)
   }
 
   const { data: fileListData, error: fileListError, isLoading: fileListIsLoading } =

@@ -1,8 +1,8 @@
 import { IPicture } from 'music-metadata-browser'
 
 export interface Cover extends IPicture {
-  width?: number;
-  height?: number;
+  width?: number,
+  height?: number,
 }
 
 interface LocalStorageCover extends Omit<Cover, 'data'> {
@@ -10,19 +10,19 @@ interface LocalStorageCover extends Omit<Cover, 'data'> {
 }
 
 export interface MetaData {
-  path: string[];
-  size?: number;
-  title: string;
-  artist?: string;
-  albumArtist?: string;
-  album?: string;
-  year?: number;
-  genre?: string[];
-  cover?: Cover[] | LocalStorageCover[];
+  path: string[],
+  size?: number,
+  title: string,
+  artist?: string,
+  albumArtist?: string,
+  album?: string,
+  year?: number,
+  genre?: string[],
+  cover?: Cover[] | LocalStorageCover[],
 }
 
 export interface MetaDataListStatus {
-  metaDataList: MetaData[];
+  metaDataList: MetaData[],
 }
 
 export interface MetaDataListAction {
