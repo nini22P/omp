@@ -37,8 +37,6 @@ const PlayQueue = () => {
 
   const [updatePlayStatu] = usePlayerStore(state => [state.updatePlayStatu])
 
-  const currentFile = playQueue?.find((item) => item.index === currentIndex)
-
   const open = (index: number) => {
     if (playQueue) {
       updatePlayStatu('playing')
@@ -74,7 +72,7 @@ const PlayQueue = () => {
               listData={playQueue}
               listType='playQueue'
               activeIndex={playQueue?.findIndex((item) => item.index === currentIndex)}
-              scrollFilePath={currentFile?.filePath}
+              scrollIndex={playQueue?.findIndex((item) => item.index === currentIndex)}
               func={{ open, remove }}
             />
           }

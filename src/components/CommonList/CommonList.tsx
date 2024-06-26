@@ -3,9 +3,9 @@ import Grid from '@mui/material/Unstable_Grid2'
 import usePlayQueueStore from '../../store/usePlayQueueStore'
 import usePlayerStore from '../../store/usePlayerStore'
 import useUiStore from '../../store/useUiStore'
-import { pathConvert, shufflePlayQueue } from '../../utils'
+import { shufflePlayQueue } from '../../utils'
 import CommonMenu from './CommonMenu'
-import { File } from '../../types/file'
+import { FileItem } from '../../types/file'
 import CommonListItem from './CommonListItem'
 import { Box, Fab, List, useMediaQuery, useTheme } from '@mui/material'
 import { AutoSizer, List as VirtualList } from 'react-virtualized'
@@ -20,15 +20,17 @@ const CommonList = (
     listData,
     listType,
     display = 'list',
-    scrollFilePath,
+    scrollIndex,
     activeIndex,
+    disableFAB,
     func,
   }: {
-    listData: File[],
+    listData: FileItem[],
     listType: 'files' | 'playlist' | 'playQueue',
     display?: 'list' | 'multicolumnList' | 'grid',
-    scrollFilePath?: File['filePath'],
+    scrollIndex?: number,
     activeIndex?: number,
+    disableFAB?: boolean,
     func?: {
       open?: (index: number) => void,
       remove?: (indexArray: number[]) => void,
@@ -188,9 +190,8 @@ const CommonList = (
   // 打开播放队列时滚动到当前播放文件
   useEffect(
     () => {
-      if (listType === 'playQueue' && listRef.current && scrollFilePath) {
-        const index = listData?.findIndex((item) => pathConvert(scrollFilePath) === pathConvert(item.filePath))
-        setTimeout(() => listRef.current?.scrollToRow(index), 100)
+      if (listType === 'playQueue' && listRef.current && typeof scrollIndex === 'number') {
+        setTimeout(() => listRef.current?.scrollToRow(scrollIndex), 100)
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -200,18 +201,18 @@ const CommonList = (
   // 滚动到之前点击过的文件夹
   useEffect(
     () => {
-      if (listType === 'files' && listRef.current && scrollFilePath) {
-        let index = listData?.findIndex((item) => pathConvert(scrollFilePath) === pathConvert(item.filePath))
-        if (index && display === 'grid')
-          index = Math.ceil(index / gridCols) - 1
-        if (index && (display === 'list' || display === 'multicolumnList'))
-          index = Math.ceil(index / listCols) - 1
+      if (listType === 'files' && listRef.current && typeof scrollIndex === 'number') {
+        let index = scrollIndex
+        if (display === 'grid')
+          index = Math.ceil(scrollIndex / gridCols) - 1
+        if ((display === 'list' || display === 'multicolumnList'))
+          index = Math.ceil(scrollIndex / listCols) - 1
 
         index && index >= 0 && listRef.current?.scrollToRow(index)
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [scrollFilePath, gridCols, listCols]
+    [scrollIndex, gridCols, listCols]
   )
 
   const scrollRef = useRef<HTMLDivElement | null>(null)
@@ -352,7 +353,7 @@ const CommonList = (
           </Fab>
         }
         {
-          (listType !== 'playQueue') && !isSelectMode &&
+          (listType !== 'playQueue') && !isSelectMode && !disableFAB &&
           <>
             <Fab size='small' onClick={handleClickShuffleAll}>
               <ShuffleRoundedIcon />

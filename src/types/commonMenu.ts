@@ -1,9 +1,11 @@
+import { FileItem } from './file'
+
 export interface CommonMenuStatus {
   anchorEl: HTMLElement | null,
   menuOpen: boolean,
   dialogOpen: boolean,
-  currentFile: null | File,
-  handleClickRemove: null | ((filePathArray: string[][]) => void),
+  currentFile: FileItem | null,
+  handleClickRemove: ((filePathArray: string[][]) => void) | null,
 }
 
 export interface CommonMenuAction {

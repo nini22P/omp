@@ -1,4 +1,4 @@
-import { File, GraphResItem } from './types/file'
+import { FileItem, RemoteItem } from './types/file'
 import { PlayQueueItem, PlayQueueStatus } from './types/playQueue'
 import { Cover } from './types/MetaData'
 
@@ -17,7 +17,7 @@ const isAudio = (name: string) => (/.(wav|mp3|aac|ogg|flac|m4a|opus)$/i).test(na
 const isVideo = (name: string) => (/.(mp4|mkv|avi|mov|rmvb|webm|flv)$/i).test(name)
 const isPicture = (name: string) => (/.(jpg|jpeg|png|bmp|webp|avif|tiff|gif|svg|ico)$/i.test(name))
 
-export const checkFileType = (name: string): File['fileType'] => {
+export const checkFileType = (name: string): FileItem['fileType'] => {
   if (isAudio(name))
     return 'audio'
   if (isVideo(name))
@@ -49,7 +49,7 @@ export const nowTime = () => {
   return `${dateTime.getFullYear}-${dateTime.getMonth}-${dateTime.getDay} ${dateTime.getHours}:${dateTime.getMinutes}`
 }
 
-export const sizeConvert = (fileSize: File['fileSize']) => {
+export const sizeConvert = (fileSize: FileItem['fileSize']) => {
   return ((fileSize / 1024) < 1024)
     ? `${(fileSize / 1024).toFixed(2)} KB`
     : ((fileSize / 1024 / 1024) < 1024)
@@ -57,7 +57,7 @@ export const sizeConvert = (fileSize: File['fileSize']) => {
       : `${(fileSize / 1024 / 1024 / 1024).toFixed(2)} GB`
 }
 
-export const pathConvert = (filePath: File['filePath']) => (filePath.join('/') === '/') ? '/' : filePath.slice(1).join('/')
+export const pathConvert = (filePath: FileItem['filePath']) => (filePath.join('/') === '/') ? '/' : filePath.slice(1).join('/')
 
 /**
  * 根据 url 解析 json
@@ -122,7 +122,7 @@ export const compressImage = (image: Cover): Promise<Cover> => {
   })
 }
 
-export const getGraphResFile = (res: GraphResItem[]): File[] => res.map((item) => ({
+export const remoteItemToFile = (res: RemoteItem[]): FileItem[] => res.map((item) => ({
   fileName: item.name,
   filePath: ['/', ...item.parentReference.path.replace('/drive/root:', '').split('/').filter(item => item.length > 0).map(item => decodeURIComponent(item)), item.name],
   fileSize: item.size,

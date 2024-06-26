@@ -7,7 +7,7 @@ import ListRoundedIcon from '@mui/icons-material/ListRounded'
 import usePlayQueueStore from '../../store/usePlayQueueStore'
 import usePlaylistsStore from '../../store/usePlaylistsStore'
 import useUiStore from '../../store/useUiStore'
-import { File } from '../../types/file'
+import { FileItem } from '../../types/file'
 
 const CommonMenu = (
   {
@@ -27,7 +27,7 @@ const CommonMenu = (
   }
     :
     {
-      listData: File[],
+      listData: FileItem[],
       listType: 'files' | 'playlist' | 'playQueue',
       anchorEl: null | HTMLElement,
       menuOpen: boolean,

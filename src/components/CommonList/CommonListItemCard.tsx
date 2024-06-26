@@ -1,5 +1,5 @@
 import { IconButton, ListItemButton, useTheme } from '@mui/material'
-import { File } from '@/types/file'
+import { FileItem } from '@/types/file'
 import InsertDriveFileRoundedIcon from '@mui/icons-material/InsertDriveFileRounded'
 import InsertPhotoRoundedIcon from '@mui/icons-material/InsertPhotoRounded'
 import FolderOpenRoundedIcon from '@mui/icons-material/FolderOpenRounded'
@@ -20,7 +20,7 @@ const CommonListItemCard = ({
   handleClickItem,
   handleClickMenu,
 }: {
-  item: File,
+  item: FileItem,
   index: number,
   active?: boolean,
   selected?: boolean,

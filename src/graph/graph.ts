@@ -98,7 +98,7 @@ export const uploadAppRootJson = async (fileName: string, fileContent: BodyInit,
     .catch(error => console.log(error))
 }
 
-export const search = async (searchQuery: string, accessToken: string) => {
+export const search = async (path: string, searchQuery: string, accessToken: string) => {
   const headers = new Headers()
   const bearer = `Bearer ${accessToken}`
 
@@ -109,7 +109,7 @@ export const search = async (searchQuery: string, accessToken: string) => {
     headers: headers
   }
 
-  return fetch(`${graphConfig.graphMeEndpoint}/me/drive/root/search(q='${searchQuery}')?$top=20`, options)
+  return fetch(`${graphConfig.graphMeEndpoint}/me/drive/root:/${encodeURIComponent(path)}:/search(q='${searchQuery}')`, options)
     .then(response => response.json())
     .catch(error => console.log(error))
 }

@@ -1,6 +1,6 @@
-import { File } from './file'
+import { FileItem } from './file'
 
-export interface PlayQueueItem extends File {
+export interface PlayQueueItem extends FileItem {
   index: number,
 }
 

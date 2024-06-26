@@ -44,10 +44,10 @@ const useFilesData = () => {
     return response
   }
 
-  const getSearchData = async (account: AccountInfo, searchQuery: string) => {
+  const getSearchData = async (account: AccountInfo, path: string, searchQuery: string) => {
     await instance.initialize()
     const acquireToken = await instance.acquireTokenSilent({ ...loginRequest, account: account })
-    const response = await search(searchQuery, acquireToken.accessToken)
+    const response = await search(path, searchQuery, acquireToken.accessToken)
     return response.value
   }
 

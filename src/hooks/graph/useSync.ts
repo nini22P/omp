@@ -3,7 +3,7 @@ import useSWR from 'swr'
 import usePlaylistsStore from '@/store/usePlaylistsStore'
 import useHistoryStore from '@/store/useHistoryStore'
 import useFilesData from './useFilesData'
-import { File } from '@/types/file'
+import { FileItem } from '@/types/file'
 import { Playlist } from '@/types/playlist'
 import { fetchJson } from '@/utils'
 import useUser from './useUser'
@@ -30,7 +30,7 @@ const useSync = () => {
     }
     console.log('Get app data')
     return {
-      history: history.map((item: File) => (
+      history: history.map((item: FileItem) => (
         {
           fileName: item.fileName,
           filePath: item.filePath,
@@ -42,7 +42,7 @@ const useSync = () => {
         {
           id: playlist.id,
           title: playlist.title,
-          fileList: playlist.fileList.map((item: File) => (
+          fileList: playlist.fileList.map((item: FileItem) => (
             {
               fileName: item.fileName,
               filePath: item.filePath,
@@ -55,7 +55,7 @@ const useSync = () => {
     }
   }
 
-  const { data, error, isLoading } = useSWR<{ history: File[], playlists: Playlist[] }>(account ? `${account.username}/fetchAppData` : null, appDatafetcher)
+  const { data, error, isLoading } = useSWR<{ history: FileItem[], playlists: Playlist[] }>(account ? `${account.username}/fetchAppData` : null, appDatafetcher)
 
   // 自动更新播放历史
   useEffect(

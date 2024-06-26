@@ -52,8 +52,8 @@ msgstr "自动"
 
 #: src/components/CommonList/CommonMenu.tsx:254
 #: src/pages/Player/PlayerMenu.tsx:322
-#: src/pages/Playlist/Playlist.tsx:176
-#: src/pages/Playlist/Playlist.tsx:199
+#: src/pages/Playlist/Playlist.tsx:208
+#: src/pages/Playlist/Playlist.tsx:231
 #: src/pages/Setting.tsx:214
 msgid "Cancel"
 msgstr "取消"
@@ -71,12 +71,16 @@ msgid "Clear"
 msgstr "清除"
 
 #: src/pages/Files/Files.tsx:177
-msgid "Close"
-msgstr "关闭"
+#~ msgid "Close"
+#~ msgstr "关闭"
 
 #: src/pages/Setting.tsx:140
 msgid "Color mode"
 msgstr "颜色模式"
+
+#: src/pages/Search.tsx:155
+msgid "Current"
+msgstr "当前"
 
 #: src/pages/Setting.tsx:123
 msgid "Customize"
@@ -90,7 +94,7 @@ msgstr "深色"
 msgid "Data"
 msgstr "数据"
 
-#: src/pages/Playlist/Playlist.tsx:150
+#: src/pages/Playlist/Playlist.tsx:182
 msgid "Delete"
 msgstr "删除"
 
@@ -98,17 +102,21 @@ msgstr "删除"
 msgid "Descending"
 msgstr "倒序"
 
-#: src/pages/Playlist/Playlist.tsx:172
+#: src/pages/Playlist/Playlist.tsx:204
 msgid "Enter new title"
 msgstr "输入新标题"
 
-#: src/pages/SideBar/SideBar.tsx:19
+#: src/pages/SideBar/SideBar.tsx:17
 msgid "Files"
 msgstr "文件"
 
 #: src/pages/Files/FilterMenu.tsx:111
 msgid "Folders first"
 msgstr "文件夹优先"
+
+#: src/pages/Search.tsx:154
+msgid "Global"
+msgstr "全局"
 
 #: src/pages/Files/FilterMenu.tsx:78
 msgid "Grid"
@@ -118,7 +126,7 @@ msgstr "网格"
 msgid "HD thumbnails"
 msgstr "高清缩略图"
 
-#: src/pages/SideBar/SideBar.tsx:20
+#: src/pages/SideBar/SideBar.tsx:18
 msgid "History"
 msgstr "历史"
 
@@ -152,7 +160,7 @@ msgstr "现代"
 
 #: src/components/CommonList/CommonListItem.tsx:39
 #: src/components/CommonList/CommonListItemCard.tsx:88
-#: src/pages/Playlist/Playlist.tsx:106
+#: src/pages/Playlist/Playlist.tsx:148
 msgid "More"
 msgstr "更多"
 
@@ -170,8 +178,8 @@ msgstr "名称"
 msgid "New playlist"
 msgstr "新播放列表"
 
-#: src/pages/Playlist/Playlist.tsx:183
-#: src/pages/Playlist/Playlist.tsx:200
+#: src/pages/Playlist/Playlist.tsx:215
+#: src/pages/Playlist/Playlist.tsx:232
 msgid "OK"
 msgstr "确定"
 
@@ -184,7 +192,7 @@ msgstr "打开所在文件夹"
 msgid "Open source dependencies"
 msgstr "开源库"
 
-#: src/components/CommonList/CommonList.tsx:434
+#: src/components/CommonList/CommonList.tsx:363
 msgid "Play all"
 msgstr "全部播放"
 
@@ -206,15 +214,15 @@ msgstr "请使用微软账户授权登录"
 msgid "Remove"
 msgstr "移除"
 
-#: src/pages/Playlist/Playlist.tsx:144
-#: src/pages/Playlist/Playlist.tsx:162
+#: src/pages/Playlist/Playlist.tsx:176
+#: src/pages/Playlist/Playlist.tsx:194
 msgid "Rename"
 msgstr "重命名"
 
-#: src/pages/Files/Files.tsx:164
-#: src/pages/Files/Files.tsx:165
-#: src/pages/Files/Files.tsx:177
-#: src/pages/Files/Files.tsx:177
+#: src/pages/Search.tsx:88
+#: src/pages/Search.tsx:113
+#: src/pages/Search.tsx:115
+#: src/pages/Search.tsx:140
 msgid "Search"
 msgstr "搜索"
 
@@ -230,7 +238,7 @@ msgstr "选择账户"
 msgid "Select all"
 msgstr "全选"
 
-#: src/pages/SideBar/SideBar.tsx:21
+#: src/pages/SideBar/SideBar.tsx:19
 msgid "Setting"
 msgstr "设置"
 
@@ -259,7 +267,7 @@ msgstr "切换全屏"
 msgid "Switch theme"
 msgstr "切换主题"
 
-#: src/pages/Playlist/Playlist.tsx:196
+#: src/pages/Playlist/Playlist.tsx:228
 msgid "The playlist will be deleted"
 msgstr "播放列表将会被删除"
 

@@ -1,4 +1,4 @@
-import { File } from '@/types/file'
+import { FileItem } from '@/types/file'
 import { sizeConvert } from '@/utils'
 import InsertDriveFileRoundedIcon from '@mui/icons-material/InsertDriveFileRounded'
 import InsertPhotoRoundedIcon from '@mui/icons-material/InsertPhotoRounded'
@@ -18,7 +18,7 @@ const CommonListItem = ({
   handleClickItem,
   handleClickMenu,
 }: {
-  item: File,
+  item: FileItem,
   index: number,
   active?: boolean
   selected?: boolean,

@@ -1,9 +1,9 @@
-import { File } from './file'
+import { FileItem } from './file'
 
 export interface Playlist {
   id: string,
   title: string,
-  fileList: File[],
+  fileList: FileItem[],
 }
 
 export interface PlaylistsStatus {
@@ -15,6 +15,6 @@ export interface PlaylistsAction {
   insertPlaylist: (playlist: Playlist) => void,
   renamePlaylist: (id: Playlist['id'], title: Playlist['title']) => void,
   removePlaylist: (id: Playlist['id']) => void,
-  insertFilesToPlaylist: (id: Playlist['id'], files: File[]) => void,
+  insertFilesToPlaylist: (id: Playlist['id'], files: FileItem[]) => void,
   removeFilesFromPlaylist: (id: Playlist['id'], indexArray: number[]) => void,
 }

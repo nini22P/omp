@@ -1,4 +1,4 @@
-export interface GraphResItem {
+export interface RemoteItem {
   name: string,
   size: number,
   lastModifiedDateTime: string,
@@ -12,7 +12,7 @@ export interface GraphResItem {
   }
 }
 
-export interface File {
+export interface FileItem {
   fileName: string,
   filePath: string[],
   fileSize: number,
