@@ -9,7 +9,7 @@ const BreadcrumbNav = ({ handleClickNav }: { handleClickNav: (index: number) => 
     <Breadcrumbs
       separator="›"
       sx={{
-        m: '0.5rem',
+        m: '0.25rem',
       }}>
       {
         folderTree.map((name: string, index: number) =>

@@ -182,6 +182,7 @@ const Setting = () => {
           {
             accounts.map((account, index) =>
               <ListItem
+                key={index}
                 disablePadding
                 secondaryAction={
                   <Tooltip title={t`Sign out`}>

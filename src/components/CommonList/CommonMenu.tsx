@@ -7,40 +7,47 @@ import ListRoundedIcon from '@mui/icons-material/ListRounded'
 import usePlayQueueStore from '../../store/usePlayQueueStore'
 import usePlaylistsStore from '../../store/usePlaylistsStore'
 import useUiStore from '../../store/useUiStore'
-import { pathConvert } from '../../utils'
-import { File } from '../../types/file'
+import { FileItem } from '../../types/file'
 
 const CommonMenu = (
   {
+    listData,
+    listType,
     anchorEl,
     menuOpen,
     dialogOpen,
-    currentFile,
+    selectIndex,
+    selectIndexArray,
     setAnchorEl,
     setMenuOpen,
     setDialogOpen,
+    setSelectIndex,
+    setSelectIndexArray,
     handleClickRemove,
-    listType,
   }
     :
     {
+      listData: FileItem[],
+      listType: 'files' | 'playlist' | 'playQueue',
       anchorEl: null | HTMLElement,
       menuOpen: boolean,
       dialogOpen: boolean,
-      currentFile: null | File,
+      selectIndex: number | null,
+      selectIndexArray: number[],
       setAnchorEl: (anchorEl: null | HTMLElement) => void,
       setMenuOpen: (menuOpen: boolean) => void,
       setDialogOpen: (dialogOpen: boolean) => void,
-      handleClickRemove?: (filePathArray: string[][]) => void,
-      listType: 'files' | 'playlist' | 'playQueue',
+      setSelectIndex: (index: number | null) => void
+      setSelectIndexArray: (setSelectIndexArray: number[]) => void,
+      handleClickRemove?: (indexArray: number[]) => void,
     }
 ) => {
 
   const navigate = useNavigate()
 
   const [updateFolderTree] = useUiStore((state) => [state.updateFolderTree])
-  const [playQueue, currentIndex, updatePlayQueue] = usePlayQueueStore(
-    (state) => [state.playQueue, state.currentIndex, state.updatePlayQueue]
+  const [playQueue, updatePlayQueue] = usePlayQueueStore(
+    (state) => [state.playQueue, state.updatePlayQueue]
   )
   const [playlists, insertPlaylist, insertFilesToPlaylist] = usePlaylistsStore(
     (state) => [state.playlists, state.insertPlaylist, state.insertFilesToPlaylist]
@@ -62,33 +69,65 @@ const CommonMenu = (
 
   // 添加到播放列表
   const addToPlaylist = (id: string) => {
-    if (currentFile) {
-      insertFilesToPlaylist(id, [{
-        fileName: currentFile.fileName,
-        filePath: currentFile.filePath,
-        fileSize: currentFile.fileSize,
-        fileType: currentFile.fileType,
-      }])
-      setDialogOpen(false)
+    if (typeof selectIndex === 'number') {
+      insertFilesToPlaylist(id, [
+        {
+          fileName: listData[selectIndex].fileName,
+          filePath: listData[selectIndex].filePath,
+          fileSize: listData[selectIndex].fileSize,
+          fileType: listData[selectIndex].fileType,
+        }
+      ])
+      setSelectIndex(null)
+    } else if (selectIndexArray.length > 0) {
+      insertFilesToPlaylist(id,
+        selectIndexArray
+          .filter(index => listData[index].fileType === 'audio' || listData[index].fileType === 'video')
+          .map(index => (
+            {
+              fileName: listData[index].fileName,
+              filePath: listData[index].filePath,
+              fileSize: listData[index].fileSize,
+              fileType: listData[index].fileType,
+            }
+          )))
+      setSelectIndexArray([])
     }
+    setDialogOpen(false)
   }
 
   // 添加到播放队列
   const handleClickAddToPlayQueue = () => {
-    if (currentFile) {
+    if (typeof selectIndex === 'number') {
       playQueue
-        ? updatePlayQueue([...playQueue, { index: playQueue.length, ...currentFile }])
-        : updatePlayQueue([{ index: 0, ...currentFile }])
-      setMenuOpen(false)
+        ? updatePlayQueue([...playQueue, { ...listData[selectIndex], index: Math.max(...playQueue.map(item => item.index)) + 1 }])
+        : updatePlayQueue([{ ...listData[selectIndex], index: 0 }])
+    } else if (selectIndexArray && selectIndexArray.length > 0) {
+      playQueue
+        ? updatePlayQueue([
+          ...playQueue,
+          ...selectIndexArray
+            .filter(index => listData[index].fileType === 'audio' || listData[index].fileType === 'video')
+            .map((index, _index) => ({ ...listData[index], index: Math.max(...playQueue.map(item => item.index)) + _index + 1 }))
+        ])
+        : updatePlayQueue(
+          selectIndexArray
+            .filter(index => listData[index].fileType === 'audio' || listData[index].fileType === 'video')
+            .map((index, _index) => ({ ...listData[index], index: _index }))
+        )
     }
+    setMenuOpen(false)
+    setSelectIndex(null)
+    setSelectIndexArray([])
   }
 
   // 打开所在文件夹
   const handleClickOpenInFolder = () => {
-    if (currentFile) {
-      updateFolderTree(currentFile.filePath.slice(0, -1))
+    if (typeof selectIndex === 'number') {
+      updateFolderTree(listData[selectIndex].filePath.slice(0, -1))
       navigate('/')
       setMenuOpen(false)
+      setSelectIndex(null)
       updateAudioViewIsShow(false)
       updateVideoViewIsShow(false)
       updatePlayQueueIsShow(false)
@@ -108,35 +147,69 @@ const CommonMenu = (
         }}>
           <ListItemText primary={t`Add to playlist`} />
         </MenuItem>
-        {  // 当前选择文件不在播放队列中时显示
-          (currentFile && !playQueue?.find((file) => {
-            return pathConvert(file.filePath) === pathConvert(currentFile?.filePath)
-          })) &&
+        {
+          (listType !== 'playQueue') &&
           <MenuItem onClick={handleClickAddToPlayQueue}>
             <ListItemText primary={t`Add to play queue`} />
           </MenuItem>
         }
 
         {  // 在 Files 组件中隐藏
-          handleClickRemove &&
+          handleClickRemove && typeof selectIndex === 'number' &&
           <MenuItem onClick={handleClickOpenInFolder}>
             <ListItemText primary={t`Open in folder`} />
           </MenuItem>
         }
 
         {
-          (
-            handleClickRemove
-            && currentFile
-            && !(listType === 'playQueue' && currentFile?.filePath === playQueue?.find((item) => item.index === currentIndex)?.filePath)
-          ) &&
+          handleClickRemove &&
           <MenuItem
             onClick={() => {
-              handleClickRemove([currentFile.filePath])
+              if (typeof selectIndex === 'number') {
+                handleClickRemove([selectIndex])
+              } else if (selectIndexArray.length > 0) {
+                handleClickRemove(selectIndexArray)
+              }
+              setSelectIndex(null)
+              setSelectIndexArray([])
               handleCloseMenu()
             }}
           >
             <ListItemText primary={t`Remove`} />
+          </MenuItem>
+        }
+
+        {
+          typeof selectIndex === 'number' && (selectIndexArray.length === 0) &&
+          <MenuItem onClick={() => {
+            if (typeof selectIndex === 'number') {
+              setSelectIndexArray([...selectIndexArray, selectIndex])
+            }
+            handleCloseMenu()
+            setSelectIndex(null)
+          }}>
+            <ListItemText primary={t`Select`} />
+          </MenuItem>
+        }
+
+        {
+          <MenuItem onClick={() => {
+            setSelectIndex(null)
+            setSelectIndexArray(Array.from({ length: listData.length }, (v, i) => i))
+            handleCloseMenu()
+          }}>
+            <ListItemText primary={t`Select all`} />
+          </MenuItem>
+        }
+
+        {
+          (selectIndexArray.length > 0) &&
+          <MenuItem onClick={() => {
+            setSelectIndex(null)
+            setSelectIndexArray([])
+            handleCloseMenu()
+          }}>
+            <ListItemText primary={t`Cancel select`} />
           </MenuItem>
         }
       </Menu>

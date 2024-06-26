@@ -28,25 +28,20 @@ const usePlaylistsStore = createWithEqualityFn<PlaylistsStatus & PlaylistsAction
           ? {
             ...playlist,
             fileList: files.concat(playlist.fileList.filter((item) =>
-              files.find((file) =>
-                pathConvert(file.filePath) !== pathConvert(item.filePath)
-              )
+              !files.map(item => pathConvert(item.filePath)).includes(pathConvert(item.filePath))
             ))
           }
           : playlist
       )
     })),
 
-  removeFilesFromPlaylist: (id, filePathArray) =>
+  removeFilesFromPlaylist: (id, indexArray) =>
     set((state) => ({
       playlists: state.playlists?.map((playlist) =>
         (playlist.id === id)
           ? {
             ...playlist,
-            fileList: playlist.fileList.filter((file) =>
-              filePathArray.find((filePath) =>
-                pathConvert(filePath) !== pathConvert(file.filePath)
-              ))
+            fileList: playlist.fileList.filter((file, index) => !indexArray.includes(index))
           }
           : playlist
       )

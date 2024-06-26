@@ -1,19 +1,16 @@
-import { File } from './file'
+import { FileItem } from './file'
 
-export interface PlayQueueItem extends File {
-  index: number;
+export interface PlayQueueItem extends FileItem {
+  index: number,
 }
 
 export interface PlayQueueStatus {
-  type: 'audio' | 'video';
-  playQueue: PlayQueueItem[] | null;
-  currentIndex: number;
+  playQueue: PlayQueueItem[] | null,
+  currentIndex: number,
 }
 
 export interface PlayQueueAction {
-  updateType: (type: PlayQueueStatus['type']) => void,
-  updatePlayQueue: (PlayQueue: PlayQueueStatus['playQueue']) => void;
-  updateCurrentIndex: (index: PlayQueueStatus['currentIndex']) => void;
-  removeFilesFromPlayQueue: (filePathArray: File['filePath'][]) => void;
-  resetPlayQueue: () => void;
+  updatePlayQueue: (PlayQueue: PlayQueueStatus['playQueue']) => void,
+  updateCurrentIndex: (index: PlayQueueStatus['currentIndex']) => void,
+  resetPlayQueue: () => void,
 }

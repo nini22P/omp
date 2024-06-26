@@ -17,16 +17,25 @@ import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
 import useFullscreen from '@/hooks/ui/useFullscreen'
 import usePlayerControl from '@/hooks/player/usePlayerControl'
-import { timeShift } from '@/utils'
+import { checkFileType, timeShift } from '@/utils'
 import PlayerMenu from './PlayerMenu'
 import VolumeControl from './VolumeControl'
+import { useEffect, useMemo } from 'react'
+import useControlHide from '@/hooks/ui/useControlHide'
 
 const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
 
   const theme = useTheme()
-  const [type, playQueue] = usePlayQueueStore((state) => [state.type, state.playQueue])
+
+  const iconStyles = {
+    small: { width: 20, height: 20 },
+    large: { width: 38, height: 38 }
+  }
+
+  const [currentIndex, playQueue] = usePlayQueueStore((state) => [state.currentIndex, state.playQueue])
 
   const [
+    audioViewIsShow,
     videoViewIsShow,
     playQueueIsShow,
     fullscreen,
@@ -37,6 +46,7 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
     updatePlayQueueIsShow,
   ] = useUiStore(
     (state) => [
+      state.audioViewIsShow,
       state.videoViewIsShow,
       state.playQueueIsShow,
       state.fullscreen,
@@ -80,6 +90,9 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
 
   const { handleClickFullscreen } = useFullscreen()
 
+  const currentFile = playQueue?.find(item => item.index === currentIndex)
+  const type = useMemo(() => currentFile && checkFileType(currentFile.fileName), [currentFile])
+
   const handleClickMediaInfo = () => {
     if (type === 'audio')
       updateAudioViewIsShow(true)
@@ -87,13 +100,25 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
       updateVideoViewIsShow(!videoViewIsShow)
   }
 
-  const iconStyles = {
-    small: { width: 20, height: 20 },
-    large: { width: 38, height: 38 }
-  }
+  useControlHide(type || 'audio')  // 播放视频时自动隐藏ui
+
+  // 根据格式自动切换
+  useEffect(
+    () => {
+      if (type === 'audio' && videoViewIsShow) {
+        updateVideoViewIsShow(false)
+        updateAudioViewIsShow(true)
+      }
+      if (type === 'video' && audioViewIsShow) {
+        updateAudioViewIsShow(false)
+        updateVideoViewIsShow(true)
+      }
+    },
+    [audioViewIsShow, type, updateAudioViewIsShow, updateVideoViewIsShow, videoViewIsShow]
+  )
 
   return (
-    <Paper sx={{ backgroundColor: `${theme.palette.background.paper}99`, backdropFilter: 'blur(8px)' }}>
+    <Paper sx={{ backgroundColor: `${theme.palette.background.paper}cc`, backdropFilter: 'blur(16px)' }}>
       <Container maxWidth={'xl'} disableGutters={true}>
         <Grid container
           sx={{ justifyContent: 'space-between', alignItems: 'center', textAlign: 'center', }}

@@ -5,7 +5,7 @@ import createTheme from '@mui/material/styles/createTheme'
 import { extractColors } from 'extract-colors'
 import { useMemo } from 'react'
 
-const useTheme = () => {
+const useCustomTheme = () => {
   const [
     coverColor,
     CoverThemeColor,
@@ -59,7 +59,7 @@ const useTheme = () => {
     primary: CoverThemeColor ? coverColor : prefersDarkMode ? '#df7ef9' : '#8e24aa',
   }
 
-  const theme = useMemo(() => createTheme({
+  const customTheme = useMemo(() => createTheme({
     palette: {
       mode: prefersDarkMode ? 'dark' : 'light',
       background: {
@@ -104,7 +104,7 @@ const useTheme = () => {
       MuiBackdrop: {
         styleOverrides: {
           root: {
-            // backgroundColor: 'transparent',
+            backgroundColor: 'transparent',
           },
         },
       },
@@ -203,7 +203,29 @@ const useTheme = () => {
     [colors.primary, prefersDarkMode]
   )
 
-  return theme
+  const scrollbarStyle = useMemo(() => ({
+    '& ::-webkit-scrollbar': {
+      width: '12px',
+      height: '12px',
+    },
+    '& ::-webkit-scrollbar-track': {
+      backgroundColor: 'transparent',
+    },
+    '& ::-webkit-scrollbar-thumb': {
+      background: customTheme.palette.primary.main,
+      borderRadius: '16px',
+      border: '3.5px solid transparent',
+      backgroundClip: 'content-box',
+      visibility: 'hidden',
+    },
+    '& :hover::-webkit-scrollbar-thumb': {
+      visibility: 'visible',
+    },
+  }),
+    [customTheme.palette.primary.main]
+  )
+
+  return { customTheme, scrollbarStyle }
 }
 
-export default useTheme
+export default useCustomTheme

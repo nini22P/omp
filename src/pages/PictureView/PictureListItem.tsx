@@ -1,7 +1,7 @@
-import { File } from '@/types/file'
+import { FileItem } from '@/types/file'
 import { Paper, useTheme } from '@mui/material'
 
-const PictureListItem = ({ picture, isCurrent }: { picture: File, isCurrent: boolean }) => {
+const PictureListItem = ({ picture, isCurrent }: { picture: FileItem, isCurrent: boolean }) => {
   const theme = useTheme()
 
   return (

@@ -1,4 +1,4 @@
-import { File } from '@/types/file'
+import { FileItem } from '@/types/file'
 import { sizeConvert } from '@/utils'
 import InsertDriveFileRoundedIcon from '@mui/icons-material/InsertDriveFileRounded'
 import InsertPhotoRoundedIcon from '@mui/icons-material/InsertPhotoRounded'
@@ -6,40 +6,41 @@ import FolderOpenRoundedIcon from '@mui/icons-material/FolderOpenRounded'
 import MusicNoteRoundedIcon from '@mui/icons-material/MusicNoteRounded'
 import MovieRoundedIcon from '@mui/icons-material/MovieRounded'
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded'
-import { ListItem, IconButton, ListItemButton, ListItemAvatar, Avatar, ListItemText, ListItemIcon } from '@mui/material'
+import { ListItem, IconButton, ListItemButton, ListItemAvatar, Avatar, ListItemText, ListItemIcon, useTheme } from '@mui/material'
 import { t } from '@lingui/macro'
 
 const CommonListItem = ({
   item,
+  index,
   active,
+  selected,
+  isSelectMode,
   handleClickItem,
   handleClickMenu,
 }: {
-  item: File,
-  active?: boolean,
-  handleClickItem: (item: File) => void,
-  handleClickMenu: (event: React.MouseEvent<HTMLElement>, currentFile: File) => void,
+  item: FileItem,
+  index: number,
+  active?: boolean
+  selected?: boolean,
+  isSelectMode?: boolean,
+  handleClickItem: (index: number) => void,
+  handleClickMenu: (event: React.MouseEvent<HTMLElement>, index: number) => void,
 }) => {
+
+  const theme = useTheme()
 
   return (
     <ListItem
       disablePadding
       secondaryAction={
-        (item.fileType === 'audio' || item.fileType === 'video')
-        &&
+        (item.fileType === 'audio' || item.fileType === 'video') && !isSelectMode &&
         <div>
           <IconButton
             aria-label={t`More`}
-            onClick={(event) =>
-              handleClickMenu(event,
-                {
-                  fileName: item.fileName,
-                  filePath: item.filePath,
-                  fileSize: item.fileSize,
-                  fileType: item.fileType,
-                  id: item.id,
-                }
-              )}
+            onClick={(event) => {
+              event.stopPropagation()
+              handleClickMenu(event, index)
+            }}
           >
             <MoreVertRoundedIcon />
           </IconButton>
@@ -47,8 +48,12 @@ const CommonListItem = ({
       }
     >
       <ListItemButton
-        onClick={() => handleClickItem(item)}
+        onClick={() => handleClickItem(index)}
         className={active ? 'active' : ''}
+        sx={{
+          outline: selected ? `3px solid ${theme.palette.primary.main}55` : '',
+          outlineOffset: '-5px'
+        }}
       >
         <ListItemAvatar sx={{ position: 'relative' }}>
           <ListItemIcon sx={{ paddingLeft: 1 }}>
