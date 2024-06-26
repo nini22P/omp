@@ -50,7 +50,7 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
   }
 
   const { data: filesData } = useSWR(
-    `${account.username}/${path}`,
+    account ? `${account.username}/${path}` : null,
     () => fileListFetcher(path),
   )
 
@@ -60,7 +60,7 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
   }
 
   const { data: searchData, isLoading: searchIsLoading } = useSWR(
-    (debouncedSearchQuery.length > 0) ? `${account.username}/${path}/${debouncedSearchQuery}` : null,
+    (debouncedSearchQuery.length > 0) && account ? `${account.username}/${path}/${debouncedSearchQuery}` : null,
     () => searchFetcher(path, debouncedSearchQuery),
   )
 
