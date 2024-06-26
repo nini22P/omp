@@ -4,8 +4,8 @@ import useUiStore from '../store/useUiStore'
 import Search from './Search'
 
 const NavBar = () => {
-  const [mobileSideBarOpen, updateMobileSideBarOpen] = useUiStore(
-    (state) => [state.mobileSideBarOpen, state.updateMobileSideBarOpen]
+  const [mobileSideBarOpen, audioViewIsShow, videoViewIsShow, updateMobileSideBarOpen] = useUiStore(
+    (state) => [state.mobileSideBarOpen, state.audioViewIsShow, state.videoViewIsShow, state.updateMobileSideBarOpen]
   )
   const windowControlsOverlayOpen = useMediaQuery('(display-mode: window-controls-overlay)')
   const theme = useTheme()
@@ -54,7 +54,7 @@ const NavBar = () => {
             justifyContent: { xs: 'flex-end', sm: windowControlsOverlayOpen ? 'flex-end' : 'center', md: 'center' }
           }}
         >
-          <Box sx={{ width: { xs: 'none', sm: '40%', height: '80%' } }} className='app-region-no-drag'>
+          <Box sx={{ width: { xs: 'none', sm: '40%' } }} className={(audioViewIsShow || videoViewIsShow) ? 'app-region-drag' : 'app-region-no-drag'}>
             <Search type={sm ? 'bar' : 'icon'} />
           </Box>
         </Box>

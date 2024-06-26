@@ -13,6 +13,7 @@ import CommonList from '@/components/CommonList/CommonList'
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
 import { useLocation, useNavigate } from 'react-router-dom'
 import useCustomTheme from '@/hooks/ui/useCustomTheme'
+import { animated, useSpring } from '@react-spring/web'
 
 type SearchScope = 'global' | 'current'
 
@@ -79,6 +80,25 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
     }
   }
 
+  const isShow = filteredData && filteredData.length > 0
+
+  const [{ height }] = useSpring(
+    () => ({
+      from: {
+        height: isShow ? '0' : '100dvh',
+      },
+      to: {
+        height: isShow ? '100dvh' : '0',
+      },
+      config: {
+        mass: 1,
+        tension: 190,
+        friction: 20,
+      }
+    }),
+    [isShow]
+  )
+
   return (
     <>
       {
@@ -87,7 +107,6 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
           onClick={() => setSearchOpen(true)}
           aria-label={t`Search`}
           sx={{
-            ...scrollbarStyle,
             borderRadius: '0.2rem',
             '.MuiTouchRipple-ripple .MuiTouchRipple-child': {
               borderRadius: '0.2rem',
@@ -123,6 +142,7 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
         fullWidth
         disableRestoreFocus
         sx={{
+          ...scrollbarStyle,
           ' .MuiBackdrop-root': {
             background: `${theme.palette.background.paper}33`,
             backdropFilter: 'blur(0.5px)',
@@ -170,12 +190,13 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
           />
           {searchIsLoading && <LinearProgress sx={{ borderRadius: '0.5rem', height: '2px' }} />}
         </Box>
-        {
-          filteredData && filteredData.length > 0 &&
-          <DialogContent sx={{ padding: '0.125rem', height: '100dvh', borderTop: `1px solid ${theme.palette.divider}` }}>
+
+        <animated.div style={{ height: height, overflow: 'hidden' }}>
+          <DialogContent sx={{ padding: '0.125rem', height: '100%', borderTop: `1px solid ${theme.palette.divider}` }}>
             <CommonList listData={filteredData} listType='files' disableFAB func={{ open }} />
           </DialogContent>
-        }
+        </animated.div>
+
       </Dialog>
     </>
   )
