@@ -23,6 +23,9 @@ html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   font-family: Roboto, Helvetica, Arial, sans-serif;
+  --custom-titlebar-height: 32px;
+  --titlebar-height: env(titlebar-area-height, var(--custom-titlebar-height));
+  --titlebar-center-safe-width: calc((50dvw - (100dvw - env(titlebar-area-x) - env(titlebar-area-width))) * 2)
 }
 
 :root[data-theme="light"] {
@@ -50,13 +53,7 @@ a {
 }
 
 .pt-titlebar-area-height {
-  padding-top: 0 !important;
-}
-
-@media (display-mode: window-controls-overlay) {
-  .pt-titlebar-area-height {
-    padding-top: env(titlebar-area-height, 32) !important;
-  }
+  padding-top: env(titlebar-area-height, 0) !important;
 }
 
 .show-scrollbar::-webkit-scrollbar-thumb {

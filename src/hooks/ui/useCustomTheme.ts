@@ -176,6 +176,12 @@ const useCustomTheme = () => {
           paper: {
             border: `${prefersDarkMode ? '#f7f7f722' : '#3b3b3b22'} solid 1px`,
             boxShadow: `5px 5px 10px 0px ${prefersDarkMode ? '#f7f7f722' : '#3b3b3b22'}`,
+          },
+          root: {
+            ' .MuiBackdrop-root': {
+              background: `${prefersDarkMode ? '#121212' : '#ffffff'}33`,
+              backdropFilter: 'blur(0.5px)',
+            },
           }
         }
       },

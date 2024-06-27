@@ -33,7 +33,7 @@ const useThemeColor = () => {
           themeColorLight.content = customTheme.palette.background.default
           themeColorDark.content = customTheme.palette.background.default
         }
-        else if (audioViewIsShow && audioViewTheme === 'classic' || videoViewIsShow) {
+        else if (audioViewIsShow && audioViewTheme === 'classic') {
           themeColorLight.content = '#1e1e1e'
           themeColorDark.content = '#1e1e1e'
         }

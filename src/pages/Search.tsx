@@ -29,7 +29,9 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
   const location = useLocation()
   const navigate = useNavigate()
 
-  useEffect(() => location.pathname === '/' ? setSearchScope('current') : setSearchScope('global'), [location.pathname])
+  const isFileView = location.pathname === '/'
+
+  useEffect(() => isFileView ? setSearchScope('current') : setSearchScope('global'), [isFileView, location.pathname])
 
   const path = searchScope === 'global' ? '/' : pathConvert(folderTree)
 
@@ -120,7 +122,6 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
         type === 'bar' &&
         <ButtonBase
           sx={{
-            padding: '0.125rem',
             background: `${theme.palette.background.paper}99`,
             border: `1px solid ${theme.palette.divider}`,
             borderRadius: '0.5rem',
@@ -143,10 +144,6 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
         disableRestoreFocus
         sx={{
           ...scrollbarStyle,
-          ' .MuiBackdrop-root': {
-            background: `${theme.palette.background.paper}33`,
-            backdropFilter: 'blur(0.5px)',
-          },
         }}
       >
         <Box
@@ -169,6 +166,7 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
                   size='small'
                   variant='standard'
                   disableUnderline
+                  disabled={!isFileView}
                   sx={{ margin: '0 0.5rem' }}
                 >
                   <MenuItem value='global'>{t`Global`}</MenuItem>

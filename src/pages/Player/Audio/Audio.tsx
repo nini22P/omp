@@ -75,9 +75,10 @@ const Audio = ({ player }: { player: HTMLVideoElement | null }) => {
     <animated.div
       {...bind()}
       style={{
+        position: 'fixed',
+        width: '100%',
         maxWidth: '100%',
         maxHeight: '100dvh',
-        position: 'fixed',
         top: top,
         left: leftRightbottom,
         right: leftRightbottom,
@@ -88,7 +89,6 @@ const Audio = ({ player }: { player: HTMLVideoElement | null }) => {
       {audioViewTheme === 'classic' && <Classic player={player} styles={{ borderRadius: borderRadius }} />}
       {audioViewTheme === 'modern' && <Modern player={player} styles={{ borderRadius: borderRadius }} />}
     </animated.div>
-
   )
 }
 

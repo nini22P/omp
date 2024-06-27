@@ -1,5 +1,4 @@
-import { Button, Drawer } from '@mui/material'
-import Grid from '@mui/material/Unstable_Grid2'
+import { Box, Button, Drawer, useTheme } from '@mui/material'
 import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import useUiStore from '@/store/useUiStore'
@@ -10,6 +9,7 @@ import useCustomTheme from '@/hooks/ui/useCustomTheme'
 const PlayQueue = () => {
 
   const { scrollbarStyle } = useCustomTheme()
+  const theme = useTheme()
 
   const [
     currentIndex,
@@ -54,18 +54,13 @@ const PlayQueue = () => {
       onClose={() => updatePlayQueueIsShow(false)}
       sx={{
         '& .MuiDrawer-paper': {
-          width: { xs: 'calc(100vw - 0.5rem)', sm: '400px', md: '500px' }
+          width: { xs: 'calc(100vw - 0.5rem)', sm: '400px' }
         },
         ...scrollbarStyle
       }}
     >
-      <Grid container wrap='nowrap' height={'100%'} >
-        <Grid height={'100%'}>
-          <Button sx={{ height: '100%' }} onClick={() => updatePlayQueueIsShow(false)}>
-            <KeyboardArrowRightRoundedIcon />
-          </Button>
-        </Grid>
-        <Grid xs sx={{ height: '100%', overflowY: 'auto' }}>
+      <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', }} >
+        <Box sx={{ overflowY: 'auto', flexGrow: 1 }}>
           {
             playQueue &&
             <CommonList
@@ -76,8 +71,13 @@ const PlayQueue = () => {
               func={{ open, remove }}
             />
           }
-        </Grid>
-      </Grid>
+        </Box>
+        <Box sx={{ width: '100%', flexGrow: 0, borderTop: `1px solid ${theme.palette.divider}` }}>
+          <Button fullWidth size='large' onClick={() => updatePlayQueueIsShow(false)}>
+            <KeyboardArrowRightRoundedIcon />
+          </Button>
+        </Box>
+      </Box>
     </Drawer>
   )
 }

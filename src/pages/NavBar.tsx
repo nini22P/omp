@@ -54,7 +54,14 @@ const NavBar = () => {
             justifyContent: { xs: 'flex-end', sm: windowControlsOverlayOpen ? 'flex-end' : 'center', md: 'center' }
           }}
         >
-          <Box sx={{ width: { xs: 'none', sm: '40%' } }} className={(audioViewIsShow || videoViewIsShow) ? 'app-region-drag' : 'app-region-no-drag'}>
+          <Box
+            sx={{
+              width: { xs: 'none', sm: '40%' },
+              maxWidth: { xs: 'auto', sm: 'var(--titlebar-center-safe-width)' },
+              height: { xs: 'auto', sm: '70%' },
+            }}
+            className={(audioViewIsShow || videoViewIsShow) ? 'app-region-drag' : 'app-region-no-drag'}
+          >
             <Search type={sm ? 'bar' : 'icon'} />
           </Box>
         </Box>
@@ -90,7 +97,7 @@ const NavBar = () => {
           />
           <Typography
             component="div"
-            fontSize={windowControlsOverlayOpen ? '1rem' : '1.25rem'}
+            fontSize={windowControlsOverlayOpen ? '100%' : '1.25rem'}
           >
             OMP
           </Typography>

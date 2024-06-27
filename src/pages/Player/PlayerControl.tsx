@@ -91,7 +91,7 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
   const { handleClickFullscreen } = useFullscreen()
 
   const currentFile = playQueue?.find(item => item.index === currentIndex)
-  const type = useMemo(() => currentFile && checkFileType(currentFile.fileName), [currentFile])
+  const type = useMemo(() => currentFile && checkFileType(currentFile.fileName) === 'video' ? 'video' : 'audio', [currentFile])
 
   const handleClickMediaInfo = () => {
     if (type === 'audio')
@@ -118,8 +118,14 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
   )
 
   return (
-    <Paper sx={{ backgroundColor: `${theme.palette.background.paper}cc`, backdropFilter: 'blur(16px)' }}>
-      <Container maxWidth={'xl'} disableGutters={true}>
+    <Container maxWidth={'xl'} disableGutters={true}>
+      <Paper
+        sx={{
+          backgroundColor: `${theme.palette.background.paper}99`,
+          backdropFilter: 'blur(16px)',
+          width: '100%',
+        }}
+      >
         <Grid container
           sx={{ justifyContent: 'space-between', alignItems: 'center', textAlign: 'center', }}
         >
@@ -310,8 +316,8 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
           </Grid>
 
         </Grid>
-      </Container >
-    </Paper>
+      </Paper>
+    </Container >
   )
 }
 
