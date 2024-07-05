@@ -29,7 +29,9 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
   const location = useLocation()
   const navigate = useNavigate()
 
-  useEffect(() => location.pathname === '/' ? setSearchScope('current') : setSearchScope('global'), [location.pathname])
+  const isFileView = location.pathname === '/'
+
+  useEffect(() => isFileView ? setSearchScope('current') : setSearchScope('global'), [isFileView, location.pathname])
 
   const path = searchScope === 'global' ? '/' : pathConvert(folderTree)
 
@@ -46,26 +48,33 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
 
   const fileListFetcher = async (path: string) => {
     const res: RemoteItem[] = await getFilesData(account, path)
-    return remoteItemToFile(res).filter(item => ['folder', 'audio', 'video'].includes(item.fileType))
+    return remoteItemToFile(res)
   }
 
-  const { data: filesData } = useSWR(
-    account ? `${account.username}/${path}` : null,
-    () => fileListFetcher(path),
-  )
+  const { data: filesData } = useSWR(account ? path : null, fileListFetcher)
 
-  const searchFetcher = async (path: string, searchQuery: string) => {
+  const searchFetcher = async () => {
     const res: RemoteItem[] = await getSearchData(account, path, searchQuery)
-    return remoteItemToFile(res).filter(item => ['folder', 'audio', 'video'].includes(item.fileType))
+    return remoteItemToFile(res)
   }
 
   const { data: searchData, isLoading: searchIsLoading } = useSWR(
     (debouncedSearchQuery.length > 0) && account ? `${account.username}/${path}/${debouncedSearchQuery}` : null,
-    () => searchFetcher(path, debouncedSearchQuery),
+    searchFetcher,
   )
 
-  const filteredFilesData = debouncedSearchQuery.length > 0 ? filesData?.filter(item => item.fileName.toLocaleLowerCase().includes(debouncedSearchQuery.toLocaleLowerCase())) : []
-  const filteredData = [...filteredFilesData || [], ...searchData?.filter(searchItem => !filteredFilesData?.find(item => (pathConvert(item.filePath) === pathConvert(searchItem.filePath)))) || []]
+  const filteredFilesData = debouncedSearchQuery.length > 0
+    ? filesData?.filter(item =>
+      item.fileName.toLocaleLowerCase().includes(debouncedSearchQuery.toLocaleLowerCase())
+      && ['folder', 'audio', 'video'].includes(item.fileType))
+    : []
+  const filteredData = [
+    ...filteredFilesData || [],
+    ...searchData?.filter(searchItem =>
+      !filteredFilesData?.find(item => (pathConvert(item.filePath) === pathConvert(searchItem.filePath)))
+      && ['folder', 'audio', 'video'].includes(searchItem.fileType))
+    || []
+  ]
 
   const open = (index: number) => {
     const currentFile = filteredData[index]
@@ -73,7 +82,7 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
       handleCloseSearh()
       updateFolderTree(currentFile.filePath)
       navigate('/')
-    } else if (['audio', 'video'].includes(currentFile.fileType)) {
+    } else {
       handleCloseSearh()
       updateFolderTree(currentFile.filePath.slice(0, currentFile.filePath.length - 1))
       navigate('/')
@@ -120,7 +129,6 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
         type === 'bar' &&
         <ButtonBase
           sx={{
-            padding: '0.125rem',
             background: `${theme.palette.background.paper}99`,
             border: `1px solid ${theme.palette.divider}`,
             borderRadius: '0.5rem',
@@ -143,10 +151,6 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
         disableRestoreFocus
         sx={{
           ...scrollbarStyle,
-          ' .MuiBackdrop-root': {
-            background: `${theme.palette.background.paper}33`,
-            backdropFilter: 'blur(0.5px)',
-          },
         }}
       >
         <Box
@@ -169,6 +173,7 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
                   size='small'
                   variant='standard'
                   disableUnderline
+                  disabled={!isFileView}
                   sx={{ margin: '0 0.5rem' }}
                 >
                   <MenuItem value='global'>{t`Global`}</MenuItem>

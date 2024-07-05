@@ -1,6 +1,4 @@
 import { Ref, forwardRef, useMemo } from 'react'
-import { Box, IconButton } from '@mui/material'
-import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded'
 import useFullscreen from '@/hooks/ui/useFullscreen'
 import useUiStore from '@/store/useUiStore'
 import { animated, useSpring } from '@react-spring/web'
@@ -10,15 +8,9 @@ const VideoPlayer = forwardRef(
 
     const [
       videoViewIsShow,
-      controlIsShow,
-      updateVideoViewIsShow,
-      updateControlIsShow,
     ] = useUiStore(
       (state) => [
         state.videoViewIsShow,
-        state.controlIsShow,
-        state.updateVideoViewIsShow,
-        state.updateControlIsShow,
       ]
     )
 
@@ -66,29 +58,6 @@ const VideoPlayer = forwardRef(
           onEnded={() => onEnded()}
           onDoubleClick={() => handleClickFullscreen()}
         />
-
-        {/* 视频播放顶栏 */}
-        <Box
-          sx={{
-            position: 'absolute',
-            top: 16,
-            left: 16,
-            width: 'auto',
-            display: controlIsShow ? 'block' : 'none',
-          }}
-          className='pt-titlebar-area-height'
-        >
-          <IconButton
-            aria-label="close"
-            onClick={() => {
-              updateVideoViewIsShow(false)
-              updateControlIsShow(true)
-            }}
-            className='app-region-no-drag'
-          >
-            <KeyboardArrowDownRoundedIcon sx={{ color: '#fff' }} />
-          </IconButton>
-        </Box>
       </animated.div>
     )
   }

@@ -140,6 +140,31 @@ const Files = () => {
           updateVideoViewIsShow(true)
         }
       }
+
+      if (!currentFile) {
+        const discs = listData.filter(item => item.fileName.toLocaleLowerCase().includes('disc'))
+        if (discs.length > 0) {
+          Promise.all(discs.map(item => getFilesData(account, pathConvert(item.filePath)).then(res => remoteItemToFile(res))))
+            .then(files => {
+              const list = files
+                .flat()
+                .filter((item) => item.fileType === 'audio' || item.fileType === 'video')
+                .map((item, _index) => ({ ...item, index: _index }))
+
+              if (list.length > 0) {
+                if (shuffle) {
+                  updateShuffle(false)
+                }
+                updatePlayQueue(list)
+                updateCurrentIndex(0)
+                updatePlayStatu('playing')
+                if (list[0].fileType === 'video') {
+                  updateVideoViewIsShow(true)
+                }
+              }
+            })
+        }
+      }
     }
   }
 

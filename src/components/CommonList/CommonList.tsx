@@ -46,7 +46,10 @@ const CommonList = (
   const [dialogOpen, setDialogOpen] = useState(false)
   const [selectIndex, setSelectIndex] = useState<number | null>(null)
   const [selectIndexArray, setSelectIndexArray] = useState<number[]>([])
+
   const isSelectMode = selectIndexArray.length > 0
+  const shuffleDisplay = listData.filter(item => item.fileType === 'audio' || item.fileType === 'video').length > 0
+  const playAllDisplay = shuffleDisplay || listData.filter(item => item.fileType === 'folder' && /^(disc|disk)\s*\d+$/.test(item.fileName.toLocaleLowerCase())).length > 0
 
   const addSelectIndex = (index: number) => { setSelectIndexArray([...selectIndexArray, index].sort()) }
 
@@ -222,24 +225,24 @@ const CommonList = (
     const scroll = scrollRef.current
     const fab = fabRef.current
     if (fab && isSelectMode) {
-      fab.style.visibility = 'visible'
+      fab.style.transform = 'translateY(0)'
     } else if (scroll && fab && !isSelectMode) {
       const onWheel = (e: WheelEvent) => {
         if (e.deltaY > 0)
-          fab.style.visibility = 'hidden'
+          fab.style.transform = 'translateY(200%)'
         else
-          fab.style.visibility = 'visible'
+          fab.style.transform = 'translateY(0)'
       }
       const onTouchStart = (e: TouchEvent) => {
         touchStartYRef.current = (e.touches[0].clientY)
       }
       const onTouchMove = (e: TouchEvent) => {
         if (e.touches[0].clientY > touchStartYRef.current) {
-          fab.style.visibility = 'visible'
+          fab.style.transform = 'translateY(0)'
           touchStartYRef.current = (e.touches[0].clientY)
         }
         else {
-          fab.style.visibility = 'hidden'
+          fab.style.transform = 'translateY(200%)'
           touchStartYRef.current = (e.touches[0].clientY)
         }
 
@@ -256,7 +259,7 @@ const CommonList = (
   }, [isSelectMode])
 
   return (
-    <Box sx={{ height: '100%', width: '100%', position: 'relative' }} >
+    <Box sx={{ height: '100%', width: '100%', position: 'relative', overflow: 'hidden' }} >
 
       {/* 文件列表 */}
       <Grid container sx={{ flexDirection: 'column', flexWrap: 'nowrap', height: '100%' }}>
@@ -344,6 +347,7 @@ const CommonList = (
           justifyContent: 'center',
           alignItems: 'center',
           gap: '0.5rem',
+          transition: 'all 0.2s ease-out',
         }}
       >
         {
@@ -355,13 +359,19 @@ const CommonList = (
         {
           (listType !== 'playQueue') && !isSelectMode && !disableFAB &&
           <>
-            <Fab size='small' onClick={handleClickShuffleAll}>
-              <ShuffleRoundedIcon />
-            </Fab>
-            <Fab variant='extended' color='primary' onClick={handleClickPlayAll}>
-              <PlayArrowRoundedIcon />
-              <span style={{ marginLeft: '0.5rem' }}>{t`Play all`}</span>
-            </Fab>
+            {
+              shuffleDisplay &&
+              <Fab size='small' onClick={handleClickShuffleAll}>
+                <ShuffleRoundedIcon />
+              </Fab>
+            }
+            {
+              playAllDisplay &&
+              <Fab variant='extended' color='primary' onClick={handleClickPlayAll}>
+                <PlayArrowRoundedIcon />
+                <span style={{ marginLeft: '0.5rem' }}>{t`Play all`}</span>
+              </Fab>
+            }
           </>
         }
 

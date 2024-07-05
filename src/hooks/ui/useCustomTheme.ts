@@ -4,7 +4,7 @@ import { useMediaQuery } from '@mui/material'
 import createTheme from '@mui/material/styles/createTheme'
 import { extractColors } from 'extract-colors'
 import { useMemo } from 'react'
-
+import Color from 'color'
 const useCustomTheme = () => {
   const [
     coverColor,
@@ -42,13 +42,10 @@ const useCustomTheme = () => {
   useMemo(
     async () => {
       if (cover !== './cover.svg') {
-        const colors = await extractColors(cover)
-        const lightColors = colors.filter(color => color.lightness < 0.7)
-        const darkColors = colors.filter(color => color.lightness > 0.5)
-        if (prefersDarkMode && darkColors.length > 0)
-          updateCoverColor(darkColors[0].hex)
-        else if (!prefersDarkMode && lightColors.length > 0)
-          updateCoverColor(lightColors[0].hex)
+        const color = (await extractColors(cover))[0]
+        const lightColor = Color(color.hex).lightness(50).hex()
+        const darkColor = Color(color.hex).lightness(75).hex()
+        updateCoverColor(prefersDarkMode ? darkColor : lightColor)
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -176,6 +173,12 @@ const useCustomTheme = () => {
           paper: {
             border: `${prefersDarkMode ? '#f7f7f722' : '#3b3b3b22'} solid 1px`,
             boxShadow: `5px 5px 10px 0px ${prefersDarkMode ? '#f7f7f722' : '#3b3b3b22'}`,
+          },
+          root: {
+            ' .MuiBackdrop-root': {
+              background: `${prefersDarkMode ? '#121212' : '#ffffff'}33`,
+              backdropFilter: 'blur(0.5px)',
+            },
           }
         }
       },
