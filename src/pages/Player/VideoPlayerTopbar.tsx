@@ -21,45 +21,54 @@ const VideoPlayerTopbar = () => {
   )
 
   return (
-    <Box
-      sx={{
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: 'var(--titlebar-height)',
-        transform: videoViewIsShow && controlIsShow ? 'none' : 'translateY(calc(-1 * var(--titlebar-height)))',
-        transition: 'all 0.2s ease-out',
-      }}
-    >
-      <div
-        style={{
-          width: 'fit-content',
+    <div style={{
+      position: 'fixed',
+      top: 0,
+      left: 0,
+      width: '100dvw',
+      height: 'var(--titlebar-height)',
+      display: 'flex',
+      justifyContent: 'center',
+      transform: videoViewIsShow && controlIsShow ? 'none' : 'translateY(calc(-1 * var(--titlebar-height)))',
+      transition: 'all 0.2s ease-out',
+    }}>
+      <Box
+        sx={{
+          width: '100%',
+          maxWidth: '1536px',
           height: '100%',
-          display: 'flex',
-          background: `${theme.palette.background.paper}99`,
-          backdropFilter: 'blur(16px)',
         }}
-        className='app-region-no-drag'
       >
-        <IconButton
-          aria-label="close"
-          onClick={() => {
-            updateVideoViewIsShow(false)
-            updateControlIsShow(true)
-          }}
-          sx={{
+        <div
+          style={{
+            width: 'fit-content',
             height: '100%',
-            borderRadius: '0.25rem',
-            '.MuiTouchRipple-ripple .MuiTouchRipple-child': {
-              borderRadius: '0.25rem',
-            },
+            display: 'flex',
+            background: `${theme.palette.background.paper}99`,
+            backdropFilter: 'blur(16px)',
           }}
+          className='app-region-no-drag'
         >
-          <KeyboardArrowDownRoundedIcon />
-        </IconButton>
-      </div>
-    </Box>
+          <IconButton
+            aria-label="close"
+            onClick={() => {
+              updateVideoViewIsShow(false)
+              updateControlIsShow(true)
+            }}
+            sx={{
+              height: '100%',
+              borderRadius: '0.25rem',
+              '.MuiTouchRipple-ripple .MuiTouchRipple-child': {
+                borderRadius: '0.25rem',
+              },
+              aspectRatio: '1 / 1',
+            }}
+          >
+            <KeyboardArrowDownRoundedIcon />
+          </IconButton>
+        </div>
+      </Box>
+    </div>
   )
 }
 

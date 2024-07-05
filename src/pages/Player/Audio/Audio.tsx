@@ -20,10 +20,10 @@ const Audio = ({ player }: { player: HTMLVideoElement | null }) => {
   )
 
   const topRef = useRef(0)
-  const [{ top, leftRightbottom, borderRadius }, api] = useSpring(() => ({
+  const [{ top, p, borderRadius }, api] = useSpring(() => ({
     from: {
       top: audioViewIsShow ? '0' : '100dvh',
-      leftRightbottom: audioViewIsShow ? '0' : '0.5rem',
+      p: audioViewIsShow ? '0' : '0.5rem',
       borderRadius: '0.5rem',
     },
     // config: {
@@ -34,14 +34,14 @@ const Audio = ({ player }: { player: HTMLVideoElement | null }) => {
   }))
 
   const show = () => api.start({
-    to: { top: '0', leftRightbottom: '0', borderRadius: '0' },
+    to: { top: '0', p: '0', borderRadius: '0' },
     // config: { clamp: false },
   })
 
   const hide = () => {
     api.start({
       from: { top: `${topRef.current}` },
-      to: { top: '100dvh', leftRightbottom: '0.5rem', borderRadius: '0.5rem' },
+      to: { top: '100dvh', p: '0.5rem', borderRadius: '0.5rem' },
       // config: { clamp: true },
     })
     topRef.current = 0
@@ -76,13 +76,12 @@ const Audio = ({ player }: { player: HTMLVideoElement | null }) => {
       {...bind()}
       style={{
         position: 'fixed',
-        width: '100%',
         maxWidth: '100%',
         maxHeight: '100dvh',
         top: top,
-        left: leftRightbottom,
-        right: leftRightbottom,
-        bottom: leftRightbottom,
+        left: p,
+        right: p,
+        bottom: p,
         touchAction: 'pan-x',
       }}
     >

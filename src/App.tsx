@@ -103,6 +103,7 @@ const App = () => {
                     width: '100%',
                     height: '100%',
                     overflowY: 'auto',
+                    backgroundColor: `${customTheme.palette.background.paper}99`
                   }}>
                   {needLogin ? <LogIn /> : <Outlet />}
                 </Paper>
