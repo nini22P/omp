@@ -63,6 +63,12 @@ export const licenses = [
     'author': 'Feross Aboukhadijeh feross@feross.org https://feross.org'
   },
   {
+    'name': 'color',
+    'licenseType': 'MIT',
+    'link': 'https://github.com/Qix-/color',
+    'author': 'Josh Junon'
+  },
+  {
     'name': 'extract-colors',
     'licenseType': 'GPL-3.0',
     'link': 'https://github.com/Namide/extract-colors',
