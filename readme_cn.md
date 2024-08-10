@@ -3,7 +3,7 @@
 # OMP - OneDrive 媒体播放器
 
 ![ci](https://github.com/nini22P/omp/actions/workflows/ci.yml/badge.svg)
-<a href="https://afdian.net/a/nini22P"><img alt="Afdaian" style="height: 30px;" src="https://pic1.afdiancdn.com/static/img/welcome/button-sponsorme.png"></a>
+<a href="https://afdian.com/a/nini22P"><img alt="Afdaian" style="height: 30px;" src="https://pic1.afdiancdn.com/static/img/welcome/button-sponsorme.png"></a>
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/nini22p)
 
 [English](./readme.md) | 中文
@@ -67,6 +67,13 @@ REDIRECT_URI=<redirectUri>
 ```
 
 运行 `npm i && npm run build`
+
+## 捐赠
+
+这个项目完全免费，如果你觉得好用，欢迎捐赠支持
+
+- [爱发电](https://afdian.com/a/nini22P)
+- [Ko-fi](https://ko-fi.com/nini22p)
 
 ## 许可
 
