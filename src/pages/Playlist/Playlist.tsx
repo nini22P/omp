@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { t } from '@lingui/macro'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Button, ListItemText, Typography, Dialog, DialogTitle, DialogActions, Menu, MenuItem, DialogContent, TextField, Box, useTheme } from '@mui/material'
-import Grid from '@mui/material/Unstable_Grid2'
+import Grid from '@mui/material/Grid2'
 import usePlaylistsStore from '../../store/usePlaylistsStore'
 import CommonList from '../../components/CommonList/CommonList'
 import Loading from '../Loading'
@@ -125,7 +125,7 @@ const Playlist = () => {
                 }
               </Box>
 
-              <Grid xs={12} container
+              <Grid size={12} container
                 sx={{
                   padding: '3rem 1rem 1rem 1rem',
                   background: `linear-gradient(0deg, ${theme.palette.background.default}ff, ${theme.palette.background.default}99,${theme.palette.background.default}00)`,
@@ -133,12 +133,12 @@ const Playlist = () => {
                   backdropFilter: 'blur(4px)',
                 }}
               >
-                <Grid xs={12}>
+                <Grid size={12}>
                   <Typography variant='h4' noWrap>
                     {playlist.title}
                   </Typography>
                 </Grid>
-                <Grid xs={'auto'}>
+                <Grid size='auto'>
                   <Button
                     variant='contained'
                     size='small'

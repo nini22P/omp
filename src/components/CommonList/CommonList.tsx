@@ -1,5 +1,5 @@
 import { useState, useEffect, Key, CSSProperties, useRef } from 'react'
-import Grid from '@mui/material/Unstable_Grid2'
+import Grid from '@mui/material/Grid2'
 import usePlayQueueStore from '../../store/usePlayQueueStore'
 import usePlayerStore from '../../store/usePlayerStore'
 import useUiStore from '../../store/useUiStore'
@@ -139,7 +139,11 @@ const CommonList = (
             return (
               item
               &&
-              <Grid key={item.fileName} xs={12 / gridCols} sx={{ aspectRatio: '4/5', overflow: 'hidden' }}>
+              <Grid
+                key={item.fileName}
+                size={{ xs: 12 / gridCols }}
+                sx={{ aspectRatio: '4/5', overflow: 'hidden' }}
+              >
                 <CommonListItemCard
                   active={typeof activeIndex === 'number' ? activeIndex === itemIndex : false}
                   item={item}
@@ -169,7 +173,7 @@ const CommonList = (
             return (
               item
               &&
-              <Grid key={item.fileName} xs={12 / listCols}>
+              <Grid key={item.fileName} size={{ xs: 12 / listCols }}>
                 <CommonListItem
                   active={typeof activeIndex === 'number' ? activeIndex === itemIndex : false}
                   item={item}
@@ -264,7 +268,7 @@ const CommonList = (
       {/* 文件列表 */}
       <Grid container sx={{ flexDirection: 'column', flexWrap: 'nowrap', height: '100%' }}>
         <Grid
-          xs={12}
+          size={12}
           sx={{
             flexGrow: 1,
             overflow: 'hidden',

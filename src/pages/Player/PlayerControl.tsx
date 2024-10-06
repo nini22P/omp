@@ -1,5 +1,5 @@
 import { Box, ButtonBase, CircularProgress, Container, IconButton, Paper, Slider, Typography, useTheme } from '@mui/material'
-import Grid from '@mui/material/Unstable_Grid2'
+import Grid from '@mui/material/Grid2'
 import CloseFullscreenRoundedIcon from '@mui/icons-material/CloseFullscreenRounded'
 import OpenInFullRoundedIcon from '@mui/icons-material/OpenInFullRounded'
 import ShuffleRoundedIcon from '@mui/icons-material/ShuffleRounded'
@@ -131,12 +131,14 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
         >
           {/* 播放进度 */}
           {/* <Grid xs={12}> */}
-          <Grid container xs={12}
+          <Grid
+            container
+            size={12}
             pl={{ xs: 0, sm: 1 }}
             pr={{ xs: 0, sm: 1 }}
             sx={{ justifyContent: 'space-between', alignItems: 'center', textAlign: 'center' }}>
             <Grid
-              xs='auto'
+              size='auto'
               sx={{ display: { sm: 'inline-grid', xs: 'none' } }}
             >
               <Typography
@@ -146,7 +148,8 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
                 {timeShift(currentTime)}
               </Typography>
             </Grid >
-            <Grid xs
+            <Grid
+              size='grow'
               pl={{ xs: 1, sm: 2 }}
               pr={{ xs: 1, sm: 2 }}
             >
@@ -163,7 +166,7 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
               />
             </Grid>
             <Grid
-              xs='auto'
+              size='auto'
               sx={{ display: { sm: 'inline-grid', xs: 'none' } }}
             >
               <Typography
@@ -175,18 +178,19 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
             </Grid>
           </Grid>
 
-          <Grid container xs={12} wrap={'nowrap'} sx={{ alignItems: 'center' }} >
+          <Grid container size={12} wrap={'nowrap'} sx={{ alignItems: 'center' }} >
             {/* 媒体信息 */}
-            <Grid container
-              xs
+            <Grid
+              container
+              size='grow'
               textAlign={'left'}
               minWidth={0}
             >
               <ButtonBase
                 sx={{ height: '4rem', width: '100%', borderRadius: '0.5rem' }}
                 onClick={() => handleClickMediaInfo()}>
-                <Grid xs container sx={{ justifyContent: 'space-between', alignItems: 'center', textAlign: 'left', overflow: 'hidden', flexGrow: 'nowrap' }}>
-                  <Grid xs="auto" sx={{ width: '4rem', height: '4rem', padding: '0.5rem', display: type === 'video' ? 'none' : 'flex' }}>
+                <Grid size='grow' container sx={{ justifyContent: 'space-between', alignItems: 'center', textAlign: 'left', overflow: 'hidden', flexGrow: 'nowrap' }}>
+                  <Grid size="auto" sx={{ width: '4rem', height: '4rem', padding: '0.5rem', display: type === 'video' ? 'none' : 'flex' }}>
                     {
                       (type === 'audio') &&
                       <img
@@ -201,7 +205,7 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
                       />
                     }
                   </Grid>
-                  <Grid xs sx={{ pl: 1 }} minWidth={0}>
+                  <Grid size='grow' sx={{ pl: 1 }} minWidth={0}>
                     <Typography variant="body1" component="div" noWrap>
                       {(!playQueue || !currentMetaData) ? 'Not playing' : currentMetaData.title}
                     </Typography>
@@ -219,7 +223,7 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
             </Grid>
 
             {/* 基本控制按钮 */}
-            <Grid container xs={5} sm={'auto'} wrap='nowrap' paddingX={{ xs: 0, sm: 1 }} sx={{ justifyContent: 'center', alignItems: 'center', }} >
+            <Grid container size={{ xs: 5, sm: 'auto' }} wrap='nowrap' paddingX={{ xs: 0, sm: 1 }} sx={{ justifyContent: 'center', alignItems: 'center', }} >
               <IconButton
                 sx={{ display: { sm: 'inline-grid', xs: 'none' } }}
                 aria-label="shuffle"
@@ -286,7 +290,7 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
 
             {/* 其他按钮 */}
             <Grid
-              xs
+              size='grow'
               textAlign={'right'}
               wrap='nowrap'
               sx={{ display: { sm: 'block', xs: type === 'video' ? 'block' : 'none' } }}

@@ -1,6 +1,6 @@
 import { Outlet, useLocation } from 'react-router-dom'
 import { Container, ThemeProvider, Paper, Box, useMediaQuery } from '@mui/material'
-import Grid from '@mui/material/Unstable_Grid2'
+import Grid from '@mui/material/Grid2'
 import NavBar from './pages/NavBar'
 import Player from './pages/Player/Player'
 import SideBar from './pages/SideBar/SideBar'
@@ -60,9 +60,7 @@ const App = () => {
             <Grid container>
               {/* 侧栏 */}
               <Grid
-                xs={0}
-                sm={3}
-                lg={2}
+                size={{ xs: 0, sm: 3, lg: 2 }}
                 sx={{
                   // overflowY: 'auto',
                   display: { xs: 'none', sm: 'block' },
@@ -86,9 +84,7 @@ const App = () => {
 
               {/* 主体内容 */}
               <Grid
-                xs={12}
-                sm={9}
-                lg={10}
+                size={{ xs: 12, sm: 9, lg: 10 }}
                 sx={{
                   padding: '0 0.5rem 0.5rem 0.5rem',
                   paddingTop: {
