@@ -1,6 +1,5 @@
+import { create } from 'zustand'
 import { PlayerStatus, PlayerAction } from '../types/player'
-import { shallow } from 'zustand/shallow'
-import { createWithEqualityFn } from 'zustand/traditional'
 
 const initialState: PlayerStatus = {
   currentMetaData: null,
@@ -12,7 +11,7 @@ const initialState: PlayerStatus = {
   duration: 0,
 }
 
-const usePlayerStore = createWithEqualityFn<PlayerStatus & PlayerAction>(
+const usePlayerStore = create<PlayerStatus & PlayerAction>(
   (set) => ({
     ...initialState,
     updateCurrentMetaData: (currentMetaData) => set(() => ({ currentMetaData: currentMetaData })),
@@ -23,8 +22,7 @@ const usePlayerStore = createWithEqualityFn<PlayerStatus & PlayerAction>(
     updateCurrentTime: (currentTime) => set(() => ({ currentTime: currentTime })),
     updateDuration: (duration) => set(() => ({ duration: duration })),
     resetPlayer: () => set(() => ({ ...initialState })),
-  }),
-  shallow
+  })
 )
 
 export default usePlayerStore

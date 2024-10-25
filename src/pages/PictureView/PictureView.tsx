@@ -3,6 +3,7 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 import { Box, Dialog, IconButton } from '@mui/material'
 import PictureList from './PictureList'
 import { useEffect, useRef } from 'react'
+import { useShallow } from 'zustand/shallow'
 
 const PictureView = () => {
 
@@ -11,11 +12,13 @@ const PictureView = () => {
     updatePictureList,
     updateCurrentPicture,
   ] = usePictureStore(
-    state => [
-      state.currentPicture,
-      state.updatePictureList,
-      state.updateCurrentPicture,
-    ]
+    useShallow(
+      (state) => [
+        state.currentPicture,
+        state.updatePictureList,
+        state.updateCurrentPicture,
+      ]
+    )
   )
 
   const open = currentPicture !== null

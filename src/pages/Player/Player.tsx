@@ -11,13 +11,7 @@ import VideoPlayerTopbar from './VideoPlayerTopbar'
 
 const Player = () => {
 
-  const [
-    controlIsShow,
-  ] = useUiStore(
-    (state) => [
-      state.controlIsShow,
-    ]
-  )
+  const controlIsShow = useUiStore((state) => state.controlIsShow)
 
   const playerRef = useRef<HTMLVideoElement>(null)
   const player = playerRef.current   // 声明播放器对象

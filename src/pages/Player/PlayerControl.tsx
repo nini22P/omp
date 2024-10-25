@@ -22,6 +22,7 @@ import PlayerMenu from './PlayerMenu'
 import VolumeControl from './VolumeControl'
 import { useEffect, useMemo } from 'react'
 import useControlHide from '@/hooks/ui/useControlHide'
+import { useShallow } from 'zustand/shallow'
 
 const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
 
@@ -32,7 +33,9 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
     large: { width: 38, height: 38 }
   }
 
-  const [currentIndex, playQueue] = usePlayQueueStore((state) => [state.currentIndex, state.playQueue])
+  const [currentIndex, playQueue] = usePlayQueueStore(
+    useShallow((state) => [state.currentIndex, state.playQueue])
+  )
 
   const [
     audioViewIsShow,
@@ -45,17 +48,19 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
     updateVideoViewIsShow,
     updatePlayQueueIsShow,
   ] = useUiStore(
-    (state) => [
-      state.audioViewIsShow,
-      state.videoViewIsShow,
-      state.playQueueIsShow,
-      state.fullscreen,
-      state.shuffle,
-      state.repeat,
-      state.updateAudioViewIsShow,
-      state.updateVideoViewIsShow,
-      state.updatePlayQueueIsShow,
-    ]
+    useShallow(
+      (state) => [
+        state.audioViewIsShow,
+        state.videoViewIsShow,
+        state.playQueueIsShow,
+        state.fullscreen,
+        state.shuffle,
+        state.repeat,
+        state.updateAudioViewIsShow,
+        state.updateVideoViewIsShow,
+        state.updatePlayQueueIsShow,
+      ]
+    )
   )
 
   const [
@@ -66,14 +71,16 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
     currentTime,
     duration,
   ] = usePlayerStore(
-    (state) => [
-      state.currentMetaData,
-      state.playStatu,
-      state.isLoading,
-      state.cover,
-      state.currentTime,
-      state.duration,
-    ]
+    useShallow(
+      (state) => [
+        state.currentMetaData,
+        state.playStatu,
+        state.isLoading,
+        state.cover,
+        state.currentTime,
+        state.duration,
+      ]
+    )
   )
 
   const {

@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom'
 import usePictureStore from '@/store/usePictureStore'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
+import { useShallow } from 'zustand/shallow'
 
 const Files = () => {
 
@@ -31,23 +32,31 @@ const Files = () => {
     updateVideoViewIsShow,
     updateShuffle,
   ] = useUiStore(
-    (state) => [
-      state.shuffle,
-      state.folderTree,
-      state.display,
-      state.sortBy,
-      state.orderBy,
-      state.foldersFirst,
-      state.mediaOnly,
-      state.updateFolderTree,
-      state.updateVideoViewIsShow,
-      state.updateShuffle,
-    ]
+    useShallow(
+      (state) => [
+        state.shuffle,
+        state.folderTree,
+        state.display,
+        state.sortBy,
+        state.orderBy,
+        state.foldersFirst,
+        state.mediaOnly,
+        state.updateFolderTree,
+        state.updateVideoViewIsShow,
+        state.updateShuffle,
+      ]
+    )
   )
 
-  const [updatePictureList, updateCurrentPicture] = usePictureStore(state => [state.updatePictureList, state.updateCurrentPicture,])
-  const [updatePlayQueue, updateCurrentIndex] = usePlayQueueStore((state) => [state.updatePlayQueue, state.updateCurrentIndex])
-  const [updatePlayStatu] = usePlayerStore(state => [state.updatePlayStatu])
+  const [updatePictureList, updateCurrentPicture] = usePictureStore(
+    useShallow((state) => [state.updatePictureList, state.updateCurrentPicture])
+  )
+
+  const [updatePlayQueue, updateCurrentIndex] = usePlayQueueStore(
+    useShallow((state) => [state.updatePlayQueue, state.updateCurrentIndex])
+  )
+
+  const updatePlayStatu = usePlayerStore(state => state.updatePlayStatu)
 
   const { getFilesData } = useFilesData()
   const navigate = useNavigate()

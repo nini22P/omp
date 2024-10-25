@@ -1,6 +1,7 @@
 import { Box, IconButton, useTheme } from '@mui/material'
 import useUiStore from '@/store/useUiStore'
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded'
+import { useShallow } from 'zustand/shallow'
 
 const VideoPlayerTopbar = () => {
 
@@ -12,12 +13,14 @@ const VideoPlayerTopbar = () => {
     updateVideoViewIsShow,
     updateControlIsShow,
   ] = useUiStore(
-    (state) => [
-      state.videoViewIsShow,
-      state.controlIsShow,
-      state.updateVideoViewIsShow,
-      state.updateControlIsShow,
-    ]
+    useShallow(
+      (state) => [
+        state.videoViewIsShow,
+        state.controlIsShow,
+        state.updateVideoViewIsShow,
+        state.updateControlIsShow,
+      ]
+    )
   )
 
   return (

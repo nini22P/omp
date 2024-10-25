@@ -1,34 +1,37 @@
-import { createWithEqualityFn } from 'zustand/traditional'
-import { shallow } from 'zustand/shallow'
+import { create } from 'zustand'
 import { UiStatus, UiAction } from '../types/ui'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
-const useUiStore = createWithEqualityFn<UiStatus & UiAction>()(
+const initialState: UiStatus = {
+  currentAccount: 0,
+  folderTree: ['/'],
+  audioViewIsShow: false,
+  audioViewTheme: 'modern',
+  videoViewIsShow: false,
+  controlIsShow: true,
+  playQueueIsShow: false,
+  fullscreen: false,
+  mobileSideBarOpen: false,
+  backgroundIsShow: true,
+  shuffle: false,
+  repeat: 'off',
+  volume: 80,
+  playbackRate: 1,
+  coverColor: '#8e24aa',
+  CoverThemeColor: true,
+  colorMode: 'auto',
+  display: 'multicolumnList',
+  sortBy: 'name',
+  orderBy: 'asc',
+  foldersFirst: true,
+  mediaOnly: true,
+  hdThumbnails: false,
+}
+
+const useUiStore = create<UiStatus & UiAction>()(
   persist(
     (set) => ({
-      currentAccount: 0,
-      folderTree: ['/'],
-      audioViewIsShow: false,
-      audioViewTheme: 'modern',
-      videoViewIsShow: false,
-      controlIsShow: true,
-      playQueueIsShow: false,
-      fullscreen: false,
-      mobileSideBarOpen: false,
-      backgroundIsShow: true,
-      shuffle: false,
-      repeat: 'off',
-      volume: 80,
-      playbackRate: 1,
-      coverColor: '#8e24aa',
-      CoverThemeColor: true,
-      colorMode: 'auto',
-      display: 'multicolumnList',
-      sortBy: 'name',
-      orderBy: 'asc',
-      foldersFirst: true,
-      mediaOnly: true,
-      hdThumbnails: false,
+      ...initialState,
       updateCurrentAccount: (currentAccount) => set(() => ({ currentAccount: currentAccount })),
       updateFolderTree: (folderTree) => set(() => ({ folderTree: folderTree })),
       updateAudioViewIsShow: (audioViewIsShow) => set(() => ({ audioViewIsShow: audioViewIsShow })),
@@ -57,6 +60,6 @@ const useUiStore = createWithEqualityFn<UiStatus & UiAction>()(
       name: 'ui-store',
       storage: createJSONStorage(() => localStorage),
     }
-  ), shallow)
+  ))
 
 export default useUiStore

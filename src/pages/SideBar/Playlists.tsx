@@ -5,11 +5,14 @@ import { List, ListItem, ListItemText, ListItemIcon, ListItemButton, Button } fr
 import ListRoundedIcon from '@mui/icons-material/ListRounded'
 import PlaylistAddRoundedIcon from '@mui/icons-material/PlaylistAddRounded'
 import usePlaylistsStore from '../../store/usePlaylistsStore'
+import { useShallow } from 'zustand/shallow'
 
 const Playlists = ({ closeSideBar }: { closeSideBar: () => void }) => {
 
   const navigate = useNavigate()
-  const [playlists, insertPlaylist] = usePlaylistsStore((state) => [state.playlists, state.insertPlaylist])
+  const [playlists, insertPlaylist] = usePlaylistsStore(
+    useShallow((state) => [state.playlists, state.insertPlaylist])
+  )
 
   const addPlaylist = async () => {
     const id = shortUUID().generate()

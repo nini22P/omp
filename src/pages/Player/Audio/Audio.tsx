@@ -4,6 +4,7 @@ import Classic from './Classic'
 import Modern from './Modern'
 import { animated, useSpring } from '@react-spring/web'
 import { useDrag } from '@use-gesture/react'
+import { useShallow } from 'zustand/shallow'
 
 const Audio = ({ player }: { player: HTMLVideoElement | null }) => {
 
@@ -12,11 +13,13 @@ const Audio = ({ player }: { player: HTMLVideoElement | null }) => {
     audioViewTheme,
     updateAudioViewIsShow,
   ] = useUiStore(
-    (state) => [
-      state.audioViewIsShow,
-      state.audioViewTheme,
-      state.updateAudioViewIsShow,
-    ]
+    useShallow(
+      (state) => [
+        state.audioViewIsShow,
+        state.audioViewTheme,
+        state.updateAudioViewIsShow,
+      ]
+    )
   )
 
   const topRef = useRef(0)

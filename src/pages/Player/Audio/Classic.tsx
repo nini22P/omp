@@ -9,10 +9,11 @@ import { Container, Box, IconButton, Typography, Slider, CircularProgress } from
 import Grid from '@mui/material/Grid2'
 import PlayerMenu from '../PlayerMenu'
 import { SpringValue, animated } from '@react-spring/web'
+import { useShallow } from 'zustand/shallow'
 
 const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: { borderRadius: SpringValue<string> } }) => {
 
-  const [playQueue] = usePlayQueueStore((state) => [state.playQueue])
+  const playQueue = usePlayQueueStore((state) => state.playQueue)
 
   const [
     audioViewIsShow,
@@ -25,17 +26,19 @@ const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: 
     updatePlayQueueIsShow,
     updateBackgroundIsShow,
   ] = useUiStore(
-    (state) => [
-      state.audioViewIsShow,
-      state.fullscreen,
-      state.backgroundIsShow,
-      state.shuffle,
-      state.repeat,
-      state.coverColor,
-      state.updateAudioViewIsShow,
-      state.updatePlayQueueIsShow,
-      state.updateBackgroundIsShow,
-    ]
+    useShallow(
+      (state) => [
+        state.audioViewIsShow,
+        state.fullscreen,
+        state.backgroundIsShow,
+        state.shuffle,
+        state.repeat,
+        state.coverColor,
+        state.updateAudioViewIsShow,
+        state.updatePlayQueueIsShow,
+        state.updateBackgroundIsShow,
+      ]
+    )
   )
 
   const [
@@ -46,14 +49,16 @@ const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: 
     currentTime,
     duration
   ] = usePlayerStore(
-    (state) => [
-      state.currentMetaData,
-      state.playStatu,
-      state.isLoading,
-      state.cover,
-      state.currentTime,
-      state.duration,
-    ]
+    useShallow(
+      (state) => [
+        state.currentMetaData,
+        state.playStatu,
+        state.isLoading,
+        state.cover,
+        state.currentTime,
+        state.duration,
+      ]
+    )
   )
 
   const {

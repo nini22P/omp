@@ -22,12 +22,13 @@ import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
 import PlayerMenu from '../PlayerMenu'
 import { timeShift } from '@/utils'
+import { useShallow } from 'zustand/shallow'
 
 const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: { borderRadius: SpringValue<string> } }) => {
 
   const theme = useTheme()
 
-  const [playQueue] = usePlayQueueStore((state) => [state.playQueue])
+  const playQueue = usePlayQueueStore((state) => state.playQueue)
 
   const [
     audioViewIsShow,
@@ -38,15 +39,17 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
     updateAudioViewIsShow,
     updatePlayQueueIsShow,
   ] = useUiStore(
-    (state) => [
-      state.audioViewIsShow,
-      state.fullscreen,
-      state.shuffle,
-      state.repeat,
-      state.coverColor,
-      state.updateAudioViewIsShow,
-      state.updatePlayQueueIsShow,
-    ]
+    useShallow(
+      (state) => [
+        state.audioViewIsShow,
+        state.fullscreen,
+        state.shuffle,
+        state.repeat,
+        state.coverColor,
+        state.updateAudioViewIsShow,
+        state.updatePlayQueueIsShow,
+      ]
+    )
   )
 
   const [
@@ -57,14 +60,16 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
     currentTime,
     duration
   ] = usePlayerStore(
-    (state) => [
-      state.currentMetaData,
-      state.playStatu,
-      state.isLoading,
-      state.cover,
-      state.currentTime,
-      state.duration,
-    ]
+    useShallow(
+      (state) => [
+        state.currentMetaData,
+        state.playStatu,
+        state.isLoading,
+        state.cover,
+        state.currentTime,
+        state.duration,
+      ]
+    )
   )
 
   const {

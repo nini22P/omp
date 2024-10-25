@@ -1,13 +1,12 @@
 import { Drawer } from '@mui/material'
-import { shallow } from 'zustand/shallow'
 import useUiStore from '../../store/useUiStore'
 import SideBar from './SideBar'
+import { useShallow } from 'zustand/shallow'
 
 const MobileSideBar = () => {
 
   const [mobileSideBarOpen, updateMobileSideBarOpen] = useUiStore(
-    (state) => [state.mobileSideBarOpen, state.updateMobileSideBarOpen],
-    shallow
+    useShallow((state) => [state.mobileSideBarOpen, state.updateMobileSideBarOpen])
   )
 
   return (

@@ -14,6 +14,7 @@ import { useSpring, animated } from '@react-spring/web'
 import { useMemo } from 'react'
 import useCustomTheme from './hooks/ui/useCustomTheme'
 import Search from './pages/Search'
+import { useShallow } from 'zustand/shallow'
 
 const App = () => {
   const { customTheme, scrollbarStyle } = useCustomTheme()
@@ -23,7 +24,8 @@ const App = () => {
   const { account } = useUser()
   useSync()
 
-  const [coverColor] = useUiStore((state) => [state.coverColor])
+  const coverColor = useUiStore((state) => state.coverColor)
+
   const [{ background }, api] = useSpring(
     () => ({
       background: `linear-gradient(45deg, ${coverColor}33, ${coverColor}15, ${coverColor}05, ${customTheme.palette.background.default})`,

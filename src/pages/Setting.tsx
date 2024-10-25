@@ -13,6 +13,7 @@ import usePlayerStore from '@/store/usePlayerStore'
 import useHistoryStore from '@/store/useHistoryStore'
 import usePlaylistsStore from '@/store/usePlaylistsStore'
 import { AccountInfo } from '@azure/msal-browser'
+import { useShallow } from 'zustand/shallow'
 
 const ListItemTitle = ({ title }: { title: string }) => {
   const theme = useTheme()
@@ -38,15 +39,17 @@ const Setting = () => {
     updateCoverThemeColor,
     updateColorMode,
   ] = useUiStore(
-    state => [
-      state.currentAccount,
-      state.CoverThemeColor,
-      state.colorMode,
-      state.updateFolderTree,
-      state.updateCurrentAccount,
-      state.updateCoverThemeColor,
-      state.updateColorMode
-    ]
+    useShallow(
+      (state) => [
+        state.currentAccount,
+        state.CoverThemeColor,
+        state.colorMode,
+        state.updateFolderTree,
+        state.updateCurrentAccount,
+        state.updateCoverThemeColor,
+        state.updateColorMode
+      ]
+    )
   )
 
   const resetPlayQueue = usePlayQueueStore(state => state.resetPlayQueue)

@@ -7,8 +7,9 @@ import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
 import { checkFileType, compressImage, pathConvert } from '@/utils'
 import useFilesData from '../graph/useFilesData'
-import { MetaData } from '@/types/MetaData'
+import { Cover, MetaData } from '@/types/MetaData'
 import useUser from '../graph/useUser'
+import { useShallow } from 'zustand/shallow'
 
 const usePlayerCore = (player: HTMLVideoElement | null) => {
 
@@ -29,25 +30,31 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
     updateCurrentTime,
     updateDuration,
   ] = usePlayerStore(
-    (state) => [
-      state.currentMetaData,
-      state.metadataUpdate,
-      state.playStatu,
-      state.isLoading,
-      state.updateCurrentMetaData,
-      state.updateMetadataUpdate,
-      state.updatePlayStatu,
-      state.updateIsLoading,
-      state.updateCover,
-      state.updateCurrentTime,
-      state.updateDuration,
-    ]
+    useShallow(
+      (state) => [
+        state.currentMetaData,
+        state.metadataUpdate,
+        state.playStatu,
+        state.isLoading,
+        state.updateCurrentMetaData,
+        state.updateMetadataUpdate,
+        state.updatePlayStatu,
+        state.updateIsLoading,
+        state.updateCover,
+        state.updateCurrentTime,
+        state.updateDuration,
+      ]
+    )
   )
 
   const { getLocalMetaData, setLocalMetaData } = useLocalMetaDataStore()
-  const [playQueue, currentIndex, updateCurrentIndex] = usePlayQueueStore((state) => [state.playQueue, state.currentIndex, state.updateCurrentIndex])
+  const [playQueue, currentIndex, updateCurrentIndex] = usePlayQueueStore(
+    useShallow((state) => [state.playQueue, state.currentIndex, state.updateCurrentIndex])
+  )
   const repeat = useUiStore((state) => state.repeat)
-  const [historyList, insertHistory] = useHistoryStore((state) => [state.historyList, state.insertHistory])
+  const [historyList, insertHistory] = useHistoryStore(
+    useShallow((state) => [state.historyList, state.insertHistory])
+  )
 
   const [url, setUrl] = useState('')
 
@@ -209,7 +216,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
         try {
           const metadata = await mm.fetchFromUrl(url)
           if (metadata && metadata.common.title !== undefined) {
-            const cover = !metadata.common.picture ? undefined : await Promise.all(metadata.common.picture.map(async (item) => await compressImage(item)))
+            const cover = !metadata.common.picture ? undefined : await Promise.all(metadata.common.picture.map(async (item: Cover) => await compressImage(item)))
             const metaData: MetaData = {
               path: path,
               title: metadata.common.title,
@@ -236,7 +243,9 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
 
           if (!localMetaData) {
             const netMetaData = await getNetMetaData(currentMetaData?.path)
-            netMetaData && setLocalMetaData(netMetaData).then(() => updateMetadataUpdate())
+            if (netMetaData) {
+              setLocalMetaData(netMetaData).then(() => updateMetadataUpdate())
+            }
           }
         }
       }

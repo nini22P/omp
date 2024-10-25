@@ -14,6 +14,7 @@ import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
 import { useLocation, useNavigate } from 'react-router-dom'
 import useCustomTheme from '@/hooks/ui/useCustomTheme'
 import { animated, useSpring } from '@react-spring/web'
+import { useShallow } from 'zustand/shallow'
 
 type SearchScope = 'global' | 'current'
 
@@ -23,7 +24,9 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
 
   const [searchQuery, setSearchQuery] = useState('')
   const debouncedSearchQuery = useDebounce(searchQuery, searchQuery.length > 0 ? 1000 : 0)
-  const [folderTree, updateFolderTree] = useUiStore(state => [state.folderTree, state.updateFolderTree])
+  const [folderTree, updateFolderTree] = useUiStore(
+    useShallow(state => [state.folderTree, state.updateFolderTree])
+  )
   const [searchScope, setSearchScope] = useState<SearchScope>('current')
 
   const location = useLocation()

@@ -6,13 +6,7 @@ import { animated, useSpring } from '@react-spring/web'
 const VideoPlayer = forwardRef(
   ({ url, onEnded }: { url: string; onEnded: () => void }, ref: Ref<HTMLVideoElement> | null) => {
 
-    const [
-      videoViewIsShow,
-    ] = useUiStore(
-      (state) => [
-        state.videoViewIsShow,
-      ]
-    )
+    const videoViewIsShow = useUiStore((state) => state.videoViewIsShow)
 
     const { handleClickFullscreen } = useFullscreen()
 

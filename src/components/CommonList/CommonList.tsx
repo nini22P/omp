@@ -14,6 +14,7 @@ import ShuffleRoundedIcon from '@mui/icons-material/ShuffleRounded'
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded'
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded'
 import { t } from '@lingui/macro'
+import { useShallow } from 'zustand/shallow'
 
 const CommonList = (
   {
@@ -37,9 +38,11 @@ const CommonList = (
     },
   }) => {
 
-  const [shuffle, updateShuffle] = useUiStore((state) => [state.shuffle, state.updateShuffle])
-  const [updatePlayQueue, updateCurrentIndex] = usePlayQueueStore((state) => [state.updatePlayQueue, state.updateCurrentIndex])
-  const [updatePlayStatu] = usePlayerStore(state => [state.updatePlayStatu])
+  const [shuffle, updateShuffle] = useUiStore(useShallow((state) => [state.shuffle, state.updateShuffle]))
+  const [updatePlayQueue, updateCurrentIndex] = usePlayQueueStore(
+    useShallow((state) => [state.updatePlayQueue, state.updateCurrentIndex])
+  )
+  const updatePlayStatu = usePlayerStore((state) => state.updatePlayStatu)
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -210,12 +213,15 @@ const CommonList = (
     () => {
       if (listType === 'files' && listRef.current && typeof scrollIndex === 'number') {
         let index = scrollIndex
+
         if (display === 'grid')
           index = Math.ceil(scrollIndex / gridCols) - 1
         if ((display === 'list' || display === 'multicolumnList'))
           index = Math.ceil(scrollIndex / listCols) - 1
 
-        index && index >= 0 && listRef.current?.scrollToRow(index)
+        if (index && index >= 0) {
+          listRef.current?.scrollToRow(index)
+        }
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps

@@ -1,8 +1,11 @@
 import { useEffect } from 'react'
 import useUiStore from '../../store/useUiStore'
+import { useShallow } from 'zustand/shallow'
 
 const useControlHide = (type: string) => {
-  const [videoViewIsShow, updateControlIsShow] = useUiStore((state) => [state.videoViewIsShow, state.updateControlIsShow])
+  const [videoViewIsShow, updateControlIsShow] = useUiStore(
+    useShallow((state) => [state.videoViewIsShow, state.updateControlIsShow])
+  )
   useEffect(
     () => {
       if (type === 'video' && videoViewIsShow) {

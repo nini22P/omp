@@ -5,12 +5,19 @@ import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
 import { checkFileType } from '@/utils'
+import { useShallow } from 'zustand/shallow'
 
 const History = () => {
-  const [historyList, removeHistory] = useHistoryStore((state) => [state.historyList, state.removeHistory])
-  const [shuffle, updateVideoViewIsShow, updateShuffle,] = useUiStore((state) => [state.shuffle, state.updateVideoViewIsShow, state.updateShuffle])
-  const [updatePlayQueue, updateCurrentIndex] = usePlayQueueStore((state) => [state.updatePlayQueue, state.updateCurrentIndex])
-  const [updatePlayStatu] = usePlayerStore(state => [state.updatePlayStatu])
+  const [historyList, removeHistory] = useHistoryStore(
+    useShallow((state) => [state.historyList, state.removeHistory])
+  )
+  const [shuffle, updateVideoViewIsShow, updateShuffle,] = useUiStore(
+    useShallow((state) => [state.shuffle, state.updateVideoViewIsShow, state.updateShuffle])
+  )
+  const [updatePlayQueue, updateCurrentIndex] = usePlayQueueStore(
+    useShallow((state) => [state.updatePlayQueue, state.updateCurrentIndex])
+  )
+  const updatePlayStatu = usePlayerStore(state => state.updatePlayStatu)
 
   const open = (index: number) => {
     const listData = historyList

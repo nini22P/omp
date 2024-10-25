@@ -3,6 +3,7 @@ import { Box } from '@mui/material'
 import PictureListItem from './PictureListItem'
 import { Grid, WindowScroller } from 'react-virtualized'
 import { CSSProperties, Key, useEffect, useRef } from 'react'
+import { useShallow } from 'zustand/shallow'
 
 const PictureList = () => {
   const [
@@ -10,11 +11,13 @@ const PictureList = () => {
     currentPicture,
     updateCurrentPicture,
   ] = usePictureStore(
-    state => [
-      state.pictureList,
-      state.currentPicture,
-      state.updateCurrentPicture,
-    ]
+    useShallow(
+      (state) => [
+        state.pictureList,
+        state.currentPicture,
+        state.updateCurrentPicture,
+      ]
+    )
   )
 
   const currentIndex = pictureList.findIndex(picture => picture.id === currentPicture?.id)

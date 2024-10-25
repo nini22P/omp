@@ -19,6 +19,7 @@ import { useNavigate } from 'react-router-dom'
 import usePlaylistsStore from '@/store/usePlaylistsStore'
 import shortUUID from 'short-uuid'
 import useFullscreen from '@/hooks/ui/useFullscreen'
+import { useShallow } from 'zustand/shallow'
 
 const PlayerMenu = () => {
 
@@ -30,10 +31,12 @@ const PlayerMenu = () => {
     playQueue,
     currentIndex,
   ] = usePlayQueueStore(
-    (state) => [
-      state.playQueue,
-      state.currentIndex,
-    ]
+    useShallow(
+      (state) => [
+        state.playQueue,
+        state.currentIndex,
+      ]
+    )
   )
 
   const currentFile = useMemo(() => playQueue?.find((item) => item.index === currentIndex), [currentIndex, playQueue])
@@ -48,28 +51,34 @@ const PlayerMenu = () => {
     updateAudioViewIsShow,
     updateVideoViewIsShow,
     updatePlayQueueIsShow,
-  ] = useUiStore(state => [
-    state.audioViewTheme,
-    state.playbackRate,
-    state.audioViewIsShow,
-    state.fullscreen,
-    state.updateAudioViewTheme,
-    state.updatePlaybackRate,
-    state.updateAudioViewIsShow,
-    state.updateVideoViewIsShow,
-    state.updatePlayQueueIsShow,
-  ])
+  ] = useUiStore(
+    useShallow(
+      (state) => [
+        state.audioViewTheme,
+        state.playbackRate,
+        state.audioViewIsShow,
+        state.fullscreen,
+        state.updateAudioViewTheme,
+        state.updatePlaybackRate,
+        state.updateAudioViewIsShow,
+        state.updateVideoViewIsShow,
+        state.updatePlayQueueIsShow,
+      ]
+    )
+  )
 
   const [
     playlists,
     insertPlaylist,
     insertFilesToPlaylist,
   ] = usePlaylistsStore(
-    (state) => [
-      state.playlists,
-      state.insertPlaylist,
-      state.insertFilesToPlaylist,
-    ]
+    useShallow(
+      (state) => [
+        state.playlists,
+        state.insertPlaylist,
+        state.insertFilesToPlaylist,
+      ]
+    )
   )
 
   const { handleClickFullscreen } = useFullscreen()
