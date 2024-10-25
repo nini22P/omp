@@ -4,6 +4,10 @@
     "noImplicitAny": true,
     "moduleResolution": "Node",
     "target": "es5",
+    "lib": [
+      "es2019",
+      "dom"
+    ],
     "allowJs": false,
     "resolveJsonModule": true,
     "jsx": "react-jsx",

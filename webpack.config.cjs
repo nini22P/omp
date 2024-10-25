@@ -63,6 +63,7 @@ const config = {
     extensions: ['.tsx', '.ts', '.jsx', '.js'],
     fallback: {
       'buffer': require.resolve('buffer'),
+      'process/browser': require.resolve('process/browser')
     },
   },
 }
