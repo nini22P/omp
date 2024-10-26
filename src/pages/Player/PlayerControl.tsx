@@ -297,6 +297,7 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
 
             {/* 其他按钮 */}
             <Grid
+              container
               size='grow'
               textAlign={'right'}
               wrap='nowrap'

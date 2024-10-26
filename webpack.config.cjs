@@ -1,4 +1,4 @@
-/* eslint-disable @typescript-eslint/no-var-requires */
+/* eslint-disable @typescript-eslint/no-require-imports */
 const webpack = require('webpack')
 const { merge } = require('webpack-merge')
 const path = require('path')
@@ -14,6 +14,13 @@ const config = {
   entry: './src/main.tsx',
   output: {
     path: path.resolve(__dirname, 'dist'),
+    filename: '[name].[contenthash].js',
+    clean: true,
+  },
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+    },
   },
   plugins: [
     new webpack.ProvidePlugin({

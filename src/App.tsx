@@ -14,7 +14,6 @@ import { useSpring, animated } from '@react-spring/web'
 import { useMemo } from 'react'
 import useCustomTheme from './hooks/ui/useCustomTheme'
 import Search from './pages/Search'
-import { useShallow } from 'zustand/shallow'
 
 const App = () => {
   const { customTheme, scrollbarStyle } = useCustomTheme()
