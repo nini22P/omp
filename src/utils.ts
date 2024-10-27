@@ -1,6 +1,7 @@
+import * as mm from 'music-metadata-browser'
 import { FileItem, RemoteItem } from './types/file'
 import { PlayQueueItem, PlayQueueStatus } from './types/playQueue'
-import { Cover } from './types/MetaData'
+import { Cover, MetaData } from './types/MetaData'
 
 /**
  * 将时间转换为分钟
@@ -132,3 +133,33 @@ export const remoteItemToFile = (res: RemoteItem[]): FileItem[] => res.map((item
   thumbnails: item.thumbnails,
   url: item['@microsoft.graph.downloadUrl'],
 }))
+
+export const getNetMetaData = async (path: string[], url: string) => {
+  console.log('Start get net metadata: ', path.slice(-1)[0])
+  try {
+    const metadata = await mm.fetchFromUrl(url)
+    console.log('Get net metadata: ', metadata)
+    if (metadata && metadata.common.title !== undefined) {
+      const cover = !metadata.common.picture ? undefined : await Promise.all(metadata.common.picture.map(async (item: Cover) => await compressImage(item)))
+      const lyrics = metadata.common.lyrics !== undefined && metadata.common.lyrics[0]
+        || metadata.native['ID3v2.3'] && metadata.native['ID3v2.3'].find(item => item.id.includes('LYRICS'))?.value
+        || null
+      const metaData: MetaData = {
+        path: path,
+        title: metadata.common.title,
+        artist: metadata.common.artist,
+        albumArtist: metadata.common.albumartist,
+        album: metadata.common.album,
+        year: metadata.common.year,
+        genre: metadata.common.genre,
+        cover: cover,
+        lyrics: lyrics,
+      }
+      console.log('Get net metadata: ', metaData)
+      return metaData
+    }
+  } catch (error) {
+    console.log('Failed to get net metadata', error)
+    return null
+  }
+}

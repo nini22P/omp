@@ -321,7 +321,7 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
               </IconButton>
 
               <Box sx={{ display: 'inline-grid' }} >
-                <PlayerMenu />
+                <PlayerMenu player={player} />
               </Box>
             </Grid>
 

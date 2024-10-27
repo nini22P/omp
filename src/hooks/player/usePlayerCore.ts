@@ -1,13 +1,12 @@
 import { useState, useMemo, useEffect } from 'react'
-import * as mm from 'music-metadata-browser'
 import useHistoryStore from '@/store/useHistoryStore'
 import useLocalMetaDataStore from '@/store/useLocalMetaDataStore'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
-import { checkFileType, compressImage, pathConvert } from '@/utils'
+import { checkFileType, getNetMetaData, pathConvert } from '@/utils'
 import useFilesData from '../graph/useFilesData'
-import { Cover, MetaData } from '@/types/MetaData'
+import { MetaData } from '@/types/MetaData'
 import useUser from '../graph/useUser'
 import { useShallow } from 'zustand/shallow'
 
@@ -211,38 +210,13 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
   // 获取在线 metadata
   useEffect(
     () => {
-      const getNetMetaData = async (path: string[]) => {
-        console.log('Start get net metadata: ', path.slice(-1)[0])
-        try {
-          const metadata = await mm.fetchFromUrl(url)
-          if (metadata && metadata.common.title !== undefined) {
-            const cover = !metadata.common.picture ? undefined : await Promise.all(metadata.common.picture.map(async (item: Cover) => await compressImage(item)))
-            const metaData: MetaData = {
-              path: path,
-              title: metadata.common.title,
-              artist: metadata.common.artist,
-              albumArtist: metadata.common.albumartist,
-              album: metadata.common.album,
-              year: metadata.common.year,
-              genre: metadata.common.genre,
-              cover: cover,
-            }
-            console.log('Get net metadata: ', metaData)
-            return metaData
-          }
-        } catch (error) {
-          console.log('Failed to get net metadata', error)
-          return null
-        }
-      }
-
       const run = async () => {
 
         if (playQueue && fileType === 'audio' && currentMetaData?.path) {
           const localMetaData = await getLocalMetaData(currentMetaData?.path)
 
           if (!localMetaData) {
-            const netMetaData = await getNetMetaData(currentMetaData?.path)
+            const netMetaData = await getNetMetaData(currentMetaData?.path, url)
             if (netMetaData) {
               setLocalMetaData(netMetaData).then(() => updateMetadataUpdate())
             }

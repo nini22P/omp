@@ -148,7 +148,7 @@ const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: 
                     : <OpenInFull style={{ height: 20, width: 20 }} />
                 }
               </IconButton>
-              <PlayerMenu />
+              <PlayerMenu player={player} />
             </Grid>
 
             {/* 封面和音频信息 */}

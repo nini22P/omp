@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Container, IconButton, Slider, Typography, useTheme } from '@mui/material'
+import { Box, CircularProgress, Container, IconButton, Slider, Typography, useMediaQuery, useTheme } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import useFullscreen from '@/hooks/ui/useFullscreen'
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded'
@@ -23,6 +23,7 @@ import useUiStore from '@/store/useUiStore'
 import PlayerMenu from '../PlayerMenu'
 import { timeShift } from '@/utils'
 import { useShallow } from 'zustand/shallow'
+import Lyrics from '@/components/Lyrics/Lyrics'
 
 const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: { borderRadius: SpringValue<string> } }) => {
 
@@ -99,6 +100,8 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
     [coverColor, theme.palette.background.default]
   )
 
+  const isMobile = useMediaQuery('(max-height: 600px) or (max-width: 600px)')
+
   return (
     <animated.div
       style={{
@@ -170,7 +173,7 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
                 }
               </IconButton>
 
-              <PlayerMenu />
+              <PlayerMenu player={player} />
             </Grid>
           </Grid>
 
@@ -180,7 +183,7 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
               height: '100%',
               overflow: 'hidden',
               display: 'grid',
-              gridTemplateColumns: { xs: '1fr', sm: 'fit-content(40%) 1fr' },
+              gridTemplateColumns: { xs: '1fr', sm: 'fit-content(50%) 1fr' },
               gridTemplateRows: { xs: '1fr 1fr', sm: '1fr' },
               // gap: { xs: '0', sm: '1rem' },
               alignItems: 'center',
@@ -192,8 +195,12 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
                 aspectRatio: '1/1',
                 maxWidth: '100%',
                 maxHeight: '100%',
+                minHeight: '5rem',
+                minWidth: '5rem',
                 overflow: 'hidden',
                 padding: '1rem',
+                gridRow: { xs: '1', sm: '1' },
+                zIndex: 1,
               }}>
               <img
                 src={cover}
@@ -207,8 +214,37 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
               />
             </Box>
 
+            {!isMobile &&
+              <Box
+                sx={{
+                  gridRow: { xs: 'auto', sm: '1 / 3' },
+                  overflow: 'hidden',
+                  height: '100%',
+                  padding: '1rem',
+                  pointerEvents: 'none',
+                }}
+              >
+                {
+                  currentMetaData && currentMetaData.lyrics
+                    ? <Lyrics lyrics={currentMetaData.lyrics} currentTime={currentTime} />
+                    : <div
+                      style={{
+                        height: '100%',
+                        width: '100%',
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                      }}
+                    >
+                      <span>暂无歌词</span>
+                    </div>
+                }
+              </Box>
+            }
+
             <Box
               sx={{
+                // gridColumn: { xs: 'auto', sm: '1 / 3' },
                 display: 'flex',
                 flexDirection: 'column',
                 width: '100%',
@@ -217,15 +253,16 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
                 paddingBottom: '0',
               }}
             >
+
               <Box sx={{ width: '100%', textOverflow: 'ellipsis' }}>
                 <Typography variant="h5" component="div" noWrap>
                   {(!playQueue || !currentMetaData) ? 'Not playing' : currentMetaData.title}
                 </Typography>
-                <Typography variant="subtitle2" component="div" noWrap>
-                  {(playQueue && currentMetaData) && currentMetaData.artist}
+                <Typography variant="subtitle2" color={theme.palette.text.secondary} component="div" noWrap sx={{ minHeight: '22px' }}>
+                  {(playQueue && currentMetaData) ? currentMetaData.artist : ''}
                 </Typography>
-                <Typography variant="subtitle1" component="div" noWrap>
-                  {(playQueue && currentMetaData) && currentMetaData.album}
+                <Typography variant="subtitle1" color={theme.palette.text.secondary} component="div" noWrap sx={{ minHeight: '28px' }}>
+                  {(playQueue && currentMetaData) ? currentMetaData.album : ''}
                 </Typography>
               </Box>
 

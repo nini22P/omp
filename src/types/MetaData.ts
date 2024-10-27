@@ -19,6 +19,7 @@ export interface MetaData {
   year?: number,
   genre?: string[],
   cover?: Cover[] | LocalStorageCover[],
+  lyrics?: string,
 }
 
 export interface MetaDataListStatus {

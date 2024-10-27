@@ -11,6 +11,7 @@ import FolderOpenRoundedIcon from '@mui/icons-material/FolderOpenRounded'
 import PlaylistPlayRoundedIcon from '@mui/icons-material/PlaylistPlayRounded'
 import CloseFullscreenRoundedIcon from '@mui/icons-material/CloseFullscreenRounded'
 import OpenInFullRoundedIcon from '@mui/icons-material/OpenInFullRounded'
+import CloudDownloadRoundedIcon from '@mui/icons-material/CloudDownloadRounded'
 import { Box, Button, Dialog, DialogActions, DialogTitle, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material'
 import { useMemo, useState } from 'react'
 import { t } from '@lingui/macro'
@@ -20,12 +21,27 @@ import usePlaylistsStore from '@/store/usePlaylistsStore'
 import shortUUID from 'short-uuid'
 import useFullscreen from '@/hooks/ui/useFullscreen'
 import { useShallow } from 'zustand/shallow'
+import usePlayerStore from '@/store/usePlayerStore'
+import useLocalMetaDataStore from '@/store/useLocalMetaDataStore'
+import { getNetMetaData } from '@/utils'
 
-const PlayerMenu = () => {
+const PlayerMenu = ({ player }: { player: HTMLVideoElement | null }) => {
 
   const navigate = useNavigate()
 
-  const updateFolderTree = useUiStore((state) => state.updateFolderTree)
+  const [
+    currentMetaData,
+    updateMetadataUpdate,
+  ] = usePlayerStore(
+    useShallow(
+      (state) => [
+        state.currentMetaData,
+        state.updateMetadataUpdate,
+      ]
+    )
+  )
+
+  const { setLocalMetaData } = useLocalMetaDataStore()
 
   const [
     playQueue,
@@ -46,6 +62,7 @@ const PlayerMenu = () => {
     playbackRate,
     audioViewIsShow,
     fullscreen,
+    updateFolderTree,
     updateAudioViewTheme,
     updatePlaybackRate,
     updateAudioViewIsShow,
@@ -58,6 +75,7 @@ const PlayerMenu = () => {
         state.playbackRate,
         state.audioViewIsShow,
         state.fullscreen,
+        state.updateFolderTree,
         state.updateAudioViewTheme,
         state.updatePlaybackRate,
         state.updateAudioViewIsShow,
@@ -137,6 +155,15 @@ const PlayerMenu = () => {
   const handleClickSwitchFullscreen = () => {
     setMenuOpen(false)
     handleClickFullscreen()
+  }
+
+  const reFetchMetadata = async () => {
+    handleCloseMenu()
+    if (!currentMetaData?.path || !player?.src) return
+    const netMetaData = await getNetMetaData(currentMetaData?.path, player?.src)
+    if (netMetaData) {
+      setLocalMetaData(netMetaData).then(() => updateMetadataUpdate())
+    }
   }
 
   return (
@@ -288,6 +315,13 @@ const PlayerMenu = () => {
               }
             </div>
           }
+
+          <MenuItem onClick={() => reFetchMetadata()}>
+            <ListItemIcon>
+              <CloudDownloadRoundedIcon />
+            </ListItemIcon>
+            <ListItemText primary={t`Re-fetch metadata`} />
+          </MenuItem>
         </Menu>
       </Box>
 
