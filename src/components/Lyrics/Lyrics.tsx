@@ -1,10 +1,11 @@
 import { useMemo, useRef } from 'react'
-import { useTheme } from '@mui/material'
+import { useMediaQuery, useTheme } from '@mui/material'
 import { useSpring, animated } from '@react-spring/web'
 
 const Lyrics = ({ lyrics, currentTime }: { lyrics: string, currentTime: number }) => {
   const theme = useTheme()
   const lyricsRef = useRef<HTMLDivElement>(null)
+  const lyricLineHeight = 48
 
   type Lyrics = {
     time: number,
@@ -50,23 +51,11 @@ const Lyrics = ({ lyrics, currentTime }: { lyrics: string, currentTime: number }
   )
 
   const { scrollY } = useSpring({
-    scrollY: currentLyricIndex >= 0 ? currentLyricIndex * 45 : 0,
+    scrollY: currentLyricIndex >= 0 ? currentLyricIndex * lyricLineHeight : 0,
     config: { mass: 2, tension: 300, friction: 25 },
   })
 
-  // useEffect(() => {
-  //   if (currentLyricIndex === -1) {
-  //     const currentLyricElement = lyricsRef.current?.children[0]
-  //     if (currentLyricElement) {
-  //       currentLyricElement.scrollIntoView({ behavior: 'smooth', block: 'end' })
-  //     }
-  //   } else if (currentLyricIndex >= 0) {
-  //     const currentLyricElement = lyricsRef.current?.children[currentLyricIndex]
-  //     if (currentLyricElement) {
-  //       currentLyricElement.scrollIntoView({ behavior: 'smooth', block: 'center' })
-  //     }
-  //   }
-  // }, [currentLyricIndex, lyricsList])
+  const isMobile = useMediaQuery('(max-height: 600px) or (max-width: 600px)')
 
   return (
     <div key={'lyrics'} style={{ height: '100%', width: '100%', overflow: 'hidden' }}>
@@ -88,21 +77,33 @@ const Lyrics = ({ lyrics, currentTime }: { lyrics: string, currentTime: number }
           <animated.div
             ref={lyricsRef}
             style={{
-              width: '100%',
+              height: '100%',
               transform: scrollY.to(y => `translateY(-${y}px)`),
-              marginTop: '50%',
-              marginBottom: '50%',
             }}
           >
+            <div style={{ height: '40%' }} />
             {
               lyricsList.map((item, index) =>
-                <div key={item.time + item.text} style={{ textAlign: 'center' }}>
+                <div
+                  key={item.time + item.text}
+                  style={{
+                    display: 'flex',
+                    justifyContent: 'start',
+                    alignItems: 'center',
+                    height: index === currentLyricIndex ? lyricLineHeight * 1.6 : lyricLineHeight,
+                    paddingLeft: index === currentLyricIndex
+                      ? isMobile ? 0 : '1rem'
+                      : isMobile ? '1rem' : '2rem',
+                  }}
+                >
                   <p
                     style={{
-                      fontSize: index === currentLyricIndex ? '1.5rem' : '1.2rem',
-                      padding: '0.5rem',
-                      color: index === currentLyricIndex ? theme.palette.primary.main : theme.palette.text.secondary,
+                      fontSize: index === currentLyricIndex
+                        ? isMobile ? '1.5rem' : '2rem'
+                        : isMobile ? '1rem' : '1.5rem',
+                      color: index === currentLyricIndex ? theme.palette.text.primary : theme.palette.text.secondary,
                       fontWeight: index === currentLyricIndex ? 'bold' : 'normal',
+                      transition: 'font-size 0.3s ease, color 0.3s ease, font-weight 0.3s ease',
                     }}
                   >
                     {item.text}
@@ -110,6 +111,7 @@ const Lyrics = ({ lyrics, currentTime }: { lyrics: string, currentTime: number }
                 </div>
               )
             }
+            <div style={{ height: '100%' }} />
           </animated.div>
       }
     </div>

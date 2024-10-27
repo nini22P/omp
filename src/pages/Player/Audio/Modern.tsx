@@ -15,7 +15,7 @@ import RepeatOneRoundedIcon from '@mui/icons-material/RepeatOneRounded'
 import RepeatRoundedIcon from '@mui/icons-material/RepeatRounded'
 import QueueMusicRoundedIcon from '@mui/icons-material/QueueMusicRounded'
 import { SpringValue, animated, useSpring } from '@react-spring/web'
-import { useMemo } from 'react'
+import { useMemo, useState } from 'react'
 import usePlayerControl from '@/hooks/player/usePlayerControl'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
@@ -102,6 +102,8 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
 
   const isMobile = useMediaQuery('(max-height: 600px) or (max-width: 600px)')
 
+  const [isShowLyrics, setIsShowLyrics] = useState(false)
+
   return (
     <animated.div
       style={{
@@ -153,6 +155,18 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
                 gap: '0.25rem',
               }}
             >
+
+              {
+                isMobile &&
+                <IconButton
+                  aria-label="Lyrics"
+                  onClick={() => setIsShowLyrics(!isShowLyrics)}
+                  className='app-region-no-drag'
+                >
+                  <div style={{ fontSize: '1rem' }}>词</div>
+                </IconButton>
+              }
+
               <IconButton
                 aria-label="PlayQueue"
                 onClick={() => updatePlayQueueIsShow(true)}
@@ -183,13 +197,15 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
               height: '100%',
               overflow: 'hidden',
               display: 'grid',
-              gridTemplateColumns: { xs: '1fr', sm: 'fit-content(50%) 1fr' },
+              gridTemplateColumns: { xs: '1fr', sm: '2fr 3fr' },
               gridTemplateRows: { xs: '1fr 1fr', sm: '1fr' },
               // gap: { xs: '0', sm: '1rem' },
               alignItems: 'center',
+              justifyContent: 'center',
             }}
           >
 
+            {/* 封面 */}
             <Box
               sx={{
                 aspectRatio: '1/1',
@@ -214,7 +230,9 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
               />
             </Box>
 
-            {!isMobile &&
+            {/* 歌词 */}
+            {
+              (!isMobile || isShowLyrics) &&
               <Box
                 sx={{
                   gridRow: { xs: 'auto', sm: '1 / 3' },
@@ -242,98 +260,102 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
               </Box>
             }
 
-            <Box
-              sx={{
-                // gridColumn: { xs: 'auto', sm: '1 / 3' },
-                display: 'flex',
-                flexDirection: 'column',
-                width: '100%',
-                overflow: 'hidden',
-                padding: '1rem',
-                paddingBottom: '0',
-              }}
-            >
-
-              <Box sx={{ width: '100%', textOverflow: 'ellipsis' }}>
-                <Typography variant="h5" component="div" noWrap>
-                  {(!playQueue || !currentMetaData) ? 'Not playing' : currentMetaData.title}
-                </Typography>
-                <Typography variant="subtitle2" color={theme.palette.text.secondary} component="div" noWrap sx={{ minHeight: '22px' }}>
-                  {(playQueue && currentMetaData) ? currentMetaData.artist : ''}
-                </Typography>
-                <Typography variant="subtitle1" color={theme.palette.text.secondary} component="div" noWrap sx={{ minHeight: '28px' }}>
-                  {(playQueue && currentMetaData) ? currentMetaData.album : ''}
-                </Typography>
-              </Box>
-
-              <Slider
-                size="small"
-                min={0}
-                max={1000}
-                value={(!duration) ? 0 : currentTime / duration * 1000}
-                onChange={(_, current) => handleTimeRangeonChange(current)}
-                sx={{
-                  width: '100%',
-                  height: '0.25rem',
-                }}
-              />
-              <Typography sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%' }} >
-                <span>{timeShift(currentTime)}</span>
-                <span>{timeShift((duration) ? duration : 0)}</span>
-              </Typography>
-
+            {/* 播放控制 */}
+            {
+              (!isMobile || !isShowLyrics) &&
               <Box
                 sx={{
+                  // gridColumn: { xs: 'auto', sm: '1 / 3' },
                   display: 'flex',
-                  justifyContent: 'center',
-                  alignItems: 'center',
-                  wrap: 'nowrap',
-                  width: '100%'
+                  flexDirection: 'column',
+                  width: '100%',
+                  overflow: 'hidden',
+                  padding: '1rem',
+                  paddingBottom: '0',
                 }}
               >
-                <IconButton aria-label="shuffle" onClick={() => handleClickShuffle()}>
-                  <ShuffleRoundedIcon sx={{ height: 28, width: 28 }} style={(shuffle) ? {} : { color: '#aaa' }} />
-                </IconButton>
-                <IconButton aria-label="previous" onClick={() => handleClickPrev()} >
-                  <SkipPreviousRoundedIcon sx={{ height: 48, width: 48 }} />
-                </IconButton>
-                <IconButton aria-label="backward" sx={{ display: { md: 'inline-grid', xs: 'none' } }} onClick={() => handleClickSeekbackward(10)} >
-                  <FastRewindRoundedIcon sx={{ height: 32, width: 32 }} />
-                </IconButton>
-                {
-                  (!isLoading && playStatu === 'paused') &&
-                  <IconButton aria-label="play" onClick={() => handleClickPlay()}>
-                    <PlayCircleOutlineRoundedIcon sx={{ height: 64, width: 64 }} />
-                  </IconButton>
-                }
-                {
-                  (!isLoading && playStatu === 'playing') &&
-                  <IconButton aria-label="pause" onClick={() => handleClickPause()}>
-                    <PauseCircleOutlineRoundedIcon sx={{ height: 64, width: 64 }} />
-                  </IconButton>
-                }
-                {
-                  isLoading &&
-                  <Box sx={{ height: 80, width: 80, padding: '13px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                    <CircularProgress color="inherit" size={54} />
-                  </Box>
-                }
-                <IconButton aria-label="forward" sx={{ display: { md: 'inline-grid', xs: 'none' } }} onClick={() => handleClickSeekforward(10)} >
-                  <FastForwardRoundedIcon sx={{ height: 32, width: 32 }} />
-                </IconButton>
-                <IconButton aria-label="next" onClick={handleClickNext} >
-                  <SkipNextRoundedIcon sx={{ height: 48, width: 48 }} />
-                </IconButton>
-                <IconButton aria-label="repeat" onClick={() => handleClickRepeat()} >
-                  {
-                    (repeat === 'one')
-                      ? <RepeatOneRoundedIcon sx={{ height: 28, width: 28 }} />
-                      : <RepeatRoundedIcon sx={{ height: 28, width: 28 }} style={(repeat === 'off') ? { color: '#aaa' } : {}} />
-                  }
-                </IconButton>
-              </Box>
 
-            </Box>
+                <Box sx={{ width: '100%', textOverflow: 'ellipsis' }}>
+                  <Typography variant="h5" component="div" noWrap>
+                    {(!playQueue || !currentMetaData) ? 'Not playing' : currentMetaData.title}
+                  </Typography>
+                  <Typography variant="subtitle2" color={theme.palette.text.secondary} component="div" noWrap sx={{ minHeight: '22px' }}>
+                    {(playQueue && currentMetaData) ? currentMetaData.artist : ''}
+                  </Typography>
+                  <Typography variant="subtitle1" color={theme.palette.text.secondary} component="div" noWrap sx={{ minHeight: '28px' }}>
+                    {(playQueue && currentMetaData) ? currentMetaData.album : ''}
+                  </Typography>
+                </Box>
+
+                <Slider
+                  size="small"
+                  min={0}
+                  max={1000}
+                  value={(!duration) ? 0 : currentTime / duration * 1000}
+                  onChange={(_, current) => handleTimeRangeonChange(current)}
+                  sx={{
+                    width: '100%',
+                    height: '0.25rem',
+                  }}
+                />
+                <Typography sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', width: '100%' }} >
+                  <span>{timeShift(currentTime)}</span>
+                  <span>{timeShift((duration) ? duration : 0)}</span>
+                </Typography>
+
+                <Box
+                  sx={{
+                    display: 'flex',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    wrap: 'nowrap',
+                    width: '100%'
+                  }}
+                >
+                  <IconButton aria-label="shuffle" onClick={() => handleClickShuffle()}>
+                    <ShuffleRoundedIcon sx={{ height: 28, width: 28 }} style={(shuffle) ? {} : { color: '#aaa' }} />
+                  </IconButton>
+                  <IconButton aria-label="previous" onClick={() => handleClickPrev()} >
+                    <SkipPreviousRoundedIcon sx={{ height: 48, width: 48 }} />
+                  </IconButton>
+                  <IconButton aria-label="backward" sx={{ display: { md: 'inline-grid', xs: 'none' } }} onClick={() => handleClickSeekbackward(10)} >
+                    <FastRewindRoundedIcon sx={{ height: 32, width: 32 }} />
+                  </IconButton>
+                  {
+                    (!isLoading && playStatu === 'paused') &&
+                    <IconButton aria-label="play" onClick={() => handleClickPlay()}>
+                      <PlayCircleOutlineRoundedIcon sx={{ height: 64, width: 64 }} />
+                    </IconButton>
+                  }
+                  {
+                    (!isLoading && playStatu === 'playing') &&
+                    <IconButton aria-label="pause" onClick={() => handleClickPause()}>
+                      <PauseCircleOutlineRoundedIcon sx={{ height: 64, width: 64 }} />
+                    </IconButton>
+                  }
+                  {
+                    isLoading &&
+                    <Box sx={{ height: 80, width: 80, padding: '13px', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                      <CircularProgress color="inherit" size={54} />
+                    </Box>
+                  }
+                  <IconButton aria-label="forward" sx={{ display: { md: 'inline-grid', xs: 'none' } }} onClick={() => handleClickSeekforward(10)} >
+                    <FastForwardRoundedIcon sx={{ height: 32, width: 32 }} />
+                  </IconButton>
+                  <IconButton aria-label="next" onClick={handleClickNext} >
+                    <SkipNextRoundedIcon sx={{ height: 48, width: 48 }} />
+                  </IconButton>
+                  <IconButton aria-label="repeat" onClick={() => handleClickRepeat()} >
+                    {
+                      (repeat === 'one')
+                        ? <RepeatOneRoundedIcon sx={{ height: 28, width: 28 }} />
+                        : <RepeatRoundedIcon sx={{ height: 28, width: 28 }} style={(repeat === 'off') ? { color: '#aaa' } : {}} />
+                    }
+                  </IconButton>
+                </Box>
+
+              </Box>
+            }
           </Box>
 
         </Grid>
