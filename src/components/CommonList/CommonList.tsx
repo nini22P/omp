@@ -1,5 +1,5 @@
 import { useState, useEffect, Key, CSSProperties, useRef } from 'react'
-import Grid from '@mui/material/Unstable_Grid2'
+import Grid from '@mui/material/Grid2'
 import usePlayQueueStore from '../../store/usePlayQueueStore'
 import usePlayerStore from '../../store/usePlayerStore'
 import useUiStore from '../../store/useUiStore'
@@ -14,6 +14,7 @@ import ShuffleRoundedIcon from '@mui/icons-material/ShuffleRounded'
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded'
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded'
 import { t } from '@lingui/macro'
+import { useShallow } from 'zustand/shallow'
 
 const CommonList = (
   {
@@ -37,9 +38,12 @@ const CommonList = (
     },
   }) => {
 
-  const [shuffle, updateShuffle] = useUiStore((state) => [state.shuffle, state.updateShuffle])
-  const [updatePlayQueue, updateCurrentIndex] = usePlayQueueStore((state) => [state.updatePlayQueue, state.updateCurrentIndex])
-  const [updatePlayStatu] = usePlayerStore(state => [state.updatePlayStatu])
+  const [shuffle, updateShuffle] = useUiStore(useShallow((state) => [state.shuffle, state.updateShuffle]))
+
+  const updatePlayQueue = usePlayQueueStore.use.updatePlayQueue()
+  const updateCurrentIndex = usePlayQueueStore.use.updateCurrentIndex()
+
+  const updatePlayStatu = usePlayerStore((state) => state.updatePlayStatu)
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -139,7 +143,11 @@ const CommonList = (
             return (
               item
               &&
-              <Grid key={item.fileName} xs={12 / gridCols} sx={{ aspectRatio: '4/5', overflow: 'hidden' }}>
+              <Grid
+                key={item.fileName}
+                size={{ xs: 12 / gridCols }}
+                sx={{ aspectRatio: '4/5', overflow: 'hidden' }}
+              >
                 <CommonListItemCard
                   active={typeof activeIndex === 'number' ? activeIndex === itemIndex : false}
                   item={item}
@@ -169,7 +177,7 @@ const CommonList = (
             return (
               item
               &&
-              <Grid key={item.fileName} xs={12 / listCols}>
+              <Grid key={item.fileName} size={{ xs: 12 / listCols }}>
                 <CommonListItem
                   active={typeof activeIndex === 'number' ? activeIndex === itemIndex : false}
                   item={item}
@@ -206,12 +214,15 @@ const CommonList = (
     () => {
       if (listType === 'files' && listRef.current && typeof scrollIndex === 'number') {
         let index = scrollIndex
+
         if (display === 'grid')
           index = Math.ceil(scrollIndex / gridCols) - 1
         if ((display === 'list' || display === 'multicolumnList'))
           index = Math.ceil(scrollIndex / listCols) - 1
 
-        index && index >= 0 && listRef.current?.scrollToRow(index)
+        if (index && index >= 0) {
+          listRef.current?.scrollToRow(index)
+        }
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -264,7 +275,7 @@ const CommonList = (
       {/* 文件列表 */}
       <Grid container sx={{ flexDirection: 'column', flexWrap: 'nowrap', height: '100%' }}>
         <Grid
-          xs={12}
+          size={12}
           sx={{
             flexGrow: 1,
             overflow: 'hidden',

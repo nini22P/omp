@@ -3,31 +3,25 @@ import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
 import { shufflePlayQueue } from '@/utils'
 import { useEffect } from 'react'
+import { useShallow } from 'zustand/shallow'
 
 const usePlayerControl = (player: HTMLVideoElement | null) => {
 
-  const [
-    playQueue,
-    currentIndex,
-    updateCurrentIndex,
-    updatePlayQueue,
-  ] = usePlayQueueStore(
-    (state) => [
-      state.playQueue,
-      state.currentIndex,
-      state.updateCurrentIndex,
-      state.updatePlayQueue,
-    ]
-  )
+  const playQueue = usePlayQueueStore.use.playQueue()
+  const currentIndex = usePlayQueueStore.use.currentIndex()
+  const updateCurrentIndex = usePlayQueueStore.use.updateCurrentIndex()
+  const updatePlayQueue = usePlayQueueStore.use.updatePlayQueue()
 
   const [
     updatePlayStatu,
     updateCurrentTime,
   ] = usePlayerStore(
-    (state) => [
-      state.updatePlayStatu,
-      state.updateCurrentTime,
-    ]
+    useShallow(
+      (state) => [
+        state.updatePlayStatu,
+        state.updateCurrentTime,
+      ]
+    )
   )
 
   const [
@@ -38,14 +32,16 @@ const usePlayerControl = (player: HTMLVideoElement | null) => {
     updateShuffle,
     updateRepeat,
   ] = useUiStore(
-    (state) => [
-      state.shuffle,
-      state.repeat,
-      state.volume,
-      state.playbackRate,
-      state.updateShuffle,
-      state.updateRepeat,
-    ]
+    useShallow(
+      (state) => [
+        state.shuffle,
+        state.repeat,
+        state.volume,
+        state.playbackRate,
+        state.updateShuffle,
+        state.updateRepeat,
+      ]
+    )
   )
 
   // 播放开始

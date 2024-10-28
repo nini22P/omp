@@ -5,6 +5,7 @@ import createTheme from '@mui/material/styles/createTheme'
 import { extractColors } from 'extract-colors'
 import { useMemo } from 'react'
 import Color from 'color'
+import { useShallow } from 'zustand/shallow'
 const useCustomTheme = () => {
   const [
     coverColor,
@@ -12,15 +13,17 @@ const useCustomTheme = () => {
     colorMode,
     updateCoverColor,
   ] = useUiStore(
-    state => [
-      state.coverColor,
-      state.CoverThemeColor,
-      state.colorMode,
-      state.updateCoverColor,
-    ]
+    useShallow(
+      (state) => [
+        state.coverColor,
+        state.CoverThemeColor,
+        state.colorMode,
+        state.updateCoverColor,
+      ]
+    )
   )
 
-  const [cover] = usePlayerStore((state) => [state.cover])
+  const cover = usePlayerStore((state) => state.cover)
 
   useMemo(
     () => {

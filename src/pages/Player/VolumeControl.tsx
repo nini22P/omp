@@ -5,6 +5,7 @@ import VolumeDownIcon from '@mui/icons-material/VolumeDown'
 import VolumeOffIcon from '@mui/icons-material/VolumeOff'
 import useUiStore from '@/store/useUiStore'
 import { useWheel } from '@use-gesture/react'
+import { useShallow } from 'zustand/shallow'
 
 export default function VolumeControl() {
 
@@ -13,11 +14,13 @@ export default function VolumeControl() {
     volume,
     updateVolume,
   ] = useUiStore(
-    (state) => [
-      state.audioViewIsShow,
-      state.volume,
-      state.updateVolume,
-    ]
+    useShallow(
+      (state) => [
+        state.audioViewIsShow,
+        state.volume,
+        state.updateVolume,
+      ]
+    )
   )
 
   const [volumeAnchorEl, setVolumeAnchorEl] = useState<HTMLElement | null>(null)
@@ -30,22 +33,7 @@ export default function VolumeControl() {
 
   return (
     <div {...bind()}>
-      <Tooltip
-        title={volume}
-        placement='top'
-        slotProps={{
-          popper: {
-            modifiers: [
-              {
-                name: 'offset',
-                options: {
-                  offset: [0, -10],
-                },
-              },
-            ],
-          },
-        }}
-      >
+      <Tooltip title={volume}>
         <IconButton onClick={(event: React.MouseEvent<HTMLButtonElement>) => setVolumeAnchorEl(event.currentTarget)} >
           {
             volume === 0

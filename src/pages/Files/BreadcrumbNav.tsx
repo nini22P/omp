@@ -3,7 +3,7 @@ import useUiStore from '../../store/useUiStore'
 
 const BreadcrumbNav = ({ handleClickNav }: { handleClickNav: (index: number) => void }) => {
 
-  const [folderTree] = useUiStore((state) => [state.folderTree])
+  const folderTree = useUiStore((state) => state.folderTree)
 
   return (
     <Breadcrumbs

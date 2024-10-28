@@ -6,7 +6,7 @@ import CommonList from '../../components/CommonList/CommonList'
 import Loading from '../Loading'
 import { remoteItemToFile, pathConvert } from '../../utils'
 import { FileItem, RemoteItem } from '../../types/file'
-import Grid from '@mui/material/Unstable_Grid2/Grid2'
+import Grid from '@mui/material/Grid2'
 import FilterMenu from './FilterMenu'
 import PictureView from '../PictureView/PictureView'
 import { Divider } from '@mui/material'
@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom'
 import usePictureStore from '@/store/usePictureStore'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
+import { useShallow } from 'zustand/shallow'
 
 const Files = () => {
 
@@ -31,23 +32,30 @@ const Files = () => {
     updateVideoViewIsShow,
     updateShuffle,
   ] = useUiStore(
-    (state) => [
-      state.shuffle,
-      state.folderTree,
-      state.display,
-      state.sortBy,
-      state.orderBy,
-      state.foldersFirst,
-      state.mediaOnly,
-      state.updateFolderTree,
-      state.updateVideoViewIsShow,
-      state.updateShuffle,
-    ]
+    useShallow(
+      (state) => [
+        state.shuffle,
+        state.folderTree,
+        state.display,
+        state.sortBy,
+        state.orderBy,
+        state.foldersFirst,
+        state.mediaOnly,
+        state.updateFolderTree,
+        state.updateVideoViewIsShow,
+        state.updateShuffle,
+      ]
+    )
   )
 
-  const [updatePictureList, updateCurrentPicture] = usePictureStore(state => [state.updatePictureList, state.updateCurrentPicture,])
-  const [updatePlayQueue, updateCurrentIndex] = usePlayQueueStore((state) => [state.updatePlayQueue, state.updateCurrentIndex])
-  const [updatePlayStatu] = usePlayerStore(state => [state.updatePlayStatu])
+  const [updatePictureList, updateCurrentPicture] = usePictureStore(
+    useShallow((state) => [state.updatePictureList, state.updateCurrentPicture])
+  )
+
+  const updatePlayQueue = usePlayQueueStore.use.updatePlayQueue()
+  const updateCurrentIndex = usePlayQueueStore.use.updateCurrentIndex()
+
+  const updatePlayStatu = usePlayerStore(state => state.updatePlayStatu)
 
   const { getFilesData } = useFilesData()
   const navigate = useNavigate()
@@ -178,22 +186,22 @@ const Files = () => {
         flexWrap: 'nowrap',
       }}>
       <Grid container
-        xs={12}
+        size={12}
         justifyContent='space-between'
         alignItems='center'
         wrap='nowrap'
         padding='0.125rem'
         gap='0.25rem'
       >
-        <Grid xs>
+        <Grid size='grow'>
           <BreadcrumbNav handleClickNav={handleClickNav} />
         </Grid>
-        <Grid xs={'auto'} sx={{ display: 'flex', flexDirection: 'row', justifyItems: 'center', alignItems: 'center' }}>
+        <Grid size='auto' sx={{ display: 'flex', flexDirection: 'row', justifyItems: 'center', alignItems: 'center' }}>
           <FilterMenu />
         </Grid>
       </Grid>
       <Divider />
-      <Grid xs={12} sx={{ flexGrow: 1, overflow: 'auto' }}>
+      <Grid size={12} sx={{ flexGrow: 1, overflow: 'auto' }}>
         {
           (fileListIsLoading || !fileListData || !sortedFileList || fileListError)
             ? <Loading />

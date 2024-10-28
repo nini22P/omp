@@ -22,6 +22,7 @@ export interface UiStatus {
   foldersFirst: boolean,
   mediaOnly: boolean,
   hdThumbnails: boolean,
+  lyricsIsShow: boolean,
 }
 
 export interface UiAction {
@@ -48,4 +49,5 @@ export interface UiAction {
   updateFoldersFirst: (foldersFirst: UiStatus['foldersFirst']) => void,
   updateMediaOnly: (mediaOnly: UiStatus['mediaOnly']) => void,
   updateHDThumbnails: (hdThumbnails: UiStatus['hdThumbnails']) => void,
+  updateLyricsIsShow: (lyricsIsShow: UiStatus['lyricsIsShow']) => void,
 }

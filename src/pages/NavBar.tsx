@@ -2,10 +2,23 @@ import { Box, Typography, Container, IconButton, useMediaQuery, useTheme } from 
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded'
 import useUiStore from '../store/useUiStore'
 import Search from './Search'
+import { useShallow } from 'zustand/shallow'
 
 const NavBar = () => {
-  const [mobileSideBarOpen, audioViewIsShow, videoViewIsShow, updateMobileSideBarOpen] = useUiStore(
-    (state) => [state.mobileSideBarOpen, state.audioViewIsShow, state.videoViewIsShow, state.updateMobileSideBarOpen]
+  const [
+    mobileSideBarOpen,
+    audioViewIsShow,
+    videoViewIsShow,
+    updateMobileSideBarOpen,
+  ] = useUiStore(
+    useShallow(
+      (state) => [
+        state.mobileSideBarOpen,
+        state.audioViewIsShow,
+        state.videoViewIsShow,
+        state.updateMobileSideBarOpen,
+      ]
+    )
   )
   const windowControlsOverlayOpen = useMediaQuery('(display-mode: window-controls-overlay)')
   const theme = useTheme()

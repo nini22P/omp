@@ -1,14 +1,14 @@
 import { PlayQueueStatus, PlayQueueAction } from '../types/playQueue'
-import { createWithEqualityFn } from 'zustand/traditional'
-import { shallow } from 'zustand/shallow'
 import { createJSONStorage, persist } from 'zustand/middleware'
+import { create } from 'zustand'
+import createSelectors from './createSelectors'
 
 const initialState: PlayQueueStatus = {
   playQueue: null,
   currentIndex: 0,
 }
 
-const usePlayQueueStore = createWithEqualityFn<PlayQueueStatus & PlayQueueAction>()(
+const usePlayQueueStoreBase = create<PlayQueueStatus & PlayQueueAction>()(
   persist((set) => ({
     ...initialState,
     updatePlayQueue: (playQueue) => set(() => ({ playQueue: playQueue })),
@@ -19,8 +19,9 @@ const usePlayQueueStore = createWithEqualityFn<PlayQueueStatus & PlayQueueAction
       name: 'playqueue-store',
       storage: createJSONStorage(() => localStorage),
     }
-  ),
-  shallow
+  )
 )
+
+const usePlayQueueStore = createSelectors(usePlayQueueStoreBase)
 
 export default usePlayQueueStore

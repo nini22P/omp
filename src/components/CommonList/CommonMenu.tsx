@@ -8,6 +8,7 @@ import usePlayQueueStore from '../../store/usePlayQueueStore'
 import usePlaylistsStore from '../../store/usePlaylistsStore'
 import useUiStore from '../../store/useUiStore'
 import { FileItem } from '../../types/file'
+import { useShallow } from 'zustand/shallow'
 
 const CommonMenu = (
   {
@@ -45,15 +46,18 @@ const CommonMenu = (
 
   const navigate = useNavigate()
 
-  const [updateFolderTree] = useUiStore((state) => [state.updateFolderTree])
-  const [playQueue, updatePlayQueue] = usePlayQueueStore(
-    (state) => [state.playQueue, state.updatePlayQueue]
+  const [updateFolderTree] = useUiStore(
+    useShallow((state) => [state.updateFolderTree])
   )
+
+  const playQueue = usePlayQueueStore.use.playQueue()
+  const updatePlayQueue = usePlayQueueStore.use.updatePlayQueue()
+
   const [playlists, insertPlaylist, insertFilesToPlaylist] = usePlaylistsStore(
-    (state) => [state.playlists, state.insertPlaylist, state.insertFilesToPlaylist]
+    useShallow((state) => [state.playlists, state.insertPlaylist, state.insertFilesToPlaylist])
   )
   const [updateAudioViewIsShow, updateVideoViewIsShow, updatePlayQueueIsShow] = useUiStore(
-    (state) => [state.updateAudioViewIsShow, state.updateVideoViewIsShow, state.updatePlayQueueIsShow]
+    useShallow((state) => [state.updateAudioViewIsShow, state.updateVideoViewIsShow, state.updatePlayQueueIsShow])
   )
 
   const handleCloseMenu = () => {
@@ -99,22 +103,26 @@ const CommonMenu = (
   // 添加到播放队列
   const handleClickAddToPlayQueue = () => {
     if (typeof selectIndex === 'number') {
-      playQueue
-        ? updatePlayQueue([...playQueue, { ...listData[selectIndex], index: Math.max(...playQueue.map(item => item.index)) + 1 }])
-        : updatePlayQueue([{ ...listData[selectIndex], index: 0 }])
+      if (playQueue) {
+        updatePlayQueue([...playQueue, { ...listData[selectIndex], index: Math.max(...playQueue.map(item => item.index)) + 1 }])
+      } else {
+        updatePlayQueue([{ ...listData[selectIndex], index: 0 }])
+      }
     } else if (selectIndexArray && selectIndexArray.length > 0) {
-      playQueue
-        ? updatePlayQueue([
+      if (playQueue) {
+        updatePlayQueue([
           ...playQueue,
           ...selectIndexArray
             .filter(index => listData[index].fileType === 'audio' || listData[index].fileType === 'video')
             .map((index, _index) => ({ ...listData[index], index: Math.max(...playQueue.map(item => item.index)) + _index + 1 }))
         ])
-        : updatePlayQueue(
+      } else {
+        updatePlayQueue(
           selectIndexArray
             .filter(index => listData[index].fileType === 'audio' || listData[index].fileType === 'video')
             .map((index, _index) => ({ ...listData[index], index: _index }))
         )
+      }
     }
     setMenuOpen(false)
     setSelectIndex(null)

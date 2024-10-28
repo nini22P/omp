@@ -3,6 +3,7 @@ import useUiStore from '../../store/useUiStore'
 import { blendHex } from '@/utils'
 import { useMediaQuery } from '@mui/material'
 import useCustomTheme from './useCustomTheme'
+import { useShallow } from 'zustand/shallow'
 const useThemeColor = () => {
 
   const [
@@ -11,12 +12,14 @@ const useThemeColor = () => {
     videoViewIsShow,
     coverColor,
   ] = useUiStore(
-    (state) => [
-      state.audioViewIsShow,
-      state.audioViewTheme,
-      state.videoViewIsShow,
-      state.coverColor,
-    ]
+    useShallow(
+      (state) => [
+        state.audioViewIsShow,
+        state.audioViewTheme,
+        state.videoViewIsShow,
+        state.coverColor,
+      ]
+    )
   )
 
   const { customTheme } = useCustomTheme()

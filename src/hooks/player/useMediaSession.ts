@@ -1,6 +1,7 @@
 import { useCallback, useEffect } from 'react'
 import usePlayerControl from './usePlayerControl'
 import usePlayerStore from '@/store/usePlayerStore'
+import { useShallow } from 'zustand/shallow'
 
 const useMediaSession = (player: HTMLVideoElement | null) => {
 
@@ -8,10 +9,12 @@ const useMediaSession = (player: HTMLVideoElement | null) => {
     currentMetaData,
     cover,
   ] = usePlayerStore(
-    (state) => [
-      state.currentMetaData,
-      state.cover,
-    ]
+    useShallow(
+      (state) => [
+        state.currentMetaData,
+        state.cover,
+      ]
+    )
   )
 
   const {

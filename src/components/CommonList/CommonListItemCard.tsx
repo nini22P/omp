@@ -6,7 +6,7 @@ import FolderOpenRoundedIcon from '@mui/icons-material/FolderOpenRounded'
 import MusicNoteRoundedIcon from '@mui/icons-material/MusicNoteRounded'
 import MovieRoundedIcon from '@mui/icons-material/MovieRounded'
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded'
-import Grid from '@mui/material/Unstable_Grid2/Grid2'
+import Grid from '@mui/material/Grid2'
 import useUtils from '@/hooks/useUtils'
 import { sizeConvert } from '@/utils'
 import { t } from '@lingui/macro'
@@ -47,7 +47,7 @@ const CommonListItemCard = ({
       onClick={() => handleClickItem(index)}
     >
       <Grid container sx={{ flexDirection: 'column', flexWrap: 'nowrap', width: '100%', height: '100%', gap: '0.25rem' }}>
-        <Grid xs={12} sx={{ overflow: 'hidden', width: '100%', flexGrow: 1, borderRadius: '0.5rem', position: 'relative', border: `2px solid ${theme.palette.divider}` }}>
+        <Grid size={12} sx={{ overflow: 'hidden', width: '100%', flexGrow: 1, borderRadius: '0.5rem', position: 'relative', border: `2px solid ${theme.palette.divider}` }}>
           <Grid container sx={{ justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
             {item.fileType === 'folder' && <FolderOpenRoundedIcon sx={{ width: '50%', height: '50%' }} />}
             {item.fileType === 'audio' && <MusicNoteRoundedIcon sx={{ width: '50%', height: '50%' }} />}
@@ -69,7 +69,7 @@ const CommonListItemCard = ({
             />
           }
         </Grid>
-        <Grid container xs={12} sx={{ width: '100%', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem' }}>
+        <Grid container size={12} sx={{ width: '100%', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem' }}>
           <Grid container sx={{ justifyContent: 'center', alignItems: 'center', width: '24px', height: '24px' }} >
             {item.fileType === 'folder' && <FolderOpenRoundedIcon />}
             {item.fileType === 'audio' && <MusicNoteRoundedIcon />}
@@ -77,11 +77,11 @@ const CommonListItemCard = ({
             {item.fileType === 'picture' && <InsertPhotoRoundedIcon />}
             {item.fileType === 'other' && <InsertDriveFileRoundedIcon />}
           </Grid>
-          <Grid container xs sx={{ justifyContent: 'center', alignItems: 'center' }} >
+          <Grid container size='grow' sx={{ justifyContent: 'center', alignItems: 'center' }} >
             <span style={{ display: 'block', width: '100%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', fontSize: 'smaller', lineHeight: '1.5' }}>{item.fileName}</span>
             <span style={{ display: 'block', width: '100%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', fontSize: 'x-small', fontWeight: 'lighter' }}>{sizeConvert(item.fileSize)}</span>
           </Grid>
-          <Grid xs='auto'>
+          <Grid size='auto'>
             {
               (item.fileType === 'audio' || item.fileType === 'video') && !isSelectMode &&
               <IconButton

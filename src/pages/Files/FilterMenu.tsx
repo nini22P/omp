@@ -3,6 +3,7 @@ import FilterListRoundedIcon from '@mui/icons-material/FilterListRounded'
 import { Checkbox, Divider, FormControlLabel, FormGroup, IconButton, Menu, Radio, RadioGroup } from '@mui/material'
 import React from 'react'
 import { t } from '@lingui/macro'
+import { useShallow } from 'zustand/shallow'
 
 const FilterMenu = () => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
@@ -28,20 +29,22 @@ const FilterMenu = () => {
     updateMediaOnly,
     updateHDThumbnails
   ] = useUiStore(
-    (state) => [
-      state.display,
-      state.sortBy,
-      state.orderBy,
-      state.foldersFirst,
-      state.mediaOnly,
-      state.hdThumbnails,
-      state.updateDisplay,
-      state.updateSortBy,
-      state.updateOrderBy,
-      state.updateFoldersFirst,
-      state.updateMediaOnly,
-      state.updateHDThumbnails,
-    ]
+    useShallow(
+      (state) => [
+        state.display,
+        state.sortBy,
+        state.orderBy,
+        state.foldersFirst,
+        state.mediaOnly,
+        state.hdThumbnails,
+        state.updateDisplay,
+        state.updateSortBy,
+        state.updateOrderBy,
+        state.updateFoldersFirst,
+        state.updateMediaOnly,
+        state.updateHDThumbnails,
+      ]
+    )
   )
 
   return (

@@ -13,6 +13,8 @@ import usePlayerStore from '@/store/usePlayerStore'
 import useHistoryStore from '@/store/useHistoryStore'
 import usePlaylistsStore from '@/store/usePlaylistsStore'
 import { AccountInfo } from '@azure/msal-browser'
+import { useShallow } from 'zustand/shallow'
+import { INFO } from '@/data/info'
 
 const ListItemTitle = ({ title }: { title: string }) => {
   const theme = useTheme()
@@ -38,18 +40,20 @@ const Setting = () => {
     updateCoverThemeColor,
     updateColorMode,
   ] = useUiStore(
-    state => [
-      state.currentAccount,
-      state.CoverThemeColor,
-      state.colorMode,
-      state.updateFolderTree,
-      state.updateCurrentAccount,
-      state.updateCoverThemeColor,
-      state.updateColorMode
-    ]
+    useShallow(
+      (state) => [
+        state.currentAccount,
+        state.CoverThemeColor,
+        state.colorMode,
+        state.updateFolderTree,
+        state.updateCurrentAccount,
+        state.updateCoverThemeColor,
+        state.updateColorMode
+      ]
+    )
   )
 
-  const resetPlayQueue = usePlayQueueStore(state => state.resetPlayQueue)
+  const resetPlayQueue = usePlayQueueStore.use.resetPlayQueue()
   const resetPlayer = usePlayerStore(state => state.resetPlayer)
   const updateHistoryList = useHistoryStore((state) => state.updateHistoryList)
   const updatePlaylists = usePlaylistsStore((state) => state.updatePlaylists)
@@ -158,6 +162,18 @@ const Setting = () => {
         <ListItem disablePadding>
           <ListItemButton onClick={() => window.open('https://github.com/nini22P/omp', '_blank')}>
             <ListItemText inset primary='OMP - OneDrive Media Player' secondary='AGPL-3.0' />
+          </ListItemButton>
+        </ListItem>
+
+        <ListItem disablePadding>
+          <ListItemButton onClick={() => window.open(`https://github.com/nini22P/omp/releases/tag/v${INFO.version}`, '_blank')}>
+            <ListItemText inset primary={t`Version`} secondary={INFO.version} />
+          </ListItemButton>
+        </ListItem>
+
+        <ListItem disablePadding>
+          <ListItemButton>
+            <ListItemText inset primary={t`Build time`} secondary={(new Date(INFO.buildTime)).toLocaleString()} />
           </ListItemButton>
         </ListItem>
 

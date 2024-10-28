@@ -6,13 +6,14 @@ import useUiStore from '@/store/useUiStore'
 import { timeShift } from '@/utils'
 import { CloseFullscreen, FastForward, FastRewind, KeyboardArrowDownOutlined, OpenInFull, PanoramaOutlined, PauseCircleOutlined, PlayCircleOutlined, QueueMusicOutlined, Repeat, RepeatOne, Shuffle, SkipNext, SkipPrevious } from '@mui/icons-material'
 import { Container, Box, IconButton, Typography, Slider, CircularProgress } from '@mui/material'
-import Grid from '@mui/material/Unstable_Grid2'
+import Grid from '@mui/material/Grid2'
 import PlayerMenu from '../PlayerMenu'
 import { SpringValue, animated } from '@react-spring/web'
+import { useShallow } from 'zustand/shallow'
 
 const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: { borderRadius: SpringValue<string> } }) => {
 
-  const [playQueue] = usePlayQueueStore((state) => [state.playQueue])
+  const playQueue = usePlayQueueStore.use.playQueue()
 
   const [
     audioViewIsShow,
@@ -25,17 +26,19 @@ const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: 
     updatePlayQueueIsShow,
     updateBackgroundIsShow,
   ] = useUiStore(
-    (state) => [
-      state.audioViewIsShow,
-      state.fullscreen,
-      state.backgroundIsShow,
-      state.shuffle,
-      state.repeat,
-      state.coverColor,
-      state.updateAudioViewIsShow,
-      state.updatePlayQueueIsShow,
-      state.updateBackgroundIsShow,
-    ]
+    useShallow(
+      (state) => [
+        state.audioViewIsShow,
+        state.fullscreen,
+        state.backgroundIsShow,
+        state.shuffle,
+        state.repeat,
+        state.coverColor,
+        state.updateAudioViewIsShow,
+        state.updatePlayQueueIsShow,
+        state.updateBackgroundIsShow,
+      ]
+    )
   )
 
   const [
@@ -46,14 +49,16 @@ const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: 
     currentTime,
     duration
   ] = usePlayerStore(
-    (state) => [
-      state.currentMetaData,
-      state.playStatu,
-      state.isLoading,
-      state.cover,
-      state.currentTime,
-      state.duration,
-    ]
+    useShallow(
+      (state) => [
+        state.currentMetaData,
+        state.playStatu,
+        state.isLoading,
+        state.cover,
+        state.currentTime,
+        state.duration,
+      ]
+    )
   )
 
   const {
@@ -107,7 +112,7 @@ const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: 
               },
             }}
           >
-            <Grid xs={6} pl={{ xs: 1, sm: 0 }} >
+            <Grid size={6} pl={{ xs: 1, sm: 0 }} >
               <IconButton
                 aria-label="close"
                 onClick={() => updateAudioViewIsShow(!audioViewIsShow)}
@@ -117,7 +122,7 @@ const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: 
               </IconButton>
             </Grid>
 
-            <Grid xs={6} pr={{ xs: 1, sm: 0 }} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+            <Grid size={6} pr={{ xs: 1, sm: 0 }} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
               <IconButton
                 aria-label="PlayQueue"
                 onClick={() => updatePlayQueueIsShow(true)}
@@ -143,12 +148,12 @@ const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: 
                     : <OpenInFull style={{ height: 20, width: 20 }} />
                 }
               </IconButton>
-              <PlayerMenu />
+              <PlayerMenu player={player} />
             </Grid>
 
             {/* 封面和音频信息 */}
             <Grid container
-              xs={12}
+              size={12}
               maxWidth={'lg'}
               height={{ xs: 'calc(100dvh - 4rem - env(titlebar-area-height, 0px))', sm: 'auto' }}
               flexDirection={{ xs: 'column', sm: 'row' }}
@@ -163,8 +168,7 @@ const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: 
               {/* 封面 */}
               <Grid
                 container
-                xs={12}
-                sm={4}
+                size={{ xs: 12, sm: 4 }}
                 flexGrow={1}
                 justifyContent={'center'}
                 alignItems={'center'}
@@ -183,8 +187,8 @@ const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: 
               </Grid>
 
               {/* 音频信息 */}
-              <Grid xs={12} sm={8} pl={{ xs: 0, lg: 5 }} textAlign={'center'}>
-                <Grid xs={12} pl={4} pr={4} >
+              <Grid size={{ xs: 12, sm: 8 }} pl={{ xs: 0, lg: 5 }} textAlign={'center'}>
+                <Grid size={12} pl={4} pr={4} >
                   <Typography variant="h6" component="div" textAlign={'center'} noWrap>
                     {(!playQueue || !currentMetaData) ? 'Not playing' : currentMetaData.title}
                   </Typography>
@@ -197,7 +201,7 @@ const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: 
                 </Grid>
 
                 {/* 播放进度条 */}
-                <Grid xs={12} pl={{ xs: 3, sm: 0 }} pr={{ xs: 3, sm: 0 }} >
+                <Grid size={12} pl={{ xs: 3, sm: 0 }} pr={{ xs: 3, sm: 0 }} >
                   <Slider
                     size="small"
                     min={0}
@@ -212,7 +216,7 @@ const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: 
                   </Typography>
                 </Grid>
 
-                <Grid xs={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', wrap: 'nowrap' }}>
+                <Grid size={12} sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', wrap: 'nowrap' }}>
                   <IconButton aria-label="shuffle" onClick={() => handleClickShuffle()}>
                     <Shuffle sx={{ height: 28, width: 28 }} style={(shuffle) ? { color: '#fff' } : { color: '#ccc' }} />
                   </IconButton>

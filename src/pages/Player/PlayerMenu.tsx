@@ -11,7 +11,8 @@ import FolderOpenRoundedIcon from '@mui/icons-material/FolderOpenRounded'
 import PlaylistPlayRoundedIcon from '@mui/icons-material/PlaylistPlayRounded'
 import CloseFullscreenRoundedIcon from '@mui/icons-material/CloseFullscreenRounded'
 import OpenInFullRoundedIcon from '@mui/icons-material/OpenInFullRounded'
-import { Box, Button, Dialog, DialogActions, DialogTitle, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material'
+import CloudDownloadRoundedIcon from '@mui/icons-material/CloudDownloadRounded'
+import { Box, Button, Dialog, DialogActions, DialogTitle, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, Tooltip } from '@mui/material'
 import { useMemo, useState } from 'react'
 import { t } from '@lingui/macro'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
@@ -19,22 +20,31 @@ import { useNavigate } from 'react-router-dom'
 import usePlaylistsStore from '@/store/usePlaylistsStore'
 import shortUUID from 'short-uuid'
 import useFullscreen from '@/hooks/ui/useFullscreen'
+import { useShallow } from 'zustand/shallow'
+import usePlayerStore from '@/store/usePlayerStore'
+import useLocalMetaDataStore from '@/store/useLocalMetaDataStore'
+import { getNetMetaData } from '@/utils'
 
-const PlayerMenu = () => {
+const PlayerMenu = ({ player }: { player: HTMLVideoElement | null }) => {
 
   const navigate = useNavigate()
 
-  const updateFolderTree = useUiStore((state) => state.updateFolderTree)
-
   const [
-    playQueue,
-    currentIndex,
-  ] = usePlayQueueStore(
-    (state) => [
-      state.playQueue,
-      state.currentIndex,
-    ]
+    currentMetaData,
+    updateMetadataUpdate,
+  ] = usePlayerStore(
+    useShallow(
+      (state) => [
+        state.currentMetaData,
+        state.updateMetadataUpdate,
+      ]
+    )
   )
+
+  const { setLocalMetaData } = useLocalMetaDataStore()
+
+  const playQueue = usePlayQueueStore.use.playQueue()
+  const currentIndex = usePlayQueueStore.use.currentIndex()
 
   const currentFile = useMemo(() => playQueue?.find((item) => item.index === currentIndex), [currentIndex, playQueue])
 
@@ -43,33 +53,41 @@ const PlayerMenu = () => {
     playbackRate,
     audioViewIsShow,
     fullscreen,
+    updateFolderTree,
     updateAudioViewTheme,
     updatePlaybackRate,
     updateAudioViewIsShow,
     updateVideoViewIsShow,
     updatePlayQueueIsShow,
-  ] = useUiStore(state => [
-    state.audioViewTheme,
-    state.playbackRate,
-    state.audioViewIsShow,
-    state.fullscreen,
-    state.updateAudioViewTheme,
-    state.updatePlaybackRate,
-    state.updateAudioViewIsShow,
-    state.updateVideoViewIsShow,
-    state.updatePlayQueueIsShow,
-  ])
+  ] = useUiStore(
+    useShallow(
+      (state) => [
+        state.audioViewTheme,
+        state.playbackRate,
+        state.audioViewIsShow,
+        state.fullscreen,
+        state.updateFolderTree,
+        state.updateAudioViewTheme,
+        state.updatePlaybackRate,
+        state.updateAudioViewIsShow,
+        state.updateVideoViewIsShow,
+        state.updatePlayQueueIsShow,
+      ]
+    )
+  )
 
   const [
     playlists,
     insertPlaylist,
     insertFilesToPlaylist,
   ] = usePlaylistsStore(
-    (state) => [
-      state.playlists,
-      state.insertPlaylist,
-      state.insertFilesToPlaylist,
-    ]
+    useShallow(
+      (state) => [
+        state.playlists,
+        state.insertPlaylist,
+        state.insertFilesToPlaylist,
+      ]
+    )
   )
 
   const { handleClickFullscreen } = useFullscreen()
@@ -130,12 +148,23 @@ const PlayerMenu = () => {
     handleClickFullscreen()
   }
 
+  const reFetchMetadata = async () => {
+    handleCloseMenu()
+    if (!currentMetaData?.path || !player?.src) return
+    const netMetaData = await getNetMetaData(currentMetaData?.path, player?.src)
+    if (netMetaData) {
+      setLocalMetaData(netMetaData).then(() => updateMetadataUpdate())
+    }
+  }
+
   return (
     <>
       <Box>
-        <IconButton onClick={(event) => handleClickMenu(event)}>
-          <MoreVertRoundedIcon />
-        </IconButton>
+        <Tooltip title={t`Menu`}>
+          <IconButton onClick={(event) => handleClickMenu(event)}>
+            <MoreVertRoundedIcon />
+          </IconButton>
+        </Tooltip>
         <Menu
           anchorEl={anchorEl}
           open={menuOpen}
@@ -211,6 +240,13 @@ const PlayerMenu = () => {
                 </ListItemIcon>
                 <ListItemText primary={t`Switch fullscreen`} />
               </MenuItem>
+
+              <MenuItem onClick={() => reFetchMetadata()}>
+                <ListItemIcon>
+                  <CloudDownloadRoundedIcon />
+                </ListItemIcon>
+                <ListItemText primary={t`Re-fetch metadata`} />
+              </MenuItem>
             </div>
           }
 
@@ -279,6 +315,7 @@ const PlayerMenu = () => {
               }
             </div>
           }
+
         </Menu>
       </Box>
 

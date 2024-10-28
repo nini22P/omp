@@ -5,37 +5,31 @@ import useUiStore from '@/store/useUiStore'
 import CommonList from '@/components/CommonList/CommonList'
 import usePlayerStore from '@/store/usePlayerStore'
 import useCustomTheme from '@/hooks/ui/useCustomTheme'
+import { useShallow } from 'zustand/shallow'
 
 const PlayQueue = () => {
 
   const { scrollbarStyle } = useCustomTheme()
   const theme = useTheme()
 
-  const [
-    currentIndex,
-    playQueue,
-    updateCurrentIndex,
-    updatePlayQueue,
-  ] = usePlayQueueStore(
-    (state) => [
-      state.currentIndex,
-      state.playQueue,
-      state.updateCurrentIndex,
-      state.updatePlayQueue,
-    ]
-  )
+  const playQueue = usePlayQueueStore.use.playQueue()
+  const currentIndex = usePlayQueueStore.use.currentIndex()
+  const updateCurrentIndex = usePlayQueueStore.use.updateCurrentIndex()
+  const updatePlayQueue = usePlayQueueStore.use.updatePlayQueue()
 
   const [
     playQueueIsShow,
     updatePlayQueueIsShow
   ] = useUiStore(
-    (state) => [
-      state.playQueueIsShow,
-      state.updatePlayQueueIsShow,
-    ]
+    useShallow(
+      (state) => [
+        state.playQueueIsShow,
+        state.updatePlayQueueIsShow,
+      ]
+    )
   )
 
-  const [updatePlayStatu] = usePlayerStore(state => [state.updatePlayStatu])
+  const updatePlayStatu = usePlayerStore(state => state.updatePlayStatu)
 
   const open = (index: number) => {
     if (playQueue) {

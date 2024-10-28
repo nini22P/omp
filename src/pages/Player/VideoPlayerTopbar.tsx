@@ -1,6 +1,8 @@
-import { Box, IconButton, useTheme } from '@mui/material'
+import { Box, IconButton, Tooltip, useTheme } from '@mui/material'
 import useUiStore from '@/store/useUiStore'
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded'
+import { useShallow } from 'zustand/shallow'
+import { t } from '@lingui/macro'
 
 const VideoPlayerTopbar = () => {
 
@@ -12,12 +14,14 @@ const VideoPlayerTopbar = () => {
     updateVideoViewIsShow,
     updateControlIsShow,
   ] = useUiStore(
-    (state) => [
-      state.videoViewIsShow,
-      state.controlIsShow,
-      state.updateVideoViewIsShow,
-      state.updateControlIsShow,
-    ]
+    useShallow(
+      (state) => [
+        state.videoViewIsShow,
+        state.controlIsShow,
+        state.updateVideoViewIsShow,
+        state.updateControlIsShow,
+      ]
+    )
   )
 
   return (
@@ -49,23 +53,25 @@ const VideoPlayerTopbar = () => {
           }}
           className='app-region-no-drag'
         >
-          <IconButton
-            aria-label="close"
-            onClick={() => {
-              updateVideoViewIsShow(false)
-              updateControlIsShow(true)
-            }}
-            sx={{
-              height: '100%',
-              borderRadius: '0.25rem',
-              '.MuiTouchRipple-ripple .MuiTouchRipple-child': {
+          <Tooltip title={t`Close`}>
+            <IconButton
+              aria-label="close"
+              onClick={() => {
+                updateVideoViewIsShow(false)
+                updateControlIsShow(true)
+              }}
+              sx={{
+                height: '100%',
                 borderRadius: '0.25rem',
-              },
-              aspectRatio: '1 / 1',
-            }}
-          >
-            <KeyboardArrowDownRoundedIcon />
-          </IconButton>
+                '.MuiTouchRipple-ripple .MuiTouchRipple-child': {
+                  borderRadius: '0.25rem',
+                },
+                aspectRatio: '1 / 1',
+              }}
+            >
+              <KeyboardArrowDownRoundedIcon />
+            </IconButton>
+          </Tooltip>
         </div>
       </Box>
     </div>

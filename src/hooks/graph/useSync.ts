@@ -7,11 +7,16 @@ import { FileItem } from '@/types/file'
 import { Playlist } from '@/types/playlist'
 import { fetchJson } from '@/utils'
 import useUser from './useUser'
+import { useShallow } from 'zustand/shallow'
 
 const useSync = () => {
   const { account } = useUser()
-  const [historyList, updateHistoryList] = useHistoryStore((state) => [state.historyList, state.updateHistoryList])
-  const [playlists, updatePlaylists] = usePlaylistsStore((state) => [state.playlists, state.updatePlaylists])
+  const [historyList, updateHistoryList] = useHistoryStore(
+    useShallow((state) => [state.historyList, state.updateHistoryList])
+  )
+  const [playlists, updatePlaylists] = usePlaylistsStore(
+    useShallow((state) => [state.playlists, state.updatePlaylists])
+  )
   const { getAppRootFilesData, uploadAppRootJsonData } = useFilesData()
 
   // 自动从 OneDrive 获取应用数据
@@ -60,7 +65,9 @@ const useSync = () => {
   // 自动更新播放历史
   useEffect(
     () => {
-      (!isLoading && !error && data?.history) && updateHistoryList(data.history)
+      if (!isLoading && !error && data?.history) {
+        updateHistoryList(data.history)
+      }
     },
     [data, error, isLoading, updateHistoryList]
   )
@@ -75,7 +82,9 @@ const useSync = () => {
   // 自动更新播放列表
   useEffect(
     () => {
-      (!isLoading && !error && data?.playlists) && updatePlaylists(data.playlists)
+      if (!isLoading && !error && data?.playlists) {
+        updatePlaylists(data.playlists)
+      }
     },
     [data, error, isLoading, updatePlaylists]
   )

@@ -7,11 +7,13 @@ import FolderRoundedIcon from '@mui/icons-material/FolderRounded'
 import useUiStore from '../../store/useUiStore'
 import Playlists from './Playlists'
 import { useRef } from 'react'
+import { useShallow } from 'zustand/shallow'
 
 const SideBar = () => {
 
   const [mobileSideBarOpen, updateMobileSideBarOpen] = useUiStore(
-    (state) => [state.mobileSideBarOpen, state.updateMobileSideBarOpen])
+    useShallow((state) => [state.mobileSideBarOpen, state.updateMobileSideBarOpen])
+  )
 
   const navData = [
     { router: '/', icon: <FolderRoundedIcon />, label: t`Files` },
@@ -25,12 +27,12 @@ const SideBar = () => {
 
   const showScrollbar = () => {
     const element = boxRef.current
-    element && element.classList.add('show-scrollbar')
+    element?.classList.add('show-scrollbar')
   }
 
   const hiddenScrollbar = () => {
     const element = boxRef.current
-    element && element.classList.remove('show-scrollbar')
+    element?.classList.remove('show-scrollbar')
   }
 
   return (

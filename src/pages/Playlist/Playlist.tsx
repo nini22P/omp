@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import { t } from '@lingui/macro'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Button, ListItemText, Typography, Dialog, DialogTitle, DialogActions, Menu, MenuItem, DialogContent, TextField, Box, useTheme } from '@mui/material'
-import Grid from '@mui/material/Unstable_Grid2'
+import Grid from '@mui/material/Grid2'
 import usePlaylistsStore from '../../store/usePlaylistsStore'
 import CommonList from '../../components/CommonList/CommonList'
 import Loading from '../Loading'
@@ -12,18 +12,25 @@ import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
 import { checkFileType } from '@/utils'
+import { useShallow } from 'zustand/shallow'
 
 const Playlist = () => {
   const navigate = useNavigate()
   const { id } = useParams()
   const theme = useTheme()
 
-  const [shuffle, updateVideoViewIsShow, updateShuffle,] = useUiStore((state) => [state.shuffle, state.updateVideoViewIsShow, state.updateShuffle])
-  const [updatePlayQueue, updateCurrentIndex] = usePlayQueueStore((state) => [state.updatePlayQueue, state.updateCurrentIndex])
-  const [updatePlayStatu] = usePlayerStore(state => [state.updatePlayStatu])
+  const [shuffle, updateVideoViewIsShow, updateShuffle,] = useUiStore(
+    useShallow((state) => [state.shuffle, state.updateVideoViewIsShow, state.updateShuffle])
+  )
+
+  const updatePlayQueue = usePlayQueueStore.use.updatePlayQueue()
+  const updateCurrentIndex = usePlayQueueStore.use.updateCurrentIndex()
+
+  const updatePlayStatu = usePlayerStore((state) => state.updatePlayStatu)
 
   const [playlists, renamePlaylist, removePlaylist, removeFilesFromPlaylist] = usePlaylistsStore(
-    (state) => [state.playlists, state.renamePlaylist, state.removePlaylist, state.removeFilesFromPlaylist])
+    useShallow((state) => [state.playlists, state.renamePlaylist, state.removePlaylist, state.removeFilesFromPlaylist])
+  )
 
   const playlist = playlists?.find(playlistItem => playlistItem.id === id) //当前播放列表
 
@@ -84,7 +91,9 @@ const Playlist = () => {
 
   //从播放列表移除文件
   const removeFiles = (indexArray: number[]) => {
-    id && removeFilesFromPlaylist(id, indexArray)
+    if (id) {
+      removeFilesFromPlaylist(id, indexArray)
+    }
   }
 
   // 删除播放列表
@@ -125,7 +134,7 @@ const Playlist = () => {
                 }
               </Box>
 
-              <Grid xs={12} container
+              <Grid size={12} container
                 sx={{
                   padding: '3rem 1rem 1rem 1rem',
                   background: `linear-gradient(0deg, ${theme.palette.background.default}ff, ${theme.palette.background.default}99,${theme.palette.background.default}00)`,
@@ -133,12 +142,12 @@ const Playlist = () => {
                   backdropFilter: 'blur(4px)',
                 }}
               >
-                <Grid xs={12}>
+                <Grid size={12}>
                   <Typography variant='h4' noWrap>
                     {playlist.title}
                   </Typography>
                 </Grid>
-                <Grid xs={'auto'}>
+                <Grid size='auto'>
                   <Button
                     variant='contained'
                     size='small'
