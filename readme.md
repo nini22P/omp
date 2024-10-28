@@ -14,7 +14,7 @@ English | [中文](./readme_cn.md)
 
 - [x] OneDrive Files View
 - [x] Music Playback
-- [x] Music Metadata
+- [x] Music Lyrics
 - [x] Video Playback
 - [x] Play Queue
 - [x] Dark Mode
@@ -25,10 +25,9 @@ English | [中文](./readme_cn.md)
 
 ## Screenshots
 
-![140335](https://github.com/nini22P/omp/assets/60903333/ced9eae1-9f04-48b9-8d03-83d8e65083d9)
-![235819](https://github.com/nini22P/omp/assets/60903333/ea6b9ec2-d52f-4243-9450-d9cbab633fac)
-![000122](https://github.com/nini22P/omp/assets/60903333/bd776c79-ec3c-4f35-9b8b-534927ff980b)
-![000452](https://github.com/nini22P/omp/assets/60903333/5ad2565b-ff8c-439b-9f91-b1edcb7e24fa)
+![Audio light](./screenshots/audio-light.png)
+![Audio dark](./screenshots/audio-dark.png)
+![Files](./screenshots/files.png)
 
 ## FAQ
 
