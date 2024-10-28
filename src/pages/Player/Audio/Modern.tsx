@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Container, IconButton, Slider, Tab, Tabs, Typography, useMediaQuery, useTheme } from '@mui/material'
+import { Box, CircularProgress, Container, IconButton, Slider, Tab, Tabs, Tooltip, Typography, useMediaQuery, useTheme } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import useFullscreen from '@/hooks/ui/useFullscreen'
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded'
@@ -151,9 +151,11 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
               height: 'auto',
             }}>
 
-            <IconButton aria-label="close" onClick={() => updateAudioViewIsShow(!audioViewIsShow)}>
-              <KeyboardArrowDownRoundedIcon />
-            </IconButton>
+            <Tooltip title={t`Close`}>
+              <IconButton aria-label="close" onClick={() => updateAudioViewIsShow(!audioViewIsShow)}>
+                <KeyboardArrowDownRoundedIcon />
+              </IconButton>
+            </Tooltip>
 
             <Grid
               container
@@ -167,45 +169,51 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
 
               {
                 !isMobile &&
-                <IconButton
-                  aria-label="PlayQueue"
-                  onClick={() => updatePlayQueueIsShow(true)}
-                  className='app-region-no-drag'
-                >
-                  <QueueMusicRoundedIcon />
-                </IconButton>
+                <Tooltip title={t`Play queue`}>
+                  <IconButton
+                    aria-label="PlayQueue"
+                    onClick={() => updatePlayQueueIsShow(true)}
+                    className='app-region-no-drag'
+                  >
+                    <QueueMusicRoundedIcon />
+                  </IconButton>
+                </Tooltip>
               }
 
               {!isMobile && <VolumeControl />}
 
               {
                 !isMobile &&
-                <IconButton
-                  aria-label="Lyrics"
-                  onClick={() => updateLyricsIsShow(!lyricsIsShow)}
-                  className='app-region-no-drag'
-                >
-                  <LyricsRoundedIcon
-                    style={
-                      lyricsIsShow
-                        ? { height: 20, width: 20 }
-                        : { height: 20, width: 20, color: '#aaa' }
-                    }
-                  />
-                </IconButton>
+                <Tooltip title={t`Lyrics`}>
+                  <IconButton
+                    aria-label="Lyrics"
+                    onClick={() => updateLyricsIsShow(!lyricsIsShow)}
+                    className='app-region-no-drag'
+                  >
+                    <LyricsRoundedIcon
+                      style={
+                        lyricsIsShow
+                          ? { height: 20, width: 20 }
+                          : { height: 20, width: 20, color: '#aaa' }
+                      }
+                    />
+                  </IconButton>
+                </Tooltip>
               }
 
-              <IconButton
-                aria-label="Full"
-                onClick={() => handleClickFullscreen()}
-                className='app-region-no-drag'
-              >
-                {
-                  fullscreen
-                    ? <CloseFullscreenRoundedIcon style={{ height: 20, width: 20 }} />
-                    : <OpenInFullRoundedIcon style={{ height: 20, width: 20 }} />
-                }
-              </IconButton>
+              <Tooltip title={t`Fullscreen`}>
+                <IconButton
+                  aria-label="Full"
+                  onClick={() => handleClickFullscreen()}
+                  className='app-region-no-drag'
+                >
+                  {
+                    fullscreen
+                      ? <CloseFullscreenRoundedIcon style={{ height: 20, width: 20 }} />
+                      : <OpenInFullRoundedIcon style={{ height: 20, width: 20 }} />
+                  }
+                </IconButton>
+              </Tooltip>
 
               <PlayerMenu player={player} />
             </Grid>

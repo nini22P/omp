@@ -12,7 +12,7 @@ import PlaylistPlayRoundedIcon from '@mui/icons-material/PlaylistPlayRounded'
 import CloseFullscreenRoundedIcon from '@mui/icons-material/CloseFullscreenRounded'
 import OpenInFullRoundedIcon from '@mui/icons-material/OpenInFullRounded'
 import CloudDownloadRoundedIcon from '@mui/icons-material/CloudDownloadRounded'
-import { Box, Button, Dialog, DialogActions, DialogTitle, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material'
+import { Box, Button, Dialog, DialogActions, DialogTitle, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, Tooltip } from '@mui/material'
 import { useMemo, useState } from 'react'
 import { t } from '@lingui/macro'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
@@ -160,9 +160,11 @@ const PlayerMenu = ({ player }: { player: HTMLVideoElement | null }) => {
   return (
     <>
       <Box>
-        <IconButton onClick={(event) => handleClickMenu(event)}>
-          <MoreVertRoundedIcon />
-        </IconButton>
+        <Tooltip title={t`Menu`}>
+          <IconButton onClick={(event) => handleClickMenu(event)}>
+            <MoreVertRoundedIcon />
+          </IconButton>
+        </Tooltip>
         <Menu
           anchorEl={anchorEl}
           open={menuOpen}

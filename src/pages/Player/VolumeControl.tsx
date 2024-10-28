@@ -33,22 +33,7 @@ export default function VolumeControl() {
 
   return (
     <div {...bind()}>
-      <Tooltip
-        title={volume}
-        placement='top'
-        slotProps={{
-          popper: {
-            modifiers: [
-              {
-                name: 'offset',
-                options: {
-                  offset: [0, -10],
-                },
-              },
-            ],
-          },
-        }}
-      >
+      <Tooltip title={volume}>
         <IconButton onClick={(event: React.MouseEvent<HTMLButtonElement>) => setVolumeAnchorEl(event.currentTarget)} >
           {
             volume === 0

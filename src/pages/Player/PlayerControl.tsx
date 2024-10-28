@@ -1,4 +1,4 @@
-import { Box, ButtonBase, CircularProgress, Container, IconButton, Paper, Slider, Typography, useTheme } from '@mui/material'
+import { Box, ButtonBase, CircularProgress, Container, IconButton, Paper, Slider, Tooltip, Typography, useTheme } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import CloseFullscreenRoundedIcon from '@mui/icons-material/CloseFullscreenRounded'
 import OpenInFullRoundedIcon from '@mui/icons-material/OpenInFullRounded'
@@ -23,6 +23,7 @@ import VolumeControl from './VolumeControl'
 import { useEffect, useMemo } from 'react'
 import useControlHide from '@/hooks/ui/useControlHide'
 import { useShallow } from 'zustand/shallow'
+import { t } from '@lingui/macro'
 
 const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
 
@@ -304,21 +305,25 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
               pr={1}
             >
 
-              <IconButton onClick={() => updatePlayQueueIsShow(!playQueueIsShow)} sx={{ display: { sm: 'inline-grid', xs: 'none' } }}>
-                <PlaylistPlayRoundedIcon />
-              </IconButton>
+              <Tooltip title={t`Play queue`}>
+                <IconButton onClick={() => updatePlayQueueIsShow(!playQueueIsShow)} sx={{ display: { sm: 'inline-grid', xs: 'none' } }}>
+                  <PlaylistPlayRoundedIcon />
+                </IconButton>
+              </Tooltip>
 
               <Box sx={{ display: 'inline-grid' }}>
                 <VolumeControl />
               </Box>
 
-              <IconButton onClick={() => handleClickFullscreen()} sx={{ display: { sm: 'inline-grid', xs: 'none' } }} >
-                {
-                  fullscreen
-                    ? <CloseFullscreenRoundedIcon sx={{ height: 18, width: 18 }} />
-                    : <OpenInFullRoundedIcon sx={{ height: 18, width: 18, }} />
-                }
-              </IconButton>
+              <Tooltip title={t`Fullscreen`}>
+                <IconButton onClick={() => handleClickFullscreen()} sx={{ display: { sm: 'inline-grid', xs: 'none' } }} >
+                  {
+                    fullscreen
+                      ? <CloseFullscreenRoundedIcon sx={{ height: 18, width: 18 }} />
+                      : <OpenInFullRoundedIcon sx={{ height: 18, width: 18, }} />
+                  }
+                </IconButton>
+              </Tooltip>
 
               <Box sx={{ display: 'inline-grid' }} >
                 <PlayerMenu player={player} />

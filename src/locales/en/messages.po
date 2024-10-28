@@ -25,20 +25,20 @@ msgstr "Account"
 msgid "Add account"
 msgstr "Add account"
 
-#: src/components/CommonList/CommonMenu.tsx:256
-#: src/pages/Player/PlayerMenu.tsx:361
+#: src/components/CommonList/CommonMenu.tsx:257
+#: src/pages/Player/PlayerMenu.tsx:354
 #: src/pages/SideBar/Playlists.tsx:52
 msgid "Add playlist"
 msgstr "Add playlist"
 
-#: src/components/CommonList/CommonMenu.tsx:160
+#: src/components/CommonList/CommonMenu.tsx:161
 msgid "Add to play queue"
 msgstr "Add to play queue"
 
-#: src/components/CommonList/CommonMenu.tsx:155
-#: src/components/CommonList/CommonMenu.tsx:230
-#: src/pages/Player/PlayerMenu.tsx:240
-#: src/pages/Player/PlayerMenu.tsx:335
+#: src/components/CommonList/CommonMenu.tsx:156
+#: src/components/CommonList/CommonMenu.tsx:231
+#: src/pages/Player/PlayerMenu.tsx:233
+#: src/pages/Player/PlayerMenu.tsx:328
 msgid "Add to playlist"
 msgstr "Add to playlist"
 
@@ -50,19 +50,19 @@ msgstr "Ascending"
 msgid "Auto"
 msgstr "Auto"
 
-#: src/components/CommonList/CommonMenu.tsx:261
-#: src/pages/Player/PlayerMenu.tsx:366
-#: src/pages/Playlist/Playlist.tsx:216
-#: src/pages/Playlist/Playlist.tsx:239
+#: src/components/CommonList/CommonMenu.tsx:262
+#: src/pages/Player/PlayerMenu.tsx:359
+#: src/pages/Playlist/Playlist.tsx:217
+#: src/pages/Playlist/Playlist.tsx:240
 #: src/pages/Setting.tsx:217
 msgid "Cancel"
 msgstr "Cancel"
 
-#: src/components/CommonList/CommonMenu.tsx:219
+#: src/components/CommonList/CommonMenu.tsx:220
 msgid "Cancel select"
 msgstr "Cancel select"
 
-#: src/pages/Player/PlayerMenu.tsx:292
+#: src/pages/Player/PlayerMenu.tsx:285
 msgid "Classic"
 msgstr "Classic"
 
@@ -70,9 +70,11 @@ msgstr "Classic"
 msgid "Clear"
 msgstr "Clear"
 
-#: src/pages/Files/Files.tsx:177
-#~ msgid "Close"
-#~ msgstr "Close"
+#: src/pages/PictureView/PictureView.tsx:72
+#: src/pages/Player/Audio/Modern.tsx:154
+#: src/pages/Player/VideoPlayerTopbar.tsx:56
+msgid "Close"
+msgstr "Close"
 
 #: src/pages/Setting.tsx:143
 msgid "Color mode"
@@ -94,7 +96,7 @@ msgstr "Dark"
 msgid "Data"
 msgstr "Data"
 
-#: src/pages/Playlist/Playlist.tsx:190
+#: src/pages/Playlist/Playlist.tsx:191
 msgid "Delete"
 msgstr "Delete"
 
@@ -102,7 +104,7 @@ msgstr "Delete"
 msgid "Descending"
 msgstr "Descending"
 
-#: src/pages/Playlist/Playlist.tsx:212
+#: src/pages/Playlist/Playlist.tsx:213
 msgid "Enter new title"
 msgstr "Enter new title"
 
@@ -113,6 +115,11 @@ msgstr "Files"
 #: src/pages/Files/FilterMenu.tsx:114
 msgid "Folders first"
 msgstr "Folders first"
+
+#: src/pages/Player/Audio/Modern.tsx:204
+#: src/pages/Player/PlayerControl.tsx:318
+msgid "Fullscreen"
+msgstr "Fullscreen"
 
 #: src/pages/Search.tsx:182
 msgid "Global"
@@ -146,6 +153,10 @@ msgstr "List"
 msgid "Local metaData cache"
 msgstr "Local metaData cache"
 
+#: src/pages/Player/Audio/Modern.tsx:187
+msgid "Lyrics"
+msgstr "Lyrics"
+
 #: src/pages/Setting.tsx:97
 msgid "Manage"
 msgstr "Manage"
@@ -154,13 +165,17 @@ msgstr "Manage"
 msgid "Media only"
 msgstr "Media only"
 
-#: src/pages/Player/PlayerMenu.tsx:280
+#: src/pages/Player/PlayerMenu.tsx:163
+msgid "Menu"
+msgstr "Menu"
+
+#: src/pages/Player/PlayerMenu.tsx:273
 msgid "Modern"
 msgstr "Modern"
 
 #: src/components/CommonList/CommonListItem.tsx:39
 #: src/components/CommonList/CommonListItemCard.tsx:88
-#: src/pages/Playlist/Playlist.tsx:156
+#: src/pages/Playlist/Playlist.tsx:157
 msgid "More"
 msgstr "More"
 
@@ -172,24 +187,24 @@ msgstr "Multicolumn list"
 msgid "Name"
 msgstr "Name"
 
-#: src/components/CommonList/CommonMenu.tsx:70
-#: src/pages/Player/PlayerMenu.tsx:139
+#: src/components/CommonList/CommonMenu.tsx:71
+#: src/pages/Player/PlayerMenu.tsx:130
 #: src/pages/SideBar/Playlists.tsx:19
 msgid "New playlist"
 msgstr "New playlist"
 
-#: src/components/Lyrics/Lyrics.tsx:75
-#: src/pages/Player/Audio/Modern.tsx:275
+#: src/components/Lyrics/Lyrics.tsx:78
+#: src/pages/Player/Audio/Modern.tsx:285
 msgid "No lyrics"
 msgstr "No lyrics"
 
-#: src/pages/Playlist/Playlist.tsx:223
-#: src/pages/Playlist/Playlist.tsx:240
+#: src/pages/Playlist/Playlist.tsx:224
+#: src/pages/Playlist/Playlist.tsx:241
 msgid "OK"
 msgstr "OK"
 
-#: src/components/CommonList/CommonMenu.tsx:167
-#: src/pages/Player/PlayerMenu.tsx:220
+#: src/components/CommonList/CommonMenu.tsx:168
+#: src/pages/Player/PlayerMenu.tsx:213
 msgid "Open in folder"
 msgstr "Open in folder"
 
@@ -197,16 +212,18 @@ msgstr "Open in folder"
 msgid "Open source dependencies"
 msgstr "Open source dependencies"
 
-#: src/components/CommonList/CommonList.tsx:382
+#: src/components/CommonList/CommonList.tsx:383
 msgid "Play all"
 msgstr "Play all"
 
-#: src/pages/Player/PlayerMenu.tsx:228
+#: src/pages/Player/Audio/Modern.tsx:172
+#: src/pages/Player/PlayerControl.tsx:308
+#: src/pages/Player/PlayerMenu.tsx:221
 msgid "Play queue"
 msgstr "Play queue"
 
-#: src/pages/Player/PlayerMenu.tsx:207
-#: src/pages/Player/PlayerMenu.tsx:305
+#: src/pages/Player/PlayerMenu.tsx:200
+#: src/pages/Player/PlayerMenu.tsx:298
 msgid "Playback rate"
 msgstr "Playback rate"
 
@@ -215,16 +232,16 @@ msgstr "Playback rate"
 msgid "Please use Microsoft account authorization to log in"
 msgstr "Please use Microsoft account authorization to log in"
 
-#: src/pages/Player/PlayerMenu.tsx:255
+#: src/pages/Player/PlayerMenu.tsx:248
 msgid "Re-fetch metadata"
 msgstr "Re-fetch metadata"
 
-#: src/components/CommonList/CommonMenu.tsx:185
+#: src/components/CommonList/CommonMenu.tsx:186
 msgid "Remove"
 msgstr "Remove"
 
-#: src/pages/Playlist/Playlist.tsx:184
-#: src/pages/Playlist/Playlist.tsx:202
+#: src/pages/Playlist/Playlist.tsx:185
+#: src/pages/Playlist/Playlist.tsx:203
 msgid "Rename"
 msgstr "Rename"
 
@@ -235,7 +252,7 @@ msgstr "Rename"
 msgid "Search"
 msgstr "Search"
 
-#: src/components/CommonList/CommonMenu.tsx:198
+#: src/components/CommonList/CommonMenu.tsx:199
 msgid "Select"
 msgstr "Select"
 
@@ -243,7 +260,7 @@ msgstr "Select"
 msgid "Select account"
 msgstr "Select account"
 
-#: src/components/CommonList/CommonMenu.tsx:208
+#: src/components/CommonList/CommonMenu.tsx:209
 msgid "Select all"
 msgstr "Select all"
 
@@ -267,16 +284,16 @@ msgstr "Sign out"
 msgid "Size"
 msgstr "Size"
 
-#: src/pages/Player/PlayerMenu.tsx:248
+#: src/pages/Player/PlayerMenu.tsx:241
 msgid "Switch fullscreen"
 msgstr "Switch fullscreen"
 
-#: src/pages/Player/PlayerMenu.tsx:198
-#: src/pages/Player/PlayerMenu.tsx:268
+#: src/pages/Player/PlayerMenu.tsx:191
+#: src/pages/Player/PlayerMenu.tsx:261
 msgid "Switch theme"
 msgstr "Switch theme"
 
-#: src/pages/Playlist/Playlist.tsx:236
+#: src/pages/Playlist/Playlist.tsx:237
 msgid "The playlist will be deleted"
 msgstr "The playlist will be deleted"
 

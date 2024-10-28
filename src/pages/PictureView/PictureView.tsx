@@ -1,9 +1,10 @@
 import usePictureStore from '@/store/usePictureStore'
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
-import { Box, Dialog, IconButton } from '@mui/material'
+import { Box, Dialog, IconButton, Tooltip } from '@mui/material'
 import PictureList from './PictureList'
 import { useEffect, useRef } from 'react'
 import { useShallow } from 'zustand/shallow'
+import { t } from '@lingui/macro'
 
 const PictureView = () => {
 
@@ -68,7 +69,11 @@ const PictureView = () => {
         }}
       >
         <Box padding='0.5rem' display='flex' alignItems={'center'} gap={2} overflow={'hidden'}>
-          <IconButton onClick={(handleClose)}><CloseRoundedIcon /></IconButton>
+          <Tooltip title={t`Close`}>
+            <IconButton onClick={(handleClose)}>
+              <CloseRoundedIcon />
+            </IconButton>
+          </Tooltip>
           {currentPicture?.fileName}
         </Box>
         <Box sx={{ height: 0, flexGrow: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
