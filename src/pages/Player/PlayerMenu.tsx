@@ -43,17 +43,8 @@ const PlayerMenu = ({ player }: { player: HTMLVideoElement | null }) => {
 
   const { setLocalMetaData } = useLocalMetaDataStore()
 
-  const [
-    playQueue,
-    currentIndex,
-  ] = usePlayQueueStore(
-    useShallow(
-      (state) => [
-        state.playQueue,
-        state.currentIndex,
-      ]
-    )
-  )
+  const playQueue = usePlayQueueStore.use.playQueue()
+  const currentIndex = usePlayQueueStore.use.currentIndex()
 
   const currentFile = useMemo(() => playQueue?.find((item) => item.index === currentIndex), [currentIndex, playQueue])
 

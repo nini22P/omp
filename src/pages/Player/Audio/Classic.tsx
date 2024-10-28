@@ -13,7 +13,7 @@ import { useShallow } from 'zustand/shallow'
 
 const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: { borderRadius: SpringValue<string> } }) => {
 
-  const playQueue = usePlayQueueStore((state) => state.playQueue)
+  const playQueue = usePlayQueueStore.use.playQueue()
 
   const [
     audioViewIsShow,

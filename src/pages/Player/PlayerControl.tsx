@@ -33,9 +33,8 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
     large: { width: 38, height: 38 }
   }
 
-  const [currentIndex, playQueue] = usePlayQueueStore(
-    useShallow((state) => [state.currentIndex, state.playQueue])
-  )
+  const playQueue = usePlayQueueStore.use.playQueue()
+  const currentIndex = usePlayQueueStore.use.currentIndex()
 
   const [
     audioViewIsShow,

@@ -39,9 +39,10 @@ const CommonList = (
   }) => {
 
   const [shuffle, updateShuffle] = useUiStore(useShallow((state) => [state.shuffle, state.updateShuffle]))
-  const [updatePlayQueue, updateCurrentIndex] = usePlayQueueStore(
-    useShallow((state) => [state.updatePlayQueue, state.updateCurrentIndex])
-  )
+
+  const updatePlayQueue = usePlayQueueStore.use.updatePlayQueue()
+  const updateCurrentIndex = usePlayQueueStore.use.updateCurrentIndex()
+
   const updatePlayStatu = usePlayerStore((state) => state.updatePlayStatu)
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)

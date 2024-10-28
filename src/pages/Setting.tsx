@@ -52,7 +52,7 @@ const Setting = () => {
     )
   )
 
-  const resetPlayQueue = usePlayQueueStore(state => state.resetPlayQueue)
+  const resetPlayQueue = usePlayQueueStore.use.resetPlayQueue()
   const resetPlayer = usePlayerStore(state => state.resetPlayer)
   const updateHistoryList = useHistoryStore((state) => state.updateHistoryList)
   const updatePlaylists = usePlaylistsStore((state) => state.updatePlaylists)

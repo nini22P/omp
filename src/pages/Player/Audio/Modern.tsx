@@ -32,7 +32,7 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
 
   const theme = useTheme()
 
-  const playQueue = usePlayQueueStore((state) => state.playQueue)
+  const playQueue = usePlayQueueStore.use.playQueue()
 
   const [
     audioViewIsShow,

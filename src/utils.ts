@@ -142,7 +142,7 @@ export const getNetMetaData = async (path: string[], url: string) => {
     if (metadata && metadata.common.title !== undefined) {
       const cover = !metadata.common.picture ? undefined : await Promise.all(metadata.common.picture.map(async (item: Cover) => await compressImage(item)))
       const lyrics = metadata.common.lyrics !== undefined && metadata.common.lyrics[0]
-        || metadata.native['ID3v2.3'] && metadata.native['ID3v2.3'].find(item => item.id.includes('LYRICS'))?.value
+        || metadata.native['ID3v2.3'] && metadata.native['ID3v2.3'].find(item => item.id.toLocaleLowerCase().includes('lyrics'))?.value
         || null
       const metaData: MetaData = {
         path: path,
@@ -155,7 +155,6 @@ export const getNetMetaData = async (path: string[], url: string) => {
         cover: cover,
         lyrics: lyrics,
       }
-      console.log('Get net metadata: ', metaData)
       return metaData
     }
   } catch (error) {

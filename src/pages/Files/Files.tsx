@@ -52,9 +52,8 @@ const Files = () => {
     useShallow((state) => [state.updatePictureList, state.updateCurrentPicture])
   )
 
-  const [updatePlayQueue, updateCurrentIndex] = usePlayQueueStore(
-    useShallow((state) => [state.updatePlayQueue, state.updateCurrentIndex])
-  )
+  const updatePlayQueue = usePlayQueueStore.use.updatePlayQueue()
+  const updateCurrentIndex = usePlayQueueStore.use.updateCurrentIndex()
 
   const updatePlayStatu = usePlayerStore(state => state.updatePlayStatu)
 

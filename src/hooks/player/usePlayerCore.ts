@@ -47,9 +47,12 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
   )
 
   const { getLocalMetaData, setLocalMetaData } = useLocalMetaDataStore()
-  const [playQueue, currentIndex, updateCurrentIndex] = usePlayQueueStore(
-    useShallow((state) => [state.playQueue, state.currentIndex, state.updateCurrentIndex])
-  )
+
+  const playQueue = usePlayQueueStore.use.playQueue()
+  const currentIndex = usePlayQueueStore.use.currentIndex()
+  const updateCurrentIndex = usePlayQueueStore.use.updateCurrentIndex()
+
+
   const repeat = useUiStore((state) => state.repeat)
   const [historyList, insertHistory] = useHistoryStore(
     useShallow((state) => [state.historyList, state.insertHistory])

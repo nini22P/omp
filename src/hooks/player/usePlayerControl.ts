@@ -7,21 +7,10 @@ import { useShallow } from 'zustand/shallow'
 
 const usePlayerControl = (player: HTMLVideoElement | null) => {
 
-  const [
-    playQueue,
-    currentIndex,
-    updateCurrentIndex,
-    updatePlayQueue,
-  ] = usePlayQueueStore(
-    useShallow(
-      (state) => [
-        state.playQueue,
-        state.currentIndex,
-        state.updateCurrentIndex,
-        state.updatePlayQueue,
-      ]
-    )
-  )
+  const playQueue = usePlayQueueStore.use.playQueue()
+  const currentIndex = usePlayQueueStore.use.currentIndex()
+  const updateCurrentIndex = usePlayQueueStore.use.updateCurrentIndex()
+  const updatePlayQueue = usePlayQueueStore.use.updatePlayQueue()
 
   const [
     updatePlayStatu,

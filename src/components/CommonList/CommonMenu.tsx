@@ -49,9 +49,10 @@ const CommonMenu = (
   const [updateFolderTree] = useUiStore(
     useShallow((state) => [state.updateFolderTree])
   )
-  const [playQueue, updatePlayQueue] = usePlayQueueStore(
-    useShallow((state) => [state.playQueue, state.updatePlayQueue])
-  )
+
+  const playQueue = usePlayQueueStore.use.playQueue()
+  const updatePlayQueue = usePlayQueueStore.use.updatePlayQueue()
+
   const [playlists, insertPlaylist, insertFilesToPlaylist] = usePlaylistsStore(
     useShallow((state) => [state.playlists, state.insertPlaylist, state.insertFilesToPlaylist])
   )

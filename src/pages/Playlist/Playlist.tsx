@@ -22,9 +22,10 @@ const Playlist = () => {
   const [shuffle, updateVideoViewIsShow, updateShuffle,] = useUiStore(
     useShallow((state) => [state.shuffle, state.updateVideoViewIsShow, state.updateShuffle])
   )
-  const [updatePlayQueue, updateCurrentIndex] = usePlayQueueStore(
-    useShallow((state) => [state.updatePlayQueue, state.updateCurrentIndex])
-  )
+
+  const updatePlayQueue = usePlayQueueStore.use.updatePlayQueue()
+  const updateCurrentIndex = usePlayQueueStore.use.updateCurrentIndex()
+
   const updatePlayStatu = usePlayerStore((state) => state.updatePlayStatu)
 
   const [playlists, renamePlaylist, removePlaylist, removeFilesFromPlaylist] = usePlaylistsStore(

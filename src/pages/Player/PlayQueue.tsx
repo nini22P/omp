@@ -12,21 +12,10 @@ const PlayQueue = () => {
   const { scrollbarStyle } = useCustomTheme()
   const theme = useTheme()
 
-  const [
-    currentIndex,
-    playQueue,
-    updateCurrentIndex,
-    updatePlayQueue,
-  ] = usePlayQueueStore(
-    useShallow(
-      (state) => [
-        state.currentIndex,
-        state.playQueue,
-        state.updateCurrentIndex,
-        state.updatePlayQueue,
-      ]
-    )
-  )
+  const playQueue = usePlayQueueStore.use.playQueue()
+  const currentIndex = usePlayQueueStore.use.currentIndex()
+  const updateCurrentIndex = usePlayQueueStore.use.updateCurrentIndex()
+  const updatePlayQueue = usePlayQueueStore.use.updatePlayQueue()
 
   const [
     playQueueIsShow,
