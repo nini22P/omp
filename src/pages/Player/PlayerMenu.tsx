@@ -247,6 +247,13 @@ const PlayerMenu = ({ player }: { player: HTMLVideoElement | null }) => {
                 </ListItemIcon>
                 <ListItemText primary={t`Switch fullscreen`} />
               </MenuItem>
+
+              <MenuItem onClick={() => reFetchMetadata()}>
+                <ListItemIcon>
+                  <CloudDownloadRoundedIcon />
+                </ListItemIcon>
+                <ListItemText primary={t`Re-fetch metadata`} />
+              </MenuItem>
             </div>
           }
 
@@ -316,12 +323,6 @@ const PlayerMenu = ({ player }: { player: HTMLVideoElement | null }) => {
             </div>
           }
 
-          <MenuItem onClick={() => reFetchMetadata()}>
-            <ListItemIcon>
-              <CloudDownloadRoundedIcon />
-            </ListItemIcon>
-            <ListItemText primary={t`Re-fetch metadata`} />
-          </MenuItem>
         </Menu>
       </Box>
 

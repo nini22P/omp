@@ -304,13 +304,14 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
               sx={{ display: { sm: 'block', xs: type === 'video' ? 'block' : 'none' } }}
               pr={1}
             >
-              <Box sx={{ display: 'inline-grid' }}>
-                <VolumeControl />
-              </Box>
 
               <IconButton onClick={() => updatePlayQueueIsShow(!playQueueIsShow)} sx={{ display: { sm: 'inline-grid', xs: 'none' } }}>
                 <PlaylistPlayRoundedIcon />
               </IconButton>
+
+              <Box sx={{ display: 'inline-grid' }}>
+                <VolumeControl />
+              </Box>
 
               <IconButton onClick={() => handleClickFullscreen()} sx={{ display: { sm: 'inline-grid', xs: 'none' } }} >
                 {

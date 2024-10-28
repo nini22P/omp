@@ -26,7 +26,7 @@ msgid "Add account"
 msgstr "添加账户"
 
 #: src/components/CommonList/CommonMenu.tsx:256
-#: src/pages/Player/PlayerMenu.tsx:360
+#: src/pages/Player/PlayerMenu.tsx:361
 #: src/pages/SideBar/Playlists.tsx:52
 msgid "Add playlist"
 msgstr "新建播放列表"
@@ -38,7 +38,7 @@ msgstr "添加到播放队列"
 #: src/components/CommonList/CommonMenu.tsx:155
 #: src/components/CommonList/CommonMenu.tsx:230
 #: src/pages/Player/PlayerMenu.tsx:240
-#: src/pages/Player/PlayerMenu.tsx:334
+#: src/pages/Player/PlayerMenu.tsx:335
 msgid "Add to playlist"
 msgstr "添加到播放列表"
 
@@ -51,7 +51,7 @@ msgid "Auto"
 msgstr "自动"
 
 #: src/components/CommonList/CommonMenu.tsx:261
-#: src/pages/Player/PlayerMenu.tsx:365
+#: src/pages/Player/PlayerMenu.tsx:366
 #: src/pages/Playlist/Playlist.tsx:216
 #: src/pages/Playlist/Playlist.tsx:239
 #: src/pages/Setting.tsx:217
@@ -62,7 +62,7 @@ msgstr "取消"
 msgid "Cancel select"
 msgstr "取消选择"
 
-#: src/pages/Player/PlayerMenu.tsx:285
+#: src/pages/Player/PlayerMenu.tsx:292
 msgid "Classic"
 msgstr "经典"
 
@@ -154,7 +154,7 @@ msgstr "管理"
 msgid "Media only"
 msgstr "仅限媒体"
 
-#: src/pages/Player/PlayerMenu.tsx:273
+#: src/pages/Player/PlayerMenu.tsx:280
 msgid "Modern"
 msgstr "现代"
 
@@ -177,6 +177,11 @@ msgstr "名称"
 #: src/pages/SideBar/Playlists.tsx:19
 msgid "New playlist"
 msgstr "新播放列表"
+
+#: src/components/Lyrics/Lyrics.tsx:75
+#: src/pages/Player/Audio/Modern.tsx:275
+msgid "No lyrics"
+msgstr "无歌词"
 
 #: src/pages/Playlist/Playlist.tsx:223
 #: src/pages/Playlist/Playlist.tsx:240
@@ -201,7 +206,7 @@ msgid "Play queue"
 msgstr "播放队列"
 
 #: src/pages/Player/PlayerMenu.tsx:207
-#: src/pages/Player/PlayerMenu.tsx:298
+#: src/pages/Player/PlayerMenu.tsx:305
 msgid "Playback rate"
 msgstr "播放速度"
 
@@ -210,7 +215,7 @@ msgstr "播放速度"
 msgid "Please use Microsoft account authorization to log in"
 msgstr "请使用微软账户授权登录"
 
-#: src/pages/Player/PlayerMenu.tsx:323
+#: src/pages/Player/PlayerMenu.tsx:255
 msgid "Re-fetch metadata"
 msgstr "重新获取元数据"
 
@@ -267,7 +272,7 @@ msgid "Switch fullscreen"
 msgstr "切换全屏"
 
 #: src/pages/Player/PlayerMenu.tsx:198
-#: src/pages/Player/PlayerMenu.tsx:261
+#: src/pages/Player/PlayerMenu.tsx:268
 msgid "Switch theme"
 msgstr "切换主题"
 

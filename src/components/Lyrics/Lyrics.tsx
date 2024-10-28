@@ -1,6 +1,7 @@
 import { useMemo, useRef } from 'react'
 import { useMediaQuery, useTheme } from '@mui/material'
 import { useSpring, animated } from '@react-spring/web'
+import { t } from '@lingui/macro'
 
 const Lyrics = ({ lyrics, currentTime }: { lyrics: string, currentTime: number }) => {
   const theme = useTheme()
@@ -71,7 +72,7 @@ const Lyrics = ({ lyrics, currentTime }: { lyrics: string, currentTime: number }
               alignItems: 'center',
             }}
           >
-            <span>暂无歌词</span>
+            <span>{t`No lyrics`}</span>
           </div>
           :
           <animated.div
@@ -81,7 +82,7 @@ const Lyrics = ({ lyrics, currentTime }: { lyrics: string, currentTime: number }
               transform: scrollY.to(y => `translateY(-${y}px)`),
             }}
           >
-            <div style={{ height: '40%' }} />
+            <div style={{ height: '30%' }} />
             {
               lyricsList.map((item, index) =>
                 <div
@@ -103,7 +104,7 @@ const Lyrics = ({ lyrics, currentTime }: { lyrics: string, currentTime: number }
                         : isMobile ? '1rem' : '1.5rem',
                       color: index === currentLyricIndex ? theme.palette.text.primary : theme.palette.text.secondary,
                       fontWeight: index === currentLyricIndex ? 'bold' : 'normal',
-                      transition: 'font-size 0.3s ease, color 0.3s ease, font-weight 0.3s ease',
+                      transition: 'font-size 0.3s ease-in-out, color 0.3s ease, font-weight 0.3s ease',
                     }}
                   >
                     {item.text}

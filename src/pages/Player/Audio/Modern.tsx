@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Container, IconButton, Slider, Typography, useMediaQuery, useTheme } from '@mui/material'
+import { Box, CircularProgress, Container, IconButton, Slider, Tab, Tabs, Typography, useMediaQuery, useTheme } from '@mui/material'
 import Grid from '@mui/material/Grid2'
 import useFullscreen from '@/hooks/ui/useFullscreen'
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded'
@@ -14,8 +14,10 @@ import SkipNextRoundedIcon from '@mui/icons-material/SkipNextRounded'
 import RepeatOneRoundedIcon from '@mui/icons-material/RepeatOneRounded'
 import RepeatRoundedIcon from '@mui/icons-material/RepeatRounded'
 import QueueMusicRoundedIcon from '@mui/icons-material/QueueMusicRounded'
+import LyricsRoundedIcon from '@mui/icons-material/LyricsRounded'
 import { SpringValue, animated, useSpring } from '@react-spring/web'
 import { useMemo, useState } from 'react'
+import { t } from '@lingui/macro'
 import usePlayerControl from '@/hooks/player/usePlayerControl'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
@@ -24,6 +26,7 @@ import PlayerMenu from '../PlayerMenu'
 import { timeShift } from '@/utils'
 import { useShallow } from 'zustand/shallow'
 import Lyrics from '@/components/Lyrics/Lyrics'
+import VolumeControl from '../VolumeControl'
 
 const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: { borderRadius: SpringValue<string> } }) => {
 
@@ -37,8 +40,10 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
     shuffle,
     repeat,
     coverColor,
+    lyricsIsShow,
     updateAudioViewIsShow,
     updatePlayQueueIsShow,
+    updateLyricsIsShow,
   ] = useUiStore(
     useShallow(
       (state) => [
@@ -47,8 +52,10 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
         state.shuffle,
         state.repeat,
         state.coverColor,
+        state.lyricsIsShow,
         state.updateAudioViewIsShow,
         state.updatePlayQueueIsShow,
+        state.updateLyricsIsShow,
       ]
     )
   )
@@ -102,7 +109,7 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
 
   const isMobile = useMediaQuery('(max-height: 600px) or (max-width: 600px)')
 
-  const [isShowLyrics, setIsShowLyrics] = useState(false)
+  const [currentTab, setCurrentTab] = useState(0)
 
   return (
     <animated.div
@@ -143,9 +150,11 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
               width: '100%',
               height: 'auto',
             }}>
+
             <IconButton aria-label="close" onClick={() => updateAudioViewIsShow(!audioViewIsShow)}>
               <KeyboardArrowDownRoundedIcon />
             </IconButton>
+
             <Grid
               container
               sx={{
@@ -157,23 +166,34 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
             >
 
               {
-                isMobile &&
+                !isMobile &&
                 <IconButton
-                  aria-label="Lyrics"
-                  onClick={() => setIsShowLyrics(!isShowLyrics)}
+                  aria-label="PlayQueue"
+                  onClick={() => updatePlayQueueIsShow(true)}
                   className='app-region-no-drag'
                 >
-                  <div style={{ fontSize: '1rem' }}>词</div>
+                  <QueueMusicRoundedIcon />
                 </IconButton>
               }
 
-              <IconButton
-                aria-label="PlayQueue"
-                onClick={() => updatePlayQueueIsShow(true)}
-                className='app-region-no-drag'
-              >
-                <QueueMusicRoundedIcon />
-              </IconButton>
+              {!isMobile && <VolumeControl />}
+
+              {
+                !isMobile &&
+                <IconButton
+                  aria-label="Lyrics"
+                  onClick={() => updateLyricsIsShow(!lyricsIsShow)}
+                  className='app-region-no-drag'
+                >
+                  <LyricsRoundedIcon
+                    style={
+                      lyricsIsShow
+                        ? { height: 20, width: 20 }
+                        : { height: 20, width: 20, color: '#aaa' }
+                    }
+                  />
+                </IconButton>
+              }
 
               <IconButton
                 aria-label="Full"
@@ -198,7 +218,7 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
               overflow: 'hidden',
               display: 'grid',
               gridTemplateColumns: { xs: '1fr', sm: '2fr 3fr' },
-              gridTemplateRows: { xs: '1fr 1fr', sm: '1fr' },
+              gridTemplateRows: { xs: '1fr 1fr auto', sm: '1fr' },
               // gap: { xs: '0', sm: '1rem' },
               alignItems: 'center',
               justifyContent: 'center',
@@ -215,7 +235,7 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
                 minWidth: '5rem',
                 overflow: 'hidden',
                 padding: '1rem',
-                gridRow: { xs: '1', sm: '1' },
+                gridRow: { xs: '1', sm: isMobile ? '1 / 3' : '1' },
                 zIndex: 1,
               }}>
               <img
@@ -232,10 +252,10 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
 
             {/* 歌词 */}
             {
-              (!isMobile || isShowLyrics) &&
+              ((!isMobile && lyricsIsShow) || (isMobile && currentTab === 1)) &&
               <Box
                 sx={{
-                  gridRow: { xs: 'auto', sm: '1 / 3' },
+                  gridRow: { xs: 'auto', sm: isMobile ? 'auto' : '1 / 3' },
                   overflow: 'hidden',
                   height: '100%',
                   padding: '1rem',
@@ -254,7 +274,7 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
                         alignItems: 'center',
                       }}
                     >
-                      <span>暂无歌词</span>
+                      <span>{t`No lyrics`}</span>
                     </div>
                 }
               </Box>
@@ -262,7 +282,7 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
 
             {/* 播放控制 */}
             {
-              (!isMobile || !isShowLyrics) &&
+              (!isMobile || (isMobile && currentTab === 0)) &&
               <Box
                 sx={{
                   // gridColumn: { xs: 'auto', sm: '1 / 3' },
@@ -353,6 +373,41 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
                     }
                   </IconButton>
                 </Box>
+
+              </Box>
+            }
+
+            {
+              isMobile &&
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'row',
+                  justifyContent: 'space-evenly',
+                  alignItems: 'center',
+                  width: '100%',
+                  gridColumn: { xs: 'auto', sm: '2 / 3' },
+                }}
+              >
+                <VolumeControl />
+
+                <Tabs
+                  value={currentTab}
+                  onChange={(_, newValue) => setCurrentTab(newValue)}
+                  aria-label="player-tab"
+                  sx={{ '& .MuiTab-root': { padding: 0, minWidth: '3rem' } }}
+                >
+                  <Tab icon={<PlayCircleOutlineRoundedIcon />} aria-label="play" />
+                  <Tab icon={<LyricsRoundedIcon />} aria-label="lyrics" />
+                </Tabs>
+
+                <IconButton
+                  aria-label="PlayQueue"
+                  onClick={() => updatePlayQueueIsShow(true)}
+                  className='app-region-no-drag'
+                >
+                  <QueueMusicRoundedIcon />
+                </IconButton>
 
               </Box>
             }

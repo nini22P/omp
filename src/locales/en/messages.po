@@ -26,7 +26,7 @@ msgid "Add account"
 msgstr "Add account"
 
 #: src/components/CommonList/CommonMenu.tsx:256
-#: src/pages/Player/PlayerMenu.tsx:360
+#: src/pages/Player/PlayerMenu.tsx:361
 #: src/pages/SideBar/Playlists.tsx:52
 msgid "Add playlist"
 msgstr "Add playlist"
@@ -38,7 +38,7 @@ msgstr "Add to play queue"
 #: src/components/CommonList/CommonMenu.tsx:155
 #: src/components/CommonList/CommonMenu.tsx:230
 #: src/pages/Player/PlayerMenu.tsx:240
-#: src/pages/Player/PlayerMenu.tsx:334
+#: src/pages/Player/PlayerMenu.tsx:335
 msgid "Add to playlist"
 msgstr "Add to playlist"
 
@@ -51,7 +51,7 @@ msgid "Auto"
 msgstr "Auto"
 
 #: src/components/CommonList/CommonMenu.tsx:261
-#: src/pages/Player/PlayerMenu.tsx:365
+#: src/pages/Player/PlayerMenu.tsx:366
 #: src/pages/Playlist/Playlist.tsx:216
 #: src/pages/Playlist/Playlist.tsx:239
 #: src/pages/Setting.tsx:217
@@ -62,7 +62,7 @@ msgstr "Cancel"
 msgid "Cancel select"
 msgstr "Cancel select"
 
-#: src/pages/Player/PlayerMenu.tsx:285
+#: src/pages/Player/PlayerMenu.tsx:292
 msgid "Classic"
 msgstr "Classic"
 
@@ -154,7 +154,7 @@ msgstr "Manage"
 msgid "Media only"
 msgstr "Media only"
 
-#: src/pages/Player/PlayerMenu.tsx:273
+#: src/pages/Player/PlayerMenu.tsx:280
 msgid "Modern"
 msgstr "Modern"
 
@@ -177,6 +177,11 @@ msgstr "Name"
 #: src/pages/SideBar/Playlists.tsx:19
 msgid "New playlist"
 msgstr "New playlist"
+
+#: src/components/Lyrics/Lyrics.tsx:75
+#: src/pages/Player/Audio/Modern.tsx:275
+msgid "No lyrics"
+msgstr "No lyrics"
 
 #: src/pages/Playlist/Playlist.tsx:223
 #: src/pages/Playlist/Playlist.tsx:240
@@ -201,7 +206,7 @@ msgid "Play queue"
 msgstr "Play queue"
 
 #: src/pages/Player/PlayerMenu.tsx:207
-#: src/pages/Player/PlayerMenu.tsx:298
+#: src/pages/Player/PlayerMenu.tsx:305
 msgid "Playback rate"
 msgstr "Playback rate"
 
@@ -210,7 +215,7 @@ msgstr "Playback rate"
 msgid "Please use Microsoft account authorization to log in"
 msgstr "Please use Microsoft account authorization to log in"
 
-#: src/pages/Player/PlayerMenu.tsx:323
+#: src/pages/Player/PlayerMenu.tsx:255
 msgid "Re-fetch metadata"
 msgstr "Re-fetch metadata"
 
@@ -267,7 +272,7 @@ msgid "Switch fullscreen"
 msgstr "Switch fullscreen"
 
 #: src/pages/Player/PlayerMenu.tsx:198
-#: src/pages/Player/PlayerMenu.tsx:261
+#: src/pages/Player/PlayerMenu.tsx:268
 msgid "Switch theme"
 msgstr "Switch theme"
 

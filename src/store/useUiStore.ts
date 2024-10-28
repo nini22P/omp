@@ -26,6 +26,7 @@ const initialState: UiStatus = {
   foldersFirst: true,
   mediaOnly: true,
   hdThumbnails: false,
+  lyricsIsShow: true,
 }
 
 const useUiStore = create<UiStatus & UiAction>()(
@@ -55,6 +56,7 @@ const useUiStore = create<UiStatus & UiAction>()(
       updateFoldersFirst: (foldersFirst) => set(() => ({ foldersFirst: foldersFirst })),
       updateMediaOnly: (mediaOnly) => set(() => ({ mediaOnly: mediaOnly })),
       updateHDThumbnails: (hdThumbnails) => set(() => ({ hdThumbnails: hdThumbnails })),
+      updateLyricsIsShow: (lyricsIsShow) => set(() => ({ lyricsIsShow: lyricsIsShow })),
     }),
     {
       name: 'ui-store',
