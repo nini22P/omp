@@ -217,7 +217,7 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
               height: '100%',
               overflow: 'hidden',
               display: 'grid',
-              gridTemplateColumns: { xs: '1fr', sm: '2fr 3fr' },
+              gridTemplateColumns: { xs: '1fr', sm: '3fr 4fr' },
               gridTemplateRows: { xs: '1fr 1fr auto', sm: '1fr' },
               // gap: { xs: '0', sm: '1rem' },
               alignItems: 'center',

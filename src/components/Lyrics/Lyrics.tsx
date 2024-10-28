@@ -29,16 +29,19 @@ const Lyrics = ({ lyrics, currentTime }: { lyrics: string, currentTime: number }
       const totalSeconds = minutes * 60 + seconds + milliseconds / 1000
       return totalSeconds
     } else {
-      throw new Error('Invalid time format')
+      return -1
     }
   }
 
   const lyricsList: Lyrics = lyrics
     .split(/\r?\n/)
-    .map(item => ({
-      time: timeToSeconds(item.split(']')[0]),
-      text: item.split(']')[1],
-    }))
+    .map(item => (
+      {
+        time: timeToSeconds(item.split(']')[0]),
+        text: item.split(']')[1],
+      }
+    ))
+    .filter(item => item.time !== -1)
 
   const currentLyricIndex = useMemo(
     () => {
@@ -100,11 +103,11 @@ const Lyrics = ({ lyrics, currentTime }: { lyrics: string, currentTime: number }
                   <p
                     style={{
                       fontSize: index === currentLyricIndex
-                        ? isMobile ? '1.5rem' : '2rem'
-                        : isMobile ? '1rem' : '1.5rem',
+                        ? isMobile ? '1.5rem' : '1.5rem'
+                        : isMobile ? '1rem' : '1.2rem',
                       color: index === currentLyricIndex ? theme.palette.text.primary : theme.palette.text.secondary,
                       fontWeight: index === currentLyricIndex ? 'bold' : 'normal',
-                      transition: 'font-size 0.3s ease-in-out, color 0.3s ease, font-weight 0.3s ease',
+                      transition: 'font-size 0.3s ease-out, color 0.3s ease, font-weight 0.3s ease',
                     }}
                   >
                     {item.text}

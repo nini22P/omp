@@ -26,7 +26,7 @@ const initialState: UiStatus = {
   foldersFirst: true,
   mediaOnly: true,
   hdThumbnails: false,
-  lyricsIsShow: true,
+  lyricsIsShow: false,
 }
 
 const useUiStore = create<UiStatus & UiAction>()(
