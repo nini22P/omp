@@ -68,6 +68,8 @@ const Lyrics = ({ lyrics, currentTime }: { lyrics: string, currentTime: number }
     config: { mass: 2, tension: 300, friction: 25 },
   })
 
+  const isHighlight = (time: number) => lyricsList[currentLyricIndex] && time === lyricsList[currentLyricIndex].time
+
   return (
     <div key={'lyrics'} style={{ height: '100%', width: '100%', overflow: 'hidden' }}>
       {
@@ -101,19 +103,25 @@ const Lyrics = ({ lyrics, currentTime }: { lyrics: string, currentTime: number }
                     display: 'flex',
                     justifyContent: 'start',
                     alignItems: 'center',
-                    height: item.time === lyricsList[currentLyricIndex].time ? lyricLineHeight * 1.6 : lyricLineHeight,
-                    paddingLeft: item.time === lyricsList[currentLyricIndex].time
+                    height: isHighlight(item.time)
+                      ? lyricLineHeight * 1.6
+                      : lyricLineHeight,
+                    paddingLeft: isHighlight(item.time)
                       ? isMobile ? 0 : '1rem'
                       : isMobile ? '1rem' : '2rem',
                   }}
                 >
                   <p
                     style={{
-                      fontSize: item.time === lyricsList[currentLyricIndex].time
+                      fontSize: isHighlight(item.time)
                         ? isMobile ? '1.5rem' : '1.5rem'
                         : isMobile ? '1rem' : '1.2rem',
-                      color: item.time === lyricsList[currentLyricIndex].time ? theme.palette.text.primary : theme.palette.text.secondary,
-                      fontWeight: item.time === lyricsList[currentLyricIndex].time ? 'bold' : 'normal',
+                      color: isHighlight(item.time)
+                        ? theme.palette.text.primary
+                        : theme.palette.text.secondary,
+                      fontWeight: isHighlight(item.time)
+                        ? 'bold'
+                        : 'normal',
                       transition: 'font-size 0.3s ease-out, color 0.3s ease, font-weight 0.3s ease',
                     }}
                   >
