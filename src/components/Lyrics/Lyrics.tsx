@@ -6,7 +6,16 @@ import { t } from '@lingui/macro'
 const Lyrics = ({ lyrics, currentTime }: { lyrics: string, currentTime: number }) => {
   const theme = useTheme()
   const lyricsRef = useRef<HTMLDivElement>(null)
-  const lyricLineHeight = 48
+
+  const isMobile = useMediaQuery('(max-height: 600px) or (max-width: 600px)')
+
+  const xs = useMediaQuery(theme.breakpoints.up('xs'))
+  const sm = useMediaQuery(theme.breakpoints.up('sm'))
+  const md = useMediaQuery(theme.breakpoints.up('md'))
+  const lg = useMediaQuery(theme.breakpoints.up('lg'))
+  const xl = useMediaQuery(theme.breakpoints.up('xl'))
+
+  const lyricLineHeight = xl ? 44 : lg ? 46 : md ? 48 : sm ? 48 : xs ? 48 : 50
 
   type Lyrics = {
     time: number,
@@ -59,8 +68,6 @@ const Lyrics = ({ lyrics, currentTime }: { lyrics: string, currentTime: number }
     config: { mass: 2, tension: 300, friction: 25 },
   })
 
-  const isMobile = useMediaQuery('(max-height: 600px) or (max-width: 600px)')
-
   return (
     <div key={'lyrics'} style={{ height: '100%', width: '100%', overflow: 'hidden' }}>
       {
@@ -87,26 +94,26 @@ const Lyrics = ({ lyrics, currentTime }: { lyrics: string, currentTime: number }
           >
             <div style={{ height: '30%' }} />
             {
-              lyricsList.map((item, index) =>
+              lyricsList.map((item) =>
                 <div
                   key={item.time + item.text}
                   style={{
                     display: 'flex',
                     justifyContent: 'start',
                     alignItems: 'center',
-                    height: index === currentLyricIndex ? lyricLineHeight * 1.6 : lyricLineHeight,
-                    paddingLeft: index === currentLyricIndex
+                    height: item.time === lyricsList[currentLyricIndex].time ? lyricLineHeight * 1.6 : lyricLineHeight,
+                    paddingLeft: item.time === lyricsList[currentLyricIndex].time
                       ? isMobile ? 0 : '1rem'
                       : isMobile ? '1rem' : '2rem',
                   }}
                 >
                   <p
                     style={{
-                      fontSize: index === currentLyricIndex
+                      fontSize: item.time === lyricsList[currentLyricIndex].time
                         ? isMobile ? '1.5rem' : '1.5rem'
                         : isMobile ? '1rem' : '1.2rem',
-                      color: index === currentLyricIndex ? theme.palette.text.primary : theme.palette.text.secondary,
-                      fontWeight: index === currentLyricIndex ? 'bold' : 'normal',
+                      color: item.time === lyricsList[currentLyricIndex].time ? theme.palette.text.primary : theme.palette.text.secondary,
+                      fontWeight: item.time === lyricsList[currentLyricIndex].time ? 'bold' : 'normal',
                       transition: 'font-size 0.3s ease-out, color 0.3s ease, font-weight 0.3s ease',
                     }}
                   >
