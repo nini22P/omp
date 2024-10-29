@@ -57,6 +57,11 @@ const Audio = ({ player }: { player: HTMLVideoElement | null }) => {
   )
 
   const bind = useDrag(({ down, movement: [, my], last, event }) => {
+    const element = event.target as HTMLElement
+
+    if (element.classList.contains('MuiSlider-thumb'))
+      return
+
     if ('pointerType' in event && event.pointerType !== 'touch') {
       return
     }
