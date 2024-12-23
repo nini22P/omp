@@ -25,9 +25,8 @@
 
 ## 截图
 
-![音频 亮色模式](./screenshots/audio-light.png)
-![音频 暗色模式](./screenshots/audio-dark.png)
-![文件列表](./screenshots/files.png)
+![音频 亮色模式](./public/screenshots/audio-light.webp)
+![音频 暗色模式](./public/screenshots/audio-dark.webp)
 
 ## FAQ
 

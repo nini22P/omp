@@ -25,9 +25,8 @@ English | [中文](./readme_cn.md)
 
 ## Screenshots
 
-![Audio light](./screenshots/audio-light.png)
-![Audio dark](./screenshots/audio-dark.png)
-![Files](./screenshots/files.png)
+![Audio light](./public/screenshots/audio-light.webp)
+![Audio dark](./public/screenshots/audio-dark.webp)
 
 ## FAQ
 
