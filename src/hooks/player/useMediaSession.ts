@@ -28,10 +28,11 @@ const useMediaSession = (player: HTMLVideoElement | null) => {
   } = usePlayerControl(player)
 
   const defaultSkipTime = 10
-  // 向 mediaSession 发送当前播放进度
+  // 更新 MediaSession 播放进度
   const updatePositionState = useCallback(
     () => {
       if ('setPositionState' in navigator.mediaSession && player && !isNaN(player.duration)) {
+        console.log('Update MediaSession Position State')
         navigator.mediaSession.setPositionState({
           duration: player.duration,
           playbackRate: player.playbackRate,
@@ -52,10 +53,11 @@ const useMediaSession = (player: HTMLVideoElement | null) => {
     [player, updatePositionState]
   )
 
-  // 添加 mediaSession
+  // 设置 MediaSession
   useEffect(
     () => {
       if ('mediaSession' in navigator) {
+        console.log('Set MediaSession')
         navigator.mediaSession.metadata = new MediaMetadata({
           title: currentMetaData?.title,
           artist: currentMetaData?.artist,
@@ -92,7 +94,8 @@ const useMediaSession = (player: HTMLVideoElement | null) => {
         }
       }
     },
-    [cover, handleClickPlay, handleClickPause, handleClickNext, handleClickPrev, handleClickSeekbackward, handleClickSeekforward, seekTo, currentMetaData?.title, currentMetaData?.artist, currentMetaData?.album, updatePositionState]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [cover, currentMetaData]
   )
 }
 

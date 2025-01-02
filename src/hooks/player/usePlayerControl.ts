@@ -47,11 +47,13 @@ const usePlayerControl = (player: HTMLVideoElement | null) => {
   // 播放开始
   const handleClickPlay = () => {
     updatePlayStatu('playing')
+    player?.play()
   }
 
   // 播放暂停
   const handleClickPause = () => {
     updatePlayStatu('paused')
+    player?.pause()
   }
 
   // 下一曲

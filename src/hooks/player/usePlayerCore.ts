@@ -78,6 +78,8 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
         } catch (error) {
           console.error(error)
           updatePlayStatu('paused')
+          updateIsLoading(false)
+          player?.pause()
         }
       }
       return true
@@ -105,14 +107,13 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
     [url]
   )
 
-  // 播放开始暂停
+  // 插入播放历史
   useEffect(
     () => {
       if (player !== null && !isLoading && player.src.includes('1drv.com') && currentFile) {
         if (playStatu === 'playing') {
           console.log('Playing', currentFile.filePath)
           if (currentFile.filePath) {
-            player?.play()
             if (historyList !== null) {
               insertHistory({
                 fileName: currentFile.fileName,
@@ -122,16 +123,11 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
               })
             }
           }
-          else {
-            updatePlayStatu('paused')
-          }
         }
-        if (playStatu === 'paused')
-          player?.pause()
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentFile, playStatu, isLoading]
+    [currentFile, playStatu]
   )
 
   // 设置当前播放进度
@@ -154,8 +150,10 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
         player?.play()
       } else if (repeat === 'off' || repeat === 'all') {
         if (isPlayQueueEnd || !next) {
-          if (repeat === 'off')
+          if (repeat === 'off'){
             updatePlayStatu('paused')
+            player?.pause()
+          }
           updateCurrentIndex(playQueue[0].index)
         } else
           updateCurrentIndex(next.index)
