@@ -4,13 +4,13 @@ import usePlayQueueStore from '@/store/usePlayQueueStore'
 import useUiStore from '@/store/useUiStore'
 import CommonList from '@/components/CommonList/CommonList'
 import usePlayerStore from '@/store/usePlayerStore'
-import useCustomTheme from '@/hooks/ui/useCustomTheme'
 import { useShallow } from 'zustand/shallow'
+import useStyles from '@/hooks/ui/useStyles'
 
 const PlayQueue = () => {
 
-  const { scrollbarStyle } = useCustomTheme()
   const theme = useTheme()
+  const styles = useStyles(theme)
 
   const playQueue = usePlayQueueStore.use.playQueue()
   const currentIndex = usePlayQueueStore.use.currentIndex()
@@ -50,7 +50,7 @@ const PlayQueue = () => {
         '& .MuiDrawer-paper': {
           width: { xs: 'calc(100vw - 0.5rem)', sm: '400px' }
         },
-        ...scrollbarStyle
+        ...styles.scrollbar
       }}
     >
       <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%', }} >

@@ -12,15 +12,15 @@ import useDebounce from '@/hooks/useDebounce'
 import CommonList from '@/components/CommonList/CommonList'
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
 import { useLocation, useNavigate } from 'react-router-dom'
-import useCustomTheme from '@/hooks/ui/useCustomTheme'
 import { animated, useSpring } from '@react-spring/web'
 import { useShallow } from 'zustand/shallow'
+import useStyles from '@/hooks/ui/useStyles'
 
 type SearchScope = 'global' | 'current'
 
 const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
   const theme = useTheme()
-  const { scrollbarStyle } = useCustomTheme()
+  const styles = useStyles(theme)
 
   const [searchQuery, setSearchQuery] = useState('')
   const debouncedSearchQuery = useDebounce(searchQuery, searchQuery.length > 0 ? 1000 : 0)
@@ -153,7 +153,7 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
         fullWidth
         disableRestoreFocus
         sx={{
-          ...scrollbarStyle,
+          ...styles.scrollbar
         }}
       >
         <Box

@@ -56,7 +56,7 @@ const useMediaSession = (player: HTMLVideoElement | null) => {
   // 设置 MediaSession
   useEffect(
     () => {
-      if ('mediaSession' in navigator) {
+      if ('mediaSession' in navigator && currentMetaData) {
         console.log('Set MediaSession')
         navigator.mediaSession.metadata = new MediaMetadata({
           title: currentMetaData?.title,

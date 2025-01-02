@@ -3,7 +3,7 @@ import useUiStore from '@/store/useUiStore'
 import { useMediaQuery } from '@mui/material'
 import createTheme from '@mui/material/styles/createTheme'
 import { extractColors } from 'extract-colors'
-import { useMemo } from 'react'
+import { useEffect, useMemo, useState } from 'react'
 import Color from 'color'
 import { useShallow } from 'zustand/shallow'
 const useCustomTheme = () => {
@@ -25,7 +25,7 @@ const useCustomTheme = () => {
 
   const cover = usePlayerStore((state) => state.cover)
 
-  useMemo(
+  useEffect(
     () => {
       if (colorMode === 'dark' || colorMode === 'light')
         document.documentElement.setAttribute('data-theme', colorMode)
@@ -39,25 +39,35 @@ const useCustomTheme = () => {
   )
 
   const prefersColorSchemeDark = useMediaQuery('(prefers-color-scheme: dark)')
-  const prefersDarkMode = colorMode === 'light' ? false : prefersColorSchemeDark || colorMode === 'dark'
+  const prefersDarkMode = useMemo(() => colorMode === 'light' ? false : prefersColorSchemeDark || colorMode === 'dark', [colorMode, prefersColorSchemeDark])
+  const [coverColors, setCoverColors] = useState<{ lightMode: string, darkMode: string } | null>(null)
 
   // 从专辑封面提取颜色
-  useMemo(
-    async () => {
-      if (cover !== './cover.svg') {
-        const color = (await extractColors(cover))[0]
-        const lightColor = Color(color.hex).lightness(50).hex()
-        const darkColor = Color(color.hex).lightness(75).hex()
-        updateCoverColor(prefersDarkMode ? darkColor : lightColor)
-      }
+  useEffect(
+    () => {
+      (async () => {
+        if (cover !== './cover.svg') {
+          const color = (await extractColors(cover))[0]
+          const getLightModeColor = (color: Color): Color => color.isDark() ? color : getLightModeColor(color.lightness(color.lightness() - 1))
+          const lightModeColor = getLightModeColor(Color(color.hex)).hex()
+          const getDarkModeColor = (color: Color): Color => color.isLight() ? color : getDarkModeColor(color.lightness(color.lightness() + 1))
+          const darkModeColor = getDarkModeColor(Color(color.hex)).hex()
+          setCoverColors({ lightMode: lightModeColor, darkMode: darkModeColor })
+        }
+      })()
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [cover, prefersDarkMode]
+    [cover]
   )
 
-  const colors = {
+  useEffect(() => {
+    if (coverColors) {
+      updateCoverColor(prefersDarkMode ? coverColors.darkMode : coverColors.lightMode)
+    }
+  }, [coverColors, prefersDarkMode, updateCoverColor])
+
+  const colors = useMemo(() => ({
     primary: CoverThemeColor ? coverColor : prefersDarkMode ? '#df7ef9' : '#8e24aa',
-  }
+  }), [CoverThemeColor, coverColor, prefersDarkMode])
 
   const customTheme = useMemo(() => createTheme({
     palette: {
@@ -209,29 +219,7 @@ const useCustomTheme = () => {
     [colors.primary, prefersDarkMode]
   )
 
-  const scrollbarStyle = useMemo(() => ({
-    '& ::-webkit-scrollbar': {
-      width: '12px',
-      height: '12px',
-    },
-    '& ::-webkit-scrollbar-track': {
-      backgroundColor: 'transparent',
-    },
-    '& ::-webkit-scrollbar-thumb': {
-      background: customTheme.palette.primary.main,
-      borderRadius: '16px',
-      border: '3.5px solid transparent',
-      backgroundClip: 'content-box',
-      visibility: 'hidden',
-    },
-    '& :hover::-webkit-scrollbar-thumb': {
-      visibility: 'visible',
-    },
-  }),
-    [customTheme.palette.primary.main]
-  )
-
-  return { customTheme, scrollbarStyle }
+  return customTheme
 }
 
 export default useCustomTheme

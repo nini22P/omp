@@ -1,13 +1,17 @@
-import { Drawer } from '@mui/material'
+import { Drawer, useTheme } from '@mui/material'
 import useUiStore from '../../store/useUiStore'
 import SideBar from './SideBar'
 import { useShallow } from 'zustand/shallow'
+import useStyles from '@/hooks/ui/useStyles'
 
 const MobileSideBar = () => {
 
   const [mobileSideBarOpen, updateMobileSideBarOpen] = useUiStore(
     useShallow((state) => [state.mobileSideBarOpen, state.updateMobileSideBarOpen])
   )
+
+  const theme = useTheme()
+  const styles = useStyles(theme)
 
   return (
     <Drawer
@@ -24,6 +28,7 @@ const MobileSideBar = () => {
           minWidth: 260,
           maxWidth: 280,
         },
+        ...styles.scrollbar
       }}
     >
       <SideBar />
