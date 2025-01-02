@@ -40,7 +40,6 @@ const useThemeColor = () => {
           themeColorDark.content = '#1e1e1e'
         }
         else if (audioViewIsShow && audioViewTheme === 'modern') {
-
           const color = blendHex(`${theme.palette.background.default}`, windowControlsOverlayOpen ? `${coverColor}31` : `${coverColor}33`)
           themeColorLight.content = color
           themeColorDark.content = color
