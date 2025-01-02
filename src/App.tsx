@@ -19,7 +19,7 @@ import useStyles from './hooks/ui/useStyles'
 const App = () => {
   const customTheme = useCustomTheme()
   const styles = useStyles(customTheme)
-  useThemeColor()
+  useThemeColor(customTheme)
   const windowControlsOverlayOpen = useMediaQuery('(display-mode: window-controls-overlay)')
 
   const { account } = useUser()

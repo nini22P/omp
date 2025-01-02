@@ -1,9 +1,9 @@
 import { useEffect } from 'react'
 import useUiStore from '../../store/useUiStore'
 import { blendHex } from '@/utils'
-import { useMediaQuery, useTheme } from '@mui/material'
+import { Theme, useMediaQuery } from '@mui/material'
 import { useShallow } from 'zustand/shallow'
-const useThemeColor = () => {
+const useThemeColor = (theme: Theme) => {
 
   const [
     audioViewIsShow,
@@ -20,8 +20,6 @@ const useThemeColor = () => {
       ]
     )
   )
-
-  const theme = useTheme()
 
   const windowControlsOverlayOpen = useMediaQuery('(display-mode: window-controls-overlay)')
 
