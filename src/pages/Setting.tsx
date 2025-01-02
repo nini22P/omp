@@ -14,7 +14,7 @@ import useHistoryStore from '@/store/useHistoryStore'
 import usePlaylistsStore from '@/store/usePlaylistsStore'
 import { AccountInfo } from '@azure/msal-browser'
 import { useShallow } from 'zustand/shallow'
-import { INFO } from '@/data/info'
+import INFO from '@/data/info'
 
 const ListItemTitle = ({ title }: { title: string }) => {
   const theme = useTheme()
@@ -166,7 +166,7 @@ const Setting = () => {
         </ListItem>
 
         <ListItem disablePadding>
-          <ListItemButton onClick={() => window.open(`https://github.com/nini22P/omp/releases/tag/v${INFO.version}`, '_blank')}>
+          <ListItemButton onClick={() => window.open(INFO.dev ? 'https://github.com/nini22P/omp/tree/dev' : `https://github.com/nini22P/omp/releases/tag/v${INFO.version}`, '_blank')}>
             <ListItemText inset primary={t`Version`} secondary={INFO.version} />
           </ListItemButton>
         </ListItem>

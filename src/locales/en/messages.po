@@ -197,7 +197,7 @@ msgstr "Name"
 msgid "New playlist"
 msgstr "New playlist"
 
-#: src/components/Lyrics/Lyrics.tsx:78
+#: src/components/Lyrics/Lyrics.tsx:87
 #: src/pages/Player/Audio/Modern.tsx:285
 msgid "No lyrics"
 msgstr "No lyrics"
@@ -296,6 +296,10 @@ msgstr "Switch fullscreen"
 #: src/pages/Player/PlayerMenu.tsx:261
 msgid "Switch theme"
 msgstr "Switch theme"
+
+#: src/pages/NavBar.tsx:122
+msgid "The current version in use is a development version. Please be cautious about data security!"
+msgstr "The current version in use is a development version. Please be cautious about data security!"
 
 #: src/pages/Playlist/Playlist.tsx:237
 msgid "The playlist will be deleted"

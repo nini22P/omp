@@ -197,7 +197,7 @@ msgstr "名称"
 msgid "New playlist"
 msgstr "新播放列表"
 
-#: src/components/Lyrics/Lyrics.tsx:78
+#: src/components/Lyrics/Lyrics.tsx:87
 #: src/pages/Player/Audio/Modern.tsx:285
 msgid "No lyrics"
 msgstr "无歌词"
@@ -296,6 +296,10 @@ msgstr "切换全屏"
 #: src/pages/Player/PlayerMenu.tsx:261
 msgid "Switch theme"
 msgstr "切换主题"
+
+#: src/pages/NavBar.tsx:122
+msgid "The current version in use is a development version. Please be cautious about data security!"
+msgstr "当前正在使用开发版本，请注意保护数据安全!"
 
 #: src/pages/Playlist/Playlist.tsx:237
 msgid "The playlist will be deleted"

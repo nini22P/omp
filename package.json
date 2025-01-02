@@ -4,11 +4,13 @@
   "private": true,
   "version": "1.9.1",
   "scripts": {
-    "dev": "webpack serve",
-    "build": "node update-version-info.mjs && webpack --mode=production --node-env=production",
-    "lint": "eslint src --report-unused-disable-directives --max-warnings 0",
-    "watch": "webpack --watch",
-    "lingui": "lingui extract & lingui compile --typescript"
+    "build": "npm run generate && webpack --mode=production --node-env=production",
+    "dev": "npm run generate:dev && webpack serve",
+    "lint": "npm run generate && eslint src --report-unused-disable-directives --max-warnings 0",
+    "lint:dev": "npm run generate:dev && eslint src --report-unused-disable-directives --max-warnings 0",
+    "lingui": "lingui extract && lingui compile --typescript",
+    "generate": "node generate-version-info.mjs && npm run lingui",
+    "generate:dev": "node generate-version-info.mjs --dev && npm run lingui"
   },
   "dependencies": {
     "@azure/msal-browser": "3.26.1",
