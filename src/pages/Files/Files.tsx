@@ -55,7 +55,7 @@ const Files = () => {
   const updatePlayQueue = usePlayQueueStore.use.updatePlayQueue()
   const updateCurrentIndex = usePlayQueueStore.use.updateCurrentIndex()
 
-  const updatePlayStatu = usePlayerStore(state => state.updatePlayStatu)
+  const updateAutoPlay = usePlayerStore(state => state.updateAutoPlay)
 
   const { getFilesData } = useFilesData()
   const navigate = useNavigate()
@@ -143,7 +143,7 @@ const Files = () => {
         }
         updatePlayQueue(list)
         updateCurrentIndex(list.find(item => pathConvert(item.filePath) === pathConvert(currentFile.filePath))?.index || 0)
-        updatePlayStatu('playing')
+        updateAutoPlay(true)
         if (currentFile.fileType === 'video') {
           updateVideoViewIsShow(true)
         }
@@ -165,7 +165,7 @@ const Files = () => {
                 }
                 updatePlayQueue(list)
                 updateCurrentIndex(0)
-                updatePlayStatu('playing')
+                updateAutoPlay(true)
                 if (list[0].fileType === 'video') {
                   updateVideoViewIsShow(true)
                 }

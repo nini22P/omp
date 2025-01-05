@@ -62,7 +62,6 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
 
   const [
     currentMetaData,
-    playStatu,
     isLoading,
     cover,
     currentTime,
@@ -71,7 +70,6 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
     useShallow(
       (state) => [
         state.currentMetaData,
-        state.playStatu,
         state.isLoading,
         state.cover,
         state.currentTime,
@@ -350,13 +348,13 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
                     <FastRewindRoundedIcon sx={{ height: 32, width: 32 }} />
                   </IconButton>
                   {
-                    (!isLoading && playStatu === 'paused') &&
+                    (!isLoading && player?.paused) &&
                     <IconButton aria-label="play" onClick={() => handleClickPlay()}>
                       <PlayCircleOutlineRoundedIcon sx={{ height: 64, width: 64 }} />
                     </IconButton>
                   }
                   {
-                    (!isLoading && playStatu === 'playing') &&
+                    (!isLoading && !player?.paused) &&
                     <IconButton aria-label="pause" onClick={() => handleClickPause()}>
                       <PauseCircleOutlineRoundedIcon sx={{ height: 64, width: 64 }} />
                     </IconButton>

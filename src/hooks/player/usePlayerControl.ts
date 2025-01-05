@@ -13,12 +13,12 @@ const usePlayerControl = (player: HTMLVideoElement | null) => {
   const updatePlayQueue = usePlayQueueStore.use.updatePlayQueue()
 
   const [
-    updatePlayStatu,
+    updateAutoPlay,
     updateCurrentTime,
   ] = usePlayerStore(
     useShallow(
       (state) => [
-        state.updatePlayStatu,
+        state.updateAutoPlay,
         state.updateCurrentTime,
       ]
     )
@@ -46,12 +46,14 @@ const usePlayerControl = (player: HTMLVideoElement | null) => {
 
   // 播放开始
   const handleClickPlay = () => {
-    updatePlayStatu('playing')
+    updateAutoPlay(true)
+    player?.play()
   }
 
   // 播放暂停
   const handleClickPause = () => {
-    updatePlayStatu('paused')
+    updateAutoPlay(false)
+    player?.pause()
   }
 
   // 下一曲

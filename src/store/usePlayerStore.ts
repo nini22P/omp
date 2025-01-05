@@ -4,7 +4,7 @@ import { PlayerStatus, PlayerAction } from '../types/player'
 const initialState: PlayerStatus = {
   currentMetaData: null,
   metadataUpdate: false,
-  playStatu: 'paused',
+  autoPlay: false,
   isLoading: false,
   cover: './cover.svg',
   currentTime: 0,
@@ -16,7 +16,7 @@ const usePlayerStore = create<PlayerStatus & PlayerAction>(
     ...initialState,
     updateCurrentMetaData: (currentMetaData) => set(() => ({ currentMetaData: currentMetaData })),
     updateMetadataUpdate: () => set((state) => ({ metadataUpdate: !state.metadataUpdate })),
-    updatePlayStatu: (playStatu) => set(() => ({ playStatu: playStatu })),
+    updateAutoPlay: (autoPlay) => set(() => ({ autoPlay })),
     updateIsLoading: (isLading) => set(() => ({ isLoading: isLading })),
     updateCover: (cover) => set(() => (({ cover: cover }))),
     updateCurrentTime: (currentTime) => set(() => ({ currentTime: currentTime })),

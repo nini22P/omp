@@ -27,3 +27,8 @@ dist-ssr
 .env
 .env.development
 .env.production
+
+# auto generated
+src/data/info.ts
+src/locales/en/messages.ts
+src/locales/zh-CN/messages.ts

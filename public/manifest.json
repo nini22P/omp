@@ -6,7 +6,7 @@
   "display_override": [
     "window-controls-overlay"
   ],
-  "description": "OneDrive Media Player",
+  "description": "OneDrive Media Player / OneDrive 媒体播放器",
   "dir": "auto",
   "icons": [
     {
@@ -35,6 +35,36 @@
       "type": "image/png",
       "sizes": "512x512",
       "purpose": "maskable"
+    }
+  ],
+  "screenshots": [
+    {
+      "src": "./screenshots/audio-light.webp",
+      "sizes": "1317x904",
+      "type": "image/webp",
+      "form_factor": "wide",
+      "description": "Audio Light"
+    },
+    {
+      "src": "./screenshots/audio-dark.webp",
+      "sizes": "1317x904",
+      "type": "image/webp",
+      "form_factor": "wide",
+      "description": "Audio Dark"
+    },
+    {
+      "src": "./screenshots/audio-light-narrow.webp",
+      "sizes": "1082x2402",
+      "type": "image/webp",
+      "form_factor": "narrow",
+      "description": "Audio Light"
+    },
+    {
+      "src": "./screenshots/audio-dark-narrow.webp",
+      "sizes": "1082x2402",
+      "type": "image/webp",
+      "form_factor": "narrow",
+      "description": "Audio Dark"
     }
   ],
   "edge_side_panel": {}

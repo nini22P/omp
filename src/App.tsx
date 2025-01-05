@@ -14,10 +14,12 @@ import { useSpring, animated } from '@react-spring/web'
 import { useMemo } from 'react'
 import useCustomTheme from './hooks/ui/useCustomTheme'
 import Search from './pages/Search'
+import useStyles from './hooks/ui/useStyles'
 
 const App = () => {
-  const { customTheme, scrollbarStyle } = useCustomTheme()
-  useThemeColor()
+  const customTheme = useCustomTheme()
+  const styles = useStyles(customTheme)
+  useThemeColor(customTheme)
   const windowControlsOverlayOpen = useMediaQuery('(display-mode: window-controls-overlay)')
 
   const { account } = useUser()
@@ -45,8 +47,8 @@ const App = () => {
   )
 
   return (
-    <Box sx={scrollbarStyle}>
-      <ThemeProvider theme={customTheme}>
+    <ThemeProvider theme={customTheme}>
+      <Box sx={styles.scrollbar}>
         <animated.div
           style={{
             width: '100vw',
@@ -111,8 +113,8 @@ const App = () => {
           <Player />
 
         </animated.div>
-      </ThemeProvider>
-    </Box>
+      </Box>
+    </ThemeProvider>
   )
 }
 

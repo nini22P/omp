@@ -75,7 +75,7 @@ msgid "Clear"
 msgstr "清除"
 
 #: src/pages/PictureView/PictureView.tsx:72
-#: src/pages/Player/Audio/Modern.tsx:154
+#: src/pages/Player/Audio/Modern.tsx:152
 #: src/pages/Player/VideoPlayerTopbar.tsx:56
 msgid "Close"
 msgstr "关闭"
@@ -87,6 +87,10 @@ msgstr "颜色模式"
 #: src/pages/Search.tsx:183
 msgid "Current"
 msgstr "当前"
+
+#: src/pages/NavBar.tsx:122
+msgid "Currently using a development version, please be careful with your data!"
+msgstr "当前正在使用开发版本，请注意数据安全!"
 
 #: src/pages/Setting.tsx:127
 msgid "Customize"
@@ -120,8 +124,8 @@ msgstr "文件"
 msgid "Folders first"
 msgstr "文件夹优先"
 
-#: src/pages/Player/Audio/Modern.tsx:204
-#: src/pages/Player/PlayerControl.tsx:318
+#: src/pages/Player/Audio/Modern.tsx:202
+#: src/pages/Player/PlayerControl.tsx:316
 msgid "Fullscreen"
 msgstr "全屏"
 
@@ -157,7 +161,7 @@ msgstr "列表"
 msgid "Local metaData cache"
 msgstr "本地元数据缓存"
 
-#: src/pages/Player/Audio/Modern.tsx:187
+#: src/pages/Player/Audio/Modern.tsx:185
 msgid "Lyrics"
 msgstr "歌词"
 
@@ -197,8 +201,8 @@ msgstr "名称"
 msgid "New playlist"
 msgstr "新播放列表"
 
-#: src/components/Lyrics/Lyrics.tsx:78
-#: src/pages/Player/Audio/Modern.tsx:285
+#: src/components/Lyrics/Lyrics.tsx:87
+#: src/pages/Player/Audio/Modern.tsx:283
 msgid "No lyrics"
 msgstr "无歌词"
 
@@ -220,8 +224,8 @@ msgstr "开源库"
 msgid "Play all"
 msgstr "全部播放"
 
-#: src/pages/Player/Audio/Modern.tsx:172
-#: src/pages/Player/PlayerControl.tsx:308
+#: src/pages/Player/Audio/Modern.tsx:170
+#: src/pages/Player/PlayerControl.tsx:306
 #: src/pages/Player/PlayerMenu.tsx:221
 msgid "Play queue"
 msgstr "播放队列"

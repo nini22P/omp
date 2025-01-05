@@ -1,8 +1,10 @@
-import { Box, Typography, Container, IconButton, useMediaQuery, useTheme } from '@mui/material'
+import { Box, Typography, Container, IconButton, useMediaQuery, useTheme, Tooltip } from '@mui/material'
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded'
 import useUiStore from '../store/useUiStore'
 import Search from './Search'
 import { useShallow } from 'zustand/shallow'
+import INFO from '@/data/info'
+import { t } from '@lingui/macro'
 
 const NavBar = () => {
   const [
@@ -83,6 +85,7 @@ const NavBar = () => {
         <Box
           sx={{
             display: 'flex',
+            flexDirection: 'row',
             alignItems: 'center',
             height: '100%',
           }}
@@ -111,9 +114,27 @@ const NavBar = () => {
           <Typography
             component="div"
             fontSize={windowControlsOverlayOpen ? '100%' : '1.25rem'}
+            style={{ textAlign: 'center' }}
           >
             OMP
+            {
+              INFO.dev &&
+              <Tooltip title={t`Currently using a development version, please be careful with your data!`}>
+                <span
+                  style={{
+                    marginLeft: '0.25rem',
+                    color: theme.palette.background.default,
+                    backgroundColor: theme.palette.text.primary,
+                    borderRadius: '0.2rem',
+                    padding: '0.05rem 0.3rem',
+                    cursor: 'help',
+                  }}
+                >DEV</span>
+              </Tooltip>
+            }
           </Typography>
+
+
         </Box>
       </Container >
     </Box >
