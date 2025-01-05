@@ -70,10 +70,10 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
         player.src = ''
       }
       if (playQueue !== null && playQueue.length !== 0 && currentFile) {
+        updateIsLoading(true)
         try {
           getFileData(account, pathConvert(currentFile.filePath)).then((res) => {
             setUrl(res['@microsoft.graph.downloadUrl'])
-            updateIsLoading(true)
           })
         } catch (error) {
           console.error(error)
