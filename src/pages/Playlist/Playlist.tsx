@@ -26,7 +26,7 @@ const Playlist = () => {
   const updatePlayQueue = usePlayQueueStore.use.updatePlayQueue()
   const updateCurrentIndex = usePlayQueueStore.use.updateCurrentIndex()
 
-  const updatePlayStatu = usePlayerStore((state) => state.updatePlayStatu)
+  const updateAutoPlay = usePlayerStore(state => state.updateAutoPlay)
 
   const [playlists, renamePlaylist, removePlaylist, removeFilesFromPlaylist] = usePlaylistsStore(
     useShallow((state) => [state.playlists, state.renamePlaylist, state.removePlaylist, state.removeFilesFromPlaylist])
@@ -66,7 +66,7 @@ const Playlist = () => {
         }
         updatePlayQueue(list)
         updateCurrentIndex(list[index].index)
-        updatePlayStatu('playing')
+        updateAutoPlay(true)
         if (checkFileType(currentFile.fileName) === 'video') {
           updateVideoViewIsShow(true)
         }

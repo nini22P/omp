@@ -29,11 +29,11 @@ const PlayQueue = () => {
     )
   )
 
-  const updatePlayStatu = usePlayerStore(state => state.updatePlayStatu)
+  const updateAutoPlay = usePlayerStore(state => state.updateAutoPlay)
 
   const open = (index: number) => {
     if (playQueue) {
-      updatePlayStatu('playing')
+      updateAutoPlay(true)
       updateCurrentIndex(playQueue[index].index)
     }
   }

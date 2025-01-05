@@ -19,11 +19,11 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
   const [
     currentMetaData,
     metadataUpdate,
-    playStatu,
+    autoPlay,
     isLoading,
     updateCurrentMetaData,
     updateMetadataUpdate,
-    updatePlayStatu,
+    updateAutoPlay,
     updateIsLoading,
     updateCover,
     updateCurrentTime,
@@ -33,11 +33,11 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
       (state) => [
         state.currentMetaData,
         state.metadataUpdate,
-        state.playStatu,
+        state.autoPlay,
         state.isLoading,
         state.updateCurrentMetaData,
         state.updateMetadataUpdate,
-        state.updatePlayStatu,
+        state.updateAutoPlay,
         state.updateIsLoading,
         state.updateCover,
         state.updateCurrentTime,
@@ -77,7 +77,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
           })
         } catch (error) {
           console.error(error)
-          updatePlayStatu('paused')
+          updateAutoPlay(false)
           updateIsLoading(false)
           player?.pause()
         }
@@ -94,8 +94,16 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
         updateDuration(0)
         player.load()
         player.onloadedmetadata = () => {
-          if (isLoading && playStatu === 'playing') {
+          if (isLoading && autoPlay) {
             player.play()
+            if (historyList && currentFile) {
+              insertHistory({
+                fileName: currentFile.fileName,
+                filePath: currentFile.filePath,
+                fileSize: currentFile.fileSize,
+                fileType: currentFile.fileType,
+              })
+            }
           }
           updateIsLoading(false)
           updateDuration(player.duration)
@@ -105,29 +113,6 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [url]
-  )
-
-  // 插入播放历史
-  useEffect(
-    () => {
-      if (player !== null && !isLoading && player.src.includes('1drv.com') && currentFile) {
-        if (playStatu === 'playing') {
-          console.log('Playing', currentFile.filePath)
-          if (currentFile.filePath) {
-            if (historyList !== null) {
-              insertHistory({
-                fileName: currentFile.fileName,
-                filePath: currentFile.filePath,
-                fileSize: currentFile.fileSize,
-                fileType: currentFile.fileType,
-              })
-            }
-          }
-        }
-      }
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentFile, playStatu]
   )
 
   // 设置当前播放进度
@@ -150,9 +135,9 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
         player?.play()
       } else if (repeat === 'off' || repeat === 'all') {
         if (isPlayQueueEnd || !next) {
-          if (repeat === 'off'){
-            updatePlayStatu('paused')
+          if (repeat === 'off') {
             player?.pause()
+            updateAutoPlay(false)
           }
           updateCurrentIndex(playQueue[0].index)
         } else

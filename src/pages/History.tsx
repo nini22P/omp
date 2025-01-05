@@ -18,7 +18,7 @@ const History = () => {
   const updatePlayQueue = usePlayQueueStore.use.updatePlayQueue()
   const updateCurrentIndex = usePlayQueueStore.use.updateCurrentIndex()
 
-  const updatePlayStatu = usePlayerStore(state => state.updatePlayStatu)
+  const updateAutoPlay = usePlayerStore(state => state.updateAutoPlay)
 
   const open = (index: number) => {
     const listData = historyList
@@ -32,7 +32,7 @@ const History = () => {
         }
         updatePlayQueue(list)
         updateCurrentIndex(list[index].index)
-        updatePlayStatu('playing')
+        updateAutoPlay(true)
         if (checkFileType(currentFile.fileName) === 'video') {
           updateVideoViewIsShow(true)
         }

@@ -43,7 +43,7 @@ const CommonList = (
   const updatePlayQueue = usePlayQueueStore.use.updatePlayQueue()
   const updateCurrentIndex = usePlayQueueStore.use.updateCurrentIndex()
 
-  const updatePlayStatu = usePlayerStore((state) => state.updatePlayStatu)
+  const updateAutoPlay = usePlayerStore((state) => state.updateAutoPlay)
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -85,7 +85,7 @@ const CommonList = (
       const shuffleList = shufflePlayQueue(list) || []
       updatePlayQueue(shuffleList)
       updateCurrentIndex(shuffleList[0].index)
-      updatePlayStatu('playing')
+      updateAutoPlay(true)
     }
   }
 

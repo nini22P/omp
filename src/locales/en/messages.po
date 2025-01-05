@@ -75,7 +75,7 @@ msgid "Clear"
 msgstr "Clear"
 
 #: src/pages/PictureView/PictureView.tsx:72
-#: src/pages/Player/Audio/Modern.tsx:154
+#: src/pages/Player/Audio/Modern.tsx:152
 #: src/pages/Player/VideoPlayerTopbar.tsx:56
 msgid "Close"
 msgstr "Close"
@@ -87,6 +87,10 @@ msgstr "Color mode"
 #: src/pages/Search.tsx:183
 msgid "Current"
 msgstr "Current"
+
+#: src/pages/NavBar.tsx:122
+msgid "Currently using a development version, please be careful with your data!"
+msgstr "Currently using a development version, please be careful with your data!"
 
 #: src/pages/Setting.tsx:127
 msgid "Customize"
@@ -120,8 +124,8 @@ msgstr "Files"
 msgid "Folders first"
 msgstr "Folders first"
 
-#: src/pages/Player/Audio/Modern.tsx:204
-#: src/pages/Player/PlayerControl.tsx:318
+#: src/pages/Player/Audio/Modern.tsx:202
+#: src/pages/Player/PlayerControl.tsx:316
 msgid "Fullscreen"
 msgstr "Fullscreen"
 
@@ -157,7 +161,7 @@ msgstr "List"
 msgid "Local metaData cache"
 msgstr "Local metaData cache"
 
-#: src/pages/Player/Audio/Modern.tsx:187
+#: src/pages/Player/Audio/Modern.tsx:185
 msgid "Lyrics"
 msgstr "Lyrics"
 
@@ -198,7 +202,7 @@ msgid "New playlist"
 msgstr "New playlist"
 
 #: src/components/Lyrics/Lyrics.tsx:87
-#: src/pages/Player/Audio/Modern.tsx:285
+#: src/pages/Player/Audio/Modern.tsx:283
 msgid "No lyrics"
 msgstr "No lyrics"
 
@@ -220,8 +224,8 @@ msgstr "Open source dependencies"
 msgid "Play all"
 msgstr "Play all"
 
-#: src/pages/Player/Audio/Modern.tsx:172
-#: src/pages/Player/PlayerControl.tsx:308
+#: src/pages/Player/Audio/Modern.tsx:170
+#: src/pages/Player/PlayerControl.tsx:306
 #: src/pages/Player/PlayerMenu.tsx:221
 msgid "Play queue"
 msgstr "Play queue"
@@ -296,10 +300,6 @@ msgstr "Switch fullscreen"
 #: src/pages/Player/PlayerMenu.tsx:261
 msgid "Switch theme"
 msgstr "Switch theme"
-
-#: src/pages/NavBar.tsx:122
-msgid "The current version in use is a development version. Please be cautious about data security!"
-msgstr "The current version in use is a development version. Please be cautious about data security!"
 
 #: src/pages/Playlist/Playlist.tsx:237
 msgid "The playlist will be deleted"

@@ -119,7 +119,7 @@ const NavBar = () => {
             OMP
             {
               INFO.dev &&
-              <Tooltip title={t`The current version in use is a development version. Please be cautious about data security!`}>
+              <Tooltip title={t`Currently using a development version, please be careful with your data!`}>
                 <span
                   style={{
                     marginLeft: '0.25rem',

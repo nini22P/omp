@@ -65,7 +65,6 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
 
   const [
     currentMetaData,
-    playStatu,
     isLoading,
     cover,
     currentTime,
@@ -74,7 +73,6 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
     useShallow(
       (state) => [
         state.currentMetaData,
-        state.playStatu,
         state.isLoading,
         state.cover,
         state.currentTime,
@@ -252,13 +250,13 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
               </IconButton>
 
               {
-                (!isLoading && playStatu === 'paused') &&
+                (!isLoading && player?.paused) &&
                 <IconButton aria-label="play" onClick={() => handleClickPlay()}>
                   <PlayCircleOutlineRoundedIcon sx={iconStyles.large} />
                 </IconButton>
               }
               {
-                (!isLoading && playStatu === 'playing') &&
+                (!isLoading && !player?.paused) &&
                 <IconButton aria-label="pause" onClick={() => handleClickPause()}>
                   <PauseCircleOutlineRoundedIcon sx={iconStyles.large} />
                 </IconButton>
