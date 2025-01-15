@@ -6,6 +6,7 @@
   "scripts": {
     "build": "npm run generate && webpack --mode=production --node-env=production",
     "build:dev": "npm run generate:dev && webpack --mode=production --node-env=production",
+    "build:android": "cd android && gradlew assembleRelease",
     "dev": "npm run generate:dev && webpack serve",
     "lint": "npm run generate && eslint src --report-unused-disable-directives --max-warnings 0",
     "lint:dev": "npm run generate:dev && eslint src --report-unused-disable-directives --max-warnings 0",
