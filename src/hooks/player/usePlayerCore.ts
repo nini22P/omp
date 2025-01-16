@@ -216,6 +216,19 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
     [url]
   )
 
+  // 设置标题
+  useEffect(
+    () => {
+      if (currentMetaData) {
+        document.title = `${currentMetaData.title}${currentMetaData.artist ? ` - ${currentMetaData.artist}` : ''}`
+      }
+      return () => {
+        document.title = 'OMP'
+      }
+    },
+    [currentMetaData, player?.paused]
+  )
+
   return {
     url,
     onEnded,
