@@ -13,7 +13,6 @@ const useUser = () => {
   const login = () => {
     instance.loginRedirect(loginRequest)
   }
-
   //登出
   const logout = (account: AccountInfo) => {
     instance.logoutRedirect({

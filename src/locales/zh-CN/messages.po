@@ -235,7 +235,7 @@ msgstr "播放队列"
 msgid "Playback rate"
 msgstr "播放速度"
 
-#: src/pages/LogIn.tsx:25
+#: src/pages/LogIn.tsx:24
 #: src/pages/Setting.tsx:107
 msgid "Please use Microsoft account authorization to log in"
 msgstr "请使用微软账户授权登录"
@@ -280,7 +280,7 @@ msgstr "设置"
 msgid "Shuffle all"
 msgstr "全部随机播放"
 
-#: src/pages/LogIn.tsx:27
+#: src/pages/LogIn.tsx:26
 msgid "Sign in"
 msgstr "登录"
 
