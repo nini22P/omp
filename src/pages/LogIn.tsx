@@ -5,7 +5,6 @@ import useUser from '../hooks/graph/useUser'
 
 const LogIn = () => {
   const { login } = useUser()
-
   return (
     <Container
       style={{

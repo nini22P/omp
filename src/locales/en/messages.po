@@ -235,7 +235,7 @@ msgstr "Play queue"
 msgid "Playback rate"
 msgstr "Playback rate"
 
-#: src/pages/LogIn.tsx:25
+#: src/pages/LogIn.tsx:24
 #: src/pages/Setting.tsx:107
 msgid "Please use Microsoft account authorization to log in"
 msgstr "Please use Microsoft account authorization to log in"
@@ -280,9 +280,9 @@ msgstr "Setting"
 msgid "Shuffle all"
 msgstr "Shuffle all"
 
-#: src/pages/LogIn.tsx:27
+#: src/pages/LogIn.tsx:26
 msgid "Sign in"
-msgstr "Sign in"
+msgstr "登录"
 
 #: src/pages/Setting.tsx:204
 msgid "Sign out"
