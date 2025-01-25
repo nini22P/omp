@@ -23,7 +23,7 @@ import useFullscreen from '@/hooks/ui/useFullscreen'
 import { useShallow } from 'zustand/shallow'
 import usePlayerStore from '@/store/usePlayerStore'
 import useLocalMetaDataStore from '@/store/useLocalMetaDataStore'
-import { getNetMetaData } from '@/utils'
+import { checkFileType, getNetMetaData } from '@/utils'
 
 const PlayerMenu = ({ player }: { player: HTMLVideoElement | null }) => {
 
@@ -47,6 +47,7 @@ const PlayerMenu = ({ player }: { player: HTMLVideoElement | null }) => {
   const currentIndex = usePlayQueueStore.use.currentIndex()
 
   const currentFile = useMemo(() => playQueue?.find((item) => item.index === currentIndex), [currentIndex, playQueue])
+  const fileType = currentFile && checkFileType(currentFile.fileName)
 
   const [
     audioViewTheme,
@@ -241,12 +242,15 @@ const PlayerMenu = ({ player }: { player: HTMLVideoElement | null }) => {
                 <ListItemText primary={t`Switch fullscreen`} />
               </MenuItem>
 
-              <MenuItem onClick={() => reFetchMetadata()}>
-                <ListItemIcon>
-                  <CloudDownloadRoundedIcon />
-                </ListItemIcon>
-                <ListItemText primary={t`Re-fetch metadata`} />
-              </MenuItem>
+              {
+                fileType === 'audio' &&
+                <MenuItem onClick={() => reFetchMetadata()}>
+                  <ListItemIcon>
+                    <CloudDownloadRoundedIcon />
+                  </ListItemIcon>
+                  <ListItemText primary={t`Re-fetch metadata`} />
+                </MenuItem>
+              }
             </div>
           }
 
