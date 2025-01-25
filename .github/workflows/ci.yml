@@ -29,9 +29,9 @@ jobs:
     runs-on: windows-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Set up Node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: 18
         cache: 'npm'
@@ -39,6 +39,8 @@ jobs:
       run: npm install
     - name: Build
       env:
+        ONEDRIVE_AUTH: ${{ secrets.ONEDRIVE_AUTH }}
+        ONEDRIVE_GME: ${{ secrets.ONEDRIVE_GME }}
         CLIENT_ID: ${{ secrets.CLIENT_ID }}
         REDIRECT_URI: ${{ secrets.REDIRECT_URI }}
       run: npm run build
@@ -47,36 +49,36 @@ jobs:
       with:
         path: './dist'
 
-  build-android:
-    name: Build Android
-    runs-on: ubuntu-latest
-    steps:
-      - name: Clone repository
-        uses: actions/checkout@v4
-      - uses: actions/setup-java@v4
-        with:
-          distribution: 'temurin'
-          java-version: '21'
-      - name: Decode and save keystore
-        run: |
-          echo "${{ secrets.KEYSTORE }}" | base64 --decode > android/app/keystore.jks
-      - name: Save key.properties
-        run: |
-          echo "storePassword=${{ secrets.STORE_PASSWORD }}" >> android/key.properties
-          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
-          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
-          echo "storeFile=keystore.jks" >> android/key.properties
-      - name: Grant execute permission for gradlew
-        run: chmod +x android/gradlew
-      - name: Build release apk
-        run: cd android && ./gradlew assembleRelease
-      - name: Rename APK
-        run: mv android/app/build/outputs/apk/release/app-release.apk OMP_android.apk
-      - name: Upload Android artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: OMP_android
-          path: OMP_android.apk
+  # build-android:
+  #   name: Build Android
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Clone repository
+  #       uses: actions/checkout@v4
+  #     - uses: actions/setup-java@v4
+  #       with:
+  #         distribution: 'temurin'
+  #         java-version: '21'
+  #     - name: Decode and save keystore
+  #       run: |
+  #         echo "${{ secrets.KEYSTORE }}" | base64 --decode > android/app/keystore.jks
+  #     - name: Save key.properties
+  #       run: |
+  #         echo "storePassword=${{ secrets.STORE_PASSWORD }}" >> android/key.properties
+  #         echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
+  #         echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
+  #         echo "storeFile=keystore.jks" >> android/key.properties
+  #     - name: Grant execute permission for gradlew
+  #       run: chmod +x android/gradlew
+  #     - name: Build release apk
+  #       run: cd android && ./gradlew assembleRelease
+  #     - name: Rename APK
+  #       run: mv android/app/build/outputs/apk/release/app-release.apk OMP_android.apk
+  #     - name: Upload Android artifact
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: OMP_android
+  #         path: OMP_android.apk
 
   deploy:
     if: ${{ github.ref == 'refs/heads/main' }}
@@ -90,12 +92,15 @@ jobs:
         uses: actions/configure-pages@v3
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v3
 
   release:
     if: ${{ github.ref == 'refs/heads/main' }}
     runs-on: ubuntu-latest
-    needs: [build-web, build-android, deploy]
+    needs: 
+      - build-web
+      # - build-android
+      - deploy
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -116,11 +121,11 @@ jobs:
           git push origin "$TAG_NAME"
       - name: Eextract log
         run: python extract_log.py ${{ steps.create_tag.outputs.TAG_NAME }}
-      - name: Download Android artifact
-        uses: actions/download-artifact@v4
-        with:
-          name: OMP_android
-          path: artifacts
+      # - name: Download Android artifact
+      #   uses: actions/download-artifact@v4
+      #   with:
+      #     name: OMP_android
+      #     path: artifacts
       - name: Release
         uses: softprops/action-gh-release@v2
         env:
@@ -130,5 +135,5 @@ jobs:
           body_path: CHANGELOG_${{ steps.create_tag.outputs.TAG_NAME }}.md
           draft: false
           prerelease: false
-          files: |
-            artifacts/OMP_android.apk
+          # files: |
+          #   artifacts/OMP_android.apk
