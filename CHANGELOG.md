@@ -1,3 +1,21 @@
+## v1.9.3
+### ⚠ Warning
+For self-deployed instances, please check [readme.md](https://github.com/nini22P/omp/blob/main/readme.md#running-and-build) before upgrading to add any missing environment variables: `ONEDRIVE_AUTH`, `ONEDRIVE_GME`
+
+### ⚠ 警告
+自行部署的在升级前请查看 [readme_cn.md](https://github.com/nini22P/omp/blob/main/readme_cn.md#运行和编译) 添加缺失的环境变量: `ONEDRIVE_AUTH`, `ONEDRIVE_GME`
+
+### Changelog
+* Support for VNET (self-deployment required, please refer to [readme.md](https://github.com/nini22P/omp/blob/main/readme.md#running-and-build)) @xiaoman1221
+* Change title on playback
+* Hide the option to refetch media metadata in the menu when playing a video
+
+### 更新日志
+* 支持世纪互联（需自行部署，具体请查看 [readme_cn.md](https://github.com/nini22P/omp/blob/main/readme_cn.md#运行和编译)）@xiaoman1221
+* 播放时更改标题
+* 播放视频时隐藏菜单中重新获取媒体元数据的选项
+
+
 ## v1.9.2
 ### Changelog
 * Fixed playback control

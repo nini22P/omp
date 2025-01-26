@@ -2,7 +2,7 @@
   "name": "omp",
   "description": "OneDrive Media Player",
   "private": true,
-  "version": "1.9.2",
+  "version": "1.9.3",
   "scripts": {
     "build": "npm run generate && webpack --mode=production --node-env=production",
     "build:dev": "npm run generate:dev && webpack --mode=production --node-env=production",
