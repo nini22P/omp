@@ -22,6 +22,7 @@
 - [x] PWA
 - [x] 播放历史同步
 - [x] 播放列表同步
+- [x] 支持世纪互联版
 
 ## 截图
 
@@ -49,6 +50,8 @@ OMP 的数据全部保存在你的 OneDrive 中的 `应用 / OMP` 文件夹中�
 在项目路径添加 `.env.development`
 
 ```env
+ONEDRIVE_AUTH=https://login.microsoftonline.com/common #世纪互联(https://login.partner.microsoftonline.cn/common)
+ONEDRIVE_GME=https://graph.microsoft.com #世纪互联(https://microsoftgraph.chinacloudapi.cn)
 CLIENT_ID=<clientId>
 REDIRECT_URI=http://localhost:8760
 ```
@@ -60,6 +63,8 @@ REDIRECT_URI=http://localhost:8760
 在项目路径添加 `.env`
 
 ```env
+ONEDRIVE_AUTH=https://login.microsoftonline.com/common #世纪互联(https://login.partner.microsoftonline.cn/common)
+ONEDRIVE_GME=https://graph.microsoft.com #世纪互联(https://microsoftgraph.chinacloudapi.cn)
 CLIENT_ID=<clientId>
 REDIRECT_URI=<redirectUri>
 ```

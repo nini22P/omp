@@ -13,7 +13,7 @@ import { LogLevel } from '@azure/msal-browser'
 export const msalConfig = {
   auth: {
     clientId: process.env.CLIENT_ID as string,
-    authority: 'https://login.microsoftonline.com/common',
+    authority: process.env.ONEDRIVE_AUTH,
     redirectUri: process.env.REDIRECT_URI as string,
   },
   cache: {
@@ -44,7 +44,6 @@ export const msalConfig = {
     }
   }
 }
-
 /**
  * Scopes you add here will be prompted for user consent during sign-in.
  * By default, MSAL.js will add OIDC scopes (openid, profile, email) to any login request.
@@ -60,5 +59,5 @@ export const loginRequest = {
  * https://github.com/AzureAD/microsoft-authentication-library-for-js/blob/dev/lib/msal-browser/docs/resources-and-scopes.md
  */
 export const graphConfig = {
-  graphMeEndpoint: 'https://graph.microsoft.com/v1.0'
+  graphMeEndpoint: process.env.ONEDRIVE_GME + '/v1.0'
 }

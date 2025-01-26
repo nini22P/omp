@@ -121,7 +121,7 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
       <Container
         maxWidth={'xl'}
         disableGutters={true}
-        className='pt-titlebar-area-height'
+        className={fullscreen ? '' : 'pt-titlebar-area-height'}
         sx={{
           height: '100%',
         }}
@@ -133,7 +133,6 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
             flexDirection: 'column',
             flexGrow: 1,
             flexWrap: 'nowrap',
-            gap: '1rem',
             width: '100%',
             height: '100%',
             padding: '1rem',

@@ -2,7 +2,15 @@ name: Deploy
 
 on:
   push:
-    branches: ['main']
+    branches:
+      - main
+    paths-ignore:
+      - readme.md
+      - readme_cn.md
+  pull_request:
+    paths-ignore:
+      - readme.md
+      - readme_cn.md
 
   workflow_dispatch:
 
@@ -16,13 +24,14 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  build:
+  build-web:
+    name: Build Web
     runs-on: windows-latest
     steps:
     - name: Checkout
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
     - name: Set up Node
-      uses: actions/setup-node@v3
+      uses: actions/setup-node@v4
       with:
         node-version: 18
         cache: 'npm'
@@ -30,6 +39,8 @@ jobs:
       run: npm install
     - name: Build
       env:
+        ONEDRIVE_AUTH: ${{ secrets.ONEDRIVE_AUTH }}
+        ONEDRIVE_GME: ${{ secrets.ONEDRIVE_GME }}
         CLIENT_ID: ${{ secrets.CLIENT_ID }}
         REDIRECT_URI: ${{ secrets.REDIRECT_URI }}
       run: npm run build
@@ -37,15 +48,92 @@ jobs:
       uses: actions/upload-pages-artifact@v2
       with:
         path: './dist'
+
   deploy:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    needs: build
+    needs: build-web
     steps:
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2
+        uses: actions/deploy-pages@v3
+
+  # build-android:
+  #   name: Build Android
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Clone repository
+  #       uses: actions/checkout@v4
+  #     - uses: actions/setup-java@v4
+  #       with:
+  #         distribution: 'temurin'
+  #         java-version: '21'
+  #     - name: Decode and save keystore
+  #       run: |
+  #         echo "${{ secrets.KEYSTORE }}" | base64 --decode > android/app/keystore.jks
+  #     - name: Save key.properties
+  #       run: |
+  #         echo "storePassword=${{ secrets.STORE_PASSWORD }}" >> android/key.properties
+  #         echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
+  #         echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
+  #         echo "storeFile=keystore.jks" >> android/key.properties
+  #     - name: Grant execute permission for gradlew
+  #       run: chmod +x android/gradlew
+  #     - name: Build release apk
+  #       run: cd android && ./gradlew assembleRelease
+  #     - name: Rename APK
+  #       run: mv android/app/build/outputs/apk/release/app-release.apk OMP_android.apk
+  #     - name: Upload Android artifact
+  #       uses: actions/upload-artifact@v4
+  #       with:
+  #         name: OMP_android
+  #         path: OMP_android.apk
+
+  # release:
+  #   if: ${{ github.ref == 'refs/heads/main' }}
+  #   runs-on: ubuntu-latest
+  #   needs: 
+  #     - build-web
+  #     - build-android
+  #     - deploy
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+  #     - name: Get version
+  #       id: yq
+  #       uses: mikefarah/yq@master
+  #       with:
+  #         cmd: yq -r '.version' package.json
+  #     - name: Print version
+  #       run: echo ${{ steps.yq.outputs.result }}
+  #     - name: Create Tag
+  #       id: create_tag
+  #       run: |
+  #         TAG_NAME="${{ steps.yq.outputs.result }}"
+  #         echo "TAG_NAME=$TAG_NAME" >> "$GITHUB_OUTPUT"
+  #         echo "Creating new tag $TAG_NAME..."
+  #         git tag "$TAG_NAME"
+  #         git push origin "$TAG_NAME"
+  #     - name: Eextract log
+  #       run: python extract_log.py ${{ steps.create_tag.outputs.TAG_NAME }}
+  #     - name: Download Android artifact
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: OMP_android
+  #         path: artifacts
+  #     - name: Release
+  #       uses: softprops/action-gh-release@v2
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       with:
+  #         tag_name: ${{ steps.create_tag.outputs.TAG_NAME }}
+  #         body_path: CHANGELOG_${{ steps.create_tag.outputs.TAG_NAME }}.md
+  #         draft: false
+  #         prerelease: false
+  #         files: |
+  #           artifacts/OMP_android.apk

@@ -22,6 +22,7 @@ English | [中文](./readme_cn.md)
 - [x] PWA
 - [x] History Sync
 - [x] Playlists Sync
+- [x] Support VNET
 
 ## Screenshots
 
@@ -49,6 +50,8 @@ All of OMP data is stored in the `Apps / OMP` folder in your OneDrive. Where `hi
 Add `.env.development` in project path
 
 ```env
+ONEDRIVE_AUTH=https://login.microsoftonline.com/common #VNET(https://login.partner.microsoftonline.cn/common)
+ONEDRIVE_GME=https://graph.microsoft.com #VNET(https://microsoftgraph.chinacloudapi.cn)
 CLIENT_ID=<clientId>
 REDIRECT_URI=http://localhost:8760
 ```
@@ -60,6 +63,8 @@ Run `npm i && npm run dev`
 Add `.env` in project path
 
 ```env
+ONEDRIVE_AUTH=https://login.microsoftonline.com/common #VNET(https://login.partner.microsoftonline.cn/common)
+ONEDRIVE_GME=https://graph.microsoft.com #VNET(https://microsoftgraph.chinacloudapi.cn)
 CLIENT_ID=<clientId>
 REDIRECT_URI=<redirectUri>
 ```
