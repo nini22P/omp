@@ -49,6 +49,20 @@ jobs:
       with:
         path: './dist'
 
+  deploy:
+    if: ${{ github.ref == 'refs/heads/main' }}
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    needs: build-web
+    steps:
+      - name: Setup Pages
+        uses: actions/configure-pages@v3
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v3
+
   # build-android:
   #   name: Build Android
   #   runs-on: ubuntu-latest
@@ -80,60 +94,46 @@ jobs:
   #         name: OMP_android
   #         path: OMP_android.apk
 
-  deploy:
-    if: ${{ github.ref == 'refs/heads/main' }}
-    runs-on: ubuntu-latest
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    needs: build-web
-    steps:
-      - name: Setup Pages
-        uses: actions/configure-pages@v3
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v3
-
-  release:
-    if: ${{ github.ref == 'refs/heads/main' }}
-    runs-on: ubuntu-latest
-    needs: 
-      - build-web
-      # - build-android
-      - deploy
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Get version
-        id: yq
-        uses: mikefarah/yq@master
-        with:
-          cmd: yq -r '.version' package.json
-      - name: Print version
-        run: echo ${{ steps.yq.outputs.result }}
-      - name: Create Tag
-        id: create_tag
-        run: |
-          TAG_NAME="${{ steps.yq.outputs.result }}"
-          echo "TAG_NAME=$TAG_NAME" >> "$GITHUB_OUTPUT"
-          echo "Creating new tag $TAG_NAME..."
-          git tag "$TAG_NAME"
-          git push origin "$TAG_NAME"
-      - name: Eextract log
-        run: python extract_log.py ${{ steps.create_tag.outputs.TAG_NAME }}
-      # - name: Download Android artifact
-      #   uses: actions/download-artifact@v4
-      #   with:
-      #     name: OMP_android
-      #     path: artifacts
-      - name: Release
-        uses: softprops/action-gh-release@v2
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ steps.create_tag.outputs.TAG_NAME }}
-          body_path: CHANGELOG_${{ steps.create_tag.outputs.TAG_NAME }}.md
-          draft: false
-          prerelease: false
-          # files: |
-          #   artifacts/OMP_android.apk
+  # release:
+  #   if: ${{ github.ref == 'refs/heads/main' }}
+  #   runs-on: ubuntu-latest
+  #   needs: 
+  #     - build-web
+  #     - build-android
+  #     - deploy
+  #   steps:
+  #     - name: Checkout
+  #       uses: actions/checkout@v4
+  #     - name: Get version
+  #       id: yq
+  #       uses: mikefarah/yq@master
+  #       with:
+  #         cmd: yq -r '.version' package.json
+  #     - name: Print version
+  #       run: echo ${{ steps.yq.outputs.result }}
+  #     - name: Create Tag
+  #       id: create_tag
+  #       run: |
+  #         TAG_NAME="${{ steps.yq.outputs.result }}"
+  #         echo "TAG_NAME=$TAG_NAME" >> "$GITHUB_OUTPUT"
+  #         echo "Creating new tag $TAG_NAME..."
+  #         git tag "$TAG_NAME"
+  #         git push origin "$TAG_NAME"
+  #     - name: Eextract log
+  #       run: python extract_log.py ${{ steps.create_tag.outputs.TAG_NAME }}
+  #     - name: Download Android artifact
+  #       uses: actions/download-artifact@v4
+  #       with:
+  #         name: OMP_android
+  #         path: artifacts
+  #     - name: Release
+  #       uses: softprops/action-gh-release@v2
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #       with:
+  #         tag_name: ${{ steps.create_tag.outputs.TAG_NAME }}
+  #         body_path: CHANGELOG_${{ steps.create_tag.outputs.TAG_NAME }}.md
+  #         draft: false
+  #         prerelease: false
+  #         files: |
+  #           artifacts/OMP_android.apk
