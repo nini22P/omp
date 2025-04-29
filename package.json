@@ -44,7 +44,7 @@
     "@eslint/compat": "^1.2.1",
     "@eslint/eslintrc": "^3.1.0",
     "@eslint/js": "^9.13.0",
-    "@lingui/cli": "4.13.0",
+    "@lingui/cli": "5.3.1",
     "@lingui/swc-plugin": "4.0.10",
     "@pmmmwh/react-refresh-webpack-plugin": "^0.5.15",
     "@swc/core": "1.7.40",
