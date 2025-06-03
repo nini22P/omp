@@ -1,6 +1,6 @@
 import { Outlet, useLocation } from 'react-router-dom'
 import { Container, ThemeProvider, Paper, Box, useMediaQuery } from '@mui/material'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import NavBar from './pages/NavBar'
 import Player from './pages/Player/Player'
 import SideBar from './pages/SideBar/SideBar'
