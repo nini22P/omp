@@ -1,4 +1,4 @@
-name: Deploy
+name: ci
 
 on:
   push:
@@ -11,17 +11,6 @@ on:
     paths-ignore:
       - README.md
       - README_CN.md
-
-  workflow_dispatch:
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: 'pages'
-  cancel-in-progress: true
 
 jobs:
   build-web:
@@ -45,6 +34,7 @@ jobs:
         REDIRECT_URI: ${{ secrets.REDIRECT_URI }}
       run: npm run build
     - name: Upload artifact
+      id: deployment
       uses: actions/upload-pages-artifact@v3
       with:
         path: './dist'
@@ -52,16 +42,20 @@ jobs:
   deploy:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
+    needs:
+      - build-web
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    needs: build-web
     steps:
       - name: Setup Pages
         uses: actions/configure-pages@v3
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v3
+        uses: actions/deploy-pages@v4
 
   build-android:
     name: Build Android
