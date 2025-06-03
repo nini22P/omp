@@ -1,5 +1,5 @@
 import { Box, ButtonBase, CircularProgress, Container, IconButton, Paper, Slider, Tooltip, Typography, useTheme } from '@mui/material'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import CloseFullscreenRoundedIcon from '@mui/icons-material/CloseFullscreenRounded'
 import OpenInFullRoundedIcon from '@mui/icons-material/OpenInFullRounded'
 import ShuffleRoundedIcon from '@mui/icons-material/ShuffleRounded'

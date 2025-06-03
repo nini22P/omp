@@ -1,11 +1,11 @@
 import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
-import { useMediaQuery } from '@mui/material'
-import createTheme from '@mui/material/styles/createTheme'
+import { createTheme, useMediaQuery } from '@mui/material'
 import { extractColors } from 'extract-colors'
 import { useEffect, useMemo, useState } from 'react'
-import Color from 'color'
+import Color, { ColorInstance } from 'color'
 import { useShallow } from 'zustand/shallow'
+
 const useCustomTheme = () => {
   const [
     coverColor,
@@ -48,9 +48,9 @@ const useCustomTheme = () => {
       (async () => {
         if (cover !== './cover.svg') {
           const color = (await extractColors(cover))[0]
-          const getLightModeColor = (color: Color): Color => color.isDark() ? color : getLightModeColor(color.lightness(color.lightness() - 1))
+          const getLightModeColor = (color:  ColorInstance): ColorInstance => color.isDark() ? color : getLightModeColor(color.lightness(color.lightness() - 1))
           const lightModeColor = getLightModeColor(Color(color.hex)).hex()
-          const getDarkModeColor = (color: Color): Color => color.isLight() ? color : getDarkModeColor(color.lightness(color.lightness() + 1))
+          const getDarkModeColor = (color: ColorInstance): ColorInstance => color.isLight() ? color : getDarkModeColor(color.lightness(color.lightness() + 1))
           const darkModeColor = getDarkModeColor(Color(color.hex)).hex()
           setCoverColors({ lightMode: lightModeColor, darkMode: darkModeColor })
         }

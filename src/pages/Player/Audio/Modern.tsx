@@ -1,5 +1,5 @@
 import { Box, CircularProgress, Container, IconButton, Slider, Tab, Tabs, Tooltip, Typography, useMediaQuery, useTheme } from '@mui/material'
-import Grid from '@mui/material/Grid2'
+import Grid from '@mui/material/Grid'
 import useFullscreen from '@/hooks/ui/useFullscreen'
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded'
 import CloseFullscreenRoundedIcon from '@mui/icons-material/CloseFullscreenRounded'

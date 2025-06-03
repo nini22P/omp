@@ -14,7 +14,6 @@ on:
 
 jobs:
   build-web:
-    name: Build Web
     runs-on: windows-latest
     steps:
     - name: Checkout
@@ -58,11 +57,9 @@ jobs:
         uses: actions/deploy-pages@v4
 
   build-android:
-    name: Build Android
     runs-on: ubuntu-latest
     env:
       KEYSTORE: ${{ secrets.KEYSTORE }}
-    if: github.env.KEYSTORE != ''
     steps:
       - name: Clone repository
         uses: actions/checkout@v4
@@ -71,9 +68,11 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
       - name: Decode and save keystore
+        if: env.KEYSTORE != ''
         run: |
           echo "${{ secrets.KEYSTORE }}" | base64 --decode > android/app/keystore.jks
       - name: Save key.properties
+        if: env.KEYSTORE != ''
         run: |
           echo "storePassword=${{ secrets.STORE_PASSWORD }}" >> android/key.properties
           echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
@@ -81,15 +80,32 @@ jobs:
           echo "storeFile=keystore.jks" >> android/key.properties
       - name: Grant execute permission for gradlew
         run: chmod +x android/gradlew
+
       - name: Build release apk
+        if: env.KEYSTORE != ''
         run: cd android && ./gradlew assembleRelease
-      - name: Rename APK
-        run: mv android/app/build/outputs/apk/release/app-release.apk OMP_android.apk
-      - name: Upload Android artifact
+      - name: Rename release apk
+        if: env.KEYSTORE != ''
+        run: mv android/app/build/outputs/apk/release/app-release.apk OMP-android.apk
+      - name: Upload android artifact
+        if: env.KEYSTORE != ''
         uses: actions/upload-artifact@v4
         with:
-          name: OMP_android
-          path: OMP_android.apk
+          name: OMP-android
+          path: OMP-android.apk
+
+      - name: Build debug apk
+        if: env.KEYSTORE == ''
+        run: cd android && ./gradlew assembleDebug
+      - name: Rename debug apk
+        if: env.KEYSTORE == ''
+        run: mv android/app/build/outputs/apk/debug/app-debug.apk OMP-android-debug.apk
+      - name: Upload android debug artifact
+        if: env.KEYSTORE == ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: OMP-android-debug
+          path: OMP-android-debug.apk
 
   release:
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
@@ -98,6 +114,8 @@ jobs:
       - build-web
       - build-android
       - deploy
+    env:
+      KEYSTORE: ${{ secrets.KEYSTORE }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -122,14 +140,14 @@ jobs:
       - name: Eextract log
         if: steps.check-tag.outputs.exists == 'false'
         run: python extract_log.py ${{ steps.tag_name.outputs.TAG_NAME }}
-      - name: Download Android artifact
-        if: steps.check-tag.outputs.exists == 'false'
+      - name: Download android artifact
+        if: steps.check-tag.outputs.exists == 'false' && env.KEYSTORE != ''
         uses: actions/download-artifact@v4
         with:
-          name: OMP_android
+          name: OMP-android
           path: artifacts
       - name: Release
-        if: steps.check-tag.outputs.exists == 'false'
+        if: steps.check-tag.outputs.exists == 'false' && env.KEYSTORE != ''
         uses: softprops/action-gh-release@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -139,4 +157,4 @@ jobs:
           draft: false
           prerelease: false
           files: |
-            artifacts/OMP_android.apk
+            artifacts/OMP-android.apk
