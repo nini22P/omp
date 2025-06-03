@@ -52,7 +52,9 @@ def twaManifest = [
 
 def keystorePropertiesFile = rootProject.file("key.properties")
 def keystoreProperties = new Properties()
-keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
+
+if ( keystorePropertiesFile.exists() )
+    keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
 
 android {
     compileSdkVersion 35
@@ -151,6 +153,7 @@ android {
         resValue "string", "orientation", twaManifest.orientation
     }
     signingConfigs {
+        if ( keystorePropertiesFile.exists() )
         release {
             storeFile file(keystoreProperties['storeFile'])
             storePassword keystoreProperties['storePassword']
@@ -160,6 +163,7 @@ android {
     }
     buildTypes {
         release {
+            if ( keystorePropertiesFile.exists() )
             signingConfig signingConfigs.release
             minifyEnabled true
         }
