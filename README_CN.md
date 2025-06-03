@@ -6,7 +6,7 @@
 <a href="https://afdian.com/a/nini22P"><img alt="Afdaian" style="height: 30px;" src="https://pic1.afdiancdn.com/static/img/welcome/button-sponsorme.png"></a>
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/nini22p)
 
-[English](./readme.md) | 中文
+[English](./README.md) | 中文
 
 **[立即播放](https://nini22p.github.io/omp/)**
 
@@ -81,6 +81,9 @@ REDIRECT_URI=<redirectUri>
 ## 许可
 
 [AGPL 3.0](https://github.com/nini22P/omp/blob/main/LICENSE)
+
+## 隐私政策
+[隐私政策](https://github.com/nini22P/omp/blob/main/PRIVACY_CN.md)
 
 ## Star History
 

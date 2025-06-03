@@ -5,12 +5,12 @@ on:
     branches:
       - main
     paths-ignore:
-      - readme.md
-      - readme_cn.md
+      - README.md
+      - README_CN.md
   pull_request:
     paths-ignore:
-      - readme.md
-      - readme_cn.md
+      - README.md
+      - README_CN.md
 
   workflow_dispatch:
 
