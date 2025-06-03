@@ -1,3 +1,11 @@
+## v1.9.4
+### Changelog
+* Release android PWA apk
+
+### 更新日志
+* 发布 android PWA apk
+
+
 ## v1.9.3
 ### ⚠ Warning
 For self-deployed instances, please check [readme.md](https://github.com/nini22P/omp/blob/main/readme.md#running-and-build) before upgrading to add any missing environment variables: `ONEDRIVE_AUTH`, `ONEDRIVE_GME`
