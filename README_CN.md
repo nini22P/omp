@@ -3,12 +3,21 @@
 # OMP - OneDrive 媒体播放器
 
 ![ci](https://github.com/nini22P/omp/actions/workflows/ci.yml/badge.svg)
-<a href="https://afdian.com/a/nini22P"><img alt="Afdaian" style="height: 30px;" src="https://pic1.afdiancdn.com/static/img/welcome/button-sponsorme.png"></a>
+<a href="https://apps.microsoft.com/detail/9p6w6x16q7l9?referrer=appbadge&mode=direct">
+	<img src="https://get.microsoft.com/images/zh-cn%20dark.svg" height="30"/>
+</a>
+<a href="https://afdian.com/a/nini22P">
+  <img alt="Afdaian" style="height: 30px;" src="https://pic1.afdiancdn.com/static/img/welcome/button-sponsorme.png">
+</a>
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/nini22p)
 
 [English](./README.md) | 中文
 
-**[立即播放](https://nini22p.github.io/omp/)**
+**立即体验 OMP:**
+
+* **[网页版](https://nini22p.github.io/omp/)**
+* **[微软商店 (PWA)](https://apps.microsoft.com/detail/9p6w6x16q7l9)**
+* **[下载 Android APK (PWA)](https://github.com/nini22P/omp/releases/latest/download/OMP-android.apk)**
 
 ## 功能
 
