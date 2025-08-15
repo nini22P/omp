@@ -1,7 +1,12 @@
 import * as mm from 'music-metadata-browser'
 import { FileItem, RemoteItem } from './types/file'
 import { PlayQueueItem, PlayQueueStatus } from './types/playQueue'
-import { Cover, MetaData } from './types/MetaData'
+import { Cover, LocalStorageCover, MetaData } from './types/MetaData'
+
+export const isDevelopment = process.env.NODE_ENV === 'development'
+
+export const isLocalStorageCover = (cover: Cover | LocalStorageCover): cover is LocalStorageCover =>
+  typeof cover.data === 'object' && cover.data !== null && 'data' in cover.data
 
 /**
  * 将时间转换为分钟
@@ -96,7 +101,7 @@ export const blendHex = (colorHex1: string, colorHex2: string) => {
 export const compressImage = (image: Cover): Promise<Cover> => {
   return new Promise((resolve, reject) => {
     const img = new Image()
-    const url = URL.createObjectURL(new Blob([new Uint8Array(image.data as ArrayBufferLike)], { type: image.format }))
+    const url = URL.createObjectURL(new Blob([new Uint8Array(image.data)], { type: image.format }))
     img.src = url
     img.onload = () => {
       const canvas = document.createElement('canvas')

@@ -123,6 +123,8 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
             '.MuiTouchRipple-ripple .MuiTouchRipple-child': {
               borderRadius: '0.2rem',
             },
+            width: 'var(--titlebar-height)',
+            height: 'var(--titlebar-height)',
           }}
         >
           <SearchRoundedIcon />

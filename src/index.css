@@ -23,9 +23,17 @@ html {
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   font-family: Roboto, Helvetica, Arial, sans-serif;
-  --custom-titlebar-height: 32px;
-  --titlebar-height: env(titlebar-area-height, var(--custom-titlebar-height));
+  --content-padding-top: 0px;
+  --titlebar-height: env(titlebar-area-height, 2rem);
   --titlebar-center-safe-width: calc((50dvw - (100dvw - env(titlebar-area-x) - env(titlebar-area-width))) * 2)
+}
+
+:root[data-window-controls-overlay="true"] {
+  --content-padding-top: env(titlebar-area-height);
+}
+
+:root[data-tauri="true"] {
+  --content-padding-top: 2rem;
 }
 
 :root[data-theme="light"] {

@@ -84,11 +84,11 @@ msgstr "Close"
 msgid "Color mode"
 msgstr "Color mode"
 
-#: src/pages/Search.tsx:183
+#: src/pages/Search.tsx:185
 msgid "Current"
 msgstr "Current"
 
-#: src/pages/NavBar.tsx:122
+#: src/pages/NavBar.tsx:133
 msgid "Currently using a development version, please be careful with your data!"
 msgstr "Currently using a development version, please be careful with your data!"
 
@@ -129,7 +129,7 @@ msgstr "Folders first"
 msgid "Fullscreen"
 msgstr "Fullscreen"
 
-#: src/pages/Search.tsx:182
+#: src/pages/Search.tsx:184
 msgid "Global"
 msgstr "Global"
 
@@ -254,9 +254,9 @@ msgid "Rename"
 msgstr "Rename"
 
 #: src/pages/Search.tsx:120
-#: src/pages/Search.tsx:143
 #: src/pages/Search.tsx:145
-#: src/pages/Search.tsx:167
+#: src/pages/Search.tsx:147
+#: src/pages/Search.tsx:169
 msgid "Search"
 msgstr "Search"
 

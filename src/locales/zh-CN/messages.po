@@ -84,11 +84,11 @@ msgstr "关闭"
 msgid "Color mode"
 msgstr "颜色模式"
 
-#: src/pages/Search.tsx:183
+#: src/pages/Search.tsx:185
 msgid "Current"
 msgstr "当前"
 
-#: src/pages/NavBar.tsx:122
+#: src/pages/NavBar.tsx:133
 msgid "Currently using a development version, please be careful with your data!"
 msgstr "当前正在使用开发版本，请注意数据安全!"
 
@@ -129,7 +129,7 @@ msgstr "文件夹优先"
 msgid "Fullscreen"
 msgstr "全屏"
 
-#: src/pages/Search.tsx:182
+#: src/pages/Search.tsx:184
 msgid "Global"
 msgstr "全局"
 
@@ -254,9 +254,9 @@ msgid "Rename"
 msgstr "重命名"
 
 #: src/pages/Search.tsx:120
-#: src/pages/Search.tsx:143
 #: src/pages/Search.tsx:145
-#: src/pages/Search.tsx:167
+#: src/pages/Search.tsx:147
+#: src/pages/Search.tsx:169
 msgid "Search"
 msgstr "搜索"
 
