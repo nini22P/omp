@@ -25,9 +25,9 @@ msgstr "Account"
 msgid "Add account"
 msgstr "Add account"
 
-#: src/pages/SideBar/Playlists.tsx:52
-#: src/pages/Player/PlayerMenu.tsx:358
 #: src/components/CommonList/CommonMenu.tsx:257
+#: src/pages/Player/PlayerMenu.tsx:358
+#: src/pages/SideBar/Playlists.tsx:52
 msgid "Add playlist"
 msgstr "Add playlist"
 
@@ -35,10 +35,10 @@ msgstr "Add playlist"
 msgid "Add to play queue"
 msgstr "Add to play queue"
 
-#: src/pages/Player/PlayerMenu.tsx:234
-#: src/pages/Player/PlayerMenu.tsx:332
 #: src/components/CommonList/CommonMenu.tsx:156
 #: src/components/CommonList/CommonMenu.tsx:231
+#: src/pages/Player/PlayerMenu.tsx:234
+#: src/pages/Player/PlayerMenu.tsx:332
 msgid "Add to playlist"
 msgstr "Add to playlist"
 
@@ -54,11 +54,11 @@ msgstr "Auto"
 msgid "Build time"
 msgstr "Build time"
 
-#: src/pages/Setting.tsx:230
+#: src/components/CommonList/CommonMenu.tsx:262
+#: src/pages/Player/PlayerMenu.tsx:363
 #: src/pages/Playlist/Playlist.tsx:217
 #: src/pages/Playlist/Playlist.tsx:240
-#: src/pages/Player/PlayerMenu.tsx:363
-#: src/components/CommonList/CommonMenu.tsx:262
+#: src/pages/Setting.tsx:230
 msgid "Cancel"
 msgstr "Cancel"
 
@@ -74,9 +74,9 @@ msgstr "Classic"
 msgid "Clear"
 msgstr "Clear"
 
-#: src/pages/Player/VideoPlayerTopbar.tsx:56
-#: src/pages/Player/Audio/Modern.tsx:151
 #: src/pages/PictureView/PictureView.tsx:72
+#: src/pages/Player/Audio/Modern.tsx:151
+#: src/pages/Player/VideoPlayerTopbar.tsx:56
 msgid "Close"
 msgstr "Close"
 
@@ -124,8 +124,8 @@ msgstr "Files"
 msgid "Folders first"
 msgstr "Folders first"
 
-#: src/pages/Player/PlayerControl.tsx:316
 #: src/pages/Player/Audio/Modern.tsx:201
+#: src/pages/Player/PlayerControl.tsx:316
 msgid "Fullscreen"
 msgstr "Fullscreen"
 
@@ -181,9 +181,9 @@ msgstr "Menu"
 msgid "Modern"
 msgstr "Modern"
 
-#: src/pages/Playlist/Playlist.tsx:157
-#: src/components/CommonList/CommonListItemCard.tsx:88
 #: src/components/CommonList/CommonListItem.tsx:39
+#: src/components/CommonList/CommonListItemCard.tsx:88
+#: src/pages/Playlist/Playlist.tsx:157
 msgid "More"
 msgstr "More"
 
@@ -195,14 +195,14 @@ msgstr "Multicolumn list"
 msgid "Name"
 msgstr "Name"
 
-#: src/pages/SideBar/Playlists.tsx:19
-#: src/pages/Player/PlayerMenu.tsx:131
 #: src/components/CommonList/CommonMenu.tsx:71
+#: src/pages/Player/PlayerMenu.tsx:131
+#: src/pages/SideBar/Playlists.tsx:19
 msgid "New playlist"
 msgstr "New playlist"
 
-#: src/pages/Player/Audio/Modern.tsx:282
 #: src/components/Lyrics/Lyrics.tsx:87
+#: src/pages/Player/Audio/Modern.tsx:282
 msgid "No lyrics"
 msgstr "No lyrics"
 
@@ -211,8 +211,8 @@ msgstr "No lyrics"
 msgid "OK"
 msgstr "OK"
 
-#: src/pages/Player/PlayerMenu.tsx:214
 #: src/components/CommonList/CommonMenu.tsx:168
+#: src/pages/Player/PlayerMenu.tsx:214
 msgid "Open in folder"
 msgstr "Open in folder"
 
@@ -224,9 +224,9 @@ msgstr "Open source dependencies"
 msgid "Play all"
 msgstr "Play all"
 
-#: src/pages/Player/PlayerMenu.tsx:222
-#: src/pages/Player/PlayerControl.tsx:306
 #: src/pages/Player/Audio/Modern.tsx:169
+#: src/pages/Player/PlayerControl.tsx:306
+#: src/pages/Player/PlayerMenu.tsx:222
 msgid "Play queue"
 msgstr "Play queue"
 
@@ -235,8 +235,8 @@ msgstr "Play queue"
 msgid "Playback rate"
 msgstr "Playback rate"
 
-#: src/pages/Setting.tsx:107
 #: src/pages/LogIn.tsx:24
+#: src/pages/Setting.tsx:107
 msgid "Please use Microsoft account authorization to log in"
 msgstr "Please use Microsoft account authorization to log in"
 

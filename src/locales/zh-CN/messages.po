@@ -25,9 +25,9 @@ msgstr "账户"
 msgid "Add account"
 msgstr "添加账户"
 
-#: src/pages/SideBar/Playlists.tsx:52
-#: src/pages/Player/PlayerMenu.tsx:358
 #: src/components/CommonList/CommonMenu.tsx:257
+#: src/pages/Player/PlayerMenu.tsx:358
+#: src/pages/SideBar/Playlists.tsx:52
 msgid "Add playlist"
 msgstr "新建播放列表"
 
@@ -35,10 +35,10 @@ msgstr "新建播放列表"
 msgid "Add to play queue"
 msgstr "添加到播放队列"
 
-#: src/pages/Player/PlayerMenu.tsx:234
-#: src/pages/Player/PlayerMenu.tsx:332
 #: src/components/CommonList/CommonMenu.tsx:156
 #: src/components/CommonList/CommonMenu.tsx:231
+#: src/pages/Player/PlayerMenu.tsx:234
+#: src/pages/Player/PlayerMenu.tsx:332
 msgid "Add to playlist"
 msgstr "添加到播放列表"
 
@@ -54,11 +54,11 @@ msgstr "自动"
 msgid "Build time"
 msgstr "编译日期"
 
-#: src/pages/Setting.tsx:230
+#: src/components/CommonList/CommonMenu.tsx:262
+#: src/pages/Player/PlayerMenu.tsx:363
 #: src/pages/Playlist/Playlist.tsx:217
 #: src/pages/Playlist/Playlist.tsx:240
-#: src/pages/Player/PlayerMenu.tsx:363
-#: src/components/CommonList/CommonMenu.tsx:262
+#: src/pages/Setting.tsx:230
 msgid "Cancel"
 msgstr "取消"
 
@@ -74,9 +74,9 @@ msgstr "经典"
 msgid "Clear"
 msgstr "清除"
 
-#: src/pages/Player/VideoPlayerTopbar.tsx:56
-#: src/pages/Player/Audio/Modern.tsx:151
 #: src/pages/PictureView/PictureView.tsx:72
+#: src/pages/Player/Audio/Modern.tsx:151
+#: src/pages/Player/VideoPlayerTopbar.tsx:56
 msgid "Close"
 msgstr "关闭"
 
@@ -124,8 +124,8 @@ msgstr "文件"
 msgid "Folders first"
 msgstr "文件夹优先"
 
-#: src/pages/Player/PlayerControl.tsx:316
 #: src/pages/Player/Audio/Modern.tsx:201
+#: src/pages/Player/PlayerControl.tsx:316
 msgid "Fullscreen"
 msgstr "全屏"
 
@@ -181,9 +181,9 @@ msgstr "菜单"
 msgid "Modern"
 msgstr "现代"
 
-#: src/pages/Playlist/Playlist.tsx:157
-#: src/components/CommonList/CommonListItemCard.tsx:88
 #: src/components/CommonList/CommonListItem.tsx:39
+#: src/components/CommonList/CommonListItemCard.tsx:88
+#: src/pages/Playlist/Playlist.tsx:157
 msgid "More"
 msgstr "更多"
 
@@ -195,14 +195,14 @@ msgstr "多列列表"
 msgid "Name"
 msgstr "名称"
 
-#: src/pages/SideBar/Playlists.tsx:19
-#: src/pages/Player/PlayerMenu.tsx:131
 #: src/components/CommonList/CommonMenu.tsx:71
+#: src/pages/Player/PlayerMenu.tsx:131
+#: src/pages/SideBar/Playlists.tsx:19
 msgid "New playlist"
 msgstr "新播放列表"
 
-#: src/pages/Player/Audio/Modern.tsx:282
 #: src/components/Lyrics/Lyrics.tsx:87
+#: src/pages/Player/Audio/Modern.tsx:282
 msgid "No lyrics"
 msgstr "无歌词"
 
@@ -211,8 +211,8 @@ msgstr "无歌词"
 msgid "OK"
 msgstr "确定"
 
-#: src/pages/Player/PlayerMenu.tsx:214
 #: src/components/CommonList/CommonMenu.tsx:168
+#: src/pages/Player/PlayerMenu.tsx:214
 msgid "Open in folder"
 msgstr "打开所在文件夹"
 
@@ -224,9 +224,9 @@ msgstr "开源库"
 msgid "Play all"
 msgstr "全部播放"
 
-#: src/pages/Player/PlayerMenu.tsx:222
-#: src/pages/Player/PlayerControl.tsx:306
 #: src/pages/Player/Audio/Modern.tsx:169
+#: src/pages/Player/PlayerControl.tsx:306
+#: src/pages/Player/PlayerMenu.tsx:222
 msgid "Play queue"
 msgstr "播放队列"
 
@@ -235,8 +235,8 @@ msgstr "播放队列"
 msgid "Playback rate"
 msgstr "播放速度"
 
-#: src/pages/Setting.tsx:107
 #: src/pages/LogIn.tsx:24
+#: src/pages/Setting.tsx:107
 msgid "Please use Microsoft account authorization to log in"
 msgstr "请使用微软账户授权登录"
 

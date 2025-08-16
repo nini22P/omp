@@ -1,6 +1,6 @@
 import { Box, Typography, Container, IconButton, useMediaQuery, useTheme, Tooltip } from '@mui/material'
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded'
-import RemoveRoundedIcon from '@mui/icons-material/RemoveRounded';
+import RemoveRoundedIcon from '@mui/icons-material/RemoveRounded'
 import CropSquareRoundedIcon from '@mui/icons-material/CropSquareRounded'
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 import useUiStore from '../store/useUiStore'
@@ -8,8 +8,8 @@ import Search from './Search'
 import { useShallow } from 'zustand/shallow'
 import INFO from '@/data/info'
 import { t } from '@lingui/macro'
-import { isTauri } from '@tauri-apps/api/core';
-import { getCurrentWindow } from '@tauri-apps/api/window';
+import { isTauri } from '@tauri-apps/api/core'
+import { getCurrentWindow } from '@tauri-apps/api/window'
 
 const NavBar = () => {
   const [

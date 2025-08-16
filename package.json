@@ -3,6 +3,7 @@
   "description": "OneDrive Media Player",
   "private": true,
   "version": "1.9.4",
+  "type": "module",
   "scripts": {
     "build": "npm run generate && webpack --mode=production --node-env=production",
     "build:dev": "npm run generate:dev && webpack --mode=production --node-env=production",
