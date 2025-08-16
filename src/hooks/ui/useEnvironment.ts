@@ -8,7 +8,6 @@ const useEnvironment = () => {
   const isOverlayMode = useMediaQuery('(display-mode: window-controls-overlay)')
 
   useEffect(() => {
-    console.log(isTauri_, isOverlayMode)
     const root = document.documentElement
 
     if (isTauri_) {

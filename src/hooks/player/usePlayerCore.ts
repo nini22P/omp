@@ -70,7 +70,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
       if (player) {
         player.src = ''
       }
-      if (playQueue !== null && playQueue.length !== 0 && currentFile) {
+      if (playQueue !== null && playQueue.length !== 0 && currentFile && account) {
         updateIsLoading(true)
         try {
           getFileData(account, pathConvert(currentFile.filePath)).then((res) => {
@@ -86,7 +86,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
       return true
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentFile?.filePath]
+    [currentFile?.filePath, account]
   )
 
   useMemo(
