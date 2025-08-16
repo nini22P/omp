@@ -85,8 +85,8 @@ msgid "Color mode"
 msgstr "Color mode"
 
 #: src/pages/Search.tsx:187
-msgid "Current"
-msgstr "Current"
+#~ msgid "Current"
+#~ msgstr "Current"
 
 #: src/pages/NavBar.tsx:134
 msgid "Currently using a development version, please be careful with your data!"
@@ -130,8 +130,8 @@ msgid "Fullscreen"
 msgstr "Fullscreen"
 
 #: src/pages/Search.tsx:186
-msgid "Global"
-msgstr "Global"
+#~ msgid "Global"
+#~ msgstr "Global"
 
 #: src/pages/Files/FilterMenu.tsx:83
 msgid "Grid"
@@ -253,10 +253,10 @@ msgstr "Remove"
 msgid "Rename"
 msgstr "Rename"
 
-#: src/pages/Search.tsx:122
-#: src/pages/Search.tsx:147
-#: src/pages/Search.tsx:149
-#: src/pages/Search.tsx:171
+#: src/pages/Search.tsx:116
+#: src/pages/Search.tsx:141
+#: src/pages/Search.tsx:143
+#: src/pages/Search.tsx:165
 msgid "Search"
 msgstr "Search"
 
