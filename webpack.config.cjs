@@ -105,9 +105,9 @@ const prodConfig = {
           name: 'azure',
           priority: 2,
         },
-        musicMetadataBrowser: {
-          test: /[\\/]node_modules[\\/](music-metadata-browser)[\\/]/,
-          name: 'music-metadata-browser',
+        musicMetadata: {
+          test: /[\\/]node_modules[\\/](music-metadata)[\\/]/,
+          name: 'music-metadata',
           priority: 3,
         },
         fontSouce: {

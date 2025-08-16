@@ -2,9 +2,10 @@ import { Box, IconButton, Tooltip, useTheme } from '@mui/material'
 import useUiStore from '@/store/useUiStore'
 import KeyboardArrowDownRoundedIcon from '@mui/icons-material/KeyboardArrowDownRounded'
 import { useShallow } from 'zustand/shallow'
-import { t } from '@lingui/macro'
+import { useLingui } from '@lingui/react/macro'
 
 const VideoPlayerTopbar = () => {
+  const { t } = useLingui()
 
   const theme = useTheme()
 

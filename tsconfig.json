@@ -27,9 +27,7 @@
         "src/*"
       ]
     },
-    "types": [
-      "./node_modules/@lingui/macro/index.d.ts"
-    ]
+    "types": []
   },
   "include": [
     "**/*.ts",

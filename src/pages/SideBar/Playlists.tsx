@@ -1,4 +1,3 @@
-import { t } from '@lingui/macro'
 import { NavLink, useNavigate } from 'react-router-dom'
 import shortUUID from 'short-uuid'
 import { List, ListItem, ListItemText, ListItemIcon, ListItemButton, Button } from '@mui/material'
@@ -6,8 +5,10 @@ import ListRoundedIcon from '@mui/icons-material/ListRounded'
 import PlaylistAddRoundedIcon from '@mui/icons-material/PlaylistAddRounded'
 import usePlaylistsStore from '../../store/usePlaylistsStore'
 import { useShallow } from 'zustand/shallow'
+import { useLingui } from '@lingui/react/macro'
 
 const Playlists = ({ closeSideBar }: { closeSideBar: () => void }) => {
+  const { t } = useLingui()
 
   const navigate = useNavigate()
   const [playlists, insertPlaylist] = usePlaylistsStore(

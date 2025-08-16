@@ -1,4 +1,3 @@
-import { t } from '@lingui/macro'
 import { Box, ButtonBase, Dialog, DialogContent, IconButton, InputAdornment, InputBase, LinearProgress, MenuItem, Select, useTheme } from '@mui/material'
 import { useEffect, useState } from 'react'
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
@@ -15,10 +14,13 @@ import { useLocation, useNavigate } from 'react-router-dom'
 import { animated, useSpring } from '@react-spring/web'
 import { useShallow } from 'zustand/shallow'
 import useStyles from '@/hooks/ui/useStyles'
+import { useLingui } from '@lingui/react/macro'
 
 type SearchScope = 'global' | 'current'
 
 const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
+  const { t } = useLingui()
+
   const theme = useTheme()
   const styles = useStyles(theme)
 

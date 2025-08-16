@@ -13,8 +13,8 @@ import CommonListItemCard from './CommonListItemCard'
 import ShuffleRoundedIcon from '@mui/icons-material/ShuffleRounded'
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded'
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded'
-import { t } from '@lingui/macro'
 import { useShallow } from 'zustand/shallow'
+import { useLingui } from '@lingui/react/macro'
 
 const CommonList = (
   {
@@ -37,6 +37,7 @@ const CommonList = (
       remove?: (indexArray: number[]) => void,
     },
   }) => {
+  const { t } = useLingui()
 
   const [shuffle, updateShuffle] = useUiStore(useShallow((state) => [state.shuffle, state.updateShuffle]))
 

@@ -1,4 +1,3 @@
-import { t } from '@lingui/macro'
 import { Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import { NavLink } from 'react-router-dom'
 import HistoryRoundedIcon from '@mui/icons-material/HistoryOutlined'
@@ -8,8 +7,10 @@ import useUiStore from '../../store/useUiStore'
 import Playlists from './Playlists'
 import { useRef } from 'react'
 import { useShallow } from 'zustand/shallow'
+import { useLingui } from '@lingui/react/macro'
 
 const SideBar = () => {
+  const { t } = useLingui()
 
   const [mobileSideBarOpen, updateMobileSideBarOpen] = useUiStore(
     useShallow((state) => [state.mobileSideBarOpen, state.updateMobileSideBarOpen])

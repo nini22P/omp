@@ -7,7 +7,7 @@ import MusicNoteRoundedIcon from '@mui/icons-material/MusicNoteRounded'
 import MovieRoundedIcon from '@mui/icons-material/MovieRounded'
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded'
 import { ListItem, IconButton, ListItemButton, ListItemAvatar, Avatar, ListItemText, ListItemIcon, useTheme } from '@mui/material'
-import { t } from '@lingui/macro'
+import { useLingui } from '@lingui/react/macro'
 
 const CommonListItem = ({
   item,
@@ -26,6 +26,7 @@ const CommonListItem = ({
   handleClickItem: (index: number) => void,
   handleClickMenu: (event: React.MouseEvent<HTMLElement>, index: number) => void,
 }) => {
+  const { t } = useLingui()
 
   const theme = useTheme()
 

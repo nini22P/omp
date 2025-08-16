@@ -1,11 +1,13 @@
 import useUiStore from '@/store/useUiStore'
+import { useLingui } from '@lingui/react/macro'
 import FilterListRoundedIcon from '@mui/icons-material/FilterListRounded'
 import { Checkbox, Divider, FormControlLabel, FormGroup, IconButton, Menu, Radio, RadioGroup } from '@mui/material'
 import React from 'react'
-import { t } from '@lingui/macro'
 import { useShallow } from 'zustand/shallow'
 
 const FilterMenu = () => {
+  const { t } = useLingui()
+
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null)
   const open = Boolean(anchorEl)
   const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {

@@ -97,7 +97,7 @@ const App = () => {
                     xs: 'calc(env(titlebar-area-height, 3rem) + 0.5rem)',
                     sm: 'calc(var(--content-padding-top) + 0.5rem)'
                   },
-                  height: 'calc(100dvh - 4.5rem - var(--content-padding-top))',
+                  height: 'calc(100dvh - 4.5rem - var(--titlebar-height))',
                 }}
               >
                 <Paper

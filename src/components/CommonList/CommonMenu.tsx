@@ -1,4 +1,3 @@
-import { t } from '@lingui/macro'
 import { useNavigate } from 'react-router-dom'
 import shortUUID from 'short-uuid'
 import { Menu, MenuItem, ListItemText, Button, Dialog, DialogActions, DialogTitle, List, ListItem, ListItemButton, ListItemIcon } from '@mui/material'
@@ -9,6 +8,7 @@ import usePlaylistsStore from '../../store/usePlaylistsStore'
 import useUiStore from '../../store/useUiStore'
 import { FileItem } from '../../types/file'
 import { useShallow } from 'zustand/shallow'
+import { useLingui } from '@lingui/react/macro'
 
 const CommonMenu = (
   {
@@ -43,6 +43,7 @@ const CommonMenu = (
       handleClickRemove?: (indexArray: number[]) => void,
     }
 ) => {
+  const { t } = useLingui()
 
   const navigate = useNavigate()
 

@@ -7,11 +7,12 @@ import useUiStore from '../store/useUiStore'
 import Search from './Search'
 import { useShallow } from 'zustand/shallow'
 import INFO from '@/data/info'
-import { t } from '@lingui/macro'
 import { isTauri } from '@tauri-apps/api/core'
 import { getCurrentWindow } from '@tauri-apps/api/window'
+import { useLingui } from '@lingui/react/macro'
 
 const NavBar = () => {
+  const { t } = useLingui()
   const [
     mobileSideBarOpen,
     audioViewIsShow,
