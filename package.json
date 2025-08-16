@@ -17,8 +17,8 @@
     "generate:dev": "node generate-version-info.mjs --dev && npm run lingui"
   },
   "dependencies": {
-    "@azure/msal-browser": "4.20.0",
-    "@azure/msal-react": "3.0.18",
+    "@azure/msal-browser": "3.30.0",
+    "@azure/msal-react": "2.2.0",
     "@emotion/react": "11.14.0",
     "@emotion/styled": "11.14.1",
     "@fontsource/roboto": "5.2.6",

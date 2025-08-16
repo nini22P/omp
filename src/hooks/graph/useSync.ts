@@ -21,6 +21,11 @@ const useSync = () => {
 
   // 自动从 OneDrive 获取应用数据
   const appDatafetcher = async () => {
+    if (!account) return {
+      history: [],
+      playlists: [],
+    }
+
     const appRootFiles = await getAppRootFilesData(account, '/')
     const historyFile = appRootFiles.value.find((item: { name: string }) => item.name === 'history.json')
     const playlistsFile = appRootFiles.value.find((item: { name: string }) => item.name === 'playlists.json')
@@ -74,7 +79,7 @@ const useSync = () => {
 
   // 自动上传播放历史
   useMemo(
-    () => (historyList !== null) && uploadAppRootJsonData(account, 'history.json', JSON.stringify(historyList)),
+    () => (historyList !== null && account) && uploadAppRootJsonData(account, 'history.json', JSON.stringify(historyList)),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [historyList]
   )
@@ -91,7 +96,7 @@ const useSync = () => {
 
   // 自动上传播放列表
   useMemo(
-    () => (playlists !== null) && uploadAppRootJsonData(account, 'playlists.json', JSON.stringify(playlists)),
+    () => (playlists !== null && account) && uploadAppRootJsonData(account, 'playlists.json', JSON.stringify(playlists)),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [playlists]
   )
