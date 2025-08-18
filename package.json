@@ -25,7 +25,7 @@
     "@lingui/react": "^5.4.1",
     "@mui/icons-material": "7.3.1",
     "@mui/material": "7.3.1",
-    "@react-spring/web": "10.0.1",
+    "@react-spring/web": "9.7.5",
     "@tauri-apps/api": "^2.7.0",
     "@use-gesture/react": "^10.3.1",
     "buffer": "^6.0.3",

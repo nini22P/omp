@@ -9,7 +9,6 @@ import useUser from './hooks/graph/useUser'
 import useSync from './hooks/graph/useSync'
 import useThemeColor from './hooks/ui/useThemeColor'
 import LogIn from './pages/LogIn'
-import useUiStore from './store/useUiStore'
 import { useSpring, animated } from '@react-spring/web'
 import { useMemo } from 'react'
 import useCustomTheme from './hooks/ui/useCustomTheme'
@@ -28,19 +27,17 @@ const App = () => {
   const { account } = useUser()
   useSync()
 
-  const coverColor = useUiStore((state) => state.coverColor)
-
   const [{ background }, api] = useSpring(
     () => ({
-      background: `linear-gradient(45deg, ${coverColor}33, ${coverColor}15, ${coverColor}05, ${customTheme.palette.background.default})`,
+      background: `linear-gradient(45deg, ${customTheme.palette.primary.main}33, ${customTheme.palette.primary.main}15, ${customTheme.palette.primary.main}05, transparent)`,
     })
   )
+
   useMemo(
     () => api.start({
-      background: `linear-gradient(45deg, ${coverColor}33, ${coverColor}15, ${coverColor}05, ${customTheme.palette.background.default})`
+      background: `linear-gradient(45deg, ${customTheme.palette.primary.main}33, ${customTheme.palette.primary.main}15, ${customTheme.palette.primary.main}05, transparent)`
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [coverColor, customTheme.palette.background.default]
+    [api, customTheme.palette.primary.main]
   )
 
   const location = useLocation()

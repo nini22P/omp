@@ -8,17 +8,13 @@ import { useShallow } from 'zustand/shallow'
 
 const useCustomTheme = () => {
   const [
-    coverColor,
     CoverThemeColor,
     colorMode,
-    updateCoverColor,
   ] = useUiStore(
     useShallow(
       (state) => [
-        state.coverColor,
         state.CoverThemeColor,
         state.colorMode,
-        state.updateCoverColor,
       ]
     )
   )
@@ -48,7 +44,7 @@ const useCustomTheme = () => {
       (async () => {
         if (cover !== './cover.svg') {
           const color = (await extractColors(cover))[0]
-          const getLightModeColor = (color:  ColorInstance): ColorInstance => color.isDark() ? color : getLightModeColor(color.lightness(color.lightness() - 1))
+          const getLightModeColor = (color: ColorInstance): ColorInstance => color.isDark() ? color : getLightModeColor(color.lightness(color.lightness() - 1))
           const lightModeColor = getLightModeColor(Color(color.hex)).hex()
           const getDarkModeColor = (color: ColorInstance): ColorInstance => color.isLight() ? color : getDarkModeColor(color.lightness(color.lightness() + 1))
           const darkModeColor = getDarkModeColor(Color(color.hex)).hex()
@@ -59,15 +55,10 @@ const useCustomTheme = () => {
     [cover]
   )
 
-  useEffect(() => {
-    if (coverColors) {
-      updateCoverColor(prefersDarkMode ? coverColors.darkMode : coverColors.lightMode)
-    }
-  }, [coverColors, prefersDarkMode, updateCoverColor])
-
-  const colors = useMemo(() => ({
-    primary: CoverThemeColor ? coverColor : prefersDarkMode ? '#df7ef9' : '#8e24aa',
-  }), [CoverThemeColor, coverColor, prefersDarkMode])
+  const primaryColor = useMemo(
+    () => CoverThemeColor && coverColors ? prefersDarkMode ? coverColors.darkMode : coverColors.lightMode : prefersDarkMode ? '#df7ef9' : '#8e24aa',
+    [CoverThemeColor, coverColors, prefersDarkMode]
+  )
 
   const customTheme = useMemo(() => createTheme({
     palette: {
@@ -77,7 +68,7 @@ const useCustomTheme = () => {
         paper: prefersDarkMode ? '#121212' : '#ffffff',
       },
       primary: {
-        main: colors.primary,
+        main: primaryColor,
       },
       secondary: {
         main: '#ff3d00',
@@ -143,10 +134,10 @@ const useCustomTheme = () => {
               backgroundColor: prefersDarkMode ? '#f7f7f711' : '#3b3b3b11',
             },
             '&.active .MuiListItemIcon-root': {
-              color: colors.primary,
+              color: primaryColor,
             },
             '&.active .MuiListItemText-root': {
-              color: colors.primary,
+              color: primaryColor,
             }
           },
         },
@@ -216,7 +207,7 @@ const useCustomTheme = () => {
       },
     },
   }),
-    [colors.primary, prefersDarkMode]
+    [primaryColor, prefersDarkMode]
   )
 
   return customTheme
