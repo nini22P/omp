@@ -1,6 +1,5 @@
 import { Avatar, Button, Checkbox, Dialog, DialogActions, DialogTitle, Divider, FormControl, FormControlLabel, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, MenuItem, Select, SelectChangeEvent, Tooltip, useTheme } from '@mui/material'
 import useUser from '../hooks/graph/useUser'
-import { t } from '@lingui/macro'
 import { licenses } from '../data/licenses'
 import useLocalMetaDataStore from '../store/useLocalMetaDataStore'
 import useLocalDeltaDataStore from '../store/useLocalDeltaDataStore'
@@ -16,6 +15,7 @@ import usePlaylistsStore from '@/store/usePlaylistsStore'
 import { AccountInfo } from '@azure/msal-browser'
 import { useShallow } from 'zustand/shallow'
 import INFO from '@/data/info'
+import { useLingui } from '@lingui/react/macro'
 
 const ListItemTitle = ({ title }: { title: string }) => {
   const theme = useTheme()
@@ -27,6 +27,7 @@ const ListItemTitle = ({ title }: { title: string }) => {
 }
 
 const Setting = () => {
+  const { t } = useLingui()
 
   const { accounts, account, login, logout } = useUser()
 

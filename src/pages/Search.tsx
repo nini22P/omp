@@ -1,6 +1,5 @@
-import { t } from '@lingui/macro'
-import { Box, ButtonBase, Dialog, DialogContent, IconButton, InputAdornment, InputBase, LinearProgress, MenuItem, Select, useTheme } from '@mui/material'
-import { useEffect, useState } from 'react'
+import { Box, ButtonBase, Dialog, DialogContent, IconButton, InputAdornment, InputBase, LinearProgress, useTheme } from '@mui/material'
+import { useState } from 'react'
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 import useFilesData from '@/hooks/graph/useFilesData'
 import useUser from '@/hooks/graph/useUser'
@@ -11,14 +10,15 @@ import useSWR from 'swr'
 import useDebounce from '@/hooks/useDebounce'
 import CommonList from '@/components/CommonList/CommonList'
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 import { animated, useSpring } from '@react-spring/web'
 import { useShallow } from 'zustand/shallow'
 import useStyles from '@/hooks/ui/useStyles'
-
-type SearchScope = 'global' | 'current'
+import { useLingui } from '@lingui/react/macro'
 
 const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
+  const { t } = useLingui()
+
   const theme = useTheme()
   const styles = useStyles(theme)
 
@@ -27,16 +27,10 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
   const [folderTree, updateFolderTree] = useUiStore(
     useShallow(state => [state.folderTree, state.updateFolderTree])
   )
-  const [searchScope, setSearchScope] = useState<SearchScope>('current')
 
-  const location = useLocation()
   const navigate = useNavigate()
 
-  const isFileView = location.pathname === '/'
-
-  useEffect(() => isFileView ? setSearchScope('current') : setSearchScope('global'), [isFileView, location.pathname])
-
-  const path = searchScope === 'global' ? '/' : pathConvert(folderTree)
+  const path = pathConvert(folderTree)
 
   const [searchOpen, setSearchOpen] = useState(false)
 
@@ -50,6 +44,7 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
   const { getFilesData, getSearchData } = useFilesData()
 
   const fileListFetcher = async (path: string) => {
+    if (!account) return []
     const res: RemoteItem[] = await getFilesData(account, path)
     return remoteItemToFile(res)
   }
@@ -57,6 +52,7 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
   const { data: filesData } = useSWR(account ? path : null, fileListFetcher)
 
   const searchFetcher = async () => {
+    if (!account) return []
     const res: RemoteItem[] = await getSearchData(account, path, searchQuery)
     return remoteItemToFile(res)
   }
@@ -123,6 +119,8 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
             '.MuiTouchRipple-ripple .MuiTouchRipple-child': {
               borderRadius: '0.2rem',
             },
+            width: 'var(--titlebar-height)',
+            height: 'var(--titlebar-height)',
           }}
         >
           <SearchRoundedIcon />
@@ -158,7 +156,7 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
       >
         <Box
           sx={{
-            padding: '0.5rem',
+            padding: '0.5rem 0.75rem',
             borderRadius: '0.5rem',
           }}
         >
@@ -170,18 +168,7 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
             onChange={(ev) => setSearchQuery(ev.target.value)}
             startAdornment={
               <InputAdornment position='start'>
-                <Select
-                  value={searchScope}
-                  onChange={(event) => setSearchScope(event.target.value as SearchScope)}
-                  size='small'
-                  variant='standard'
-                  disableUnderline
-                  disabled={!isFileView}
-                  sx={{ margin: '0 0.5rem' }}
-                >
-                  <MenuItem value='global'>{t`Global`}</MenuItem>
-                  <MenuItem value='current'>{t`Current`}</MenuItem>
-                </Select>
+                <SearchRoundedIcon />
               </InputAdornment>
             }
             endAdornment={

@@ -9,7 +9,7 @@ import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded'
 import Grid from '@mui/material/Grid'
 import useUtils from '@/hooks/useUtils'
 import { sizeConvert } from '@/utils'
-import { t } from '@lingui/macro'
+import { useLingui } from '@lingui/react/macro'
 
 const CommonListItemCard = ({
   item,
@@ -28,6 +28,7 @@ const CommonListItemCard = ({
   handleClickItem: (index: number) => void,
   handleClickMenu: (event: React.MouseEvent<HTMLElement>, index: number) => void,
 }) => {
+  const { t } = useLingui()
 
   const theme = useTheme()
   const { getThumbnailUrl } = useUtils()

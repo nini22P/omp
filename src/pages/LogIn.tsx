@@ -1,10 +1,12 @@
 import { Button, Container, IconButton, Link, Typography } from '@mui/material'
 import GitHubIcon from '@mui/icons-material/GitHub'
-import { t } from '@lingui/macro'
 import useUser from '../hooks/graph/useUser'
+import { useLingui } from '@lingui/react/macro'
 
 const LogIn = () => {
+  const { t } = useLingui()
   const { login } = useUser()
+
   return (
     <Container
       style={{

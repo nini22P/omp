@@ -4,11 +4,12 @@ import useLocalMetaDataStore from '@/store/useLocalMetaDataStore'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
-import { checkFileType, getNetMetaData, pathConvert } from '@/utils'
+import { checkFileType, getNetMetaData, isLocalStorageCover, pathConvert } from '@/utils'
 import useFilesData from '../graph/useFilesData'
 import { MetaData } from '@/types/MetaData'
 import useUser from '../graph/useUser'
 import { useShallow } from 'zustand/shallow'
+import { setTitle } from '@/tauriUtils'
 
 const usePlayerCore = (player: HTMLVideoElement | null) => {
 
@@ -69,7 +70,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
       if (player) {
         player.src = ''
       }
-      if (playQueue !== null && playQueue.length !== 0 && currentFile) {
+      if (playQueue !== null && playQueue.length !== 0 && currentFile && account) {
         updateIsLoading(true)
         try {
           getFileData(account, pathConvert(currentFile.filePath)).then((res) => {
@@ -85,7 +86,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
       return true
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentFile?.filePath]
+    [currentFile?.filePath, account]
   )
 
   useMemo(
@@ -175,10 +176,8 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
             updateCurrentMetaData(metaData)
             if (metaData.cover?.length) {
               const cover = metaData.cover[0]
-              if (cover && 'data' in cover.data && Array.isArray(cover.data.data)) {
-                updateCover(URL.createObjectURL(new Blob([new Uint8Array(cover.data.data as unknown as ArrayBufferLike)], { type: cover.format })))
-              } else if (cover) {
-                updateCover(URL.createObjectURL(new Blob([new Uint8Array(cover.data as ArrayBufferLike)], { type: cover.format })))
+              if (cover && isLocalStorageCover(cover)) {
+                updateCover(URL.createObjectURL(new Blob([new Uint8Array(cover.data.data)], { type: cover.format })))
               }
             } else {
               updateCover('./cover.svg')
@@ -216,18 +215,21 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
     [url]
   )
 
-  // 设置标题
-  useEffect(
-    () => {
-      if (currentMetaData) {
-        document.title = `${currentMetaData.title}${currentMetaData.artist ? ` - ${currentMetaData.artist}` : ''}`
-      }
-      return () => {
-        document.title = 'OMP'
-      }
-    },
-    [currentMetaData, player?.paused]
-  )
+  useEffect(() => {
+    let newTitle = 'OMP'
+    if (currentMetaData) {
+      newTitle = `${currentMetaData.title}${currentMetaData.artist ? ` - ${currentMetaData.artist}` : ''}`
+    }
+
+    document.title = newTitle
+    setTitle(newTitle)
+
+    return () => {
+      const defaultTitle = 'OMP'
+      document.title = defaultTitle
+      setTitle(defaultTitle)
+    }
+  }, [currentMetaData, player?.paused])
 
   return {
     url,

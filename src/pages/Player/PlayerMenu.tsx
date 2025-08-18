@@ -14,7 +14,6 @@ import OpenInFullRoundedIcon from '@mui/icons-material/OpenInFullRounded'
 import CloudDownloadRoundedIcon from '@mui/icons-material/CloudDownloadRounded'
 import { Box, Button, Dialog, DialogActions, DialogTitle, IconButton, List, ListItem, ListItemButton, ListItemIcon, ListItemText, Menu, MenuItem, Tooltip } from '@mui/material'
 import { useMemo, useState } from 'react'
-import { t } from '@lingui/macro'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import { useNavigate } from 'react-router-dom'
 import usePlaylistsStore from '@/store/usePlaylistsStore'
@@ -24,8 +23,10 @@ import { useShallow } from 'zustand/shallow'
 import usePlayerStore from '@/store/usePlayerStore'
 import useLocalMetaDataStore from '@/store/useLocalMetaDataStore'
 import { checkFileType, getNetMetaData } from '@/utils'
+import { useLingui } from '@lingui/react/macro'
 
 const PlayerMenu = ({ player }: { player: HTMLVideoElement | null }) => {
+  const { t } = useLingui()
 
   const navigate = useNavigate()
 

@@ -23,9 +23,10 @@ import VolumeControl from './VolumeControl'
 import { useEffect, useMemo } from 'react'
 import useControlHide from '@/hooks/ui/useControlHide'
 import { useShallow } from 'zustand/shallow'
-import { t } from '@lingui/macro'
+import { useLingui } from '@lingui/react/macro'
 
 const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
+  const { t } = useLingui()
 
   const theme = useTheme()
 

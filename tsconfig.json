@@ -1,28 +1,33 @@
 {
   "compilerOptions": {
-    "allowSyntheticDefaultImports": true,
-    "noImplicitAny": true,
-    "moduleResolution": "Node",
-    "target": "es5",
+    "target": "es2020",
     "lib": [
-      "es2019",
-      "dom"
+      "ES2020",
+      "DOM",
+      "DOM.Iterable"
     ],
-    "allowJs": false,
-    "resolveJsonModule": true,
+    "module": "ESNext",
     "jsx": "react-jsx",
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "noEmit": true,
     "strict": true,
+    "forceConsistentCasingInFileNames": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "noFallthroughCasesInSwitch": true,
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "noImplicitAny": true,
+    "allowJs": false,
     "baseUrl": "./",
     "paths": {
       "@/*": [
         "src/*"
       ]
     },
-    "types": [
-      "./node_modules/@lingui/macro/index.d.ts"
-    ]
+    "types": []
   },
   "include": [
     "**/*.ts",

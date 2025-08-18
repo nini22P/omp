@@ -15,8 +15,11 @@ import { useMemo } from 'react'
 import useCustomTheme from './hooks/ui/useCustomTheme'
 import Search from './pages/Search'
 import useStyles from './hooks/ui/useStyles'
+import useEnvironment from './hooks/ui/useEnvironment'
+import { isTauri } from '@tauri-apps/api/core'
 
 const App = () => {
+  useEnvironment()
   const customTheme = useCustomTheme()
   const styles = useStyles(customTheme)
   useThemeColor(customTheme)
@@ -76,7 +79,7 @@ const App = () => {
                   <Box sx={{
                     height: '2.5rem',
                     padding: '0.25rem',
-                    display: windowControlsOverlayOpen ? 'none' : 'block',
+                    display: windowControlsOverlayOpen || isTauri() ? 'none' : 'block',
                   }}
                   >
                     <Search type='bar' />
@@ -92,9 +95,9 @@ const App = () => {
                   padding: '0 0.5rem 0.5rem 0.5rem',
                   paddingTop: {
                     xs: 'calc(env(titlebar-area-height, 3rem) + 0.5rem)',
-                    sm: 'calc(env(titlebar-area-height, 0rem) + 0.5rem)'
+                    sm: 'calc(var(--content-padding-top) + 0.5rem)'
                   },
-                  height: 'calc(100dvh - 4.5rem - env(titlebar-area-height, 2rem))',
+                  height: 'calc(100dvh - 4.5rem - var(--titlebar-height))',
                 }}
               >
                 <Paper

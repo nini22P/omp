@@ -4,9 +4,10 @@ import { Box, Dialog, IconButton, Tooltip } from '@mui/material'
 import PictureList from './PictureList'
 import { useEffect, useRef } from 'react'
 import { useShallow } from 'zustand/shallow'
-import { t } from '@lingui/macro'
+import { useLingui } from '@lingui/react/macro'
 
 const PictureView = () => {
+  const { t } = useLingui()
 
   const [
     currentPicture,

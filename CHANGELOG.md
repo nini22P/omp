@@ -1,9 +1,11 @@
 ## v1.9.4
 ### Changelog
-* Release android PWA apk
+* Released on the [Microsoft Store (PWA)](https://apps.microsoft.com/detail/9p6w6x16q7l9)
+* Released an [Android APK (PWA)](https://github.com/nini22P/omp/releases/latest/download/OMP-android.apk)
 
 ### 更新日志
-* 发布 android PWA apk
+* 发布到 [微软商店 (PWA)](https://apps.microsoft.com/detail/9p6w6x16q7l9)
+* 发布 [Android APK (PWA)](https://github.com/nini22P/omp/releases/latest/download/OMP-android.apk)
 
 
 ## v1.9.3

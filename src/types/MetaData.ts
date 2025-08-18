@@ -5,8 +5,8 @@ export interface Cover extends IPicture {
   height?: number,
 }
 
-interface LocalStorageCover extends Omit<Cover, 'data'> {
-  data: { type: 'Buffer', data: string[] },
+export interface LocalStorageCover extends Omit<Cover, 'data'> {
+  data: { type: 'Buffer', data: number[] },
 }
 
 export interface MetaData {

@@ -7,7 +7,7 @@ const useUser = () => {
   const { instance, accounts } = useMsal()
   const currentAccount = useUiStore(state => state.currentAccount)
 
-  const account: AccountInfo | null = accounts[currentAccount] || null
+  const account = accounts.length && currentAccount < accounts.length ? accounts[currentAccount] : null
 
   // 登入
   const login = () => {

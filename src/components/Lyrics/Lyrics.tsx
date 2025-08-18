@@ -1,9 +1,11 @@
 import { useMemo, useRef } from 'react'
 import { useMediaQuery, useTheme } from '@mui/material'
 import { useSpring, animated } from '@react-spring/web'
-import { t } from '@lingui/macro'
+import { useLingui } from '@lingui/react/macro'
 
 const Lyrics = ({ lyrics, currentTime }: { lyrics: string, currentTime: number }) => {
+  const { t } = useLingui()
+
   const theme = useTheme()
   const lyricsRef = useRef<HTMLDivElement>(null)
 

@@ -17,7 +17,6 @@ import QueueMusicRoundedIcon from '@mui/icons-material/QueueMusicRounded'
 import LyricsRoundedIcon from '@mui/icons-material/LyricsRounded'
 import { SpringValue, animated, useSpring } from '@react-spring/web'
 import { useMemo, useState } from 'react'
-import { t } from '@lingui/macro'
 import usePlayerControl from '@/hooks/player/usePlayerControl'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
@@ -27,8 +26,10 @@ import { timeShift } from '@/utils'
 import { useShallow } from 'zustand/shallow'
 import Lyrics from '@/components/Lyrics/Lyrics'
 import VolumeControl from '../VolumeControl'
+import { useLingui } from '@lingui/react/macro'
 
 const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: { borderRadius: SpringValue<string> } }) => {
+  const { t } = useLingui()
 
   const theme = useTheme()
 

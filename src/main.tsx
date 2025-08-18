@@ -30,12 +30,14 @@ i18n.load(messages)
 
 i18n.activate(languages.includes(langage) ? langage : 'en')
 
-ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
-  <React.StrictMode>
-    <I18nProvider i18n={i18n}>
-      <MsalProvider instance={msalInstance}>
-        <RouterProvider router={router} />
-      </MsalProvider>
-    </I18nProvider>
-  </React.StrictMode>
-)
+msalInstance.initialize().then(() => {
+  ReactDOM.createRoot(document.getElementById('root') as HTMLElement).render(
+    <React.StrictMode>
+      <I18nProvider i18n={i18n}>
+        <MsalProvider instance={msalInstance}>
+          <RouterProvider router={router} />
+        </MsalProvider>
+      </I18nProvider>
+    </React.StrictMode>
+  )
+})

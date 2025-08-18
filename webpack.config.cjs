@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 const webpack = require('webpack')
+const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer')
 const { merge } = require('webpack-merge')
 const path = require('path')
 const Dotenv = require('dotenv-webpack')
@@ -8,20 +9,12 @@ const CopyWebpackPlugin = require('copy-webpack-plugin')
 const WorkboxWebpackPlugin = require('workbox-webpack-plugin')
 const CompressionPlugin = require('compression-webpack-plugin')
 const ReactRefreshPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
+
 const isProduction = process.env.NODE_ENV == 'production'
+const isTauriBuild = process.env.TAURI_ENV_PLATFORM !== undefined
 
 const config = {
   entry: './src/main.tsx',
-  output: {
-    path: path.resolve(__dirname, 'dist'),
-    filename: '[name].[contenthash].js',
-    clean: true,
-  },
-  optimization: {
-    splitChunks: {
-      chunks: 'all',
-    },
-  },
   plugins: [
     new webpack.ProvidePlugin({
       process: 'process/browser',
@@ -33,6 +26,10 @@ const config = {
     }),
     new CopyWebpackPlugin({
       patterns: [{ from: 'public' }],
+    }),
+    new Dotenv({
+      path: isProduction ? '.env' : '.env.development',
+      systemvars: true,
     }),
   ],
   module: {
@@ -77,10 +74,62 @@ const config = {
 
 const prodConfig = {
   mode: 'production',
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: '[name].[contenthash].js',
+    chunkFilename: '[name].[contenthash].chunk.js',
+    clean: true,
+  },
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
+      cacheGroups: {
+        vendors: {
+          test: /[\\/]node_modules[\\/]/,
+          name: 'vendors',
+          priority: -10,
+          reuseExistingChunk: true,
+        },
+        react: {
+          test: /[\\/]node_modules[\\/](react|react-dom|react-router-dom)[\\/]/,
+          name: 'react',
+          priority: 0,
+        },
+        mui: {
+          test: /[\\/]node_modules[\\/](@mui)[\\/]/,
+          name: 'mui',
+          priority: 1,
+        },
+        azure: {
+          test: /[\\/]node_modules[\\/](@azure)[\\/]/,
+          name: 'azure',
+          priority: 2,
+        },
+        musicMetadata: {
+          test: /[\\/]node_modules[\\/](music-metadata)[\\/]/,
+          name: 'music-metadata',
+          priority: 3,
+        },
+        fontSouce: {
+          test: /[\\/]node_modules[\\/](@fontsource)[\\/]/,
+          name: 'fontsource',
+          priority: 4,
+        },
+      },
+    },
+  },
   plugins: [
-    new Dotenv({ path: '.env', systemvars: true }),
-    new WorkboxWebpackPlugin.GenerateSW(),
-    new CompressionPlugin(),
+    ...(
+      isTauriBuild ? [] : [
+        new WorkboxWebpackPlugin.GenerateSW(),
+        new CompressionPlugin(),
+        new BundleAnalyzerPlugin({
+          analyzerMode: 'static',
+          openAnalyzer: true,
+          reportFilename: 'bundle-report.html',
+        }),
+      ]
+    )
   ]
 }
 
@@ -92,7 +141,6 @@ const devConfig = {
     port: 8760,
   },
   plugins: [
-    new Dotenv({ path: '.env.development' }),
     new ReactRefreshPlugin(),
   ]
 }

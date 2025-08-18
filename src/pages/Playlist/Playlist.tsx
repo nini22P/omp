@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import { t } from '@lingui/macro'
 import { useNavigate, useParams } from 'react-router-dom'
 import { Button, ListItemText, Typography, Dialog, DialogTitle, DialogActions, Menu, MenuItem, DialogContent, TextField, Box, useTheme } from '@mui/material'
 import Grid from '@mui/material/Grid'
@@ -13,8 +12,11 @@ import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
 import { checkFileType } from '@/utils'
 import { useShallow } from 'zustand/shallow'
+import { useLingui } from '@lingui/react/macro'
 
 const Playlist = () => {
+  const { t } = useLingui()
+
   const navigate = useNavigate()
   const { id } = useParams()
   const theme = useTheme()
