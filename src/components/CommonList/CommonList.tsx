@@ -7,7 +7,7 @@ import { shufflePlayQueue } from '../../utils'
 import CommonMenu from './CommonMenu'
 import { FileItem } from '../../types/file'
 import CommonListItem from './CommonListItem'
-import { Box, Fab, List, useMediaQuery, useTheme } from '@mui/material'
+import { Box, CircularProgress, Fab, List, useMediaQuery, useTheme } from '@mui/material'
 import { AutoSizer, List as VirtualList } from 'react-virtualized'
 import CommonListItemCard from './CommonListItemCard'
 import ShuffleRoundedIcon from '@mui/icons-material/ShuffleRounded'
@@ -35,6 +35,7 @@ const CommonList = (
     func?: {
       open?: (index: number) => void,
       remove?: (indexArray: number[]) => void,
+      deltaListFetcher?:() => Promise<FileItem[]>,
     },
   }) => {
 
@@ -50,9 +51,10 @@ const CommonList = (
   const [dialogOpen, setDialogOpen] = useState(false)
   const [selectIndex, setSelectIndex] = useState<number | null>(null)
   const [selectIndexArray, setSelectIndexArray] = useState<number[]>([])
+  const [shuffleLoading, setShuffleLoading] = useState(false)
 
   const isSelectMode = selectIndexArray.length > 0
-  const shuffleDisplay = listData.filter(item => item.fileType === 'audio' || item.fileType === 'video').length > 0
+  const shuffleDisplay = true
   const playAllDisplay = shuffleDisplay || listData.filter(item => item.fileType === 'folder' && /^(disc|disk)\s*\d+$/.test(item.fileName.toLocaleLowerCase())).length > 0
 
   const addSelectIndex = (index: number) => { setSelectIndexArray([...selectIndexArray, index].sort()) }
@@ -75,9 +77,22 @@ const CommonList = (
   }
 
   // 点击随机播放全部
-  const handleClickShuffleAll = () => {
-    if (listData) {
-      const list = listData
+  const handleClickShuffleAll = async () => {
+    setShuffleLoading(true)
+    let dataToUse = listData
+    if (func?.deltaListFetcher) {
+      try {
+        const deltaData = await func.deltaListFetcher()
+        if (deltaData && deltaData.length > 0) {
+          dataToUse = deltaData
+        }
+      } catch (error) {
+        console.error('Error fetching delta data:', error)
+      }
+    }
+    
+    if (dataToUse) {
+      const list = dataToUse
         .filter((item) => item.fileType === 'audio' || item.fileType === 'video')
         .map((item, index) => { return { index, ...item } })
       if (!shuffle)
@@ -87,6 +102,7 @@ const CommonList = (
       updateCurrentIndex(shuffleList[0].index)
       updateAutoPlay(true)
     }
+    setShuffleLoading(false)
   }
 
   const openMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -372,8 +388,16 @@ const CommonList = (
           <>
             {
               shuffleDisplay &&
-              <Fab size='small' onClick={handleClickShuffleAll}>
-                <ShuffleRoundedIcon />
+              <Fab 
+                size='small' 
+                onClick={handleClickShuffleAll}
+                disabled={shuffleLoading}
+              >
+                {shuffleLoading ? (
+                  <CircularProgress size={24} color="inherit" />
+                ) : (
+                  <ShuffleRoundedIcon />
+                )}
               </Fab>
             }
             {

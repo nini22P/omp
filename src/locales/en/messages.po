@@ -13,15 +13,15 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/pages/Setting.tsx:161
+#: src/pages/Setting.tsx:173
 msgid "About"
 msgstr "About"
 
-#: src/pages/Setting.tsx:95
+#: src/pages/Setting.tsx:97
 msgid "Account"
 msgstr "Account"
 
-#: src/pages/Setting.tsx:225
+#: src/pages/Setting.tsx:237
 msgid "Add account"
 msgstr "Add account"
 
@@ -46,15 +46,15 @@ msgstr "Add to playlist"
 msgid "Ascending"
 msgstr "Ascending"
 
-#: src/pages/Setting.tsx:137
+#: src/pages/Setting.tsx:149
 msgid "Auto"
 msgstr "Auto"
 
-#: src/pages/Setting.tsx:176
+#: src/pages/Setting.tsx:188
 msgid "Build time"
 msgstr "Build time"
 
-#: src/pages/Setting.tsx:230
+#: src/pages/Setting.tsx:242
 #: src/pages/Playlist/Playlist.tsx:217
 #: src/pages/Playlist/Playlist.tsx:240
 #: src/pages/Player/PlayerMenu.tsx:363
@@ -70,7 +70,8 @@ msgstr "Cancel select"
 msgid "Classic"
 msgstr "Classic"
 
-#: src/pages/Setting.tsx:118
+#: src/pages/Setting.tsx:120
+#: src/pages/Setting.tsx:130
 msgid "Clear"
 msgstr "Clear"
 
@@ -80,7 +81,7 @@ msgstr "Clear"
 msgid "Close"
 msgstr "Close"
 
-#: src/pages/Setting.tsx:144
+#: src/pages/Setting.tsx:156
 msgid "Color mode"
 msgstr "Color mode"
 
@@ -92,15 +93,15 @@ msgstr "Current"
 msgid "Currently using a development version, please be careful with your data!"
 msgstr "Currently using a development version, please be careful with your data!"
 
-#: src/pages/Setting.tsx:127
+#: src/pages/Setting.tsx:139
 msgid "Customize"
 msgstr "Customize"
 
-#: src/pages/Setting.tsx:139
+#: src/pages/Setting.tsx:151
 msgid "Dark"
 msgstr "Dark"
 
-#: src/pages/Setting.tsx:114
+#: src/pages/Setting.tsx:116
 msgid "Data"
 msgstr "Data"
 
@@ -149,7 +150,7 @@ msgstr "History"
 msgid "Last modified"
 msgstr "Last modified"
 
-#: src/pages/Setting.tsx:138
+#: src/pages/Setting.tsx:150
 msgid "Light"
 msgstr "Light"
 
@@ -157,7 +158,11 @@ msgstr "Light"
 msgid "List"
 msgstr "List"
 
-#: src/pages/Setting.tsx:122
+#: src/pages/Setting.tsx:134
+msgid "Local file index cache"
+msgstr "Local file index cache"
+
+#: src/pages/Setting.tsx:124
 msgid "Local metaData cache"
 msgstr "Local metaData cache"
 
@@ -165,7 +170,7 @@ msgstr "Local metaData cache"
 msgid "Lyrics"
 msgstr "Lyrics"
 
-#: src/pages/Setting.tsx:98
+#: src/pages/Setting.tsx:100
 msgid "Manage"
 msgstr "Manage"
 
@@ -216,11 +221,11 @@ msgstr "OK"
 msgid "Open in folder"
 msgstr "Open in folder"
 
-#: src/pages/Setting.tsx:182
+#: src/pages/Setting.tsx:194
 msgid "Open source dependencies"
 msgstr "Open source dependencies"
 
-#: src/components/CommonList/CommonList.tsx:383
+#: src/components/CommonList/CommonList.tsx:407
 msgid "Play all"
 msgstr "Play all"
 
@@ -235,7 +240,7 @@ msgstr "Play queue"
 msgid "Playback rate"
 msgstr "Playback rate"
 
-#: src/pages/Setting.tsx:107
+#: src/pages/Setting.tsx:109
 #: src/pages/LogIn.tsx:24
 msgid "Please use Microsoft account authorization to log in"
 msgstr "Please use Microsoft account authorization to log in"
@@ -264,7 +269,7 @@ msgstr "Search"
 msgid "Select"
 msgstr "Select"
 
-#: src/pages/Setting.tsx:196
+#: src/pages/Setting.tsx:208
 msgid "Select account"
 msgstr "Select account"
 
@@ -276,7 +281,7 @@ msgstr "Select all"
 msgid "Setting"
 msgstr "Setting"
 
-#: src/components/CommonList/ShuffleAll.tsx:24
+#: src/components/CommonList/ShuffleAll.tsx:28
 msgid "Shuffle all"
 msgstr "Shuffle all"
 
@@ -284,7 +289,7 @@ msgstr "Shuffle all"
 msgid "Sign in"
 msgstr "登录"
 
-#: src/pages/Setting.tsx:204
+#: src/pages/Setting.tsx:216
 msgid "Sign out"
 msgstr "Sign out"
 
@@ -305,10 +310,10 @@ msgstr "Switch theme"
 msgid "The playlist will be deleted"
 msgstr "The playlist will be deleted"
 
-#: src/pages/Setting.tsx:156
+#: src/pages/Setting.tsx:168
 msgid "Use album cover theme color"
 msgstr "Use album cover theme color"
 
-#: src/pages/Setting.tsx:170
+#: src/pages/Setting.tsx:182
 msgid "Version"
 msgstr "Version"
