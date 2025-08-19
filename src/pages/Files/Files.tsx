@@ -1,10 +1,10 @@
 import useSWR from 'swr'
 import useUiStore from '../../store/useUiStore'
-import useFilesData from '../../hooks/graph/useFilesData'
+import useGraph from '../../hooks/graph/useGraph'
 import BreadcrumbNav from './BreadcrumbNav'
 import CommonList from '../../components/CommonList/CommonList'
 import Loading from '../Loading'
-import { remoteItemToFile, pathConvert } from '../../utils'
+import { remoteItemToFile, pathConv, fileSorter } from '../../utils'
 import { FileItem, RemoteItem } from '../../types/file'
 import Grid from '@mui/material/Grid'
 import FilterMenu from './FilterMenu'
@@ -17,6 +17,7 @@ import usePictureStore from '@/store/usePictureStore'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
 import { useShallow } from 'zustand/shallow'
+import { useMsal } from '@azure/msal-react'
 
 const Files = () => {
 
@@ -57,95 +58,39 @@ const Files = () => {
 
   const updateAutoPlay = usePlayerStore(state => state.updateAutoPlay)
 
-  const { getFilesData, getDeltaData } = useFilesData()
-  const navigate = useNavigate()
-
+  const { instance } = useMsal()
   const { account } = useUser()
 
-  const path = pathConvert(folderTree)
+  const { getFilesData, getDeltaData } = useGraph(instance, account)
+  const navigate = useNavigate()
 
-  const fileListFetcher = async (path: string) => {
-    const res: RemoteItem[] = await getFilesData(account, path)
-    return remoteItemToFile(res)
+  const filesFetcher = async (path: string[]) => {
+    console.log(path)
+    const res = await getFilesData(path)
+    return remoteItemToFile(res.value)
   }
 
   const deltaListFetcher = async () => {
-    const res: RemoteItem[] = await getDeltaData(account, path)
+    const res: RemoteItem[] = await getDeltaData(folderTree)
     const deltaListData = remoteItemToFile(res)
     const filteredDeltaList = deltaListData.filter((item) => mediaOnly ? item.fileType !== 'other' : true)
-    const sortedDeltaList = filteredDeltaList.sort((a, b) => {
-      if (foldersFirst) {
-        if (a.fileType === 'folder' && b.fileType !== 'folder') {
-          return -1
-        } else if (a.fileType !== 'folder' && b.fileType === 'folder') {
-          return 1
-        }
-      }
-
-      if (sortBy === 'name') {
-        if (orderBy === 'asc') {
-          return (a.fileName).localeCompare(b.fileName)
-        } else {
-          return (b.fileName).localeCompare(a.fileName)
-        }
-      } else if (sortBy === 'size') {
-        if (orderBy === 'asc') {
-          return a.fileSize - b.fileSize
-        } else {
-          return b.fileSize - a.fileSize
-        }
-      } else if (sortBy === 'datetime' && a.lastModifiedDateTime && b.lastModifiedDateTime) {
-        if (orderBy === 'asc') {
-          return new Date(a.lastModifiedDateTime).getTime() - new Date(b.lastModifiedDateTime).getTime()
-        } else {
-          return new Date(b.lastModifiedDateTime).getTime() - new Date(a.lastModifiedDateTime).getTime()
-        }
-      } else return 0
-    })
+    const sortedDeltaList = fileSorter(filteredDeltaList, foldersFirst, sortBy, orderBy)
     return sortedDeltaList
   }
 
-  const { data: fileListData, error: fileListError, isLoading: fileListIsLoading } =
+  const { data: filesData, error: filesError, isLoading: filesIsLoading } =
     useSWR(
-      `${account.username}/${path}`,
-      () => fileListFetcher(path),
+      account ? `${account?.username}/${pathConv(folderTree)}` : null,
+      () => filesFetcher(folderTree),
       { revalidateOnFocus: false }
     )
 
-  const filteredFileList = fileListData?.filter((item) => mediaOnly ? item.fileType !== 'other' : true)
+  const filteredFiles = filesData?.filter((item) => mediaOnly ? item.fileType !== 'other' : true)
 
-  const sortedFileList = filteredFileList?.sort((a, b) => {
-    if (foldersFirst) {
-      if (a.fileType === 'folder' && b.fileType !== 'folder') {
-        return -1
-      } else if (a.fileType !== 'folder' && b.fileType === 'folder') {
-        return 1
-      }
-    }
-
-    if (sortBy === 'name') {
-      if (orderBy === 'asc') {
-        return (a.fileName).localeCompare(b.fileName)
-      } else {
-        return (b.fileName).localeCompare(a.fileName)
-      }
-    } else if (sortBy === 'size') {
-      if (orderBy === 'asc') {
-        return a.fileSize - b.fileSize
-      } else {
-        return b.fileSize - a.fileSize
-      }
-    } else if (sortBy === 'datetime' && a.lastModifiedDateTime && b.lastModifiedDateTime) {
-      if (orderBy === 'asc') {
-        return new Date(a.lastModifiedDateTime).getTime() - new Date(b.lastModifiedDateTime).getTime()
-      } else {
-        return new Date(b.lastModifiedDateTime).getTime() - new Date(a.lastModifiedDateTime).getTime()
-      }
-    } else return 0
-  })
+  const sortedFiles = filteredFiles && fileSorter(filteredFiles, foldersFirst, sortBy, orderBy)
 
   const [scrollPath, setScrollPath] = useState<FileItem['filePath'] | undefined>()
-  const scrollIndex = scrollPath ? sortedFileList?.findIndex(item => pathConvert(item.filePath) === pathConvert(scrollPath)) : undefined
+  const scrollIndex = scrollPath ? sortedFiles?.findIndex(item => pathConv(item.filePath) === pathConv(scrollPath)) : undefined
 
   const handleClickNav = (index: number) => {
     if (index < folderTree.length - 1) {
@@ -154,8 +99,8 @@ const Files = () => {
     }
   }
 
-  const open = (index: number) => {
-    const listData = sortedFileList
+  const open = async (index: number) => {
+    const listData = sortedFiles
     if (listData) {
       const currentFile = listData[index]
 
@@ -178,7 +123,7 @@ const Files = () => {
           updateShuffle(false)
         }
         updatePlayQueue(list)
-        updateCurrentIndex(list.find(item => pathConvert(item.filePath) === pathConvert(currentFile.filePath))?.index || 0)
+        updateCurrentIndex(list.find(item => pathConv(item.filePath) === pathConv(currentFile.filePath))?.index || 0)
         updateAutoPlay(true)
         if (currentFile.fileType === 'video') {
           updateVideoViewIsShow(true)
@@ -187,26 +132,25 @@ const Files = () => {
 
       if (!currentFile) {
         const discs = listData.filter(item => item.fileName.toLocaleLowerCase().includes('disc'))
-        if (discs.length > 0) {
-          Promise.all(discs.map(item => getFilesData(account, pathConvert(item.filePath)).then(res => remoteItemToFile(res))))
-            .then(files => {
-              const list = files
-                .flat()
-                .filter((item) => item.fileType === 'audio' || item.fileType === 'video')
-                .map((item, _index) => ({ ...item, index: _index }))
+        if (discs.length > 0 && account) {
+          const files = await Promise.all(discs.map(item => getFilesData(item.filePath).then(res => remoteItemToFile(res.value))))
 
-              if (list.length > 0) {
-                if (shuffle) {
-                  updateShuffle(false)
-                }
-                updatePlayQueue(list)
-                updateCurrentIndex(0)
-                updateAutoPlay(true)
-                if (list[0].fileType === 'video') {
-                  updateVideoViewIsShow(true)
-                }
-              }
-            })
+          const list = files
+            .flat()
+            .filter((item) => item.fileType === 'audio' || item.fileType === 'video')
+            .map((item, _index) => ({ ...item, index: _index }))
+
+          if (list.length > 0) {
+            if (shuffle) {
+              updateShuffle(false)
+            }
+            updatePlayQueue(list)
+            updateCurrentIndex(0)
+            updateAutoPlay(true)
+            if (list[0].fileType === 'video') {
+              updateVideoViewIsShow(true)
+            }
+          }
         }
       }
     }
@@ -239,11 +183,11 @@ const Files = () => {
       <Divider />
       <Grid size={12} sx={{ flexGrow: 1, overflow: 'auto' }}>
         {
-          (fileListIsLoading || !fileListData || !sortedFileList || fileListError)
+          (filesIsLoading || !filesData || !sortedFiles || filesError)
             ? <Loading />
             : <CommonList
               display={display}
-              listData={sortedFileList}
+              listData={sortedFiles}
               listType='files'
               scrollIndex={scrollIndex}
               func={{ open, deltaListFetcher }}

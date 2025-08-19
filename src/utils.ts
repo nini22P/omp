@@ -63,7 +63,7 @@ export const sizeConvert = (fileSize: FileItem['fileSize']) => {
       : `${(fileSize / 1024 / 1024 / 1024).toFixed(2)} GB`
 }
 
-export const pathConvert = (filePath: FileItem['filePath']) => (filePath.join('/') === '/') ? '/' : filePath.slice(1).join('/')
+export const pathConv = (filePath: FileItem['filePath']) => (filePath.join('/') === '/') ? '/' : filePath.slice(1).join('/')
 
 /**
  * 根据 url 解析 json
@@ -128,16 +128,18 @@ export const compressImage = (image: Cover): Promise<Cover> => {
   })
 }
 
-export const remoteItemToFile = (res: RemoteItem[]): FileItem[] => res.map((item) => ({
-  fileName: item.name,
-  filePath: ['/', ...item.parentReference.path.replace('/drive/root:', '').split('/').filter(item => item.length > 0).map(item => decodeURIComponent(item)), item.name],
-  fileSize: item.size,
-  fileType: (item.folder) ? 'folder' : checkFileType(item.name),
-  lastModifiedDateTime: item.lastModifiedDateTime,
-  id: item.id,
-  thumbnails: item.thumbnails,
-  url: item['@microsoft.graph.downloadUrl'],
-}))
+export const remoteItemToFile = (res: RemoteItem[]): FileItem[] => res
+  .filter(item => item.parentReference.path)
+  .map((item) => ({
+    fileName: item.name,
+    filePath: ['/', ...item.parentReference.path!.replace('/drive/root:', '').split('/').filter(item => item.length > 0).map(item => decodeURIComponent(item)), item.name],
+    fileSize: item.size,
+    fileType: (item.folder) ? 'folder' : checkFileType(item.name),
+    lastModifiedDateTime: item.lastModifiedDateTime,
+    id: item.id,
+    thumbnails: item.thumbnails,
+    url: item['@microsoft.graph.downloadUrl'],
+  }))
 
 export const getNetMetaData = async (path: string[], url: string) => {
   console.log('Start get net metadata: ', path.slice(-1)[0])
@@ -167,3 +169,36 @@ export const getNetMetaData = async (path: string[], url: string) => {
     return null
   }
 }
+
+export const fileSorter = (files: FileItem[], foldersFirst: boolean, sortBy: string, orderBy: string) =>
+  files.sort(
+    (a, b) => {
+      if (foldersFirst) {
+        if (a.fileType === 'folder' && b.fileType !== 'folder') {
+          return -1
+        } else if (a.fileType !== 'folder' && b.fileType === 'folder') {
+          return 1
+        }
+      }
+
+      if (sortBy === 'name') {
+        if (orderBy === 'asc') {
+          return (a.fileName).localeCompare(b.fileName)
+        } else {
+          return (b.fileName).localeCompare(a.fileName)
+        }
+      } else if (sortBy === 'size') {
+        if (orderBy === 'asc') {
+          return a.fileSize - b.fileSize
+        } else {
+          return b.fileSize - a.fileSize
+        }
+      } else if (sortBy === 'datetime' && a.lastModifiedDateTime && b.lastModifiedDateTime) {
+        if (orderBy === 'asc') {
+          return new Date(a.lastModifiedDateTime).getTime() - new Date(b.lastModifiedDateTime).getTime()
+        } else {
+          return new Date(b.lastModifiedDateTime).getTime() - new Date(a.lastModifiedDateTime).getTime()
+        }
+      } else return 0
+    }
+  )

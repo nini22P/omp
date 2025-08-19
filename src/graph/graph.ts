@@ -1,24 +1,6 @@
+import { DeltaResponse, FileResponse, RemoteItem } from '@/types/file'
 import { graphConfig } from './authConfig'
-
-/**
- * Attaches a given access token to an MS Graph API call. Returns information about the user
- * @param accessToken 
- */
-export async function callMsGraph(accessToken: string) {
-  const headers = new Headers()
-  const bearer = `Bearer ${accessToken}`
-
-  headers.append('Authorization', bearer)
-
-  const options = {
-    method: 'GET',
-    headers: headers
-  }
-
-  return fetch(graphConfig.graphMeEndpoint, options)
-    .then(response => response.json())
-    .catch(error => console.log(error))
-}
+import { pathConv } from '@/utils'
 
 /**
  * 根据文件夹路径获取文件列表
@@ -26,7 +8,11 @@ export async function callMsGraph(accessToken: string) {
  * @param accessToken 
  * @returns 
  */
-export async function getFiles(path: string, accessToken: string) {
+export async function getFiles(
+  path: string[],
+  accessToken: string,
+  nextLink?: string,
+): Promise<FileResponse> {
   const headers = new Headers()
   const bearer = `Bearer ${accessToken}`
 
@@ -37,7 +23,16 @@ export async function getFiles(path: string, accessToken: string) {
     headers: headers
   }
 
-  return fetch(`${graphConfig.graphMeEndpoint}/me/drive/root:/${encodeURIComponent(path)}:/children?$top=2147483647&expand=thumbnails`, options)
+  const queryParams = {
+    $top: '2147483647',
+    $expand: 'thumbnails'
+  }
+
+  const params = new URLSearchParams(queryParams)
+
+  const url = `${graphConfig.graphMeEndpoint}/me/drive/root:/${encodeURIComponent(pathConv(path))}:/children?${params.toString()}`
+
+  return fetch(nextLink || url, options)
     .then(response => response.json())
     .catch(error => console.log(error))
 }
@@ -48,7 +43,10 @@ export async function getFiles(path: string, accessToken: string) {
  * @param accessToken 
  * @returns 
  */
-export async function getFile(path: string, accessToken: string) {
+export async function getFile(
+  path: string[],
+  accessToken: string,
+): Promise<RemoteItem> {
   const headers = new Headers()
   const bearer = `Bearer ${accessToken}`
 
@@ -59,12 +57,23 @@ export async function getFile(path: string, accessToken: string) {
     headers: headers
   }
 
-  return fetch(`${graphConfig.graphMeEndpoint}/me/drive/root:/${encodeURIComponent(path)}`, options)
+  const queryParams = {
+    $expand: 'thumbnails'
+  }
+
+  const params = new URLSearchParams(queryParams)
+
+  const url = `${graphConfig.graphMeEndpoint}/me/drive/root:/${encodeURIComponent(pathConv(path))}?${params.toString()}`
+
+  return fetch(url, options)
     .then(response => response.json())
     .catch(error => console.log(error))
 }
 
-export const getAppRootFiles = async (path: string, accessToken: string) => {
+export const getAppRootFiles = async (
+  path: string[],
+  accessToken: string,
+) => {
   const headers = new Headers()
   const bearer = `Bearer ${accessToken}`
 
@@ -75,12 +84,18 @@ export const getAppRootFiles = async (path: string, accessToken: string) => {
     headers: headers
   }
 
-  return fetch(`${graphConfig.graphMeEndpoint}/me/drive/special/approot/${encodeURIComponent(path)}/children`, options)
+  const url = `${graphConfig.graphMeEndpoint}/me/drive/special/approot:/${encodeURIComponent(pathConv(path))}:/children`
+
+  return fetch(url, options)
     .then(response => response.json())
     .catch(error => console.log(error))
 }
 
-export const uploadAppRootJson = async (fileName: string, fileContent: BodyInit, accessToken: string) => {
+export const uploadAppRootJson = async (
+  fileName: string,
+  fileContent: BodyInit,
+  accessToken: string,
+) => {
   const headers = new Headers()
   const bearer = `Bearer ${accessToken}`
 
@@ -93,12 +108,17 @@ export const uploadAppRootJson = async (fileName: string, fileContent: BodyInit,
     body: fileContent,
   }
 
-  return fetch(`${graphConfig.graphMeEndpoint}/me/drive/special/approot:/${fileName}:/content`, options)
+  const url = `${graphConfig.graphMeEndpoint}/me/drive/special/approot:/${fileName}:/content`
+
+  return fetch(url, options)
     .then(response => response.json())
     .catch(error => console.log(error))
 }
 
-export const search = async (path: string, searchQuery: string, accessToken: string) => {
+export const search = async (
+  searchQuery: string,
+  accessToken: string,
+): Promise<FileResponse> => {
   const headers = new Headers()
   const bearer = `Bearer ${accessToken}`
 
@@ -109,12 +129,18 @@ export const search = async (path: string, searchQuery: string, accessToken: str
     headers: headers
   }
 
-  return fetch(`${graphConfig.graphMeEndpoint}/me/drive/root:/${encodeURIComponent(path)}:/search(q='${searchQuery}')`, options)
+  const url = `${graphConfig.graphMeEndpoint}/me/drive/root/search(q='${searchQuery}')`
+
+  return fetch(url, options)
     .then(response => response.json())
     .catch(error => console.log(error))
 }
 
-export const getDelta = async (path: string, accessToken: string, nextLink?: string) => {
+export const getDelta = async (
+  path: string[],
+  accessToken: string,
+  deltaLink?: string,
+): Promise<DeltaResponse> => {
   const headers = new Headers()
   const bearer = `Bearer ${accessToken}`
 
@@ -125,9 +151,16 @@ export const getDelta = async (path: string, accessToken: string, nextLink?: str
     headers: headers
   }
 
-  const param = '?$top=2147483647&$select=name, parentReference, size, folder, lastModifiedDateTime, id, @microsoft.graph.downloadUrl'
+  const queryParams = {
+    $top: '2147483647',
+    $select: 'name, parentReference, size, folder, lastModifiedDateTime, id, @microsoft.graph.downloadUrl'
+  }
 
-  return fetch(nextLink || `${graphConfig.graphMeEndpoint}/me/drive/root:/${encodeURIComponent(path)}:/delta${param}`, options)
+  const param = new URLSearchParams(queryParams)
+
+  const url = `${graphConfig.graphMeEndpoint}/me/drive/root:/${encodeURIComponent(pathConv(path))}:/delta?${param.toString()}`
+
+  return fetch(deltaLink || url, options)
     .then(response => response.json())
     .catch(error => console.log(error))
 }

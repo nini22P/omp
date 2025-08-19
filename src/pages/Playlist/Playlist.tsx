@@ -129,7 +129,7 @@ const Playlist = () => {
                 {
                   metaDataList[0] && metaDataList[0].cover && 'data' in metaDataList[0].cover[0].data &&
                   <img
-                    src={URL.createObjectURL(new Blob([new Uint8Array(metaDataList[0].cover[0].data.data as unknown as ArrayBufferLike)], { type: 'image/png' }))}
+                    src={URL.createObjectURL(new Blob([new Uint8Array(metaDataList[0].cover[0].data.data)], { type: metaDataList[0].cover[0].format }))}
                     alt='Cover'
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   />

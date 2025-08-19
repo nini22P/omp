@@ -31,9 +31,9 @@ const CommonListItemCard = ({
   const { t } = useLingui()
 
   const theme = useTheme()
-  const { getThumbnailUrl } = useUtils()
+  const { findThumbnail } = useUtils()
 
-  const thumbnailUrl = getThumbnailUrl(item)
+  const thumbnail = findThumbnail(item)
 
   return (
     <ListItemButton
@@ -57,10 +57,10 @@ const CommonListItemCard = ({
             {item.fileType === 'other' && <InsertDriveFileRoundedIcon sx={{ width: '50%', height: '50%' }} />}
           </Grid>
           {
-            thumbnailUrl
+            thumbnail?.url
             &&
             <img
-              src={thumbnailUrl}
+              src={thumbnail.url}
               onError={({ currentTarget }) => {
                 currentTarget.onerror = null
                 currentTarget.style.display = 'none'

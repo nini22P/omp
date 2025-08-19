@@ -2,14 +2,16 @@ import { useEffect, useMemo } from 'react'
 import useSWR from 'swr'
 import usePlaylistsStore from '@/store/usePlaylistsStore'
 import useHistoryStore from '@/store/useHistoryStore'
-import useFilesData from './useFilesData'
+import useGraph from './useGraph'
 import { FileItem } from '@/types/file'
 import { Playlist } from '@/types/playlist'
 import { fetchJson } from '@/utils'
 import useUser from './useUser'
 import { useShallow } from 'zustand/shallow'
+import { useMsal } from '@azure/msal-react'
 
 const useSync = () => {
+  const { instance } = useMsal()
   const { account } = useUser()
   const [historyList, updateHistoryList] = useHistoryStore(
     useShallow((state) => [state.historyList, state.updateHistoryList])
@@ -17,7 +19,7 @@ const useSync = () => {
   const [playlists, updatePlaylists] = usePlaylistsStore(
     useShallow((state) => [state.playlists, state.updatePlaylists])
   )
-  const { getAppRootFilesData, uploadAppRootJsonData } = useFilesData()
+  const { getAppRootFilesData, uploadAppRootJsonData } = useGraph(instance, account)
 
   // 自动从 OneDrive 获取应用数据
   const appDatafetcher = async () => {
@@ -26,7 +28,7 @@ const useSync = () => {
       playlists: [],
     }
 
-    const appRootFiles = await getAppRootFilesData(account, '/')
+    const appRootFiles = await getAppRootFilesData(['/'])
     const historyFile = appRootFiles.value.find((item: { name: string }) => item.name === 'history.json')
     const playlistsFile = appRootFiles.value.find((item: { name: string }) => item.name === 'playlists.json')
     let history = []
@@ -65,7 +67,10 @@ const useSync = () => {
     }
   }
 
-  const { data, error, isLoading } = useSWR<{ history: FileItem[], playlists: Playlist[] }>(account ? `${account.username}/fetchAppData` : null, appDatafetcher)
+  const { data, error, isLoading } = useSWR<{ history: FileItem[], playlists: Playlist[] }>(
+    account ? `${account.username}/fetchAppData` : null,
+    appDatafetcher,
+  )
 
   // 自动更新播放历史
   useEffect(
@@ -79,7 +84,7 @@ const useSync = () => {
 
   // 自动上传播放历史
   useMemo(
-    () => (historyList !== null && account) && uploadAppRootJsonData(account, 'history.json', JSON.stringify(historyList)),
+    () => (historyList !== null) && uploadAppRootJsonData('history.json', JSON.stringify(historyList)),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [historyList]
   )
@@ -96,7 +101,7 @@ const useSync = () => {
 
   // 自动上传播放列表
   useMemo(
-    () => (playlists !== null && account) && uploadAppRootJsonData(account, 'playlists.json', JSON.stringify(playlists)),
+    () => (playlists !== null) && uploadAppRootJsonData('playlists.json', JSON.stringify(playlists)),
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [playlists]
   )

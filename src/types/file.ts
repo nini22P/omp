@@ -1,27 +1,39 @@
-export interface RemoteItem {
-  name: string,
-  size: number,
-  lastModifiedDateTime: string,
-  id: string,
-  thumbnails: Thumbnail[],
-  '@microsoft.graph.downloadUrl'?: string,
-  folder?: object,
-  parentReference: {
-    name: string,
-    path: string,
-  },
-  deleted?: object
+export interface FileResponse {
+  '@odata.nextLink'?: string,
+  value: RemoteItem[],
 }
 
-export interface FileItem {
-  fileName: string,
-  filePath: string[],
-  fileSize: number,
-  fileType: 'folder' | 'audio' | 'video' | 'picture' | 'other',
-  lastModifiedDateTime?: string,
-  id?: string,
-  thumbnails?: Thumbnail[],
-  url?: string,
+export interface DeltaResponse {
+  '@odata.deltaLink'?: string,
+  '@odata.nextLink'?: string,
+  value: RemoteItem[],
+}
+
+export interface FileDetails {
+  mimeType: string,
+  hashes?: {
+    quickXorHash?: string,
+    sha1Hash?: string,
+    sha256Hash?: string,
+    crc32Hash?: string,
+  },
+}
+
+export interface FolderDetails {
+  childCount: number,
+  view?: {
+    sortBy: string,
+    sortOrder: 'ascending' | 'descending',
+    viewType: 'details' | 'thumbnails' | 'list' | 'icons',
+  },
+}
+
+export interface ParentReference {
+  driveId: string,
+  driveType: string,
+  id: string,
+  name?: string,
+  path?: string,
 }
 
 export interface ThumbnailItem {
@@ -35,4 +47,48 @@ export interface Thumbnail {
   small: ThumbnailItem,
   medium: ThumbnailItem,
   large: ThumbnailItem,
+}
+
+export interface IdentitySet {
+  user?: { id: string, displayName: string, email?: string, },
+}
+
+export interface DeletedState {
+  state: 'deleted',
+}
+
+export interface RemoteItem {
+  id: string,
+  name: string,
+  size: number,
+  webUrl: string,
+  createdDateTime: string,
+  lastModifiedDateTime: string,
+
+  cTag?: string,
+  eTag?: string,
+
+  file?: FileDetails,
+  folder?: FolderDetails,
+
+  parentReference: ParentReference,
+
+  thumbnails?: Thumbnail[],
+  '@microsoft.graph.downloadUrl'?: string,
+
+  createdBy?: IdentitySet,
+  lastModifiedBy?: IdentitySet,
+
+  deleted?: DeletedState,
+}
+
+export interface FileItem {
+  fileName: string,
+  filePath: string[],
+  fileSize: number,
+  fileType: 'folder' | 'audio' | 'video' | 'picture' | 'other',
+  lastModifiedDateTime?: string,
+  id?: string,
+  thumbnails?: Thumbnail[],
+  url?: string,
 }

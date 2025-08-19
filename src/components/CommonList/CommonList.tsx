@@ -35,7 +35,7 @@ const CommonList = (
     func?: {
       open?: (index: number) => void,
       remove?: (indexArray: number[]) => void,
-      deltaListFetcher?:() => Promise<FileItem[]>,
+      deltaListFetcher?: () => Promise<FileItem[]>,
     },
   }) => {
   const { t } = useLingui()
@@ -91,7 +91,7 @@ const CommonList = (
         console.error('Error fetching delta data:', error)
       }
     }
-    
+
     if (dataToUse) {
       const list = dataToUse
         .filter((item) => item.fileType === 'audio' || item.fileType === 'video')
@@ -389,8 +389,8 @@ const CommonList = (
           <>
             {
               shuffleDisplay &&
-              <Fab 
-                size='small' 
+              <Fab
+                size='small'
                 onClick={handleClickShuffleAll}
                 disabled={shuffleLoading}
               >

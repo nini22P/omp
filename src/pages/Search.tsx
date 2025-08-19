@@ -1,11 +1,10 @@
 import { Box, ButtonBase, Dialog, DialogContent, IconButton, InputAdornment, InputBase, LinearProgress, useTheme } from '@mui/material'
 import { useState } from 'react'
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
-import useFilesData from '@/hooks/graph/useFilesData'
+import useGraph from '@/hooks/graph/useGraph'
 import useUser from '@/hooks/graph/useUser'
 import useUiStore from '@/store/useUiStore'
-import { remoteItemToFile, pathConvert } from '@/utils'
-import { RemoteItem } from '@/types/file'
+import { pathConv, remoteItemToFile } from '@/utils'
 import useSWR from 'swr'
 import useDebounce from '@/hooks/useDebounce'
 import CommonList from '@/components/CommonList/CommonList'
@@ -15,6 +14,7 @@ import { animated, useSpring } from '@react-spring/web'
 import { useShallow } from 'zustand/shallow'
 import useStyles from '@/hooks/ui/useStyles'
 import { useLingui } from '@lingui/react/macro'
+import { useMsal } from '@azure/msal-react'
 
 const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
   const { t } = useLingui()
@@ -30,8 +30,6 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
 
   const navigate = useNavigate()
 
-  const path = pathConvert(folderTree)
-
   const [searchOpen, setSearchOpen] = useState(false)
 
   const handleCloseSearh = () => {
@@ -39,27 +37,31 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
     setSearchQuery('')
   }
 
+  const { instance } = useMsal()
   const { account } = useUser()
 
-  const { getFilesData, getSearchData } = useFilesData()
+  const { getFilesData, getSearchData } = useGraph(instance, account)
 
-  const fileListFetcher = async (path: string) => {
-    if (!account) return []
-    const res: RemoteItem[] = await getFilesData(account, path)
-    return remoteItemToFile(res)
+  const filesFetcher = async (path: string[]) => {
+    const { value } = await getFilesData(path)
+    return remoteItemToFile(value)
   }
 
-  const { data: filesData } = useSWR(account ? path : null, fileListFetcher)
+  const { data: filesData } = useSWR(
+    account ? `${account.username}/${pathConv(folderTree)}` : null,
+    () => filesFetcher(folderTree),
+    { revalidateOnFocus: false },
+  )
 
-  const searchFetcher = async () => {
+  const searchFetcher = async (searchQuery: string) => {
     if (!account) return []
-    const res: RemoteItem[] = await getSearchData(account, path, searchQuery)
-    return remoteItemToFile(res)
+    const { value } = await getSearchData(searchQuery)
+    return remoteItemToFile(value)
   }
 
   const { data: searchData, isLoading: searchIsLoading } = useSWR(
-    (debouncedSearchQuery.length > 0) && account ? `${account.username}/${path}/${debouncedSearchQuery}` : null,
-    searchFetcher,
+    (debouncedSearchQuery.length > 0) && account ? `${account.username}/${pathConv(folderTree)}/${debouncedSearchQuery}` : null,
+    () => searchFetcher(debouncedSearchQuery),
   )
 
   const filteredFilesData = debouncedSearchQuery.length > 0
@@ -70,7 +72,7 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
   const filteredData = [
     ...filteredFilesData || [],
     ...searchData?.filter(searchItem =>
-      !filteredFilesData?.find(item => (pathConvert(item.filePath) === pathConvert(searchItem.filePath)))
+      !filteredFilesData?.find(item => (pathConv(item.filePath) === pathConv(searchItem.filePath)))
       && ['folder', 'audio', 'video'].includes(searchItem.fileType))
     || []
   ]

@@ -3,12 +3,13 @@ import { FileItem } from '@/types/file'
 
 const useUtils = () => {
   const hdThumbnails = useUiStore(state => state.hdThumbnails)
-  const getThumbnailUrl = (item: FileItem): string | null => {
+
+  const findThumbnail = (item: FileItem) => {
     if (item.thumbnails && item.thumbnails[0])
-      return hdThumbnails ? item.thumbnails[0].large.url : item.thumbnails[0].medium.url
+      return hdThumbnails ? item.thumbnails[0].large : item.thumbnails[0].medium
     return null
   }
 
-  return { getThumbnailUrl }
+  return { findThumbnail }
 }
 export default useUtils

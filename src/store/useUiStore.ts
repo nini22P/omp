@@ -15,7 +15,7 @@ const initialState: UiStatus = {
   backgroundIsShow: true,
   shuffle: false,
   repeat: 'off',
-  volume: 80,
+  volume: 100,
   playbackRate: 1,
   CoverThemeColor: true,
   colorMode: 'auto',

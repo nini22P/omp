@@ -76,7 +76,7 @@ msgid "Clear"
 msgstr "Clear"
 
 #: src/pages/PictureView/PictureView.tsx:73
-#: src/pages/Player/Audio/Modern.tsx:152
+#: src/pages/Player/Audio/Modern.tsx:150
 #: src/pages/Player/VideoPlayerTopbar.tsx:57
 msgid "Close"
 msgstr "Close"
@@ -125,7 +125,7 @@ msgstr "Files"
 msgid "Folders first"
 msgstr "Folders first"
 
-#: src/pages/Player/Audio/Modern.tsx:202
+#: src/pages/Player/Audio/Modern.tsx:200
 #: src/pages/Player/PlayerControl.tsx:317
 msgid "Fullscreen"
 msgstr "Fullscreen"
@@ -166,7 +166,7 @@ msgstr "Local file index cache"
 msgid "Local metaData cache"
 msgstr "Local metaData cache"
 
-#: src/pages/Player/Audio/Modern.tsx:185
+#: src/pages/Player/Audio/Modern.tsx:183
 msgid "Lyrics"
 msgstr "Lyrics"
 
@@ -207,7 +207,7 @@ msgid "New playlist"
 msgstr "New playlist"
 
 #: src/components/Lyrics/Lyrics.tsx:89
-#: src/pages/Player/Audio/Modern.tsx:283
+#: src/pages/Player/Audio/Modern.tsx:281
 msgid "No lyrics"
 msgstr "No lyrics"
 
@@ -229,7 +229,7 @@ msgstr "Open source dependencies"
 msgid "Play all"
 msgstr "Play all"
 
-#: src/pages/Player/Audio/Modern.tsx:170
+#: src/pages/Player/Audio/Modern.tsx:168
 #: src/pages/Player/PlayerControl.tsx:307
 #: src/pages/Player/PlayerMenu.tsx:223
 msgid "Play queue"
@@ -258,10 +258,10 @@ msgstr "Remove"
 msgid "Rename"
 msgstr "Rename"
 
-#: src/pages/Search.tsx:116
-#: src/pages/Search.tsx:141
+#: src/pages/Search.tsx:118
 #: src/pages/Search.tsx:143
-#: src/pages/Search.tsx:165
+#: src/pages/Search.tsx:145
+#: src/pages/Search.tsx:167
 msgid "Search"
 msgstr "Search"
 

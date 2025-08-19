@@ -4,18 +4,20 @@ import useLocalMetaDataStore from '@/store/useLocalMetaDataStore'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
-import { checkFileType, getNetMetaData, isLocalStorageCover, pathConvert } from '@/utils'
-import useFilesData from '../graph/useFilesData'
+import { checkFileType, getNetMetaData, isLocalStorageCover, pathConv } from '@/utils'
+import useGraph from '../graph/useGraph'
 import { MetaData } from '@/types/MetaData'
 import useUser from '../graph/useUser'
 import { useShallow } from 'zustand/shallow'
 import { setTitle } from '@/tauriUtils'
+import { useMsal } from '@azure/msal-react'
 
 const usePlayerCore = (player: HTMLVideoElement | null) => {
 
+  const { instance } = useMsal()
   const { account } = useUser()
 
-  const { getFileData } = useFilesData()
+  const { getFileData } = useGraph(instance, account)
 
   const [
     currentMetaData,
@@ -73,7 +75,10 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
       if (playQueue !== null && playQueue.length !== 0 && currentFile && account) {
         updateIsLoading(true)
         try {
-          getFileData(account, pathConvert(currentFile.filePath)).then((res) => {
+          getFileData(currentFile.filePath).then((res) => {
+            if (!res['@microsoft.graph.downloadUrl']) {
+              throw new Error('No download url')
+            }
             setUrl(res['@microsoft.graph.downloadUrl'])
           })
         } catch (error) {
@@ -170,7 +175,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
             &&
             metaData.path
             &&
-            pathConvert(metaData.path) === pathConvert(currentFile.filePath)
+            pathConv(metaData.path) === pathConv(currentFile.filePath)
           ) {
             console.log('Update current metaData: ', metaData)
             updateCurrentMetaData(metaData)

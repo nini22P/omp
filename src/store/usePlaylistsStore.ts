@@ -1,4 +1,4 @@
-import { pathConvert } from '../utils'
+import { pathConv } from '../utils'
 import { PlaylistsStatus, PlaylistsAction } from '../types/playlist'
 import { create } from 'zustand'
 
@@ -22,7 +22,7 @@ const usePlaylistsStore = create<PlaylistsStatus & PlaylistsAction>(
             ? {
               ...playlist,
               fileList: files.concat(playlist.fileList.filter((item) =>
-                !files.map(item => pathConvert(item.filePath)).includes(pathConvert(item.filePath))
+                !files.map(item => pathConv(item.filePath)).includes(pathConv(item.filePath))
               ))
             }
             : playlist
@@ -34,7 +34,7 @@ const usePlaylistsStore = create<PlaylistsStatus & PlaylistsAction>(
           (playlist.id === id)
             ? {
               ...playlist,
-              fileList: playlist.fileList.filter((file, index) => !indexArray.includes(index))
+              fileList: playlist.fileList.filter((_file, index) => !indexArray.includes(index))
             }
             : playlist
         )

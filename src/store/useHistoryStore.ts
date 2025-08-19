@@ -1,4 +1,4 @@
-import { pathConvert } from '../utils'
+import { pathConv } from '../utils'
 import { HistoryStatus, HistoryAction } from '../types/history'
 import { create } from 'zustand'
 
@@ -14,7 +14,7 @@ const useHistoryStore = create<HistoryStatus & HistoryAction>(
               [
                 file,
                 ...state.historyList.filter((item) =>
-                  pathConvert(item.filePath) !== pathConvert(file.filePath))
+                  pathConv(item.filePath) !== pathConv(file.filePath))
               ].slice(0, 200)
           }
           : { historyList: [file] }
