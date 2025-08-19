@@ -23,7 +23,6 @@ const useGraph = (
   }
 
   const getFilesData = async (path: string[]) => {
-    await instance.initialize()
     const accessToken = await getAccessToken()
 
     let response = await getFiles(path, accessToken)
@@ -39,35 +38,30 @@ const useGraph = (
   }
 
   const getFileData = async (path: string[]) => {
-    await instance.initialize()
     const accessToken = await getAccessToken()
     const response = await getFile(path, accessToken)
     return response
   }
 
   const getAppRootFilesData = async (path: string[]) => {
-    await instance.initialize()
     const accessToken = await getAccessToken()
     const response = await getAppRootFiles(path, accessToken)
     return response
   }
 
   const uploadAppRootJsonData = async (fileName: string, fileContent: BodyInit) => {
-    await instance.initialize()
     const accessToken = await getAccessToken()
     const response = await uploadAppRootJson(fileName, fileContent, accessToken)
     return response
   }
 
   const getSearchData = async (searchQuery: string) => {
-    await instance.initialize()
     const accessToken = await getAccessToken()
     const response = await search(searchQuery, accessToken)
     return response
   }
 
   const getDeltaData = async (path: string[]) => {
-    await instance.initialize()
     const accessToken = await getAccessToken()
 
     const localData = await getLocalDeltaData(path)
