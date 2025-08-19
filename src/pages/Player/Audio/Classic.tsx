@@ -5,13 +5,15 @@ import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
 import { timeShift } from '@/utils'
 import { CloseFullscreen, FastForward, FastRewind, KeyboardArrowDownOutlined, OpenInFull, PanoramaOutlined, PauseCircleOutlined, PlayCircleOutlined, QueueMusicOutlined, Repeat, RepeatOne, Shuffle, SkipNext, SkipPrevious } from '@mui/icons-material'
-import { Container, Box, IconButton, Typography, Slider, CircularProgress } from '@mui/material'
+import { Container, Box, IconButton, Typography, Slider, CircularProgress, useTheme } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import PlayerMenu from '../PlayerMenu'
 import { SpringValue, animated } from '@react-spring/web'
 import { useShallow } from 'zustand/shallow'
 
 const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: { borderRadius: SpringValue<string> } }) => {
+
+  const theme = useTheme()
 
   const playQueue = usePlayQueueStore.use.playQueue()
 
@@ -21,7 +23,6 @@ const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: 
     backgroundIsShow,
     shuffle,
     repeat,
-    coverColor,
     updateAudioViewIsShow,
     updatePlayQueueIsShow,
     updateBackgroundIsShow,
@@ -33,7 +34,6 @@ const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: 
         state.backgroundIsShow,
         state.shuffle,
         state.repeat,
-        state.coverColor,
         state.updateAudioViewIsShow,
         state.updatePlayQueueIsShow,
         state.updateBackgroundIsShow,
@@ -80,7 +80,7 @@ const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: 
         height: '100%',
         background:
           (!backgroundIsShow || cover === './cover.svg')
-            ? `linear-gradient(rgba(50, 50, 50, 0.6), ${coverColor}bb), #000`
+            ? `linear-gradient(rgba(50, 50, 50, 0.6), ${theme.palette.primary.main}bb), #000`
             : `linear-gradient(rgba(50, 50, 50, 0.3), rgba(50, 50, 50, 0.3)), url(${cover}) no-repeat center / cover, #000`,
         color: '#fff',
         overflow: 'hidden',

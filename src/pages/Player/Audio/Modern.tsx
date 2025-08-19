@@ -40,7 +40,6 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
     fullscreen,
     shuffle,
     repeat,
-    coverColor,
     lyricsIsShow,
     updateAudioViewIsShow,
     updatePlayQueueIsShow,
@@ -52,7 +51,6 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
         state.fullscreen,
         state.shuffle,
         state.repeat,
-        state.coverColor,
         state.lyricsIsShow,
         state.updateAudioViewIsShow,
         state.updatePlayQueueIsShow,
@@ -95,15 +93,15 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
 
   const [{ background }, api] = useSpring(
     () => ({
-      background: `linear-gradient(180deg, ${coverColor}33, ${coverColor}15, ${coverColor}05), ${theme.palette.background.default}`,
+      background: `linear-gradient(180deg, ${theme.palette.primary.main}33, ${theme.palette.primary.main}15, ${theme.palette.primary.main}05), ${theme.palette.background.default}`,
     })
   )
+
   useMemo(
     () => api.start({
-      background: `linear-gradient(180deg, ${coverColor}33, ${coverColor}15, ${coverColor}05), ${theme.palette.background.default}`
+      background: `linear-gradient(180deg, ${theme.palette.primary.main}33, ${theme.palette.primary.main}15, ${theme.palette.primary.main}05), ${theme.palette.background.default}`
     }),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [coverColor, theme.palette.background.default]
+    [api, theme.palette.primary.main, theme.palette.background.default]
   )
 
   const isMobile = useMediaQuery('(max-height: 600px) or (max-width: 600px)')
