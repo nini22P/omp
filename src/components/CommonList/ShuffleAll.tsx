@@ -1,8 +1,8 @@
-import { ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
+import { CircularProgress, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
 import ShuffleRoundedIcon from '@mui/icons-material/ShuffleRounded'
 import { useLingui } from '@lingui/react/macro'
 
-const ShuffleAll = ({ handleClickShuffleAll }: { handleClickShuffleAll: () => void }) => {
+const ShuffleAll = ({ handleClickShuffleAll, loading = false }: { handleClickShuffleAll: () => void, loading?: boolean }) => {
   const { t } = useLingui()
 
   return (
@@ -18,9 +18,13 @@ const ShuffleAll = ({ handleClickShuffleAll }: { handleClickShuffleAll: () => vo
         },
       }}
     >
-      <ListItemButton onClick={handleClickShuffleAll}>
+      <ListItemButton onClick={handleClickShuffleAll} disabled={loading}>
         <ListItemIcon>
-          <ShuffleRoundedIcon />
+          {loading ? (
+            <CircularProgress size={20} color="inherit" />
+          ) : (
+            <ShuffleRoundedIcon />
+          )}
         </ListItemIcon>
         <ListItemText primary={t`Shuffle all`} />
       </ListItemButton>

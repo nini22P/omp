@@ -113,3 +113,21 @@ export const search = async (path: string, searchQuery: string, accessToken: str
     .then(response => response.json())
     .catch(error => console.log(error))
 }
+
+export const getDelta = async (path: string, accessToken: string, nextLink?: string) => {
+  const headers = new Headers()
+  const bearer = `Bearer ${accessToken}`
+
+  headers.append('Authorization', bearer)
+
+  const options = {
+    method: 'GET',
+    headers: headers
+  }
+
+  const param = '?$top=2147483647&$select=name, parentReference, size, folder, lastModifiedDateTime, id, @microsoft.graph.downloadUrl'
+
+  return fetch(nextLink || `${graphConfig.graphMeEndpoint}/me/drive/root:/${encodeURIComponent(path)}:/delta${param}`, options)
+    .then(response => response.json())
+    .catch(error => console.log(error))
+}

@@ -9,7 +9,8 @@ export interface RemoteItem {
   parentReference: {
     name: string,
     path: string,
-  }
+  },
+  deleted?: object
 }
 
 export interface FileItem {

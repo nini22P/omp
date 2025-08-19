@@ -13,15 +13,15 @@ msgstr ""
 "Language-Team: \n"
 "Plural-Forms: \n"
 
-#: src/pages/Setting.tsx:162
+#: src/pages/Setting.tsx:174
 msgid "About"
 msgstr "关于"
 
-#: src/pages/Setting.tsx:96
+#: src/pages/Setting.tsx:98
 msgid "Account"
 msgstr "账户"
 
-#: src/pages/Setting.tsx:226
+#: src/pages/Setting.tsx:238
 msgid "Add account"
 msgstr "添加账户"
 
@@ -46,11 +46,11 @@ msgstr "添加到播放列表"
 msgid "Ascending"
 msgstr "正序"
 
-#: src/pages/Setting.tsx:138
+#: src/pages/Setting.tsx:150
 msgid "Auto"
 msgstr "自动"
 
-#: src/pages/Setting.tsx:177
+#: src/pages/Setting.tsx:189
 msgid "Build time"
 msgstr "编译日期"
 
@@ -58,7 +58,7 @@ msgstr "编译日期"
 #: src/pages/Player/PlayerMenu.tsx:364
 #: src/pages/Playlist/Playlist.tsx:219
 #: src/pages/Playlist/Playlist.tsx:242
-#: src/pages/Setting.tsx:231
+#: src/pages/Setting.tsx:243
 msgid "Cancel"
 msgstr "取消"
 
@@ -70,7 +70,8 @@ msgstr "取消选择"
 msgid "Classic"
 msgstr "经典"
 
-#: src/pages/Setting.tsx:119
+#: src/pages/Setting.tsx:121
+#: src/pages/Setting.tsx:131
 msgid "Clear"
 msgstr "清除"
 
@@ -80,11 +81,11 @@ msgstr "清除"
 msgid "Close"
 msgstr "关闭"
 
-#: src/pages/Setting.tsx:145
+#: src/pages/Setting.tsx:157
 msgid "Color mode"
 msgstr "颜色模式"
 
-#: src/pages/Search.tsx:187
+#: src/pages/Search.tsx:183
 #~ msgid "Current"
 #~ msgstr "当前"
 
@@ -92,15 +93,15 @@ msgstr "颜色模式"
 msgid "Currently using a development version, please be careful with your data!"
 msgstr "当前正在使用开发版本，请注意数据安全!"
 
-#: src/pages/Setting.tsx:128
+#: src/pages/Setting.tsx:140
 msgid "Customize"
 msgstr "定制"
 
-#: src/pages/Setting.tsx:140
+#: src/pages/Setting.tsx:152
 msgid "Dark"
 msgstr "深色"
 
-#: src/pages/Setting.tsx:115
+#: src/pages/Setting.tsx:117
 msgid "Data"
 msgstr "数据"
 
@@ -129,7 +130,7 @@ msgstr "文件夹优先"
 msgid "Fullscreen"
 msgstr "全屏"
 
-#: src/pages/Search.tsx:186
+#: src/pages/Search.tsx:182
 #~ msgid "Global"
 #~ msgstr "全局"
 
@@ -149,7 +150,7 @@ msgstr "历史"
 msgid "Last modified"
 msgstr "最后修改"
 
-#: src/pages/Setting.tsx:139
+#: src/pages/Setting.tsx:151
 msgid "Light"
 msgstr "浅色"
 
@@ -157,7 +158,11 @@ msgstr "浅色"
 msgid "List"
 msgstr "列表"
 
-#: src/pages/Setting.tsx:123
+#: src/pages/Setting.tsx:135
+msgid "Local file index cache"
+msgstr "本地文件索引缓存"
+
+#: src/pages/Setting.tsx:125
 msgid "Local metaData cache"
 msgstr "本地元数据缓存"
 
@@ -165,7 +170,7 @@ msgstr "本地元数据缓存"
 msgid "Lyrics"
 msgstr "歌词"
 
-#: src/pages/Setting.tsx:99
+#: src/pages/Setting.tsx:101
 msgid "Manage"
 msgstr "管理"
 
@@ -216,11 +221,11 @@ msgstr "确定"
 msgid "Open in folder"
 msgstr "打开所在文件夹"
 
-#: src/pages/Setting.tsx:183
+#: src/pages/Setting.tsx:195
 msgid "Open source dependencies"
 msgstr "开源库"
 
-#: src/components/CommonList/CommonList.tsx:384
+#: src/components/CommonList/CommonList.tsx:408
 msgid "Play all"
 msgstr "全部播放"
 
@@ -236,7 +241,7 @@ msgid "Playback rate"
 msgstr "播放速度"
 
 #: src/pages/LogIn.tsx:26
-#: src/pages/Setting.tsx:108
+#: src/pages/Setting.tsx:110
 msgid "Please use Microsoft account authorization to log in"
 msgstr "请使用微软账户授权登录"
 
@@ -264,7 +269,7 @@ msgstr "搜索"
 msgid "Select"
 msgstr "选择"
 
-#: src/pages/Setting.tsx:197
+#: src/pages/Setting.tsx:209
 msgid "Select account"
 msgstr "选择账户"
 
@@ -276,7 +281,7 @@ msgstr "全选"
 msgid "Setting"
 msgstr "设置"
 
-#: src/components/CommonList/ShuffleAll.tsx:25
+#: src/components/CommonList/ShuffleAll.tsx:29
 msgid "Shuffle all"
 msgstr "全部随机播放"
 
@@ -284,7 +289,7 @@ msgstr "全部随机播放"
 msgid "Sign in"
 msgstr "登录"
 
-#: src/pages/Setting.tsx:205
+#: src/pages/Setting.tsx:217
 msgid "Sign out"
 msgstr "注销"
 
@@ -305,10 +310,10 @@ msgstr "切换主题"
 msgid "The playlist will be deleted"
 msgstr "播放列表将会被删除"
 
-#: src/pages/Setting.tsx:157
+#: src/pages/Setting.tsx:169
 msgid "Use album cover theme color"
 msgstr "使用专辑封面主题色"
 
-#: src/pages/Setting.tsx:171
+#: src/pages/Setting.tsx:183
 msgid "Version"
 msgstr "版本号"

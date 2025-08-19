@@ -2,6 +2,7 @@ import { Avatar, Button, Checkbox, Dialog, DialogActions, DialogTitle, Divider, 
 import useUser from '../hooks/graph/useUser'
 import { licenses } from '../data/licenses'
 import useLocalMetaDataStore from '../store/useLocalMetaDataStore'
+import useLocalDeltaDataStore from '../store/useLocalDeltaDataStore'
 import useUiStore from '@/store/useUiStore'
 import { UiStatus } from '@/types/ui'
 import { useState } from 'react'
@@ -31,6 +32,7 @@ const Setting = () => {
   const { accounts, account, login, logout } = useUser()
 
   const { clearLocalMetaData } = useLocalMetaDataStore()
+  const { clearLocalDeltaData } = useLocalDeltaDataStore()
 
   const [
     currentAccount,
@@ -121,6 +123,16 @@ const Setting = () => {
           }
         >
           <ListItemText inset primary={t`Local metaData cache`} secondary=' ' />
+        </ListItem>
+        
+        <ListItem
+          secondaryAction={
+            <Button onClick={() => clearLocalDeltaData()}>
+              {t`Clear`}
+            </Button>
+          }
+        >
+          <ListItemText inset primary={t`Local file index cache`} secondary=' ' />
         </ListItem>
 
         <Divider sx={{ m: 1 }} />

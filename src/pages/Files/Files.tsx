@@ -57,7 +57,7 @@ const Files = () => {
 
   const updateAutoPlay = usePlayerStore(state => state.updateAutoPlay)
 
-  const { getFilesData } = useFilesData()
+  const { getFilesData, getDeltaData } = useFilesData()
   const navigate = useNavigate()
 
   const { account } = useUser()
@@ -67,6 +67,42 @@ const Files = () => {
   const fileListFetcher = async (path: string) => {
     const res: RemoteItem[] = await getFilesData(account, path)
     return remoteItemToFile(res)
+  }
+
+  const deltaListFetcher = async () => {
+    const res: RemoteItem[] = await getDeltaData(account, path)
+    const deltaListData = remoteItemToFile(res)
+    const filteredDeltaList = deltaListData.filter((item) => mediaOnly ? item.fileType !== 'other' : true)
+    const sortedDeltaList = filteredDeltaList.sort((a, b) => {
+      if (foldersFirst) {
+        if (a.fileType === 'folder' && b.fileType !== 'folder') {
+          return -1
+        } else if (a.fileType !== 'folder' && b.fileType === 'folder') {
+          return 1
+        }
+      }
+
+      if (sortBy === 'name') {
+        if (orderBy === 'asc') {
+          return (a.fileName).localeCompare(b.fileName)
+        } else {
+          return (b.fileName).localeCompare(a.fileName)
+        }
+      } else if (sortBy === 'size') {
+        if (orderBy === 'asc') {
+          return a.fileSize - b.fileSize
+        } else {
+          return b.fileSize - a.fileSize
+        }
+      } else if (sortBy === 'datetime' && a.lastModifiedDateTime && b.lastModifiedDateTime) {
+        if (orderBy === 'asc') {
+          return new Date(a.lastModifiedDateTime).getTime() - new Date(b.lastModifiedDateTime).getTime()
+        } else {
+          return new Date(b.lastModifiedDateTime).getTime() - new Date(a.lastModifiedDateTime).getTime()
+        }
+      } else return 0
+    })
+    return sortedDeltaList
   }
 
   const { data: fileListData, error: fileListError, isLoading: fileListIsLoading } =
@@ -210,7 +246,7 @@ const Files = () => {
               listData={sortedFileList}
               listType='files'
               scrollIndex={scrollIndex}
-              func={{ open }}
+              func={{ open, deltaListFetcher }}
             />
         }
       </Grid>
