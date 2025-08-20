@@ -1,9 +1,5 @@
 import { useState, useEffect, Key, CSSProperties, useRef } from 'react'
 import Grid from '@mui/material/Grid'
-import usePlayQueueStore from '../../store/usePlayQueueStore'
-import usePlayerStore from '../../store/usePlayerStore'
-import useUiStore from '../../store/useUiStore'
-import { shufflePlayQueue } from '../../utils'
 import CommonMenu from './CommonMenu'
 import { FileItem } from '../../types/file'
 import CommonListItem from './CommonListItem'
@@ -13,7 +9,6 @@ import CommonListItemCard from './CommonListItemCard'
 import ShuffleRoundedIcon from '@mui/icons-material/ShuffleRounded'
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded'
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded'
-import { useShallow } from 'zustand/shallow'
 import { useLingui } from '@lingui/react/macro'
 
 const CommonList = (
@@ -33,19 +28,13 @@ const CommonList = (
     activeIndex?: number,
     disableFAB?: boolean,
     func?: {
-      open?: (index: number) => void,
-      remove?: (indexArray: number[]) => void,
-      deltaListFetcher?: () => Promise<FileItem[]>,
+      open?: (index: number) => Promise<void>,
+      remove?: (indexArray: number[]) => Promise<void>,
+      playAll?: () => Promise<void>,
+      shuffleAll?: () => Promise<void>,
     },
   }) => {
   const { t } = useLingui()
-
-  const [shuffle, updateShuffle] = useUiStore(useShallow((state) => [state.shuffle, state.updateShuffle]))
-
-  const updatePlayQueue = usePlayQueueStore.use.updatePlayQueue()
-  const updateCurrentIndex = usePlayQueueStore.use.updateCurrentIndex()
-
-  const updateAutoPlay = usePlayerStore((state) => state.updateAutoPlay)
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -55,8 +44,6 @@ const CommonList = (
   const [shuffleLoading, setShuffleLoading] = useState(false)
 
   const isSelectMode = selectIndexArray.length > 0
-  const shuffleDisplay = true
-  const playAllDisplay = shuffleDisplay || listData.filter(item => item.fileType === 'folder' && /^(disc|disk)\s*\d+$/.test(item.fileName.toLocaleLowerCase())).length > 0
 
   const addSelectIndex = (index: number) => { setSelectIndexArray([...selectIndexArray, index].sort()) }
 
@@ -68,41 +55,21 @@ const CommonList = (
 
   const switchSelect = (index: number) => isSelected(index) ? removeSelectIndex(index) : addSelectIndex(index)
 
-  const handleClickItem = (index: number) => {
+  const handleClickItem = async (index: number) => {
     if (func?.open)
-      func.open(index)
+      await func.open(index)
   }
 
-  const handleClickPlayAll = () => {
-    handleClickItem(listData.findIndex(item => item.fileType === 'audio' || item.fileType === 'video'))
+  const handleClickPlayAll = async () => {
+    if (func?.playAll)
+      await func.playAll()
   }
 
   // 点击随机播放全部
   const handleClickShuffleAll = async () => {
     setShuffleLoading(true)
-    let dataToUse = listData
-    if (func?.deltaListFetcher) {
-      try {
-        const deltaData = await func.deltaListFetcher()
-        if (deltaData && deltaData.length > 0) {
-          dataToUse = deltaData
-        }
-      } catch (error) {
-        console.error('Error fetching delta data:', error)
-      }
-    }
-
-    if (dataToUse) {
-      const list = dataToUse
-        .filter((item) => item.fileType === 'audio' || item.fileType === 'video')
-        .map((item, index) => { return { index, ...item } })
-      if (!shuffle)
-        updateShuffle(true)
-      const shuffleList = shufflePlayQueue(list) || []
-      updatePlayQueue(shuffleList)
-      updateCurrentIndex(shuffleList[0].index)
-      updateAutoPlay(true)
-    }
+    if (func?.shuffleAll)
+      await func.shuffleAll()
     setShuffleLoading(false)
   }
 
@@ -249,6 +216,7 @@ const CommonList = (
   const scrollRef = useRef<HTMLDivElement | null>(null)
   const fabRef = useRef<HTMLDivElement | null>(null)
   const touchStartYRef = useRef(0)
+
   useEffect(() => {
     const scroll = scrollRef.current
     const fab = fabRef.current
@@ -273,7 +241,6 @@ const CommonList = (
           fab.style.transform = 'translateY(200%)'
           touchStartYRef.current = (e.touches[0].clientY)
         }
-
       }
       scroll.addEventListener('wheel', onWheel)
       scroll.addEventListener('touchstart', onTouchStart)
@@ -388,21 +355,21 @@ const CommonList = (
           (listType !== 'playQueue') && !isSelectMode && !disableFAB &&
           <>
             {
-              shuffleDisplay &&
+              func?.shuffleAll &&
               <Fab
                 size='small'
                 onClick={handleClickShuffleAll}
                 disabled={shuffleLoading}
               >
-                {shuffleLoading ? (
-                  <CircularProgress size={24} color="inherit" />
-                ) : (
-                  <ShuffleRoundedIcon />
-                )}
+                {
+                  shuffleLoading
+                    ? <CircularProgress size={24} color="inherit" />
+                    : <ShuffleRoundedIcon />
+                }
               </Fab>
             }
             {
-              playAllDisplay &&
+              func?.playAll &&
               <Fab variant='extended' color='primary' onClick={handleClickPlayAll}>
                 <PlayArrowRoundedIcon />
                 <span style={{ marginLeft: '0.5rem' }}>{t`Play all`}</span>

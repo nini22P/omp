@@ -225,7 +225,7 @@ msgstr "Open in folder"
 msgid "Open source dependencies"
 msgstr "Open source dependencies"
 
-#: src/components/CommonList/CommonList.tsx:408
+#: src/components/CommonList/CommonList.tsx:375
 msgid "Play all"
 msgstr "Play all"
 
@@ -282,8 +282,8 @@ msgid "Setting"
 msgstr "Setting"
 
 #: src/components/CommonList/ShuffleAll.tsx:29
-msgid "Shuffle all"
-msgstr "Shuffle all"
+#~ msgid "Shuffle all"
+#~ msgstr "Shuffle all"
 
 #: src/pages/LogIn.tsx:28
 msgid "Sign in"

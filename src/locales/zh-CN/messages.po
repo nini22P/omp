@@ -225,7 +225,7 @@ msgstr "打开所在文件夹"
 msgid "Open source dependencies"
 msgstr "开源库"
 
-#: src/components/CommonList/CommonList.tsx:408
+#: src/components/CommonList/CommonList.tsx:375
 msgid "Play all"
 msgstr "全部播放"
 
@@ -282,8 +282,8 @@ msgid "Setting"
 msgstr "设置"
 
 #: src/components/CommonList/ShuffleAll.tsx:29
-msgid "Shuffle all"
-msgstr "全部随机播放"
+#~ msgid "Shuffle all"
+#~ msgstr "全部随机播放"
 
 #: src/pages/LogIn.tsx:28
 msgid "Sign in"

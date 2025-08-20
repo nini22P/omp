@@ -1,6 +1,6 @@
 import * as mm from 'music-metadata-browser'
 import { FileItem, RemoteItem } from './types/file'
-import { PlayQueueItem, PlayQueueStatus } from './types/playQueue'
+import { PlayQueueItem } from './types/playQueue'
 import { Cover, LocalStorageCover, MetaData } from './types/MetaData'
 
 export const isDevelopment = process.env.NODE_ENV === 'development'
@@ -34,19 +34,19 @@ export const checkFileType = (name: string): FileItem['fileType'] => {
 }
 
 /**
- * 创建随机播放队列，如果传入当前播放id时歌曲会排到第一
+ * 创建随机播放队列，如果传入id时这首歌曲会排到第一
  * @param playQueue 播放队列
- * @param currentIndex 当前播放id
+ * @param index 想要排第一的歌曲id
  * @returns 
  */
-export const shufflePlayQueue = (playQueue: PlayQueueItem[], currentIndex?: PlayQueueStatus['currentIndex']) => {
+export const shufflePlayQueue = (playQueue: PlayQueueItem[], index?: number) => {
   const randomPlayQueue = [...playQueue]
   for (let i = randomPlayQueue.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
     [randomPlayQueue[i], randomPlayQueue[j]] = [randomPlayQueue[j], randomPlayQueue[i]]
   }
-  if (currentIndex !== undefined)
-    return randomPlayQueue.filter(item => item.index === currentIndex).concat(randomPlayQueue.filter(item => item.index !== currentIndex))
+  if (index !== undefined)
+    return randomPlayQueue.filter(item => item.index === index).concat(randomPlayQueue.filter(item => item.index !== index))
   else return randomPlayQueue
 }
 

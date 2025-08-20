@@ -4,13 +4,13 @@ import useGraph from '../../hooks/graph/useGraph'
 import BreadcrumbNav from './BreadcrumbNav'
 import CommonList from '../../components/CommonList/CommonList'
 import Loading from '../Loading'
-import { remoteItemToFile, pathConv, fileSorter } from '../../utils'
+import { remoteItemToFile, pathConv, fileSorter, shufflePlayQueue } from '../../utils'
 import { FileItem, RemoteItem } from '../../types/file'
 import Grid from '@mui/material/Grid'
 import FilterMenu from './FilterMenu'
 import PictureView from '../PictureView/PictureView'
 import { Divider } from '@mui/material'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import useUser from '@/hooks/graph/useUser'
 import { useNavigate } from 'react-router-dom'
 import usePictureStore from '@/store/usePictureStore'
@@ -85,12 +85,36 @@ const Files = () => {
       { revalidateOnFocus: false }
     )
 
-  const filteredFiles = filesData?.filter((item) => mediaOnly ? item.fileType !== 'other' : true)
-
-  const sortedFiles = filteredFiles && fileSorter(filteredFiles, foldersFirst, sortBy, orderBy)
+  const files = useMemo(
+    () => fileSorter(
+      filesData?.filter((item) => mediaOnly ? item.fileType !== 'other' : true) || [],
+      foldersFirst,
+      sortBy,
+      orderBy,
+    ),
+    [filesData, foldersFirst, sortBy, orderBy, mediaOnly]
+  )
 
   const [scrollPath, setScrollPath] = useState<FileItem['filePath'] | undefined>()
-  const scrollIndex = scrollPath ? sortedFiles?.findIndex(item => pathConv(item.filePath) === pathConv(scrollPath)) : undefined
+
+  const scrollIndex = useMemo(
+    () => scrollPath ? files?.findIndex(item => pathConv(item.filePath) === pathConv(scrollPath)) : undefined,
+    [scrollPath, files]
+  )
+
+  const shuffleDisplay = useMemo(
+    () => files?.filter(item => item.fileType === 'audio' || item.fileType === 'video').length > 0,
+    [files]
+  )
+
+  const playAllDisplay = useMemo(
+    () =>
+      shuffleDisplay
+      || files
+        .filter(item => item.fileType === 'folder' && /^(disc|disk)\s*\d+$/.test(item.fileName.toLocaleLowerCase()))
+        .length > 0,
+    [files, shuffleDisplay]
+  )
 
   const handleClickNav = (index: number) => {
     if (index < folderTree.length - 1) {
@@ -100,9 +124,8 @@ const Files = () => {
   }
 
   const open = async (index: number) => {
-    const listData = sortedFiles
-    if (listData) {
-      const currentFile = listData[index]
+    if (files) {
+      const currentFile = files[index]
 
       if (currentFile && currentFile.fileType === 'folder') {
         updateFolderTree(currentFile.filePath)
@@ -110,13 +133,13 @@ const Files = () => {
       }
 
       if (currentFile && currentFile.fileType === 'picture') {
-        const list = listData.filter(item => item.fileType === 'picture')
+        const list = files.filter(item => item.fileType === 'picture')
         updatePictureList(list)
         updateCurrentPicture(currentFile)
       }
 
       if (currentFile && (currentFile.fileType === 'audio' || currentFile.fileType === 'video')) {
-        const list = listData
+        const list = files
           .filter((item) => item.fileType === 'audio' || item.fileType === 'video')
           .map((item, _index) => ({ ...item, index: _index }))
         if (shuffle) {
@@ -131,7 +154,7 @@ const Files = () => {
       }
 
       if (!currentFile) {
-        const discs = listData.filter(item => item.fileName.toLocaleLowerCase().includes('disc'))
+        const discs = files.filter(item => item.fileName.toLocaleLowerCase().includes('disc'))
         if (discs.length > 0 && account) {
           const files = await Promise.all(discs.map(item => getFilesData(item.filePath).then(res => remoteItemToFile(res.value))))
 
@@ -154,6 +177,25 @@ const Files = () => {
         }
       }
     }
+  }
+
+  const playAll = async () => {
+    const index = files?.findIndex(item => item.fileType === 'audio' || item.fileType === 'video')
+    if (index !== undefined) {
+      open(index)
+    }
+  }
+
+  const shuffleAll = async () => {
+    const list = files
+      .filter((item) => item.fileType === 'audio' || item.fileType === 'video')
+      .map((item, index) => ({ index, ...item }))
+    if (!shuffle)
+      updateShuffle(true)
+    const shuffledList = shufflePlayQueue(list) || []
+    updatePlayQueue(shuffledList)
+    updateCurrentIndex(shuffledList[0].index)
+    updateAutoPlay(true)
   }
 
   return (
@@ -183,14 +225,18 @@ const Files = () => {
       <Divider />
       <Grid size={12} sx={{ flexGrow: 1, overflow: 'auto' }}>
         {
-          (filesIsLoading || !filesData || !sortedFiles || filesError)
+          (filesIsLoading || !filesData || !files || filesError)
             ? <Loading />
             : <CommonList
               display={display}
-              listData={sortedFiles}
+              listData={files}
               listType='files'
               scrollIndex={scrollIndex}
-              func={{ open, deltaListFetcher }}
+              func={{
+                open,
+                playAll: playAllDisplay ? playAll : undefined,
+                shuffleAll: shuffleDisplay ? shuffleAll : undefined,
+              }}
             />
         }
       </Grid>
