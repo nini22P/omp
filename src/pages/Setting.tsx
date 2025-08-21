@@ -136,12 +136,17 @@ const Setting = () => {
 
         </ListItem>
 
-        <Divider sx={{ m: 1 }} />
+        {
+          account &&
+          <>
+            <Divider sx={{ m: 1 }} />
 
-        <ListItemTitle title={t`Library`} />
-        <ListItem secondaryAction={<SetLibraryFolderDialog title={t`Select`} variant='text' />}>
-          <ListItemText inset primary={t`Library folder`} secondary={libraryRootName} />
-        </ListItem>
+            <ListItemTitle title={t`Library`} />
+            <ListItem secondaryAction={<SetLibraryFolderDialog title={t`Select`} variant='text' />}>
+              <ListItemText inset primary={t`Library folder`} secondary={libraryRootName} />
+            </ListItem>
+          </>
+        }
 
         <Divider sx={{ m: 1 }} />
 
