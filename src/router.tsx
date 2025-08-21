@@ -6,6 +6,7 @@ import Playlist from './pages/Playlist/Playlist'
 import NotFound from './pages/NotFound'
 import Setting from './pages/Setting'
 import Refresh from './pages/Refresh'
+import Library from './pages/Library/Library'
 
 const router = createHashRouter([
   {
@@ -16,6 +17,10 @@ const router = createHashRouter([
       {
         path: '/',
         element: <Files />,
+      },
+      {
+        path: '/library',
+        element: <Library />
       },
       {
         path: '/history',
@@ -32,7 +37,7 @@ const router = createHashRouter([
       {
         path: '/refresh',
         element: <Refresh />
-      }
+      },
     ]
   },
 ])

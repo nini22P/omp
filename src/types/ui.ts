@@ -1,51 +1,51 @@
-export interface UiStatus {
-  currentAccount: number,
-  folderTree: string[],
-  audioViewIsShow: boolean,
-  audioViewTheme: 'classic' | 'modern',
-  videoViewIsShow: boolean,
-  controlIsShow: boolean,
-  playQueueIsShow: boolean,
-  fullscreen: boolean,
-  mobileSideBarOpen: boolean,
-  backgroundIsShow: boolean,
-  shuffle: boolean,
-  repeat: 'off' | 'all' | 'one',
-  volume: number,
-  playbackRate: number,
-  CoverThemeColor: boolean,
-  colorMode: 'auto' | 'light' | 'dark',
-  display: 'list' | 'multicolumnList' | 'grid',
-  sortBy: 'name' | 'size' | 'datetime',
-  orderBy: 'asc' | 'desc',
-  foldersFirst: boolean,
-  mediaOnly: boolean,
-  hdThumbnails: boolean,
-  lyricsIsShow: boolean,
+export interface UiState {
+  currentAccount: number
+  folderTree: string[]
+  audioViewIsShow: boolean
+  audioViewTheme: 'classic' | 'modern'
+  videoViewIsShow: boolean
+  controlIsShow: boolean
+  playQueueIsShow: boolean
+  fullscreen: boolean
+  mobileSideBarOpen: boolean
+  backgroundIsShow: boolean
+  shuffle: boolean
+  repeat: 'off' | 'all' | 'one'
+  volume: number
+  playbackRate: number
+  CoverThemeColor: boolean
+  colorMode: 'auto' | 'light' | 'dark'
+  display: 'list' | 'multicolumnList' | 'grid'
+  sortBy: 'name' | 'size' | 'datetime'
+  orderBy: 'asc' | 'desc'
+  foldersFirst: boolean
+  mediaOnly: boolean
+  hdThumbnails: boolean
+  lyricsIsShow: boolean
 }
 
-export interface UiAction {
-  updateCurrentAccount: (currentAccount: UiStatus['currentAccount']) => void,
-  updateFolderTree: (folderTree: UiStatus['folderTree']) => void,
-  updateAudioViewIsShow: (audioViewIsShow: UiStatus['audioViewIsShow']) => void,
-  updateAudioViewTheme: (audioViewTheme: UiStatus['audioViewTheme']) => void,
-  updateVideoViewIsShow: (videoViewIsShow: UiStatus['videoViewIsShow']) => void,
-  updateControlIsShow: (controlIsShow: UiStatus['controlIsShow']) => void,
-  updatePlayQueueIsShow: (PlayQueueIsShow: UiStatus['playQueueIsShow']) => void,
-  updateFullscreen: (fullscreen: UiStatus['fullscreen']) => void,
-  updateMobileSideBarOpen: (mobileSideBarOpen: UiStatus['mobileSideBarOpen']) => void,
-  updateBackgroundIsShow: (backgroundIsShow: UiStatus['backgroundIsShow']) => void,
-  updateShuffle: (shuffle: UiStatus['shuffle']) => void,
-  updateRepeat: (loop: UiStatus['repeat']) => void,
-  updateVolume: (volume: UiStatus['volume']) => void,
-  updatePlaybackRate: (playbackRate: UiStatus['playbackRate']) => void,
-  updateCoverThemeColor: (CoverThemeColor: UiStatus['CoverThemeColor']) => void,
-  updateColorMode: (colorMode: UiStatus['colorMode']) => void,
-  updateDisplay: (display: UiStatus['display']) => void,
-  updateSortBy: (sortBy: UiStatus['sortBy']) => void,
-  updateOrderBy: (orderBy: UiStatus['orderBy']) => void,
-  updateFoldersFirst: (foldersFirst: UiStatus['foldersFirst']) => void,
-  updateMediaOnly: (mediaOnly: UiStatus['mediaOnly']) => void,
-  updateHDThumbnails: (hdThumbnails: UiStatus['hdThumbnails']) => void,
-  updateLyricsIsShow: (lyricsIsShow: UiStatus['lyricsIsShow']) => void,
+export interface UiActions {
+  updateCurrentAccount: (currentAccount: UiState['currentAccount']) => void
+  updateFolderTree: (folderTree: UiState['folderTree']) => void
+  updateAudioViewIsShow: (audioViewIsShow: UiState['audioViewIsShow']) => void
+  updateAudioViewTheme: (audioViewTheme: UiState['audioViewTheme']) => void
+  updateVideoViewIsShow: (videoViewIsShow: UiState['videoViewIsShow']) => void
+  updateControlIsShow: (controlIsShow: UiState['controlIsShow']) => void
+  updatePlayQueueIsShow: (PlayQueueIsShow: UiState['playQueueIsShow']) => void
+  updateFullscreen: (fullscreen: UiState['fullscreen']) => void
+  updateMobileSideBarOpen: (mobileSideBarOpen: UiState['mobileSideBarOpen']) => void
+  updateBackgroundIsShow: (backgroundIsShow: UiState['backgroundIsShow']) => void
+  updateShuffle: (shuffle: UiState['shuffle']) => void
+  updateRepeat: (loop: UiState['repeat']) => void
+  updateVolume: (volume: UiState['volume']) => void
+  updatePlaybackRate: (playbackRate: UiState['playbackRate']) => void
+  updateCoverThemeColor: (CoverThemeColor: UiState['CoverThemeColor']) => void
+  updateColorMode: (colorMode: UiState['colorMode']) => void
+  updateDisplay: (display: UiState['display']) => void
+  updateSortBy: (sortBy: UiState['sortBy']) => void
+  updateOrderBy: (orderBy: UiState['orderBy']) => void
+  updateFoldersFirst: (foldersFirst: UiState['foldersFirst']) => void
+  updateMediaOnly: (mediaOnly: UiState['mediaOnly']) => void
+  updateHDThumbnails: (hdThumbnails: UiState['hdThumbnails']) => void
+  updateLyricsIsShow: (lyricsIsShow: UiState['lyricsIsShow']) => void
 }

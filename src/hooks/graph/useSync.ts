@@ -13,6 +13,7 @@ import { useMsal } from '@azure/msal-react'
 const useSync = () => {
   const { instance } = useMsal()
   const { account } = useUser()
+
   const [historyList, updateHistoryList] = useHistoryStore(
     useShallow((state) => [state.historyList, state.updateHistoryList])
   )

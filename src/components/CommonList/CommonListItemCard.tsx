@@ -8,7 +8,7 @@ import MovieRoundedIcon from '@mui/icons-material/MovieRounded'
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded'
 import Grid from '@mui/material/Grid'
 import useUtils from '@/hooks/useUtils'
-import { sizeConvert } from '@/utils'
+import { sizeConv } from '@/utils'
 import { useLingui } from '@lingui/react/macro'
 
 const CommonListItemCard = ({
@@ -80,7 +80,7 @@ const CommonListItemCard = ({
           </Grid>
           <Grid container size='grow' sx={{ justifyContent: 'center', alignItems: 'center' }} >
             <span style={{ display: 'block', width: '100%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', fontSize: 'smaller', lineHeight: '1.5' }}>{item.fileName}</span>
-            <span style={{ display: 'block', width: '100%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', fontSize: 'x-small', fontWeight: 'lighter' }}>{sizeConvert(item.fileSize)}</span>
+            <span style={{ display: 'block', width: '100%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', fontSize: 'x-small', fontWeight: 'lighter' }}>{sizeConv(item.fileSize)}</span>
           </Grid>
           <Grid size='auto'>
             {

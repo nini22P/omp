@@ -1,11 +1,11 @@
 import { FileItem } from './file'
 
-export interface PictiureStatus {
-  pictureList: FileItem[],
-  currentPicture: FileItem | null,
+export interface PictiureState {
+  pictureList: FileItem[]
+  currentPicture: FileItem | null
 }
 
-export interface PictureAction {
-  updatePictureList: (pictureList: PictiureStatus['pictureList']) => void,
-  updateCurrentPicture: (currentPicture: PictiureStatus['currentPicture']) => void,
+export interface PictureActions {
+  updatePictureList: (pictureList: PictiureState['pictureList']) => void
+  updateCurrentPicture: (currentPicture: PictiureState['currentPicture']) => void
 }

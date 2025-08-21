@@ -1,8 +1,9 @@
 import { pathConv } from '../utils'
-import { PlaylistsStatus, PlaylistsAction } from '../types/playlist'
+import { PlaylistsActions, PlaylistsState } from '../types/playlist'
 import { create } from 'zustand'
+import createSelectors from './createSelectors'
 
-const usePlaylistsStore = create<PlaylistsStatus & PlaylistsAction>(
+const usePlaylistsStoreBase = create<PlaylistsState & PlaylistsActions>(
   (set) => ({
     playlists: null,
     updatePlaylists: (playlists) => set(() => ({ playlists: playlists })),
@@ -41,5 +42,7 @@ const usePlaylistsStore = create<PlaylistsStatus & PlaylistsAction>(
       })),
   })
 )
+
+const usePlaylistsStore = createSelectors(usePlaylistsStoreBase)
 
 export default usePlaylistsStore

@@ -2,10 +2,9 @@ import { Avatar, Button, Checkbox, Dialog, DialogActions, DialogTitle, Divider, 
 import useUser from '../hooks/graph/useUser'
 import { licenses } from '../data/licenses'
 import useLocalMetaDataStore from '../store/useLocalMetaDataStore'
-import useLocalDeltaDataStore from '../store/useLocalDeltaDataStore'
 import useUiStore from '@/store/useUiStore'
-import { UiStatus } from '@/types/ui'
-import { useState } from 'react'
+import { UiState } from '@/types/ui'
+import { useEffect, useMemo, useState } from 'react'
 import AddRoundedIcon from '@mui/icons-material/AddRounded'
 import LogoutRoundedIcon from '@mui/icons-material/LogoutRounded'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
@@ -16,6 +15,12 @@ import { AccountInfo } from '@azure/msal-browser'
 import { useShallow } from 'zustand/shallow'
 import INFO from '@/data/info'
 import { useLingui } from '@lingui/react/macro'
+import SetLibraryFolderDialog from './Library/SetLibraryFolderDialog'
+import { useLiveQuery } from 'dexie-react-hooks'
+import useDb from '@/hooks/useDb'
+import { useMsal } from '@azure/msal-react'
+import useGraph from '@/hooks/graph/useGraph'
+import { pathConv, remoteItemToFile } from '@/utils'
 
 const ListItemTitle = ({ title }: { title: string }) => {
   const theme = useTheme()
@@ -29,10 +34,13 @@ const ListItemTitle = ({ title }: { title: string }) => {
 const Setting = () => {
   const { t } = useLingui()
 
+  const { instance } = useMsal()
   const { accounts, account, login, logout } = useUser()
+  const db = useDb(account)
+
+  const { getFileData } = useGraph(instance, account)
 
   const { clearLocalMetaData } = useLocalMetaDataStore()
-  const { clearLocalDeltaData } = useLocalDeltaDataStore()
 
   const [
     currentAccount,
@@ -62,6 +70,22 @@ const Setting = () => {
   const updatePlaylists = usePlaylistsStore((state) => state.updatePlaylists)
 
   const [accountsDialogOpen, setAccountsDialogOpen] = useState(false)
+  const [libraryRootName, setLibraryRootName] = useState('')
+
+  const settings = useLiveQuery(() => db?.settings.get('settings'), [db])
+  const libraryRootId = useMemo(() => settings?.libraryRootId, [settings])
+
+  useEffect(
+    () => {
+      (async () => {
+        if (libraryRootId) {
+          const res = await getFileData(['/'], libraryRootId)
+          setLibraryRootName(pathConv(remoteItemToFile(res).filePath))
+        }
+      })()
+    },
+    [db, getFileData, libraryRootId]
+  )
 
   const handleCloseAccountsDialog = () => setAccountsDialogOpen(false)
 
@@ -114,6 +138,13 @@ const Setting = () => {
 
         <Divider sx={{ m: 1 }} />
 
+        <ListItemTitle title={t`Library`} />
+        <ListItem secondaryAction={<SetLibraryFolderDialog title={t`Select`} variant='text' />}>
+          <ListItemText inset primary={t`Library folder`} secondary={libraryRootName} />
+        </ListItem>
+
+        <Divider sx={{ m: 1 }} />
+
         <ListItemTitle title={t`Data`} />
         <ListItem
           secondaryAction={
@@ -123,16 +154,6 @@ const Setting = () => {
           }
         >
           <ListItemText inset primary={t`Local metaData cache`} secondary=' ' />
-        </ListItem>
-        
-        <ListItem
-          secondaryAction={
-            <Button onClick={() => clearLocalDeltaData()}>
-              {t`Clear`}
-            </Button>
-          }
-        >
-          <ListItemText inset primary={t`Local file index cache`} secondary=' ' />
         </ListItem>
 
         <Divider sx={{ m: 1 }} />
@@ -145,7 +166,7 @@ const Setting = () => {
                 labelId="color-mode-select-label"
                 id="color-mode-select"
                 value={colorMode}
-                onChange={(event: SelectChangeEvent) => updateColorMode(event.target.value as UiStatus['colorMode'])}
+                onChange={(event: SelectChangeEvent) => updateColorMode(event.target.value as UiState['colorMode'])}
               >
                 <MenuItem value={'auto'}> {t`Auto`} </MenuItem>
                 <MenuItem value={'light'}> {t`Light`} </MenuItem>

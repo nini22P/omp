@@ -5,7 +5,7 @@ import BreadcrumbNav from './BreadcrumbNav'
 import CommonList from '../../components/CommonList/CommonList'
 import Loading from '../Loading'
 import { remoteItemToFile, pathConv, fileSorter, shufflePlayQueue } from '../../utils'
-import { FileItem, RemoteItem } from '../../types/file'
+import { FileItem } from '../../types/file'
 import Grid from '@mui/material/Grid'
 import FilterMenu from './FilterMenu'
 import PictureView from '../PictureView/PictureView'
@@ -61,21 +61,13 @@ const Files = () => {
   const { instance } = useMsal()
   const { account } = useUser()
 
-  const { getFilesData, getDeltaData } = useGraph(instance, account)
+  const { getFilesData } = useGraph(instance, account)
   const navigate = useNavigate()
 
   const filesFetcher = async (path: string[]) => {
     console.log(path)
-    const res = await getFilesData(path)
-    return remoteItemToFile(res.value)
-  }
-
-  const deltaListFetcher = async () => {
-    const res: RemoteItem[] = await getDeltaData(folderTree)
-    const deltaListData = remoteItemToFile(res)
-    const filteredDeltaList = deltaListData.filter((item) => mediaOnly ? item.fileType !== 'other' : true)
-    const sortedDeltaList = fileSorter(filteredDeltaList, foldersFirst, sortBy, orderBy)
-    return sortedDeltaList
+    const { value } = await getFilesData(path)
+    return value.map(item => remoteItemToFile(item))
   }
 
   const { data: filesData, error: filesError, isLoading: filesIsLoading } =
@@ -156,7 +148,7 @@ const Files = () => {
       if (!currentFile) {
         const discs = files.filter(item => item.fileName.toLocaleLowerCase().includes('disc'))
         if (discs.length > 0 && account) {
-          const files = await Promise.all(discs.map(item => getFilesData(item.filePath).then(res => remoteItemToFile(res.value))))
+          const files = await Promise.all(discs.map(item => getFilesData(item.filePath).then(({ value }) => value.map(item => remoteItemToFile(item)))))
 
           const list = files
             .flat()
@@ -216,7 +208,7 @@ const Files = () => {
         gap='0.25rem'
       >
         <Grid size='grow'>
-          <BreadcrumbNav handleClickNav={handleClickNav} />
+          <BreadcrumbNav folderTree={folderTree} handleClickNav={handleClickNav} />
         </Grid>
         <Grid size='auto' sx={{ display: 'flex', flexDirection: 'row', justifyItems: 'center', alignItems: 'center' }}>
           <FilterMenu />

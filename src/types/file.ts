@@ -1,94 +1,101 @@
 export interface FileResponse {
-  '@odata.nextLink'?: string,
-  value: RemoteItem[],
+  '@odata.nextLink'?: string
+  value: RemoteItem[]
 }
 
 export interface DeltaResponse {
-  '@odata.deltaLink'?: string,
-  '@odata.nextLink'?: string,
-  value: RemoteItem[],
+  '@odata.deltaLink'?: string
+  '@odata.nextLink'?: string
+  value: RemoteItem[]
 }
 
 export interface FileDetails {
-  mimeType: string,
+  mimeType: string
   hashes?: {
-    quickXorHash?: string,
-    sha1Hash?: string,
-    sha256Hash?: string,
-    crc32Hash?: string,
-  },
+    quickXorHash?: string
+    sha1Hash?: string
+    sha256Hash?: string
+    crc32Hash?: string
+  }
 }
 
 export interface FolderDetails {
-  childCount: number,
+  childCount: number
   view?: {
-    sortBy: string,
-    sortOrder: 'ascending' | 'descending',
-    viewType: 'details' | 'thumbnails' | 'list' | 'icons',
-  },
+    sortBy: string
+    sortOrder: 'ascending' | 'descending'
+    viewType: 'details' | 'thumbnails' | 'list' | 'icons'
+  }
 }
 
 export interface ParentReference {
-  driveId: string,
-  driveType: string,
-  id: string,
-  name?: string,
-  path?: string,
+  driveId: string
+  driveType: string
+  id?: string
+  name?: string
+  path?: string
 }
 
 export interface ThumbnailItem {
-  height: number,
-  width: number,
-  url: string,
+  height: number
+  width: number
+  url: string
 }
 
 export interface Thumbnail {
-  id: string,
-  small: ThumbnailItem,
-  medium: ThumbnailItem,
-  large: ThumbnailItem,
+  id: string
+  small: ThumbnailItem
+  medium: ThumbnailItem
+  large: ThumbnailItem
 }
 
 export interface IdentitySet {
-  user?: { id: string, displayName: string, email?: string, },
+  user?: {
+    id: string
+    displayName: string
+    email?: string
+  }
 }
 
 export interface DeletedState {
-  state: 'deleted',
+  state: 'deleted'
 }
 
 export interface RemoteItem {
-  id: string,
-  name: string,
-  size: number,
-  webUrl: string,
-  createdDateTime: string,
-  lastModifiedDateTime: string,
+  id: string
+  name: string
+  size: number
+  webUrl: string
+  createdDateTime: string
+  lastModifiedDateTime: string
 
-  cTag?: string,
-  eTag?: string,
+  cTag?: string
+  eTag?: string
 
-  file?: FileDetails,
-  folder?: FolderDetails,
+  file?: FileDetails
+  folder?: FolderDetails
 
-  parentReference: ParentReference,
+  parentReference: ParentReference
 
-  thumbnails?: Thumbnail[],
-  '@microsoft.graph.downloadUrl'?: string,
+  thumbnails?: Thumbnail[]
+  '@microsoft.graph.downloadUrl'?: string
 
-  createdBy?: IdentitySet,
-  lastModifiedBy?: IdentitySet,
+  createdBy?: IdentitySet
+  lastModifiedBy?: IdentitySet
 
-  deleted?: DeletedState,
+  deleted?: DeletedState
 }
 
+export type FileType = 'folder' | 'audio' | 'video' | 'picture' | 'other'
+
 export interface FileItem {
-  fileName: string,
-  filePath: string[],
-  fileSize: number,
-  fileType: 'folder' | 'audio' | 'video' | 'picture' | 'other',
-  lastModifiedDateTime?: string,
-  id?: string,
-  thumbnails?: Thumbnail[],
-  url?: string,
+  fileName: string
+  filePath: string[]
+  fileSize: number
+  fileType: FileType
+  lastModifiedDateTime?: string
+  id?: string
+  parentId?: string
+  thumbnails?: Thumbnail[]
+  url?: string
 }

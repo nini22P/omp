@@ -1,8 +1,9 @@
 import { pathConv } from '../utils'
-import { HistoryStatus, HistoryAction } from '../types/history'
+import { HistoryActions, HistoryState } from '../types/history'
 import { create } from 'zustand'
+import createSelectors from './createSelectors'
 
-const useHistoryStore = create<HistoryStatus & HistoryAction>(
+const useHistoryStoreBase = create<HistoryState & HistoryActions>(
   (set) => ({
     historyList: null,
     updateHistoryList: (historyList) => set(() => ({ historyList: historyList })),
@@ -23,5 +24,7 @@ const useHistoryStore = create<HistoryStatus & HistoryAction>(
     clearHistoryList: () => set({ historyList: [] }),
   })
 )
+
+const useHistoryStore = createSelectors(useHistoryStoreBase)
 
 export default useHistoryStore

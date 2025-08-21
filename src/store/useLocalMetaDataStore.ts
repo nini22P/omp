@@ -1,4 +1,4 @@
-import { MetaData } from '../types/MetaData'
+import { MetaData } from '../types/metaData'
 import { pathConv } from '../utils'
 import { get, getMany, set, clear, entries, createStore } from 'idb-keyval'
 

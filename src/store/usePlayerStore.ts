@@ -1,7 +1,8 @@
 import { create } from 'zustand'
-import { PlayerStatus, PlayerAction } from '../types/player'
+import { PlayerActions, PlayerState } from '../types/player'
+import createSelectors from './createSelectors'
 
-const initialState: PlayerStatus = {
+const initialState: PlayerState = {
   currentMetaData: null,
   metadataUpdate: false,
   autoPlay: false,
@@ -11,7 +12,7 @@ const initialState: PlayerStatus = {
   duration: 0,
 }
 
-const usePlayerStore = create<PlayerStatus & PlayerAction>(
+const usePlayerStoreBase = create<PlayerState & PlayerActions>(
   (set) => ({
     ...initialState,
     updateCurrentMetaData: (currentMetaData) => set(() => ({ currentMetaData: currentMetaData })),
@@ -24,5 +25,7 @@ const usePlayerStore = create<PlayerStatus & PlayerAction>(
     resetPlayer: () => set(() => ({ ...initialState })),
   })
 )
+
+const usePlayerStore = createSelectors(usePlayerStoreBase)
 
 export default usePlayerStore

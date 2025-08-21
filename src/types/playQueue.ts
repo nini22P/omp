@@ -1,16 +1,16 @@
 import { FileItem } from './file'
 
 export interface PlayQueueItem extends FileItem {
-  index: number,
+  index: number
 }
 
-export interface PlayQueueStatus {
-  playQueue: PlayQueueItem[] | null,
-  currentIndex: number,
+export interface PlayQueueState {
+  playQueue: PlayQueueItem[] | null
+  currentIndex: number
 }
 
-export interface PlayQueueAction {
-  updatePlayQueue: (PlayQueue: PlayQueueStatus['playQueue']) => void,
-  updateCurrentIndex: (index: PlayQueueStatus['currentIndex']) => void,
-  resetPlayQueue: () => void,
+export interface PlayQueueActions {
+  updatePlayQueue: (PlayQueue: PlayQueueState['playQueue']) => void
+  updateCurrentIndex: (index: PlayQueueState['currentIndex']) => void
+  resetPlayQueue: () => void
 }

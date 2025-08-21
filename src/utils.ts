@@ -1,7 +1,8 @@
 import * as mm from 'music-metadata-browser'
-import { FileItem, RemoteItem } from './types/file'
+import { FileItem, FileType, RemoteItem } from './types/file'
 import { PlayQueueItem } from './types/playQueue'
-import { Cover, LocalStorageCover, MetaData } from './types/MetaData'
+import { Cover, LocalStorageCover, MetaData } from './types/metaData'
+import { FileNode } from './types/library'
 
 export const isDevelopment = process.env.NODE_ENV === 'development'
 
@@ -19,11 +20,11 @@ export const timeShift = (time: number) => {
   return `${minute} : ${second}`
 }
 
-const isAudio = (name: string) => (/.(wav|mp3|aac|ogg|flac|m4a|opus)$/i).test(name)
-const isVideo = (name: string) => (/.(mp4|mkv|avi|mov|rmvb|webm|flv)$/i).test(name)
-const isPicture = (name: string) => (/.(jpg|jpeg|png|bmp|webp|avif|tiff|gif|svg|ico)$/i.test(name))
+export const isAudio = (name: string) => (/.(wav|mp3|aac|ogg|flac|m4a|opus)$/i).test(name)
+export const isVideo = (name: string) => (/.(mp4|mkv|avi|mov|rmvb|webm|flv)$/i).test(name)
+export const isPicture = (name: string) => (/.(jpg|jpeg|png|bmp|webp|avif|tiff|gif|svg|ico)$/i.test(name))
 
-export const checkFileType = (name: string): FileItem['fileType'] => {
+export const checkFileType = (name: string): FileType => {
   if (isAudio(name))
     return 'audio'
   if (isVideo(name))
@@ -55,7 +56,7 @@ export const nowTime = () => {
   return `${dateTime.getFullYear}-${dateTime.getMonth}-${dateTime.getDay} ${dateTime.getHours}:${dateTime.getMinutes}`
 }
 
-export const sizeConvert = (fileSize: FileItem['fileSize']) => {
+export const sizeConv = (fileSize: FileItem['fileSize']) => {
   return ((fileSize / 1024) < 1024)
     ? `${(fileSize / 1024).toFixed(2)} KB`
     : ((fileSize / 1024 / 1024) < 1024)
@@ -128,18 +129,44 @@ export const compressImage = (image: Cover): Promise<Cover> => {
   })
 }
 
-export const remoteItemToFile = (res: RemoteItem[]): FileItem[] => res
-  .filter(item => item.parentReference.path)
-  .map((item) => ({
+export const remoteItemToFileNode = (item: RemoteItem): FileNode => {
+  const type: FileType = item.folder ? 'folder' : checkFileType(item.name)
+
+  return {
+    id: item.id,
+    parentId: item.parentReference.id,
+    name: item.name,
+    type: type,
+    cTag: item.cTag,
+    size: item.size,
+    lastModifiedDateTime: item.lastModifiedDateTime,
+    metadataState: type === 'audio' ? 'pending' : 'completed',
+  }
+}
+
+export const remoteItemToFile = (item: RemoteItem): FileItem => (
+  {
     fileName: item.name,
-    filePath: ['/', ...item.parentReference.path!.replace('/drive/root:', '').split('/').filter(item => item.length > 0).map(item => decodeURIComponent(item)), item.name],
+    filePath: item.parentReference.path
+      ? [
+        '/',
+        ...item.parentReference.path
+          .replace('/drive/root:', '')
+          .split('/')
+          .filter(item => item.length > 0)
+          .map(item => decodeURIComponent(item)),
+        item.name,
+      ]
+      : ['/'],
     fileSize: item.size,
     fileType: (item.folder) ? 'folder' : checkFileType(item.name),
     lastModifiedDateTime: item.lastModifiedDateTime,
     id: item.id,
+    parentId: item.parentReference.id,
     thumbnails: item.thumbnails,
     url: item['@microsoft.graph.downloadUrl'],
-  }))
+  }
+)
 
 export const getNetMetaData = async (path: string[], url: string) => {
   console.log('Start get net metadata: ', path.slice(-1)[0])

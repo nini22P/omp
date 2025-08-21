@@ -1,5 +1,5 @@
 import { FileItem } from '@/types/file'
-import { sizeConvert } from '@/utils'
+import { sizeConv } from '@/utils'
 import InsertDriveFileRoundedIcon from '@mui/icons-material/InsertDriveFileRounded'
 import InsertPhotoRoundedIcon from '@mui/icons-material/InsertPhotoRounded'
 import FolderOpenRoundedIcon from '@mui/icons-material/FolderOpenRounded'
@@ -89,7 +89,7 @@ const CommonListItem = ({
         <ListItemText
           primary={item.fileName}
           secondary={
-            `${sizeConvert(item.fileSize)}
+            `${sizeConv(item.fileSize)}
             ${item.lastModifiedDateTime
               ? ` • ${new Date(item.lastModifiedDateTime).toLocaleString(undefined, {
                 year: 'numeric',

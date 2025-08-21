@@ -6,7 +6,7 @@ import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
 import { checkFileType, getNetMetaData, isLocalStorageCover, pathConv } from '@/utils'
 import useGraph from '../graph/useGraph'
-import { MetaData } from '@/types/MetaData'
+import { MetaData } from '@/types/metaData'
 import useUser from '../graph/useUser'
 import { useShallow } from 'zustand/shallow'
 import { setTitle } from '@/tauriUtils'
@@ -69,26 +69,27 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
   // 获取当前播放文件链接
   useMemo(
     () => {
-      if (player) {
-        player.src = ''
-      }
-      if (playQueue !== null && playQueue.length !== 0 && currentFile && account) {
-        updateIsLoading(true)
-        try {
-          getFileData(currentFile.filePath).then((res) => {
+      (async () => {
+        if (player) {
+          player.src = ''
+        }
+        if (playQueue !== null && playQueue.length !== 0 && currentFile && account) {
+          updateIsLoading(true)
+          try {
+            const res = await getFileData(currentFile.filePath, currentFile.id)
             if (!res['@microsoft.graph.downloadUrl']) {
               throw new Error('No download url')
             }
             setUrl(res['@microsoft.graph.downloadUrl'])
-          })
-        } catch (error) {
-          console.error(error)
-          updateAutoPlay(false)
-          updateIsLoading(false)
-          player?.pause()
+          } catch (error) {
+            console.error(error)
+            updateAutoPlay(false)
+            updateIsLoading(false)
+            player?.pause()
+          }
         }
-      }
-      return true
+        return true
+      })()
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [currentFile?.filePath, account]

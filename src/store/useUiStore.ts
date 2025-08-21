@@ -1,8 +1,9 @@
 import { create } from 'zustand'
-import { UiStatus, UiAction } from '../types/ui'
+import { UiActions, UiState } from '../types/ui'
 import { createJSONStorage, persist } from 'zustand/middleware'
+import createSelectors from './createSelectors'
 
-const initialState: UiStatus = {
+const initialState: UiState = {
   currentAccount: 0,
   folderTree: ['/'],
   audioViewIsShow: false,
@@ -28,7 +29,7 @@ const initialState: UiStatus = {
   lyricsIsShow: false,
 }
 
-const useUiStore = create<UiStatus & UiAction>()(
+const useUiStoreBase = create<UiState & UiActions>()(
   persist(
     (set) => ({
       ...initialState,
@@ -61,5 +62,7 @@ const useUiStore = create<UiStatus & UiAction>()(
       storage: createJSONStorage(() => localStorage),
     }
   ))
+
+const useUiStore = createSelectors(useUiStoreBase)
 
 export default useUiStore

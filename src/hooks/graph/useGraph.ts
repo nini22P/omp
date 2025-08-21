@@ -1,13 +1,11 @@
 import { getAppRootFiles, getFile, getFiles, search, uploadAppRootJson, getDelta } from '@/graph/graph'
 import { loginRequest } from '@/graph/authConfig'
 import { AccountInfo, IPublicClientApplication } from '@azure/msal-browser'
-import useLocalDeltaDataStore from '@/store/useLocalDeltaDataStore'
 
 const useGraph = (
   instance: IPublicClientApplication,
   account: AccountInfo | null | undefined,
 ) => {
-  const { setLocalDeltaData, getLocalDeltaData } = useLocalDeltaDataStore()
 
   const getAccessToken = async (): Promise<string> => {
     if (!account) {
@@ -22,109 +20,67 @@ const useGraph = (
     return tokenResponse.accessToken
   }
 
-  const getFilesData = async (path: string[]) => {
+  const getFilesData = async (path: string[], id?: string) => {
     const accessToken = await getAccessToken()
 
-    let response = await getFiles(path, accessToken)
+    let response = await getFiles(accessToken, path, id)
 
     const remoteItems = [...response.value]
 
     while (response['@odata.nextLink']) {
-      response = await getFiles(path, accessToken, response['@odata.nextLink'])
+      response = await getFiles(accessToken, path, response['@odata.nextLink'])
       remoteItems.push(...response.value)
     }
 
     return { value: remoteItems }
   }
 
-  const getFileData = async (path: string[]) => {
+  const getFileData = async (path: string[], id?: string) => {
     const accessToken = await getAccessToken()
-    const response = await getFile(path, accessToken)
+    const response = await getFile(accessToken, path, id)
     return response
   }
 
   const getAppRootFilesData = async (path: string[]) => {
     const accessToken = await getAccessToken()
-    const response = await getAppRootFiles(path, accessToken)
+    const response = await getAppRootFiles(accessToken, path)
     return response
   }
 
   const uploadAppRootJsonData = async (fileName: string, fileContent: BodyInit) => {
     const accessToken = await getAccessToken()
-    const response = await uploadAppRootJson(fileName, fileContent, accessToken)
+    const response = await uploadAppRootJson(accessToken, fileName, fileContent)
     return response
   }
 
   const getSearchData = async (searchQuery: string) => {
     const accessToken = await getAccessToken()
-    const response = await search(searchQuery, accessToken)
+    const response = await search(accessToken, searchQuery)
     return response
   }
 
-  const getDeltaData = async (path: string[]) => {
+  const getDeltaData = async (id: string, deltaLink?: string) => {
     const accessToken = await getAccessToken()
 
-    const localData = await getLocalDeltaData(path)
-    const deltaLink = localData?.deltaLink
+    let response = await getDelta(accessToken, id, deltaLink)
 
-    if (deltaLink) {
-      try {
-        console.log('Attempting delta sync...')
-        let response = await getDelta(path, accessToken, deltaLink)
-        const remoteChanges = [...response.value]
-
-        while (response['@odata.nextLink']) {
-          response = await getDelta(path, accessToken, response['@odata.nextLink'])
-          remoteChanges.push(...response.value)
-        }
-
-        if (!response['@odata.deltaLink']) {
-          throw new Error('Delta sync failed: No new deltaLink received.')
-        }
-
-        const newDeltaLink = response['@odata.deltaLink']
-
-        const mergedItems = [...localData.items]
-        remoteChanges.forEach((item) => {
-          const index = mergedItems.findIndex(i => i.id === item.id)
-
-          if (item.deleted) {
-            if (index !== -1) mergedItems.splice(index, 1)
-          } else {
-            if (index === -1) {
-              mergedItems.push(item)
-            } else {
-              mergedItems[index] = item
-            }
-          }
-        })
-
-        await setLocalDeltaData(path, { items: mergedItems, deltaLink: newDeltaLink })
-        return mergedItems
-
-      } catch (error) {
-        console.error('Delta sync failed, falling back to full sync.', error)
-      }
-    }
-
-    console.log('Performing full sync...')
-    let response = await getDelta(path, accessToken)
     const remoteItems = [...response.value]
 
     while (response['@odata.nextLink']) {
-      response = await getDelta(path, accessToken, response['@odata.nextLink'])
+      response = await getDelta(accessToken, id, response['@odata.nextLink'])
       remoteItems.push(...response.value)
     }
 
     if (!response['@odata.deltaLink']) {
-      throw new Error('Initial sync failed: No deltaLink received.')
+      throw new Error('Delta sync failed: No new deltaLink received.')
     }
 
-    const newDeltaLink = response['@odata.deltaLink']
-
-    await setLocalDeltaData(path, { items: remoteItems, deltaLink: newDeltaLink })
-    return remoteItems
+    return {
+      '@odata.deltaLink': response['@odata.deltaLink'],
+      value: remoteItems,
+    }
   }
+
 
   return {
     getFilesData,

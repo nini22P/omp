@@ -1,14 +1,14 @@
-import { PlayQueueStatus, PlayQueueAction } from '../types/playQueue'
+import { PlayQueueActions, PlayQueueState } from '../types/playQueue'
 import { createJSONStorage, persist } from 'zustand/middleware'
 import { create } from 'zustand'
 import createSelectors from './createSelectors'
 
-const initialState: PlayQueueStatus = {
+const initialState: PlayQueueState = {
   playQueue: null,
   currentIndex: 0,
 }
 
-const usePlayQueueStoreBase = create<PlayQueueStatus & PlayQueueAction>()(
+const usePlayQueueStoreBase = create<PlayQueueState & PlayQueueActions>()(
   persist((set) => ({
     ...initialState,
     updatePlayQueue: (playQueue) => set(() => ({ playQueue: playQueue })),

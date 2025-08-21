@@ -91,7 +91,7 @@ const prodConfig = {
           reuseExistingChunk: true,
         },
         react: {
-          test: /[\\/]node_modules[\\/](react|react-dom|react-router-dom)[\\/]/,
+          test: /[\\/]node_modules[\\/](react|react-dom|react-router|react-virtualized)[\\/]/,
           name: 'react',
           priority: 0,
         },

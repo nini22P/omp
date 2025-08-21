@@ -18,6 +18,7 @@ const SideBar = () => {
 
   const navData = [
     { router: '/', icon: <FolderRoundedIcon />, label: t`Files` },
+    { router: '/library', icon: <FolderRoundedIcon />, label: t`Library` },
     { router: '/history', icon: <HistoryRoundedIcon />, label: t`History` },
     { router: '/setting', icon: <SettingsRoundedIcon />, label: t`Setting` },
   ]

@@ -1,7 +1,8 @@
-import { PictiureStatus, PictureAction } from '@/types/picture'
+import { PictiureState, PictureActions } from '@/types/picture'
 import { create } from 'zustand'
+import createSelectors from './createSelectors'
 
-const usePictureStore = create<PictiureStatus & PictureAction>(
+const usePictureStoreBase = create<PictiureState & PictureActions>(
   (set) => ({
     pictureList: [],
     currentPicture: null,
@@ -9,5 +10,7 @@ const usePictureStore = create<PictiureStatus & PictureAction>(
     updateCurrentPicture: (currentPicture) => set(() => ({ currentPicture: currentPicture })),
   })
 )
+
+const usePictureStore = createSelectors(usePictureStoreBase)
 
 export default usePictureStore

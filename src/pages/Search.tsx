@@ -44,7 +44,7 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
 
   const filesFetcher = async (path: string[]) => {
     const { value } = await getFilesData(path)
-    return remoteItemToFile(value)
+    return value.map(item => remoteItemToFile(item))
   }
 
   const { data: filesData } = useSWR(
@@ -56,7 +56,7 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
   const searchFetcher = async (searchQuery: string) => {
     if (!account) return []
     const { value } = await getSearchData(searchQuery)
-    return remoteItemToFile(value)
+    return value.map(item => remoteItemToFile(item))
   }
 
   const { data: searchData, isLoading: searchIsLoading } = useSWR(
@@ -77,7 +77,7 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
     || []
   ]
 
-  const open = (index: number) => {
+  const open = async (index: number) => {
     const currentFile = filteredData[index]
     if (currentFile.fileType === 'folder') {
       handleCloseSearh()

@@ -10,12 +10,16 @@ import useSync from './hooks/graph/useSync'
 import useThemeColor from './hooks/ui/useThemeColor'
 import LogIn from './pages/LogIn'
 import { useSpring, animated } from '@react-spring/web'
-import { useMemo } from 'react'
+import { useEffect, useMemo } from 'react'
 import useCustomTheme from './hooks/ui/useCustomTheme'
 import Search from './pages/Search'
 import useStyles from './hooks/ui/useStyles'
 import useEnvironment from './hooks/ui/useEnvironment'
 import { isTauri } from '@tauri-apps/api/core'
+import useFileNodeSync from './hooks/graph/useFileNodeSync'
+import useFileNodeSyncStore from './store/useFileNodeSyncStore'
+import { useLiveQuery } from 'dexie-react-hooks'
+import useDb from './hooks/useDb'
 
 const App = () => {
   useEnvironment()
@@ -26,6 +30,25 @@ const App = () => {
 
   const { account } = useUser()
   useSync()
+  useFileNodeSync()
+
+  const db = useDb(account)
+  const libraryRootId = useLiveQuery(async () => (await db?.settings.get('settings'))?.libraryRootId, [db])
+
+  const enableSyncing = useFileNodeSyncStore.use.enableSyncing()
+  const requestSync = useFileNodeSyncStore.use.requestSync()
+
+  useEffect(
+    () => {
+      console.log(libraryRootId)
+      if (account && libraryRootId) {
+        console.log('应用已就绪，启用同步系统并请求首次同步。')
+        enableSyncing()
+        requestSync()
+      }
+    },
+    [account, enableSyncing, libraryRootId, requestSync]
+  )
 
   const [{ background }, api] = useSpring(
     () => ({
