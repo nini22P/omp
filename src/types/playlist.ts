@@ -1,20 +1,26 @@
-import { FileItem } from './file'
+import { FileItem, PlaylistItem } from './file'
 
-export interface Playlist {
+export interface OldPlaylist {
   id: string
   title: string
   fileList: FileItem[]
 }
 
+export interface Playlist {
+  id: string
+  name: string
+  files: PlaylistItem[]
+}
+
 export interface PlaylistsState {
-  playlists: Playlist[] | null
+  playlists: Playlist[]
 }
 
 export interface PlaylistsActions {
   updatePlaylists: (playlists: PlaylistsState['playlists']) => void
   insertPlaylist: (playlist: Playlist) => void
-  renamePlaylist: (id: Playlist['id'], title: Playlist['title']) => void
+  renamePlaylist: (id: Playlist['id'], name: Playlist['name']) => void
   removePlaylist: (id: Playlist['id']) => void
-  insertFilesToPlaylist: (id: Playlist['id'], files: FileItem[]) => void
+  insertFilesToPlaylist: (id: Playlist['id'], files: Playlist['files']) => void
   removeFilesFromPlaylist: (id: Playlist['id'], indexArray: number[]) => void
 }

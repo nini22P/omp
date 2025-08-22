@@ -5,7 +5,7 @@ import createSelectors from './createSelectors'
 
 const initialState: UiState = {
   currentAccount: 0,
-  folderTree: ['/'],
+  folderTree: [],
   audioViewIsShow: false,
   audioViewTheme: 'modern',
   videoViewIsShow: false,

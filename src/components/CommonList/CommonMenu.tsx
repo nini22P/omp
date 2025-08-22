@@ -3,12 +3,13 @@ import shortUUID from 'short-uuid'
 import { Menu, MenuItem, ListItemText, Button, Dialog, DialogActions, DialogTitle, List, ListItem, ListItemButton, ListItemIcon } from '@mui/material'
 import PlaylistAddRoundedIcon from '@mui/icons-material/PlaylistAddRounded'
 import ListRoundedIcon from '@mui/icons-material/ListRounded'
-import usePlayQueueStore from '../../store/usePlayQueueStore'
-import usePlaylistsStore from '../../store/usePlaylistsStore'
-import useUiStore from '../../store/useUiStore'
-import { FileItem } from '../../types/file'
+import usePlayQueueStore from '@/store/usePlayQueueStore'
+import usePlaylistsStore from '@/store/usePlaylistsStore'
+import useUiStore from '@/store/useUiStore'
+import { FileNode, PlaylistItem } from '@/types/file'
 import { useShallow } from 'zustand/shallow'
 import { useLingui } from '@lingui/react/macro'
+import { fileNodeToPlaylistItem, isAudio, isVideo } from '@/utils'
 
 const CommonMenu = (
   {
@@ -28,7 +29,7 @@ const CommonMenu = (
   }
     :
     {
-      listData: FileItem[],
+      listData: FileNode[] | PlaylistItem[],
       listType: 'files' | 'playlist' | 'playQueue',
       anchorEl: null | HTMLElement,
       menuOpen: boolean,
@@ -69,7 +70,7 @@ const CommonMenu = (
   // 新建播放列表
   const addNewPlaylist = () => {
     const id = shortUUID().generate()
-    insertPlaylist({ id, title: t`New playlist`, fileList: [] })
+    insertPlaylist({ id, name: t`New playlist`, files: [] })
   }
 
   // 添加到播放列表
@@ -77,23 +78,23 @@ const CommonMenu = (
     if (typeof selectIndex === 'number') {
       insertFilesToPlaylist(id, [
         {
-          fileName: listData[selectIndex].fileName,
-          filePath: listData[selectIndex].filePath,
-          fileSize: listData[selectIndex].fileSize,
-          fileType: listData[selectIndex].fileType,
+          id: listData[selectIndex].id,
+          name: listData[selectIndex].name,
+          path: listData[selectIndex].path,
+          size: listData[selectIndex].size,
         }
       ])
       setSelectIndex(null)
     } else if (selectIndexArray.length > 0) {
       insertFilesToPlaylist(id,
         selectIndexArray
-          .filter(index => listData[index].fileType === 'audio' || listData[index].fileType === 'video')
+          .filter(index => isAudio(listData[index].name) || isVideo(listData[index].name))
           .map(index => (
             {
-              fileName: listData[index].fileName,
-              filePath: listData[index].filePath,
-              fileSize: listData[index].fileSize,
-              fileType: listData[index].fileType,
+              id: listData[index].id,
+              name: listData[index].name,
+              path: listData[index].path,
+              size: listData[index].size,
             }
           )))
       setSelectIndexArray([])
@@ -104,24 +105,24 @@ const CommonMenu = (
   // 添加到播放队列
   const handleClickAddToPlayQueue = () => {
     if (typeof selectIndex === 'number') {
-      if (playQueue) {
-        updatePlayQueue([...playQueue, { ...listData[selectIndex], index: Math.max(...playQueue.map(item => item.index)) + 1 }])
+      if (playQueue.length > 0) {
+        updatePlayQueue([...playQueue, { ...fileNodeToPlaylistItem(listData[selectIndex]), index: Math.max(...playQueue.map(item => item.index)) + 1 }])
       } else {
-        updatePlayQueue([{ ...listData[selectIndex], index: 0 }])
+        updatePlayQueue([{ ...fileNodeToPlaylistItem(listData[selectIndex]), index: 0 }])
       }
     } else if (selectIndexArray && selectIndexArray.length > 0) {
       if (playQueue) {
         updatePlayQueue([
           ...playQueue,
           ...selectIndexArray
-            .filter(index => listData[index].fileType === 'audio' || listData[index].fileType === 'video')
-            .map((index, _index) => ({ ...listData[index], index: Math.max(...playQueue.map(item => item.index)) + _index + 1 }))
+            .filter(index => isAudio(listData[index].name) || isVideo(listData[index].name))
+            .map((index, _index) => ({ ...fileNodeToPlaylistItem(listData[index]), index: Math.max(...playQueue.map(item => item.index)) + _index + 1 }))
         ])
       } else {
         updatePlayQueue(
           selectIndexArray
-            .filter(index => listData[index].fileType === 'audio' || listData[index].fileType === 'video')
-            .map((index, _index) => ({ ...listData[index], index: _index }))
+            .filter(index => isAudio(listData[index].name) || isVideo(listData[index].name))
+            .map((index, _index) => ({ ...fileNodeToPlaylistItem(listData[index]), index: _index }))
         )
       }
     }
@@ -131,9 +132,9 @@ const CommonMenu = (
   }
 
   // 打开所在文件夹
-  const handleClickOpenInFolder = () => {
-    if (typeof selectIndex === 'number') {
-      updateFolderTree(listData[selectIndex].filePath.slice(0, -1))
+  const handleClickOpenInFolder = async () => {
+    if (typeof selectIndex === 'number' && listData[selectIndex].path) {
+      updateFolderTree(listData[selectIndex].path.slice(0, -1))
       navigate('/')
       setMenuOpen(false)
       setSelectIndex(null)
@@ -243,7 +244,7 @@ const CommonMenu = (
                 <ListItemIcon>
                   <ListRoundedIcon />
                 </ListItemIcon>
-                <ListItemText primary={item.title} />
+                <ListItemText primary={item.name} />
               </ListItemButton>
             </ListItem>
           )}

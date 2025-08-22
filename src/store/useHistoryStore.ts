@@ -1,27 +1,25 @@
-import { pathConv } from '../utils'
 import { HistoryActions, HistoryState } from '../types/history'
 import { create } from 'zustand'
 import createSelectors from './createSelectors'
 
 const useHistoryStoreBase = create<HistoryState & HistoryActions>(
   (set) => ({
-    historyList: null,
-    updateHistoryList: (historyList) => set(() => ({ historyList: historyList })),
+    historys: [],
+    updateHistoryList: (historys) => set(() => ({ historys })),
     insertHistory: (file) => set(
       (state) => (
-        (state.historyList !== null)
+        (state.historys !== null)
           ? {
-            historyList:
+            historys:
               [
                 file,
-                ...state.historyList.filter((item) =>
-                  pathConv(item.filePath) !== pathConv(file.filePath))
+                ...state.historys.filter((item) => item.path !== file.path)
               ].slice(0, 200)
           }
-          : { historyList: [file] }
+          : { historys: [file] }
       )),
-    removeHistory: (indexArray) => set((state) => ({ historyList: state.historyList?.filter((_, index) => !indexArray.includes(index)) })),
-    clearHistoryList: () => set({ historyList: [] }),
+    removeHistory: (indexArray) => set((state) => ({ historys: state.historys?.filter((_, index) => !indexArray.includes(index)) })),
+    clearHistoryList: () => set({ historys: [] }),
   })
 )
 

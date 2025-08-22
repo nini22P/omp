@@ -1,7 +1,7 @@
-import { Avatar, Button, Checkbox, Dialog, DialogActions, DialogTitle, Divider, FormControl, FormControlLabel, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, MenuItem, Select, SelectChangeEvent, Tooltip, useTheme } from '@mui/material'
-import useUser from '../hooks/graph/useUser'
-import { licenses } from '../data/licenses'
-import useLocalMetaDataStore from '../store/useLocalMetaDataStore'
+import { Avatar, Button, Checkbox, Dialog, DialogActions, DialogTitle, Divider, FormControl, FormControlLabel, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, MenuItem, Select, SelectChangeEvent, Tooltip } from '@mui/material'
+import useUser from '@/hooks/graph/useUser'
+import { licenses } from '@/data/licenses'
+import useLocalMetaDataStore from '@/store/useLocalMetaDataStore'
 import useUiStore from '@/store/useUiStore'
 import { UiState } from '@/types/ui'
 import { useEffect, useMemo, useState } from 'react'
@@ -15,23 +15,15 @@ import { AccountInfo } from '@azure/msal-browser'
 import { useShallow } from 'zustand/shallow'
 import INFO from '@/data/info'
 import { useLingui } from '@lingui/react/macro'
-import SetLibraryFolderDialog from './Library/SetLibraryFolderDialog'
+import SetLibraryFolderDialog from '@/components/Dialog/SetLibraryFolderDialog'
 import { useLiveQuery } from 'dexie-react-hooks'
 import useDb from '@/hooks/useDb'
 import { useMsal } from '@azure/msal-react'
 import useGraph from '@/hooks/graph/useGraph'
-import { pathConv, remoteItemToFile } from '@/utils'
+import { getRemotePath } from '@/utils'
+import ListItemTitle from '@/components/ListItemTitle'
 
-const ListItemTitle = ({ title }: { title: string }) => {
-  const theme = useTheme()
-  return (
-    <ListItem>
-      <ListItemText inset sx={{ color: theme.palette.primary.main }} primary={title} />
-    </ListItem>
-  )
-}
-
-const Setting = () => {
+const Settings = () => {
   const { t } = useLingui()
 
   const { instance } = useMsal()
@@ -79,8 +71,8 @@ const Setting = () => {
     () => {
       (async () => {
         if (libraryRootId) {
-          const res = await getFileData(['/'], libraryRootId)
-          setLibraryRootName(pathConv(remoteItemToFile(res).filePath))
+          const res = await getFileData(libraryRootId)
+          setLibraryRootName(getRemotePath(res).join('/'))
         }
       })()
     },
@@ -94,8 +86,8 @@ const Setting = () => {
     if (currentAccount === index) return
     updateCurrentAccount(index)
     updateFolderTree(['/'])
-    updateHistoryList(null)
-    updatePlaylists(null)
+    updateHistoryList([])
+    updatePlaylists([])
     resetPlayQueue()
     resetPlayer()
   }
@@ -104,8 +96,8 @@ const Setting = () => {
     if (account.username === accounts[currentAccount].username) {
       resetPlayQueue()
       resetPlayer()
-      updateHistoryList(null)
-      updatePlaylists(null)
+      updateHistoryList([])
+      updatePlaylists([])
       updateFolderTree(['/'])
     }
     if (currentAccount === accounts.length - 1) {
@@ -153,7 +145,10 @@ const Setting = () => {
         <ListItemTitle title={t`Data`} />
         <ListItem
           secondaryAction={
-            <Button onClick={() => clearLocalMetaData()}>
+            <Button onClick={async () => {
+              await clearLocalMetaData()
+              await db?.metadata.clear()
+            }}>
               {t`Clear`}
             </Button>
           }
@@ -274,4 +269,4 @@ const Setting = () => {
 
   )
 }
-export default Setting
+export default Settings

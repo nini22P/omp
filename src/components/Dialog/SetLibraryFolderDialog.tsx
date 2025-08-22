@@ -1,7 +1,7 @@
 import useGraph from '@/hooks/graph/useGraph'
 import useUser from '@/hooks/graph/useUser'
 import useUiStore from '@/store/useUiStore'
-import { fileSorter, pathConv, remoteItemToFile } from '@/utils'
+import { fileSorter } from '@/utils'
 import { useMsal } from '@azure/msal-react'
 import { useLingui } from '@lingui/react/macro'
 import { Divider, Grid } from '@mui/material'
@@ -12,12 +12,12 @@ import DialogContent from '@mui/material/DialogContent'
 import DialogTitle from '@mui/material/DialogTitle'
 import { useMemo, useState } from 'react'
 import { Fragment } from 'react/jsx-runtime'
-import useSWR from 'swr'
 import { useShallow } from 'zustand/shallow'
-import BreadcrumbNav from '../Files/BreadcrumbNav'
-import Loading from '../Loading'
+import BreadcrumbNav from '@/pages/Files/BreadcrumbNav'
+import Loading from '@/pages/Loading'
 import CommonList from '@/components/CommonList/CommonList'
 import useDb from '@/hooks/useDb'
+import useGetFiles from '@/hooks/useGetFiles'
 
 export default function SetLibraryFolderDialog(
   {
@@ -33,7 +33,7 @@ export default function SetLibraryFolderDialog(
   const { instance } = useMsal()
   const { account } = useUser()
   const db = useDb(account)
-  const { getFilesData, getFileData } = useGraph(instance, account)
+  const { getFileData } = useGraph(instance, account)
 
   const [
     display,
@@ -54,22 +54,11 @@ export default function SetLibraryFolderDialog(
   const [open, setOpen] = useState(false)
   const [folderTree, setFolderTree] = useState(['/'])
 
-  const filesFetcher = async (path: string[]) => {
-    console.log(path)
-    const { value } = await getFilesData(path)
-    return value.map(item => remoteItemToFile(item))
-  }
-
-  const { data: filesData, error: filesError, isLoading: filesIsLoading } =
-    useSWR(
-      account ? `${account?.username}/${pathConv(folderTree)}` : null,
-      () => filesFetcher(folderTree),
-      { revalidateOnFocus: false }
-    )
+  const { data: filesData, error: filesError, isLoading: filesIsLoading } = useGetFiles(folderTree)
 
   const files = useMemo(
     () => fileSorter(
-      filesData?.filter((item) => item.fileType === 'folder') || [],
+      filesData?.filter((item) => item.folder === 1) || [],
       foldersFirst,
       sortBy,
       orderBy,
@@ -87,8 +76,8 @@ export default function SetLibraryFolderDialog(
     if (files) {
       const currentFile = files[index]
 
-      if (currentFile && currentFile.fileType === 'folder') {
-        setFolderTree(currentFile.filePath)
+      if (currentFile && currentFile.folder === 1) {
+        setFolderTree(currentFile.path)
       }
     }
   }
@@ -108,7 +97,7 @@ export default function SetLibraryFolderDialog(
     if (files?.length > 0) {
       rootId = files[0].parentId
     } else {
-      const res = await getFileData(folderTree)
+      const res = await getFileData('', folderTree)
       rootId = res.id
     }
 

@@ -1,11 +1,10 @@
 import { DeltaResponse, FileResponse, RemoteItem } from '@/types/file'
 import { graphConfig } from './authConfig'
-import { pathConv } from '@/utils'
 
 export async function getFiles(
   accessToken: string,
-  path: string[],
-  id: string | undefined,
+  id: string,
+  path?: string[],
   nextLink?: string,
 ): Promise<FileResponse> {
   const headers = new Headers()
@@ -25,9 +24,11 @@ export async function getFiles(
 
   const params = new URLSearchParams(queryParams)
 
-  const url = id
-    ? `${graphConfig.graphMeEndpoint}/me/drive/items/${id}/children?${params.toString()}`
-    : `${graphConfig.graphMeEndpoint}/me/drive/root:/${encodeURIComponent(pathConv(path))}:/children?${params.toString()}`
+  const url = path
+    ? path.length === 0
+      ? `${graphConfig.graphMeEndpoint}/me/drive/root/children?${params.toString()}`
+      : `${graphConfig.graphMeEndpoint}/me/drive/root:/${encodeURIComponent(path.join('/'))}:/children?${params.toString()}`
+    : `${graphConfig.graphMeEndpoint}/me/drive/items/${id}/children?${params.toString()}`
 
   return fetch(nextLink || url, options)
     .then(response => response.json())
@@ -36,8 +37,8 @@ export async function getFiles(
 
 export async function getFile(
   accessToken: string,
-  path: string[],
-  id: string | undefined,
+  id: string,
+  path?: string[],
 ): Promise<RemoteItem> {
   const headers = new Headers()
   const bearer = `Bearer ${accessToken}`
@@ -55,9 +56,9 @@ export async function getFile(
 
   const params = new URLSearchParams(queryParams)
 
-  const url = id
-    ? `${graphConfig.graphMeEndpoint}/me/drive/items/${id}?${params.toString()}`
-    : `${graphConfig.graphMeEndpoint}/me/drive/root:/${encodeURIComponent(pathConv(path))}?${params.toString()}`
+  const url = path
+    ? `${graphConfig.graphMeEndpoint}/me/drive/root:/${encodeURIComponent(path.join('/'))}?${params.toString()}`
+    : `${graphConfig.graphMeEndpoint}/me/drive/items/${id}?${params.toString()}`
 
   return fetch(url, options)
     .then(response => response.json())
@@ -66,7 +67,6 @@ export async function getFile(
 
 export const getAppRootFiles = async (
   accessToken: string,
-  path: string[],
 ) => {
   const headers = new Headers()
   const bearer = `Bearer ${accessToken}`
@@ -78,7 +78,7 @@ export const getAppRootFiles = async (
     headers: headers
   }
 
-  const url = `${graphConfig.graphMeEndpoint}/me/drive/special/approot:/${encodeURIComponent(pathConv(path))}:/children`
+  const url = `${graphConfig.graphMeEndpoint}/me/drive/special/approot/children`
 
   return fetch(url, options)
     .then(response => response.json())

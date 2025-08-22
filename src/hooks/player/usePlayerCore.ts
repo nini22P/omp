@@ -1,16 +1,15 @@
 import { useState, useMemo, useEffect } from 'react'
 import useHistoryStore from '@/store/useHistoryStore'
-import useLocalMetaDataStore from '@/store/useLocalMetaDataStore'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
-import { checkFileType, getNetMetaData, isLocalStorageCover, pathConv } from '@/utils'
+import { getNetMetaData, isAudio } from '@/utils'
 import useGraph from '../graph/useGraph'
-import { MetaData } from '@/types/metaData'
 import useUser from '../graph/useUser'
 import { useShallow } from 'zustand/shallow'
 import { setTitle } from '@/tauriUtils'
 import { useMsal } from '@azure/msal-react'
+import useDb from '../useDb'
 
 const usePlayerCore = (player: HTMLVideoElement | null) => {
 
@@ -18,6 +17,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
   const { account } = useUser()
 
   const { getFileData } = useGraph(instance, account)
+  const db = useDb(account)
 
   const [
     currentMetaData,
@@ -49,22 +49,19 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
     )
   )
 
-  const { getLocalMetaData, setLocalMetaData } = useLocalMetaDataStore()
-
   const playQueue = usePlayQueueStore.use.playQueue()
   const currentIndex = usePlayQueueStore.use.currentIndex()
   const updateCurrentIndex = usePlayQueueStore.use.updateCurrentIndex()
 
 
   const repeat = useUiStore((state) => state.repeat)
-  const [historyList, insertHistory] = useHistoryStore(
-    useShallow((state) => [state.historyList, state.insertHistory])
+  const [historys, insertHistory] = useHistoryStore(
+    useShallow((state) => [state.historys, state.insertHistory])
   )
 
   const [url, setUrl] = useState('')
 
-  const currentFile = playQueue?.filter(item => item.index === currentIndex)[0]
-  const fileType = currentFile && checkFileType(currentFile.fileName)
+  const currentFile = useMemo(() => playQueue?.find(item => item.index === currentIndex), [currentIndex, playQueue])
 
   // 获取当前播放文件链接
   useMemo(
@@ -76,7 +73,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
         if (playQueue !== null && playQueue.length !== 0 && currentFile && account) {
           updateIsLoading(true)
           try {
-            const res = await getFileData(currentFile.filePath, currentFile.id)
+            const res = await getFileData(currentFile.id, currentFile.path)
             if (!res['@microsoft.graph.downloadUrl']) {
               throw new Error('No download url')
             }
@@ -92,7 +89,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
       })()
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentFile?.filePath, account]
+    [currentFile, account]
   )
 
   useMemo(
@@ -103,13 +100,8 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
         player.onloadedmetadata = () => {
           if (isLoading && autoPlay) {
             player.play()
-            if (historyList && currentFile) {
-              insertHistory({
-                fileName: currentFile.fileName,
-                filePath: currentFile.filePath,
-                fileSize: currentFile.fileSize,
-                fileType: currentFile.fileType,
-              })
+            if (historys && currentFile) {
+              insertHistory(currentFile)
             }
           }
           updateIsLoading(false)
@@ -156,66 +148,54 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
   // 更新当前 metadata
   useEffect(
     () => {
-      const updateMetaData = async () => {
-        if (playQueue && currentFile) {
-          const metaData: MetaData = await getLocalMetaData(currentFile.filePath)
+      (async () => {
+        if (currentFile?.id && db) {
+          const metaData = await db.metadata.get(currentFile.id)
 
           if (!metaData) {
             updateCover('./cover.svg')
             updateCurrentMetaData(
               {
-                title: currentFile.fileName || 'Not playing',
+                id: currentFile.id,
+                title: currentFile.name || 'Not playing',
                 artist: '',
-                path: currentFile.filePath,
               }
             )
-          } else if (
-            fileType === 'audio'
-            &&
-            metaData
-            &&
-            metaData.path
-            &&
-            pathConv(metaData.path) === pathConv(currentFile.filePath)
-          ) {
+          } else {
             console.log('Update current metaData: ', metaData)
             updateCurrentMetaData(metaData)
-            if (metaData.cover?.length) {
+            if (metaData.cover && metaData.cover.length > 0) {
               const cover = metaData.cover[0]
-              if (cover && isLocalStorageCover(cover)) {
-                updateCover(URL.createObjectURL(new Blob([new Uint8Array(cover.data.data)], { type: cover.format })))
+              if (cover && 'data' in cover) {
+                updateCover(URL.createObjectURL(new Blob([new Uint8Array(cover.data as unknown as ArrayBuffer)], { type: cover.format })))
               }
             } else {
               updateCover('./cover.svg')
             }
           }
         }
-      }
-
-      updateMetaData()
+      })()
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentFile?.filePath, metadataUpdate]
+    [metadataUpdate, db, currentFile?.id]
   )
 
   // 获取在线 metadata
   useEffect(
     () => {
-      const run = async () => {
-
-        if (playQueue && fileType === 'audio' && currentMetaData?.path) {
-          const localMetaData = await getLocalMetaData(currentMetaData?.path)
-
+      (async () => {
+        if (currentFile && currentFile.id && isAudio(currentFile.name) && db && url) {
+          const localMetaData = await db.metadata.get(currentFile.id)
           if (!localMetaData) {
-            const netMetaData = await getNetMetaData(currentMetaData?.path, url)
+            const netMetaData = await getNetMetaData(currentFile, url)
             if (netMetaData) {
-              setLocalMetaData(netMetaData).then(() => updateMetadataUpdate())
+              console.log('Get net metadata: ', netMetaData)
+              await db.metadata.put(netMetaData)
+              updateMetadataUpdate()
             }
           }
         }
-      }
-
-      run()
+      })()
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [url]

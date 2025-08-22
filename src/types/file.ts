@@ -86,7 +86,7 @@ export interface RemoteItem {
   deleted?: DeletedState
 }
 
-export type FileType = 'folder' | 'audio' | 'video' | 'picture' | 'other'
+export type FileType = 'audio' | 'video' | 'picture' | 'other'
 
 export interface FileItem {
   fileName: string
@@ -98,4 +98,28 @@ export interface FileItem {
   parentId?: string
   thumbnails?: Thumbnail[]
   url?: string
+}
+
+export interface FileNode {
+  id: string
+  parentId?: string
+  name: string
+  path: string[]
+  type: FileType
+  size: number
+  lastModifiedDateTime: string
+  metadataState?: 'pending' | 'completed' | 'failed'
+  cTag?: string
+  folder?: number
+  childCount?: number
+  thumbnails?: Thumbnail[]
+  url?: string
+}
+
+export interface PlaylistItem {
+  id: string
+  name: string
+  path: string[]
+  size: number
+  cTag?: string
 }

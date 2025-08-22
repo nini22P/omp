@@ -1,29 +1,32 @@
-import { pathConv } from '../utils'
 import { PlaylistsActions, PlaylistsState } from '../types/playlist'
 import { create } from 'zustand'
 import createSelectors from './createSelectors'
 
+const initialState: PlaylistsState = {
+  playlists: [],
+}
+
 const usePlaylistsStoreBase = create<PlaylistsState & PlaylistsActions>(
   (set) => ({
-    playlists: null,
+    ...initialState,
     updatePlaylists: (playlists) => set(() => ({ playlists: playlists })),
     insertPlaylist: (playlist) =>
       set((state) => ({ playlists: (state.playlists) ? [playlist, ...state.playlists] : [playlist] })),
-    renamePlaylist: (id, title) =>
+    renamePlaylist: (id, name) =>
       set((state) => ({
-        playlists: state.playlists?.map((playlist) =>
-          (playlist.id === id) ? { ...playlist, title: title } : playlist)
+        playlists: state.playlists.map((playlist) =>
+          (playlist.id === id) ? { ...playlist, name } : playlist)
       })),
     removePlaylist: (id) => set((state) =>
-      ({ playlists: state.playlists?.filter(playlist => playlist.id !== id) })),
+      ({ playlists: state.playlists.filter(playlist => playlist.id !== id) })),
     insertFilesToPlaylist: (id, files) =>
       set((state) => ({
-        playlists: state.playlists?.map((playlist) =>
+        playlists: state.playlists.map((playlist) =>
           (playlist.id === id)
             ? {
               ...playlist,
-              fileList: files.concat(playlist.fileList.filter((item) =>
-                !files.map(item => pathConv(item.filePath)).includes(pathConv(item.filePath))
+              files: files.concat(playlist.files.filter((item) =>
+                !files.map(item => item.path).includes(item.path)
               ))
             }
             : playlist
@@ -35,7 +38,7 @@ const usePlaylistsStoreBase = create<PlaylistsState & PlaylistsActions>(
           (playlist.id === id)
             ? {
               ...playlist,
-              fileList: playlist.fileList.filter((_file, index) => !indexArray.includes(index))
+              files: playlist.files.filter((_file, index) => !indexArray.includes(index))
             }
             : playlist
         )

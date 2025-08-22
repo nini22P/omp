@@ -1,5 +1,5 @@
-import { FileItem } from '@/types/file'
-import { sizeConv } from '@/utils'
+import { FileNode, PlaylistItem } from '@/types/file'
+import { checkFileType, sizeConv } from '@/utils'
 import InsertDriveFileRoundedIcon from '@mui/icons-material/InsertDriveFileRounded'
 import InsertPhotoRoundedIcon from '@mui/icons-material/InsertPhotoRounded'
 import FolderOpenRoundedIcon from '@mui/icons-material/FolderOpenRounded'
@@ -18,7 +18,7 @@ const CommonListItem = ({
   handleClickItem,
   handleClickMenu,
 }: {
-  item: FileItem,
+  item: FileNode | PlaylistItem,
   index: number,
   active?: boolean
   selected?: boolean,
@@ -27,14 +27,15 @@ const CommonListItem = ({
   handleClickMenu: (event: React.MouseEvent<HTMLElement>, index: number) => void,
 }) => {
   const { t } = useLingui()
-
   const theme = useTheme()
+
+  const type = checkFileType(item.name)
 
   return (
     <ListItem
       disablePadding
       secondaryAction={
-        (item.fileType === 'audio' || item.fileType === 'video') && !isSelectMode &&
+        (type === 'audio' || type === 'video') && !isSelectMode &&
         <div>
           <IconButton
             aria-label={t`More`}
@@ -58,20 +59,21 @@ const CommonListItem = ({
       >
         <ListItemAvatar sx={{ position: 'relative' }}>
           <ListItemIcon sx={{ paddingLeft: 1 }}>
-            {item.fileType === 'folder' && <FolderOpenRoundedIcon />}
-            {item.fileType === 'audio' && <MusicNoteRoundedIcon />}
-            {item.fileType === 'video' && <MovieRoundedIcon />}
-            {item.fileType === 'picture' && <InsertPhotoRoundedIcon />}
-            {item.fileType === 'other' && <InsertDriveFileRoundedIcon />}
+            {'folder' in item && item.folder === 1 && <FolderOpenRoundedIcon />}
+            {!('folder' in item) && type === 'audio' && <MusicNoteRoundedIcon />}
+            {!('folder' in item) && type === 'video' && <MovieRoundedIcon />}
+            {!('folder' in item) && type === 'picture' && <InsertPhotoRoundedIcon />}
+            {!('folder' in item) && type === 'other' && <InsertDriveFileRoundedIcon />}
           </ListItemIcon>
           {
+            'thumbnails' in item &&
             (item.thumbnails && item.thumbnails[0])
             &&
             <Avatar
               variant="square"
-              alt={item.fileName}
+              alt={item.name}
               src={item.thumbnails[0].small.url}
-              imgProps={{ loading: 'lazy' }}
+              slotProps={{ img: { loading: 'lazy' } }}
               sx={{
                 position: 'absolute',
                 left: 0,
@@ -87,10 +89,10 @@ const CommonListItem = ({
         </ListItemAvatar>
 
         <ListItemText
-          primary={item.fileName}
+          primary={item.name}
           secondary={
-            `${sizeConv(item.fileSize)}
-            ${item.lastModifiedDateTime
+            `${sizeConv(item.size)}
+            ${'lastModifiedDateTime' in item && item.lastModifiedDateTime
               ? ` • ${new Date(item.lastModifiedDateTime).toLocaleString(undefined, {
                 year: 'numeric',
                 month: 'long',

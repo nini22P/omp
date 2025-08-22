@@ -1,12 +1,12 @@
-import { FileItem } from './file'
+import { PlaylistItem } from './file'
 
 export interface HistoryState {
-  historyList: FileItem[] | null
+  historys: PlaylistItem[]
 }
 
 export interface HistoryActions {
-  updateHistoryList: (historyList: HistoryState['historyList']) => void
-  insertHistory: (file: FileItem) => void
+  updateHistoryList: (historys: HistoryState['historys']) => void
+  insertHistory: (file: PlaylistItem) => void
   removeHistory: (indexArray: number[]) => void
   clearHistoryList: () => void
 }

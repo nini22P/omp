@@ -31,14 +31,14 @@ const PlayQueue = () => {
 
   const updateAutoPlay = usePlayerStore(state => state.updateAutoPlay)
 
-  const open = (index: number) => {
+  const open = async (index: number) => {
     if (playQueue) {
       updateAutoPlay(true)
       updateCurrentIndex(playQueue[index].index)
     }
   }
 
-  const remove = (indexArray: number[]) =>
+  const remove = async (indexArray: number[]) =>
     updatePlayQueue(playQueue?.filter(item => !indexArray.map(index => playQueue[index].index).filter(index => index !== currentIndex).includes(item.index)) || [])
 
   return (

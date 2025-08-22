@@ -1,23 +1,19 @@
-import { IPicture } from 'music-metadata-browser'
-
-export interface Cover extends IPicture {
-  width?: number
-  height?: number
-}
-
-export interface LocalStorageCover extends Omit<Cover, 'data'> {
-  data: { type: 'Buffer', data: number[] }
+export interface Cover {
+  data: Uint8Array;
+  format: string;
+  width?: number;
+  height?: number;
+  description?: string;
 }
 
 export interface MetaData {
-  path: string[]
-  size?: number
+  id: string
   title: string
   artist?: string
   albumArtist?: string
   album?: string
   year?: number
   genre?: string[]
-  cover?: Cover[] | LocalStorageCover[]
+  cover?: Cover[]
   lyrics?: string
 }

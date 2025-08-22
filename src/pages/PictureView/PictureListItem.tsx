@@ -1,7 +1,7 @@
-import { FileItem } from '@/types/file'
+import { FileNode } from '@/types/file'
 import { Paper, useTheme } from '@mui/material'
 
-const PictureListItem = ({ picture, isCurrent }: { picture: FileItem, isCurrent: boolean }) => {
+const PictureListItem = ({ picture, isCurrent }: { picture: FileNode, isCurrent: boolean }) => {
   const theme = useTheme()
 
   return (
@@ -18,7 +18,7 @@ const PictureListItem = ({ picture, isCurrent }: { picture: FileItem, isCurrent:
     >
       <img
         src={picture.thumbnails ? picture.thumbnails[0].medium.url : ''}
-        alt={picture.fileName}
+        alt={picture.name}
         style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '0.5rem' }}
         loading='lazy'
       />

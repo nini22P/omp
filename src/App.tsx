@@ -40,7 +40,6 @@ const App = () => {
 
   useEffect(
     () => {
-      console.log(libraryRootId)
       if (account && libraryRootId) {
         console.log('应用已就绪，启用同步系统并请求首次同步。')
         enableSyncing()

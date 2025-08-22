@@ -115,6 +115,11 @@ const prodConfig = {
           name: 'fontsource',
           priority: 4,
         },
+        pinyinPro: {
+          test: /[\\/]node_modules[\\/](pinyin-pro)[\\/]/,
+          name: 'pinyin-pro',
+          priority: 5,
+        },
       },
     },
   },

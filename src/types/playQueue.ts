@@ -1,11 +1,11 @@
-import { FileItem } from './file'
+import { PlaylistItem } from './file'
 
-export interface PlayQueueItem extends FileItem {
+export interface PlayQueueItem extends PlaylistItem {
   index: number
 }
 
 export interface PlayQueueState {
-  playQueue: PlayQueueItem[] | null
+  playQueue: PlayQueueItem[]
   currentIndex: number
 }
 

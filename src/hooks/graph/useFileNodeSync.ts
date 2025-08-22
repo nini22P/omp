@@ -1,5 +1,4 @@
 import { LibraryDB } from '@/db'
-import { FileNode } from '@/types/library'
 import { remoteItemToFileNode } from '@/utils'
 import { useMsal } from '@azure/msal-react'
 import { useLiveQuery } from 'dexie-react-hooks'
@@ -9,6 +8,7 @@ import useFileNodeSyncStore from '@/store/useFileNodeSyncStore'
 import { useShallow } from 'zustand/shallow'
 import { useEffect } from 'react'
 import useDb from '../useDb'
+import { FileNode } from '@/types/file'
 
 const useFileNodeSync = () => {
 

@@ -10,7 +10,7 @@ const BreadcrumbNav = ({ folderTree, handleClickNav }: { folderTree: UiState['fo
         m: '0.25rem',
       }}>
       {
-        folderTree.map((name: string, index: number) =>
+        ['/', ...folderTree].map((name: string, index: number) =>
           <Button
             key={index}
             color="inherit"

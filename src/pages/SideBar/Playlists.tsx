@@ -17,7 +17,7 @@ const Playlists = ({ closeSideBar }: { closeSideBar: () => void }) => {
 
   const addPlaylist = async () => {
     const id = shortUUID().generate()
-    insertPlaylist({ id, title: t`New playlist`, fileList: [] })
+    insertPlaylist({ id, name: t`New playlist`, files: [] })
     return navigate(`/playlist/${id}`)
   }
 
@@ -39,7 +39,7 @@ const Playlists = ({ closeSideBar }: { closeSideBar: () => void }) => {
               <ListItemIcon>
                 <ListRoundedIcon />
               </ListItemIcon>
-              <ListItemText primary={playlist.title} />
+              <ListItemText primary={playlist.name} />
             </ListItemButton>
           </ListItem >
         )

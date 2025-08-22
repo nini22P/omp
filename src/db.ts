@@ -1,9 +1,12 @@
-import { FileNode, Settings } from '@/types/library'
+import { Settings } from '@/types/library'
 import Dexie, { type EntityTable } from 'dexie'
+import { FileNode } from './types/file'
+import { MetaData } from './types/metaData'
 
 export type LibraryDB = Dexie & {
   settings: EntityTable<Settings, 'id'>,
   nodes: EntityTable<FileNode, 'id'>,
+  metadata: EntityTable<MetaData, 'id'>,
 }
 
 const dbInstances = new Map<string, LibraryDB>()
@@ -19,9 +22,26 @@ export function getDbForUser(userId: string): LibraryDB {
   db.version(1).stores({
     settings: '&id',
     nodes: [
-      '&id, parentId, [parentId+name]',
-      'type, [type+name], [type+size], [type+lastModifiedDateTime]',
+      '&id',
+      'parentId',
+      '[parentId+name]',
+      'name',
+      'size',
+      'lastModifiedDateTime',
+      'folder',
+      'type',
       'metadataState',
+      '[type+name]',
+      '[type+lastModifiedDateTime]',
+    ].join(', '),
+    metadata: [
+      '&id',
+      'title',
+      'artist',
+      'albumArtist',
+      'album',
+      '[artist+album]',
+      '*genre',
     ].join(', ')
   })
 

@@ -4,12 +4,12 @@ import Loading from './Loading'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
-import { checkFileType } from '@/utils'
+import { isVideo } from '@/utils'
 import { useShallow } from 'zustand/shallow'
 
 const History = () => {
-  const [historyList, removeHistory] = useHistoryStore(
-    useShallow((state) => [state.historyList, state.removeHistory])
+  const [historys, removeHistory] = useHistoryStore(
+    useShallow((state) => [state.historys, state.removeHistory])
   )
   const [shuffle, updateVideoViewIsShow, updateShuffle,] = useUiStore(
     useShallow((state) => [state.shuffle, state.updateVideoViewIsShow, state.updateShuffle])
@@ -20,8 +20,8 @@ const History = () => {
 
   const updateAutoPlay = usePlayerStore(state => state.updateAutoPlay)
 
-  const open = (index: number) => {
-    const listData = historyList
+  const open = async (index: number) => {
+    const listData = historys
     if (listData) {
       const currentFile = listData[index]
       if (currentFile) {
@@ -33,21 +33,25 @@ const History = () => {
         updatePlayQueue(list)
         updateCurrentIndex(list[index].index)
         updateAutoPlay(true)
-        if (checkFileType(currentFile.fileName) === 'video') {
+        if (isVideo(currentFile.name)) {
           updateVideoViewIsShow(true)
         }
       }
     }
   }
 
+  const remove = async (indexArray: number[]) => {
+    removeHistory(indexArray)
+  }
+
   return (
     <div style={{ height: '100%' }}>
       {
-        (!historyList) ? <Loading />
+        (!historys) ? <Loading />
           : <CommonList
-            listData={historyList}
+            listData={historys}
             listType='files'
-            func={{ open, remove: removeHistory }}
+            func={{ open, remove }}
           />
       }
     </div>

@@ -97,7 +97,7 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
   const { handleClickFullscreen } = useFullscreen()
 
   const currentFile = playQueue?.find(item => item.index === currentIndex)
-  const type = useMemo(() => currentFile && checkFileType(currentFile.fileName) === 'video' ? 'video' : 'audio', [currentFile])
+  const type = useMemo(() => currentFile && checkFileType(currentFile.name) === 'video' ? 'video' : 'audio', [currentFile])
 
   const handleClickMediaInfo = () => {
     if (type === 'audio')

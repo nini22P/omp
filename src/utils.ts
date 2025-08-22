@@ -1,13 +1,13 @@
 import * as mm from 'music-metadata-browser'
-import { FileItem, FileType, RemoteItem } from './types/file'
+import { pinyin } from 'pinyin-pro'
+import { toRomaji } from 'wanakana'
+import { franc, francAll, } from 'franc-min'
+import { FileNode, FileType, PlaylistItem, RemoteItem } from './types/file'
 import { PlayQueueItem } from './types/playQueue'
-import { Cover, LocalStorageCover, MetaData } from './types/metaData'
-import { FileNode } from './types/library'
+import { Cover, MetaData } from './types/metaData'
+import kanjiRomajiMap from '@/data/kanjiRomajiMap'
 
 export const isDevelopment = process.env.NODE_ENV === 'development'
-
-export const isLocalStorageCover = (cover: Cover | LocalStorageCover): cover is LocalStorageCover =>
-  typeof cover.data === 'object' && cover.data !== null && 'data' in cover.data
 
 /**
  * 将时间转换为分钟
@@ -56,15 +56,13 @@ export const nowTime = () => {
   return `${dateTime.getFullYear}-${dateTime.getMonth}-${dateTime.getDay} ${dateTime.getHours}:${dateTime.getMinutes}`
 }
 
-export const sizeConv = (fileSize: FileItem['fileSize']) => {
+export const sizeConv = (fileSize: number) => {
   return ((fileSize / 1024) < 1024)
     ? `${(fileSize / 1024).toFixed(2)} KB`
     : ((fileSize / 1024 / 1024) < 1024)
       ? `${(fileSize / 1024 / 1024).toFixed(2)} MB`
       : `${(fileSize / 1024 / 1024 / 1024).toFixed(2)} GB`
 }
-
-export const pathConv = (filePath: FileItem['filePath']) => (filePath.join('/') === '/') ? '/' : filePath.slice(1).join('/')
 
 /**
  * 根据 url 解析 json
@@ -99,133 +97,191 @@ export const blendHex = (colorHex1: string, colorHex2: string) => {
   return `rgb(${color.join(', ')})`
 }
 
-export const compressImage = (image: Cover): Promise<Cover> => {
-  return new Promise((resolve, reject) => {
-    const img = new Image()
-    const url = URL.createObjectURL(new Blob([new Uint8Array(image.data)], { type: image.format }))
-    img.src = url
-    img.onload = () => {
-      const canvas = document.createElement('canvas')
-      const ctx = canvas.getContext('2d')
-      canvas.width = img.width
-      canvas.height = img.height
-      ctx?.drawImage(img, 0, 0, img.width, img.height)
-      canvas.toBlob((blob) => {
-        URL.revokeObjectURL(url)
-        blob?.arrayBuffer().then((buffer) => {
-          resolve({
-            ...image,
-            format: 'image/webp',
-            data: Buffer.from(new Uint8Array(buffer)),
-            width: img.width,
-            height: img.height,
-          })
-        })
-      }, 'image/webp', 0.8)
-    }
-    img.onerror = (error) => {
-      reject(error)
-    }
-  })
-}
+export const remoteItemToFileNode = (
+  item: RemoteItem,
+  options?: { includeVisuals?: boolean }
+): FileNode => {
 
-export const remoteItemToFileNode = (item: RemoteItem): FileNode => {
-  const type: FileType = item.folder ? 'folder' : checkFileType(item.name)
-
-  return {
+  const baseNode: FileNode = {
     id: item.id,
     parentId: item.parentReference.id,
     name: item.name,
-    type: type,
-    cTag: item.cTag,
+    path: getRemotePath(item),
+    type: checkFileType(item.name),
     size: item.size,
     lastModifiedDateTime: item.lastModifiedDateTime,
-    metadataState: type === 'audio' ? 'pending' : 'completed',
+    metadataState: checkFileType(item.name) === 'audio' ? 'pending' : 'completed',
+    cTag: item.cTag,
+    folder: item.folder ? 1 : 0,
+    childCount: item.folder?.childCount,
+  }
+
+  if (options?.includeVisuals) {
+    baseNode.thumbnails = item.thumbnails
+    baseNode.url = item['@microsoft.graph.downloadUrl']
+  }
+
+  return baseNode
+}
+
+export const fileNodeToPlaylistItem = (fileNode: FileNode | PlaylistItem): PlaylistItem => {
+  return {
+    id: fileNode.id,
+    name: fileNode.name,
+    path: fileNode.path,
+    size: fileNode.size,
+    cTag: fileNode.cTag,
   }
 }
 
-export const remoteItemToFile = (item: RemoteItem): FileItem => (
-  {
-    fileName: item.name,
-    filePath: item.parentReference.path
-      ? [
-        '/',
-        ...item.parentReference.path
-          .replace('/drive/root:', '')
-          .split('/')
-          .filter(item => item.length > 0)
-          .map(item => decodeURIComponent(item)),
-        item.name,
-      ]
-      : ['/'],
-    fileSize: item.size,
-    fileType: (item.folder) ? 'folder' : checkFileType(item.name),
-    lastModifiedDateTime: item.lastModifiedDateTime,
-    id: item.id,
-    parentId: item.parentReference.id,
-    thumbnails: item.thumbnails,
-    url: item['@microsoft.graph.downloadUrl'],
-  }
-)
+export const getRemotePath = (item: RemoteItem) => item.parentReference.path
+  ? [
+    ...item.parentReference.path
+      .replace('/drive/root:', '')
+      .split('/')
+      .filter(item => item.length > 0)
+      .map(item => decodeURIComponent(item)),
+    item.name,
+  ]
+  : []
 
-export const getNetMetaData = async (path: string[], url: string) => {
-  console.log('Start get net metadata: ', path.slice(-1)[0])
+export const compressImage = async (image: mm.IPicture): Promise<Cover> => {
+  const blob = new Blob([image.data as unknown as ArrayBuffer], { type: image.format })
+  const url = URL.createObjectURL(blob)
+  const img = new Image()
+
+  try {
+    await new Promise((resolve, reject) => {
+      img.onload = resolve
+      img.onerror = (err) => reject(new Error('Image failed to load: ' + err))
+      img.src = url
+    })
+
+    const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
+    if (!ctx) {
+      throw new Error('Could not get canvas context')
+    }
+
+    canvas.width = img.width
+    canvas.height = img.height
+    ctx.drawImage(img, 0, 0, img.width, img.height)
+
+    const compressedBlob = await new Promise<Blob>((resolve, reject) => {
+      canvas.toBlob((blob) => {
+        if (blob) {
+          resolve(blob)
+        } else {
+          reject(new Error('Canvas toBlob failed to create a blob.'))
+        }
+      }, 'image/webp', 0.8)
+    })
+
+    const buffer = await compressedBlob.arrayBuffer()
+
+    return {
+      ...image,
+      format: 'image/webp',
+      data: new Uint8Array(buffer),
+      width: img.width,
+      height: img.height,
+    }
+  } finally {
+    URL.revokeObjectURL(url)
+  }
+}
+
+export const getNetMetaData = async (file: FileNode | PlayQueueItem, url: string): Promise<MetaData | null> => {
+  console.log('Start get net metadata: ', file.name)
   try {
     const metadata = await mm.fetchFromUrl(url)
     console.log('Get net metadata: ', metadata)
-    if (metadata && metadata.common.title !== undefined) {
-      const cover = !metadata.common.picture ? undefined : await Promise.all(metadata.common.picture.map(async (item: Cover) => await compressImage(item)))
-      const lyrics = metadata.common.lyrics !== undefined && metadata.common.lyrics[0]
-        || metadata.native['ID3v2.3'] && metadata.native['ID3v2.3'].find(item => item.id.toLocaleLowerCase().includes('lyrics'))?.value
-        || null
-      const metaData: MetaData = {
-        path: path,
-        title: metadata.common.title,
-        artist: metadata.common.artist,
-        albumArtist: metadata.common.albumartist,
-        album: metadata.common.album,
-        year: metadata.common.year,
-        genre: metadata.common.genre,
-        cover: cover,
-        lyrics: lyrics,
-      }
-      return metaData
+
+    if (!metadata?.common?.title) {
+      return null
     }
+
+    let compressedCovers: Cover[] | undefined = undefined
+    if (metadata.common.picture) {
+      compressedCovers = await Promise.all(
+        metadata.common.picture.map((item) => compressImage(item))
+      )
+    }
+
+    const lyrics = metadata.common.lyrics?.[0]
+      || metadata.native?.['ID3v2.3']?.find(item => item.id.toLocaleLowerCase().includes('lyrics'))?.value
+      || undefined
+
+    const metaData: MetaData = {
+      id: file.id,
+      title: metadata.common.title,
+      artist: metadata.common.artist,
+      albumArtist: metadata.common.albumartist,
+      album: metadata.common.album,
+      year: metadata.common.year,
+      genre: metadata.common.genre,
+      cover: compressedCovers,
+      lyrics: lyrics,
+    }
+
+    return metaData
+
   } catch (error) {
-    console.log('Failed to get net metadata', error)
+    console.error('Failed to get net metadata', error)
     return null
   }
 }
 
-export const fileSorter = (files: FileItem[], foldersFirst: boolean, sortBy: string, orderBy: string) =>
-  files.sort(
-    (a, b) => {
-      if (foldersFirst) {
-        if (a.fileType === 'folder' && b.fileType !== 'folder') {
-          return -1
-        } else if (a.fileType !== 'folder' && b.fileType === 'folder') {
-          return 1
-        }
+export const fileSorter = (files: FileNode[], foldersFirst: boolean, sortBy: string, orderBy: string) => {
+  return [...files].sort((a, b) => {
+    if (foldersFirst) {
+      if (a.folder === 1 && b.folder === 0) {
+        return -1
       }
-
-      if (sortBy === 'name') {
-        if (orderBy === 'asc') {
-          return (a.fileName).localeCompare(b.fileName)
-        } else {
-          return (b.fileName).localeCompare(a.fileName)
-        }
-      } else if (sortBy === 'size') {
-        if (orderBy === 'asc') {
-          return a.fileSize - b.fileSize
-        } else {
-          return b.fileSize - a.fileSize
-        }
-      } else if (sortBy === 'datetime' && a.lastModifiedDateTime && b.lastModifiedDateTime) {
-        if (orderBy === 'asc') {
-          return new Date(a.lastModifiedDateTime).getTime() - new Date(b.lastModifiedDateTime).getTime()
-        } else {
-          return new Date(b.lastModifiedDateTime).getTime() - new Date(a.lastModifiedDateTime).getTime()
-        }
-      } else return 0
+      if (a.folder === 0 && b.folder === 1) {
+        return 1
+      }
     }
-  )
+
+    let compareResult = 0
+
+    if (sortBy === 'name') {
+      compareResult = fileModeNameCollator(a, b)
+    } else if (sortBy === 'size') {
+      compareResult = a.size - b.size
+    } else if (sortBy === 'datetime' && a.lastModifiedDateTime && b.lastModifiedDateTime) {
+      compareResult = new Date(a.lastModifiedDateTime).getTime() - new Date(b.lastModifiedDateTime).getTime()
+    }
+
+    return orderBy === 'asc' ? compareResult : -compareResult
+  })
+}
+
+export const normalizeNameForSort = (name: string): string => {
+  let normalized = name
+
+  const kanjiRegex = new RegExp(Object.keys(kanjiRomajiMap).join('|'), 'g')
+
+  if (/[ぁ-んァ-ン]/.test(normalized) || francAll(normalized).some(guess => guess[0] === 'jpn')) {
+    normalized = normalized.replace(kanjiRegex, (match) => (kanjiRomajiMap[match as keyof typeof kanjiRomajiMap] || match))
+    normalized = toRomaji(normalized, { upcaseKatakana: true })
+  }
+  else if (/[\u4e00-\u9fa5]/.test(normalized) || franc(normalized) === 'cmn') {
+    normalized = pinyin(normalized, { toneType: 'none', nonZh: 'consecutive' })
+  }
+
+  return normalized
+    .toLowerCase()
+    .replace(/[._!"'()[\]-]+/g, ' ')
+    .replace(/\s+/g, ' ')
+    .trim()
+}
+
+export function fileModeNameCollator(a: FileNode, b: FileNode): number {
+  const normalizedA = normalizeNameForSort(a.name)
+  const normalizedB = normalizeNameForSort(b.name)
+
+  const collator = new Intl.Collator(undefined, { numeric: true, sensitivity: 'base' })
+
+  return collator.compare(normalizedA, normalizedB)
+}

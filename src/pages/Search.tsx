@@ -4,7 +4,7 @@ import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 import useGraph from '@/hooks/graph/useGraph'
 import useUser from '@/hooks/graph/useUser'
 import useUiStore from '@/store/useUiStore'
-import { pathConv, remoteItemToFile } from '@/utils'
+import { isAudio, isVideo, remoteItemToFileNode } from '@/utils'
 import useSWR from 'swr'
 import useDebounce from '@/hooks/useDebounce'
 import CommonList from '@/components/CommonList/CommonList'
@@ -15,6 +15,7 @@ import { useShallow } from 'zustand/shallow'
 import useStyles from '@/hooks/ui/useStyles'
 import { useLingui } from '@lingui/react/macro'
 import { useMsal } from '@azure/msal-react'
+import useGetFiles from '@/hooks/useGetFiles'
 
 const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
   const { t } = useLingui()
@@ -40,52 +41,46 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
   const { instance } = useMsal()
   const { account } = useUser()
 
-  const { getFilesData, getSearchData } = useGraph(instance, account)
+  const { getSearchData } = useGraph(instance, account)
 
-  const filesFetcher = async (path: string[]) => {
-    const { value } = await getFilesData(path)
-    return value.map(item => remoteItemToFile(item))
-  }
-
-  const { data: filesData } = useSWR(
-    account ? `${account.username}/${pathConv(folderTree)}` : null,
-    () => filesFetcher(folderTree),
-    { revalidateOnFocus: false },
-  )
+  const { data: files } = useGetFiles(folderTree)
 
   const searchFetcher = async (searchQuery: string) => {
     if (!account) return []
     const { value } = await getSearchData(searchQuery)
-    return value.map(item => remoteItemToFile(item))
+    return value.map(item => remoteItemToFileNode(item, { includeVisuals: true }))
   }
 
   const { data: searchData, isLoading: searchIsLoading } = useSWR(
-    (debouncedSearchQuery.length > 0) && account ? `${account.username}/${pathConv(folderTree)}/${debouncedSearchQuery}` : null,
+    (debouncedSearchQuery.length > 0) && account ? `${account.username}/${debouncedSearchQuery}` : null,
     () => searchFetcher(debouncedSearchQuery),
   )
 
   const filteredFilesData = debouncedSearchQuery.length > 0
-    ? filesData?.filter(item =>
-      item.fileName.toLocaleLowerCase().includes(debouncedSearchQuery.toLocaleLowerCase())
-      && ['folder', 'audio', 'video'].includes(item.fileType))
+    ? files?.filter(item =>
+      item.name.toLocaleLowerCase().includes(debouncedSearchQuery.toLocaleLowerCase())
+      && ((isAudio(item.name) || isVideo(item.name) || item.folder === 1))
+    )
     : []
+
   const filteredData = [
     ...filteredFilesData || [],
     ...searchData?.filter(searchItem =>
-      !filteredFilesData?.find(item => (pathConv(item.filePath) === pathConv(searchItem.filePath)))
-      && ['folder', 'audio', 'video'].includes(searchItem.fileType))
+      !filteredFilesData?.find(item => (item.id === searchItem.id))
+      && ((isAudio(searchItem.name) || isVideo(searchItem.name) || searchItem.folder === 1))
+    )
     || []
   ]
 
   const open = async (index: number) => {
     const currentFile = filteredData[index]
-    if (currentFile.fileType === 'folder') {
+    if (currentFile.folder === 1) {
       handleCloseSearh()
-      updateFolderTree(currentFile.filePath)
+      updateFolderTree(currentFile.path)
       navigate('/')
     } else {
       handleCloseSearh()
-      updateFolderTree(currentFile.filePath.slice(0, currentFile.filePath.length - 1))
+      updateFolderTree(currentFile.path.slice(0, currentFile.path.length - 1))
       navigate('/')
     }
   }

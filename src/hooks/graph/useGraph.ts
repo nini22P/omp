@@ -20,30 +20,30 @@ const useGraph = (
     return tokenResponse.accessToken
   }
 
-  const getFilesData = async (path: string[], id?: string) => {
+  const getFilesData = async (id: string, path?: string[]) => {
     const accessToken = await getAccessToken()
 
-    let response = await getFiles(accessToken, path, id)
+    let response = await getFiles(accessToken, id, path,)
 
     const remoteItems = [...response.value]
 
     while (response['@odata.nextLink']) {
-      response = await getFiles(accessToken, path, response['@odata.nextLink'])
+      response = await getFiles(accessToken, id, path, response['@odata.nextLink'])
       remoteItems.push(...response.value)
     }
 
     return { value: remoteItems }
   }
 
-  const getFileData = async (path: string[], id?: string) => {
+  const getFileData = async (id: string, path?: string[],) => {
     const accessToken = await getAccessToken()
-    const response = await getFile(accessToken, path, id)
+    const response = await getFile(accessToken, id, path)
     return response
   }
 
-  const getAppRootFilesData = async (path: string[]) => {
+  const getAppRootFilesData = async () => {
     const accessToken = await getAccessToken()
-    const response = await getAppRootFiles(accessToken, path)
+    const response = await getAppRootFiles(accessToken)
     return response
   }
 

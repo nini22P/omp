@@ -21,14 +21,17 @@ import shortUUID from 'short-uuid'
 import useFullscreen from '@/hooks/ui/useFullscreen'
 import { useShallow } from 'zustand/shallow'
 import usePlayerStore from '@/store/usePlayerStore'
-import useLocalMetaDataStore from '@/store/useLocalMetaDataStore'
 import { checkFileType, getNetMetaData } from '@/utils'
 import { useLingui } from '@lingui/react/macro'
+import useUser from '@/hooks/graph/useUser'
+import useDb from '@/hooks/useDb'
 
 const PlayerMenu = ({ player }: { player: HTMLVideoElement | null }) => {
   const { t } = useLingui()
-
   const navigate = useNavigate()
+
+  const { account } = useUser()
+  const db = useDb(account)
 
   const [
     currentMetaData,
@@ -42,13 +45,11 @@ const PlayerMenu = ({ player }: { player: HTMLVideoElement | null }) => {
     )
   )
 
-  const { setLocalMetaData } = useLocalMetaDataStore()
-
   const playQueue = usePlayQueueStore.use.playQueue()
   const currentIndex = usePlayQueueStore.use.currentIndex()
 
   const currentFile = useMemo(() => playQueue?.find((item) => item.index === currentIndex), [currentIndex, playQueue])
-  const fileType = currentFile && checkFileType(currentFile.fileName)
+  const fileType = currentFile && checkFileType(currentFile.name)
 
   const [
     audioViewTheme,
@@ -118,7 +119,7 @@ const PlayerMenu = ({ player }: { player: HTMLVideoElement | null }) => {
   // 打开所在文件夹
   const handleClickOpenInFolder = () => {
     if (currentFile) {
-      updateFolderTree(currentFile.filePath.slice(0, -1))
+      updateFolderTree(currentFile.path.slice(0, -1))
       navigate('/')
       setMenuOpen(false)
       updateAudioViewIsShow(false)
@@ -129,18 +130,13 @@ const PlayerMenu = ({ player }: { player: HTMLVideoElement | null }) => {
   // 新建播放列表
   const addNewPlaylist = () => {
     const id = shortUUID().generate()
-    insertPlaylist({ id, title: t`New playlist`, fileList: [] })
+    insertPlaylist({ id, name: t`New playlist`, files: [] })
   }
 
   // 添加到播放列表
   const addToPlaylist = (id: string) => {
     if (currentFile) {
-      insertFilesToPlaylist(id, [{
-        fileName: currentFile.fileName,
-        filePath: currentFile.filePath,
-        fileSize: currentFile.fileSize,
-        fileType: currentFile.fileType,
-      }])
+      insertFilesToPlaylist(id, [currentFile])
       setAddToPlaylistDialogOpen(false)
     }
   }
@@ -152,10 +148,11 @@ const PlayerMenu = ({ player }: { player: HTMLVideoElement | null }) => {
 
   const reFetchMetadata = async () => {
     handleCloseMenu()
-    if (!currentMetaData?.path || !player?.src) return
-    const netMetaData = await getNetMetaData(currentMetaData?.path, player?.src)
+    if (!currentMetaData?.id || !player?.src || !currentFile || !db) return
+    const netMetaData = await getNetMetaData(currentFile, player.src)
     if (netMetaData) {
-      setLocalMetaData(netMetaData).then(() => updateMetadataUpdate())
+      await db.metadata.bulkPut([netMetaData])
+      updateMetadataUpdate()
     }
   }
 
@@ -344,7 +341,7 @@ const PlayerMenu = ({ player }: { player: HTMLVideoElement | null }) => {
                 <ListItemIcon>
                   <ListRoundedIcon />
                 </ListItemIcon>
-                <ListItemText primary={item.title} />
+                <ListItemText primary={item.name} />
               </ListItemButton>
             </ListItem>
           )}

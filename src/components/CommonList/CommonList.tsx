@@ -1,7 +1,6 @@
 import { useState, useEffect, Key, CSSProperties, useRef } from 'react'
 import Grid from '@mui/material/Grid'
 import CommonMenu from './CommonMenu'
-import { FileItem } from '../../types/file'
 import CommonListItem from './CommonListItem'
 import { Box, CircularProgress, Fab, List, useMediaQuery, useTheme } from '@mui/material'
 import { AutoSizer, List as VirtualList } from 'react-virtualized'
@@ -10,6 +9,7 @@ import ShuffleRoundedIcon from '@mui/icons-material/ShuffleRounded'
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded'
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded'
 import { useLingui } from '@lingui/react/macro'
+import { FileNode, PlaylistItem } from '@/types/file'
 
 const CommonList = (
   {
@@ -21,7 +21,7 @@ const CommonList = (
     disableFAB,
     func,
   }: {
-    listData: FileItem[],
+    listData: FileNode[] | PlaylistItem[],
     listType: 'files' | 'playlist' | 'playQueue',
     display?: 'list' | 'multicolumnList' | 'grid',
     scrollIndex?: number,
@@ -128,7 +128,7 @@ const CommonList = (
               item
               &&
               <Grid
-                key={item.fileName}
+                key={item.id}
                 size={{ xs: 12 / gridCols }}
                 sx={{ aspectRatio: '4/5', overflow: 'hidden' }}
               >
@@ -161,7 +161,7 @@ const CommonList = (
             return (
               item
               &&
-              <Grid key={item.fileName} size={{ xs: 12 / listCols }}>
+              <Grid key={item.name} size={{ xs: 12 / listCols }}>
                 <CommonListItem
                   active={typeof activeIndex === 'number' ? activeIndex === itemIndex : false}
                   item={item}

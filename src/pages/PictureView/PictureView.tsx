@@ -75,13 +75,13 @@ const PictureView = () => {
               <CloseRoundedIcon />
             </IconButton>
           </Tooltip>
-          {currentPicture?.fileName}
+          {currentPicture?.name}
         </Box>
         <Box sx={{ height: 0, flexGrow: 1, display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
           <img
             ref={imgRef}
             src={currentPicture?.url}
-            alt={currentPicture?.fileName}
+            alt={currentPicture?.name}
             style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain' }}
           />
         </Box>

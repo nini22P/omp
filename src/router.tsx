@@ -4,7 +4,7 @@ import Files from './pages/Files/Files'
 import History from './pages/History'
 import Playlist from './pages/Playlist/Playlist'
 import NotFound from './pages/NotFound'
-import Setting from './pages/Setting'
+import Settings from './pages/Settings/Settings'
 import Refresh from './pages/Refresh'
 import Library from './pages/Library/Library'
 
@@ -31,8 +31,8 @@ const router = createHashRouter([
         element: <Playlist />,
       },
       {
-        path: '/setting',
-        element: <Setting />,
+        path: '/settings',
+        element: <Settings />,
       },
       {
         path: '/refresh',

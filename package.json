@@ -33,8 +33,10 @@
     "dexie": "^4.2.0",
     "dexie-react-hooks": "^4.2.0",
     "extract-colors": "4.2.1",
+    "franc-min": "^6.2.0",
     "idb-keyval": "^6.2.1",
     "music-metadata-browser": "^2.5.11",
+    "pinyin-pro": "^3.27.0",
     "process": "^0.11.10",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
@@ -42,6 +44,7 @@
     "react-virtualized": "9.22.6",
     "short-uuid": "^5.2.0",
     "swr": "2.3.6",
+    "wanakana": "^5.3.1",
     "zustand": "5.0.7"
   },
   "devDependencies": {

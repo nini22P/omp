@@ -1,5 +1,5 @@
 import { IconButton, ListItemButton, useTheme } from '@mui/material'
-import { FileItem } from '@/types/file'
+import { FileNode, PlaylistItem } from '@/types/file'
 import InsertDriveFileRoundedIcon from '@mui/icons-material/InsertDriveFileRounded'
 import InsertPhotoRoundedIcon from '@mui/icons-material/InsertPhotoRounded'
 import FolderOpenRoundedIcon from '@mui/icons-material/FolderOpenRounded'
@@ -7,9 +7,10 @@ import MusicNoteRoundedIcon from '@mui/icons-material/MusicNoteRounded'
 import MovieRoundedIcon from '@mui/icons-material/MovieRounded'
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded'
 import Grid from '@mui/material/Grid'
-import useUtils from '@/hooks/useUtils'
-import { sizeConv } from '@/utils'
+import { checkFileType, sizeConv } from '@/utils'
 import { useLingui } from '@lingui/react/macro'
+import useUiStore from '@/store/useUiStore'
+import { useMemo } from 'react'
 
 const CommonListItemCard = ({
   item,
@@ -20,7 +21,7 @@ const CommonListItemCard = ({
   handleClickItem,
   handleClickMenu,
 }: {
-  item: FileItem,
+  item: FileNode | PlaylistItem,
   index: number,
   active?: boolean,
   selected?: boolean,
@@ -31,9 +32,19 @@ const CommonListItemCard = ({
   const { t } = useLingui()
 
   const theme = useTheme()
-  const { findThumbnail } = useUtils()
 
-  const thumbnail = findThumbnail(item)
+  const hdThumbnails = useUiStore(state => state.hdThumbnails)
+
+  const thumbnail = useMemo(() =>
+    'thumbnails' in item && item.thumbnails && item.thumbnails[0]
+      ? hdThumbnails
+        ? item.thumbnails[0].large
+        : item.thumbnails[0].medium
+      : null,
+    [item, hdThumbnails]
+  )
+
+  const type = useMemo(() => checkFileType(item.name), [item])
 
   return (
     <ListItemButton
@@ -50,11 +61,11 @@ const CommonListItemCard = ({
       <Grid container sx={{ flexDirection: 'column', flexWrap: 'nowrap', width: '100%', height: '100%', gap: '0.25rem' }}>
         <Grid size={12} sx={{ overflow: 'hidden', width: '100%', flexGrow: 1, borderRadius: '0.5rem', position: 'relative', border: `2px solid ${theme.palette.divider}` }}>
           <Grid container sx={{ justifyContent: 'center', alignItems: 'center', height: '100%', width: '100%' }}>
-            {item.fileType === 'folder' && <FolderOpenRoundedIcon sx={{ width: '50%', height: '50%' }} />}
-            {item.fileType === 'audio' && <MusicNoteRoundedIcon sx={{ width: '50%', height: '50%' }} />}
-            {item.fileType === 'video' && <MovieRoundedIcon sx={{ width: '50%', height: '50%' }} />}
-            {item.fileType === 'picture' && <InsertPhotoRoundedIcon sx={{ width: '50%', height: '50%' }} />}
-            {item.fileType === 'other' && <InsertDriveFileRoundedIcon sx={{ width: '50%', height: '50%' }} />}
+            {'folder' in item && item.folder === 1 && <FolderOpenRoundedIcon sx={{ width: '50%', height: '50%' }} />}
+            {!('folder' in item) && type === 'audio' && <MusicNoteRoundedIcon sx={{ width: '50%', height: '50%' }} />}
+            {!('folder' in item) && type === 'video' && <MovieRoundedIcon sx={{ width: '50%', height: '50%' }} />}
+            {!('folder' in item) && type === 'picture' && <InsertPhotoRoundedIcon sx={{ width: '50%', height: '50%' }} />}
+            {!('folder' in item) && type === 'other' && <InsertDriveFileRoundedIcon sx={{ width: '50%', height: '50%' }} />}
           </Grid>
           {
             thumbnail?.url
@@ -65,26 +76,26 @@ const CommonListItemCard = ({
                 currentTarget.onerror = null
                 currentTarget.style.display = 'none'
               }}
-              alt={item.fileName}
+              alt={item.name}
               style={{ position: 'absolute', left: 0, top: 0, right: 0, bottom: 0, width: '100%', height: '100%', objectFit: 'cover', }}
             />
           }
         </Grid>
         <Grid container size={12} sx={{ width: '100%', justifyContent: 'space-between', alignItems: 'center', gap: '0.5rem' }}>
           <Grid container sx={{ justifyContent: 'center', alignItems: 'center', width: '24px', height: '24px' }} >
-            {item.fileType === 'folder' && <FolderOpenRoundedIcon />}
-            {item.fileType === 'audio' && <MusicNoteRoundedIcon />}
-            {item.fileType === 'video' && <MovieRoundedIcon />}
-            {item.fileType === 'picture' && <InsertPhotoRoundedIcon />}
-            {item.fileType === 'other' && <InsertDriveFileRoundedIcon />}
+            {'folder' in item && item.folder === 1 && <FolderOpenRoundedIcon />}
+            {!('folder' in item) && type === 'audio' && <MusicNoteRoundedIcon />}
+            {!('folder' in item) && type === 'video' && <MovieRoundedIcon />}
+            {!('folder' in item) && type === 'picture' && <InsertPhotoRoundedIcon />}
+            {!('folder' in item) && type === 'other' && <InsertDriveFileRoundedIcon />}
           </Grid>
           <Grid container size='grow' sx={{ justifyContent: 'center', alignItems: 'center' }} >
-            <span style={{ display: 'block', width: '100%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', fontSize: 'smaller', lineHeight: '1.5' }}>{item.fileName}</span>
-            <span style={{ display: 'block', width: '100%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', fontSize: 'x-small', fontWeight: 'lighter' }}>{sizeConv(item.fileSize)}</span>
+            <span style={{ display: 'block', width: '100%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', fontSize: 'smaller', lineHeight: '1.5' }}>{item.name}</span>
+            <span style={{ display: 'block', width: '100%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', fontSize: 'x-small', fontWeight: 'lighter' }}>{sizeConv(item.size)}</span>
           </Grid>
           <Grid size='auto'>
             {
-              (item.fileType === 'audio' || item.fileType === 'video') && !isSelectMode &&
+              (type === 'audio' || type === 'video') && !isSelectMode &&
               <IconButton
                 aria-label={t`More`}
                 size='small'

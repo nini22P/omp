@@ -4,7 +4,7 @@ import { create } from 'zustand'
 import createSelectors from './createSelectors'
 
 const initialState: PlayQueueState = {
-  playQueue: null,
+  playQueue: [],
   currentIndex: 0,
 }
 

@@ -3,8 +3,8 @@ import useSWR from 'swr'
 import usePlaylistsStore from '@/store/usePlaylistsStore'
 import useHistoryStore from '@/store/useHistoryStore'
 import useGraph from './useGraph'
-import { FileItem } from '@/types/file'
-import { Playlist } from '@/types/playlist'
+import { FileItem, PlaylistItem } from '@/types/file'
+import { OldPlaylist, Playlist } from '@/types/playlist'
 import { fetchJson } from '@/utils'
 import useUser from './useUser'
 import { useShallow } from 'zustand/shallow'
@@ -14,13 +14,21 @@ const useSync = () => {
   const { instance } = useMsal()
   const { account } = useUser()
 
-  const [historyList, updateHistoryList] = useHistoryStore(
-    useShallow((state) => [state.historyList, state.updateHistoryList])
+  const [historys, updateHistoryList] = useHistoryStore(
+    useShallow((state) => [state.historys, state.updateHistoryList])
   )
   const [playlists, updatePlaylists] = usePlaylistsStore(
     useShallow((state) => [state.playlists, state.updatePlaylists])
   )
   const { getAppRootFilesData, uploadAppRootJsonData } = useGraph(instance, account)
+
+  function isFileItem(item: unknown): item is FileItem {
+    return typeof item === 'object' && item !== null && 'fileName' in item && 'filePath' in item
+  }
+
+  function isOldPlaylist(playlist: unknown): playlist is OldPlaylist {
+    return typeof playlist === 'object' && playlist !== null && 'title' in playlist && 'fileList' in playlist
+  }
 
   // 自动从 OneDrive 获取应用数据
   const appDatafetcher = async () => {
@@ -29,46 +37,54 @@ const useSync = () => {
       playlists: [],
     }
 
-    const appRootFiles = await getAppRootFilesData(['/'])
+    const appRootFiles = await getAppRootFilesData()
     const historyFile = appRootFiles.value.find((item: { name: string }) => item.name === 'history.json')
     const playlistsFile = appRootFiles.value.find((item: { name: string }) => item.name === 'playlists.json')
-    let history = []
-    let playlists = []
+    let remoteHistory: FileItem[] | PlaylistItem[] = []
+    let remotePlaylists: OldPlaylist[] | Playlist[] = []
 
     if (historyFile) {
-      history = await fetchJson(historyFile['@microsoft.graph.downloadUrl'])
+      remoteHistory = await fetchJson(historyFile['@microsoft.graph.downloadUrl'])
     }
     if (playlistsFile) {
-      playlists = await fetchJson(playlistsFile['@microsoft.graph.downloadUrl'])
+      remotePlaylists = await fetchJson(playlistsFile['@microsoft.graph.downloadUrl'])
     }
+
     console.log('Get app data')
-    return {
-      history: history.map((item: FileItem) => (
-        {
-          fileName: item.fileName,
-          filePath: item.filePath,
-          fileSize: item.fileSize,
-          fileType: item.fileType,
-        }
-      )),
-      playlists: playlists.map((playlist: Playlist) => (
-        {
+
+    const history: PlaylistItem[] = remoteHistory.map((item) =>
+      isFileItem(item)
+        ? ({
+          id: '',
+          name: item.fileName,
+          path: item.filePath.filter((item: string) => item !== '/'),
+          size: item.fileSize,
+        })
+        : item
+    )
+
+    const playlists: Playlist[] = remotePlaylists.map((playlist) =>
+      isOldPlaylist(playlist)
+        ? ({
           id: playlist.id,
-          title: playlist.title,
-          fileList: playlist.fileList.map((item: FileItem) => (
-            {
-              fileName: item.fileName,
-              filePath: item.filePath,
-              fileSize: item.fileSize,
-              fileType: item.fileType,
-            }
-          )),
-        }
-      ))
+          name: playlist.title,
+          files: playlist.fileList.map((item) => ({
+            id: '',
+            name: item.fileName,
+            path: item.filePath.filter((item: string) => item !== '/'),
+            size: item.fileSize,
+          })),
+        })
+        : playlist
+    )
+
+    return {
+      history,
+      playlists,
     }
   }
 
-  const { data, error, isLoading } = useSWR<{ history: FileItem[], playlists: Playlist[] }>(
+  const { data, error, isLoading } = useSWR<{ history: PlaylistItem[], playlists: Playlist[] }>(
     account ? `${account.username}/fetchAppData` : null,
     appDatafetcher,
   )
@@ -84,11 +100,11 @@ const useSync = () => {
   )
 
   // 自动上传播放历史
-  useMemo(
-    () => (historyList !== null) && uploadAppRootJsonData('history.json', JSON.stringify(historyList)),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [historyList]
-  )
+  // useMemo(
+  //   () => (historys !== null) && uploadAppRootJsonData('history.json', JSON.stringify(historys)),
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  //   [historys]
+  // )
 
   // 自动更新播放列表
   useEffect(
@@ -101,11 +117,11 @@ const useSync = () => {
   )
 
   // 自动上传播放列表
-  useMemo(
-    () => (playlists !== null) && uploadAppRootJsonData('playlists.json', JSON.stringify(playlists)),
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [playlists]
-  )
+  // useMemo(
+  //   () => (playlists !== null) && uploadAppRootJsonData('playlists.json', JSON.stringify(playlists)),
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  //   [playlists]
+  // )
 
 }
 

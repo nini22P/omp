@@ -5,7 +5,6 @@ import Grid from '@mui/material/Grid'
 import usePlaylistsStore from '../../store/usePlaylistsStore'
 import CommonList from '../../components/CommonList/CommonList'
 import Loading from '../Loading'
-import useLocalMetaDataStore from '@/store/useLocalMetaDataStore'
 import { MetaData } from '@/types/metaData'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
@@ -13,6 +12,8 @@ import useUiStore from '@/store/useUiStore'
 import { checkFileType } from '@/utils'
 import { useShallow } from 'zustand/shallow'
 import { useLingui } from '@lingui/react/macro'
+import useUser from '@/hooks/graph/useUser'
+import useDb from '@/hooks/useDb'
 
 const Playlist = () => {
   const { t } = useLingui()
@@ -20,6 +21,9 @@ const Playlist = () => {
   const navigate = useNavigate()
   const { id } = useParams()
   const theme = useTheme()
+
+  const { account } = useUser()
+  const db = useDb(account)
 
   const [shuffle, updateVideoViewIsShow, updateShuffle,] = useUiStore(
     useShallow((state) => [state.shuffle, state.updateVideoViewIsShow, state.updateShuffle])
@@ -40,24 +44,26 @@ const Playlist = () => {
   const [menuOpen, setMenuOpen] = useState(false)
   const [renameDialogOpen, setRenameDialogOpen] = useState(false)
   const [deleteDiaLogOpen, setDeleteDiaLogOpen] = useState(false)
-  const [newTitle, setNewTitle] = useState(playlist?.title)
-  const { getManyLocalMetaData } = useLocalMetaDataStore()
-  const [metaDataList, setMetaDataList] = useState<MetaData[]>([])
+  const [newName, setNewName] = useState(playlist?.name)
+  const [metaDatas, setMetaDatas] = useState<MetaData[]>([])
 
   useEffect(
     () => {
-      getManyLocalMetaData(playlist?.fileList.slice(0, 5).map(file => file.filePath) || [])
-        .then(metaDataList => metaDataList && setMetaDataList(metaDataList.filter(metaData => metaData)))
+      (async () => {
+        if (!db) return
+        const _metaDatas = await db.metadata.bulkGet(playlist?.files.map(file => file.id) || [])
+        setMetaDatas(_metaDatas.filter(metaData => metaData !== undefined))
+      })()
       return () => {
-        setMetaDataList([])
+        setMetaDatas([])
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
     [playlist]
   )
 
-  const open = (index: number) => {
-    const listData = playlist?.fileList
+  const open = async (index: number) => {
+    const listData = playlist?.files
     if (listData) {
       const currentFile = listData[index]
       if (currentFile) {
@@ -69,7 +75,7 @@ const Playlist = () => {
         updatePlayQueue(list)
         updateCurrentIndex(list[index].index)
         updateAutoPlay(true)
-        if (checkFileType(currentFile.fileName) === 'video') {
+        if (checkFileType(currentFile.name) === 'video') {
           updateVideoViewIsShow(true)
         }
       }
@@ -88,11 +94,11 @@ const Playlist = () => {
 
   const handleCloseRenameDialog = () => {
     setRenameDialogOpen(false)
-    setNewTitle(playlist?.title)
+    setNewName(playlist?.name)
   }
 
   //从播放列表移除文件
-  const removeFiles = (indexArray: number[]) => {
+  const remove = async (indexArray: number[]) => {
     if (id) {
       removeFilesFromPlaylist(id, indexArray)
     }
@@ -103,7 +109,7 @@ const Playlist = () => {
     if (id && playlists) {
       removePlaylist(id)
       setDeleteDiaLogOpen(false)
-      setNewTitle('')
+      setNewName('')
       const prev = playlists[playlists?.findIndex((playlist) => playlist.id === id) - 1]
       const next = playlists[playlists?.findIndex((playlist) => playlist.id === id) + 1]
       const navigateToId = (prev) ? prev.id : (next) ? next.id : null
@@ -127,9 +133,9 @@ const Playlist = () => {
               {/* 背景 */}
               <Box sx={{ position: 'absolute', height: '100%', width: '100%' }}>
                 {
-                  metaDataList[0] && metaDataList[0].cover && 'data' in metaDataList[0].cover[0].data &&
+                  metaDatas[0] && metaDatas[0].cover && metaDatas[0].cover.length > 0 && 'data' in metaDatas[0].cover[0] &&
                   <img
-                    src={URL.createObjectURL(new Blob([new Uint8Array(metaDataList[0].cover[0].data.data)], { type: metaDataList[0].cover[0].format }))}
+                    src={URL.createObjectURL(new Blob([new Uint8Array(metaDatas[0].cover[0].data as unknown as ArrayBuffer)], { type: metaDatas[0].cover[0].format }))}
                     alt='Cover'
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   />
@@ -146,7 +152,7 @@ const Playlist = () => {
               >
                 <Grid size={12}>
                   <Typography variant='h4' noWrap>
-                    {playlist.title}
+                    {playlist.name}
                   </Typography>
                 </Grid>
                 <Grid size='auto'>
@@ -165,9 +171,9 @@ const Playlist = () => {
 
             <Grid sx={{ flexGrow: 1 }}>
               <CommonList
-                listData={playlist.fileList}
+                listData={playlist.files}
                 listType='playlist'
-                func={{ open, remove: removeFiles }}
+                func={{ open, remove }}
               />
             </Grid>
 
@@ -210,16 +216,16 @@ const Playlist = () => {
             margin="dense"
             fullWidth
             variant="standard"
-            value={newTitle}
-            onChange={(event) => setNewTitle(event.target.value)}
+            value={newName}
+            onChange={(event) => setNewName(event.target.value)}
             placeholder={t`Enter new title`}
           />
         </DialogContent>
         <DialogActions>
           <Button onClick={handleCloseRenameDialog}>{t`Cancel`}</Button>
           <Button onClick={() => {
-            if (id && newTitle) {
-              renamePlaylist(id, newTitle)
+            if (id && newName) {
+              renamePlaylist(id, newName)
               setRenameDialogOpen(false)
             }
           }} >

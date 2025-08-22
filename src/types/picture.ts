@@ -1,8 +1,8 @@
-import { FileItem } from './file'
+import { FileNode } from './file'
 
 export interface PictiureState {
-  pictureList: FileItem[]
-  currentPicture: FileItem | null
+  pictureList: FileNode[]
+  currentPicture: FileNode | null
 }
 
 export interface PictureActions {
