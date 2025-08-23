@@ -3,7 +3,7 @@ import useHistoryStore from '@/store/useHistoryStore'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
-import { getNetMetaData, isAudio, remoteItemToTrack } from '@/utils'
+import { getCoverUrl, getNetMetaData, isAudio, remoteItemToTrack } from '@/utils'
 import useGraph from '../graph/useGraph'
 import useUser from '../graph/useUser'
 import { useShallow } from 'zustand/shallow'
@@ -174,7 +174,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
             if (metaData.cover && metaData.cover.length > 0) {
               const cover = metaData.cover[0]
               if (cover && 'data' in cover) {
-                updateCover(URL.createObjectURL(new Blob([new Uint8Array(cover.data as unknown as ArrayBuffer)], { type: cover.format })))
+                updateCover(getCoverUrl(metaData.cover))
               }
             } else {
               updateCover('./cover.svg')
@@ -193,6 +193,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
         if (currentTrack && currentTrack.track.id && isAudio(currentTrack.track.name) && db && url) {
           const localMetaData = await db.metadata.get(currentTrack.track.id)
           if (!localMetaData) {
+            console.log('Start get net metadata: ', currentTrack.track)
             const netMetaData = await getNetMetaData(currentTrack.track, url)
             if (netMetaData) {
               console.log('Get net metadata: ', netMetaData)
@@ -203,7 +204,8 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
         }
       })()
     },
-    [currentTrack, db, updateMetadataUpdate, url]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [url]
   )
 
   useEffect(() => {

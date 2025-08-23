@@ -10,17 +10,26 @@ const FolderView = () => {
   const { account } = useUser()
   const db = useDb(account)
 
-  const folders = useLiveQuery(async () => await db?.nodes.where('folder').equals(1).sortBy('name'), [db])
+  const folders = useLiveQuery(async () => {
+    if (!db) return []
+    const audioFiles = await db.nodes.where('type').equals('audio').toArray()
+    const parentIdsWithMusic = new Set(audioFiles.map(file => file.parentId).filter(Boolean))
+    const folders = await db.nodes
+      .where('id')
+      .anyOf(Array.from(parentIdsWithMusic).filter((id): id is string => typeof id === 'string'))
+      .sortBy('name')
+    return folders
+  }, [db])
 
   return (
     <Box sx={{ width: '100%' }}>
       <List>
         {folders?.map(folder => (
-          <ListItem key={folder.name} disablePadding>
+          <ListItem key={folder.id} disablePadding>
             <ListItemButton onClick={() => console.log(folder)}>
               <ListItemText
                 primary={folder.name}
-                secondary={`${sizeConv(folder.size)} • ${folder.childCount}`}
+                secondary={[sizeConv(folder.size)].filter(Boolean).join(' • ')}
               />
             </ListItemButton>
           </ListItem>

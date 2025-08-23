@@ -23,6 +23,8 @@ export const timeShift = (time: number) => {
 export const isAudio = (name: string) => (/.(wav|mp3|aac|ogg|flac|m4a|opus)$/i).test(name)
 export const isVideo = (name: string) => (/.(mp4|mkv|avi|mov|rmvb|webm|flv)$/i).test(name)
 export const isPicture = (name: string) => (/.(jpg|jpeg|png|bmp|webp|avif|tiff|gif|svg|ico)$/i.test(name))
+export const isLyrics = (name: string) => (/.(lrc)$/i).test(name)
+export const isSubtitle = (name: string) => (/.(ass|srt|ssa|vtt)$/i).test(name)
 
 export const checkFileType = (name: string): FileType => {
   if (isAudio(name))
@@ -31,6 +33,10 @@ export const checkFileType = (name: string): FileType => {
     return 'video'
   if (isPicture(name))
     return 'picture'
+  if (isLyrics(name))
+    return 'lyrics'
+  if (isSubtitle(name))
+    return 'subtitle'
   return 'other'
 }
 
@@ -201,10 +207,8 @@ export const compressImage = async (image: mm.IPicture): Promise<Cover> => {
 }
 
 export const getNetMetaData = async (file: FileNode | Track, url: string): Promise<MetaData | null> => {
-  console.log('Start get net metadata: ', file.name)
   try {
     const metadata = await mm.fetchFromUrl(url)
-    console.log('Get net metadata: ', metadata)
 
     if (!metadata?.common?.title) {
       return null
@@ -239,6 +243,14 @@ export const getNetMetaData = async (file: FileNode | Track, url: string): Promi
     console.error('Failed to get net metadata', error)
     return null
   }
+}
+
+export const getCoverUrl = (cover?: Cover[]): string => {
+  if (cover && cover.length > 0) {
+    const blob = new Blob([cover[0].data as unknown as ArrayBuffer], { type: cover[0].format })
+    return URL.createObjectURL(blob)
+  }
+  return './cover.svg'
 }
 
 export const fileSorter = (files: FileNode[], foldersFirst: boolean, sortBy: string, orderBy: string) => {

@@ -8,7 +8,17 @@ const ArtistView = () => {
   const { account } = useUser()
   const db = useDb(account)
 
-  const artists = useLiveQuery(async () => await db?.metadata.orderBy('artist').uniqueKeys(), [db])
+  const artists = useLiveQuery(
+    async () =>
+      db
+        ? (
+          await db.metadata
+            .orderBy('albumArtist')
+            .uniqueKeys()
+        ).filter((artist): artist is string => typeof artist === 'string')
+        : [],
+    [db]
+  )
 
   return (
     <Box sx={{ width: '100%' }}>

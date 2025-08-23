@@ -2,20 +2,14 @@ import useUser from '@/hooks/graph/useUser'
 import useDb from '@/hooks/useDb'
 import { Card, CardActionArea, CardMedia, Grid, Typography } from '@mui/material'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { Cover, MetaData } from '@/types/metaData'
-
-const getCoverUrl = (cover?: Cover[]): string => {
-  if (cover && cover.length > 0) {
-    const blob = new Blob([cover[0].data as unknown as ArrayBuffer], { type: cover[0].format })
-    return URL.createObjectURL(blob)
-  }
-  return './cover.svg'
-}
-
+import { MetaData } from '@/types/metaData'
+import { getCoverUrl } from '@/utils'
+import { useLingui } from '@lingui/react/macro'
 
 const AlbumView = () => {
   const { account } = useUser()
   const db = useDb(account)
+  const { t } = useLingui()
 
   const albums = useLiveQuery(async () => {
     if (!db) return []
@@ -24,19 +18,39 @@ const AlbumView = () => {
     if (!allSongs) return []
 
     const albumMap = new Map<string, MetaData>()
+
     for (const song of allSongs) {
-      if (song.album && !albumMap.has(song.album)) {
-        albumMap.set(song.album, song)
+      if (song.album) {
+        const albumArtist = song.albumArtist || song.artist || t`Unknown Artist`
+        const compositeKey = `${song.album}::${albumArtist}`
+
+        const existingAlbumInfo = albumMap.get(compositeKey)
+
+        if (!existingAlbumInfo) {
+          const albumInfo: MetaData = {
+            ...song,
+            artist: albumArtist,
+          }
+          albumMap.set(compositeKey, albumInfo)
+        }
+        else if (!existingAlbumInfo.cover && song.cover) {
+          const betterAlbumInfo: MetaData = {
+            ...song,
+            artist: albumArtist,
+          }
+          albumMap.set(compositeKey, betterAlbumInfo)
+        }
+
       }
     }
 
     return Array.from(albumMap.values())
-  }, [db])
+  }, [db, t])
 
   return (
     <Grid container spacing={2} padding={2}>
       {albums?.map(albumInfo => (
-        <Grid key={albumInfo.album} size={{ xs: 6, sm: 3, md: 3, lg: 2 }}>
+        <Grid key={`${albumInfo.album}::${albumInfo.artist}`} size={{ xs: 6, sm: 3, md: 3, lg: 2 }}>
           <Card sx={{ width: '100%' }}>
             <CardActionArea onClick={() => console.log(albumInfo)}>
               <CardMedia

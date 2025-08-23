@@ -86,7 +86,7 @@ export interface RemoteItem {
   deleted?: DeletedState
 }
 
-export type FileType = 'audio' | 'video' | 'picture' | 'other'
+export type FileType = 'audio' | 'video' | 'picture' | 'lyrics' | 'subtitle' | 'other'
 
 export interface FileItem {
   fileName: string

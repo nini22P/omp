@@ -15,7 +15,6 @@ import ArtistView from './ArtistView'
 import SongView from './SongView'
 import FolderView from './FolderView'
 import { useMemo, useState } from 'react'
-import AlbumArtistView from './AlbumArtistView'
 
 const Library = () => {
   const { t } = useLingui()
@@ -79,12 +78,6 @@ const Library = () => {
               sx={tabStyle}
             />
             <Tab
-              icon={<PersonIcon />}
-              iconPosition={iconPosition}
-              label={t`Album Artist`}
-              sx={tabStyle}
-            />
-            <Tab
               icon={<MusicNoteIcon />}
               iconPosition={iconPosition}
               label={t`Song`}
@@ -96,15 +89,13 @@ const Library = () => {
               label={t`Folder`}
               sx={tabStyle}
             />
-
           </Tabs>
         </Box>
         <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
           {currentTab === 0 && <AlbumView />}
           {currentTab === 1 && <ArtistView />}
-          {currentTab === 2 && <AlbumArtistView />}
-          {currentTab === 3 && <SongView />}
-          {currentTab === 4 && <FolderView />}
+          {currentTab === 2 && <SongView />}
+          {currentTab === 3 && <FolderView />}
         </Box>
       </Box>
       :
