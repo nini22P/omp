@@ -3,7 +3,7 @@ import useGraph from '@/hooks/graph/useGraph'
 import BreadcrumbNav from './BreadcrumbNav'
 import CommonList from '@/components/CommonList/CommonList'
 import Loading from '../Loading'
-import { fileSorter, shufflePlayQueue, remoteItemToFileNode, fileNodeToPlaylistItem, isAudio, isVideo } from '@/utils'
+import { fileSorter, shufflePlayQueue, remoteItemToFileNode, fileNodeToTrack, isAudio, isVideo } from '@/utils'
 import Grid from '@mui/material/Grid'
 import FilterMenu from './FilterMenu'
 import PictureView from '../PictureView/PictureView'
@@ -116,12 +116,12 @@ const Files = () => {
       if (currentFile && (isAudio(currentFile.name) || isVideo(currentFile.name))) {
         const list = files
           .filter((item) => isAudio(item.name) || isVideo(item.name))
-          .map((item, _index) => ({ ...fileNodeToPlaylistItem(item), index: _index }))
+          .map((item, _index) => ({ track: fileNodeToTrack(item), index: _index }))
         if (shuffle) {
           updateShuffle(false)
         }
         updatePlayQueue(list)
-        updateCurrentIndex(list.find(item => item.path.join('/') === currentFile.path.join('/'))?.index || 0)
+        updateCurrentIndex(list.find(item => item.track.path.join('/') === currentFile.path.join('/'))?.index || 0)
         updateAutoPlay(true)
         if (isVideo(currentFile.name)) {
           updateVideoViewIsShow(true)
@@ -137,7 +137,7 @@ const Files = () => {
           const list = files
             .flat()
             .filter((item) => isAudio(item.name) || isVideo(item.name))
-            .map((item, _index) => ({ ...fileNodeToPlaylistItem(item), index: _index }))
+            .map((item, _index) => ({ track: fileNodeToTrack(item), index: _index }))
 
           if (list.length > 0) {
             if (shuffle) {
@@ -146,7 +146,7 @@ const Files = () => {
             updatePlayQueue(list)
             updateCurrentIndex(0)
             updateAutoPlay(true)
-            if (isVideo(list[0].name)) {
+            if (isVideo(list[0].track.name)) {
               updateVideoViewIsShow(true)
             }
           }
@@ -165,7 +165,7 @@ const Files = () => {
   const shuffleAll = async () => {
     const list = files
       .filter((item) => isAudio(item.name) || isVideo(item.name))
-      .map((item, index) => ({ index, ...fileNodeToPlaylistItem(item) }))
+      .map((item, index) => ({ track: fileNodeToTrack(item), index }))
     if (!shuffle)
       updateShuffle(true)
     const shuffledList = shufflePlayQueue(list) || []

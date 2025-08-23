@@ -6,10 +6,10 @@ import ListRoundedIcon from '@mui/icons-material/ListRounded'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlaylistsStore from '@/store/usePlaylistsStore'
 import useUiStore from '@/store/useUiStore'
-import { FileNode, PlaylistItem } from '@/types/file'
+import { FileNode, Track } from '@/types/file'
 import { useShallow } from 'zustand/shallow'
 import { useLingui } from '@lingui/react/macro'
-import { fileNodeToPlaylistItem, isAudio, isVideo } from '@/utils'
+import { fileNodeToTrack, isAudio, isVideo } from '@/utils'
 
 const CommonMenu = (
   {
@@ -29,7 +29,7 @@ const CommonMenu = (
   }
     :
     {
-      listData: FileNode[] | PlaylistItem[],
+      listData: FileNode[] | Track[],
       listType: 'files' | 'playlist' | 'playQueue',
       anchorEl: null | HTMLElement,
       menuOpen: boolean,
@@ -106,9 +106,15 @@ const CommonMenu = (
   const handleClickAddToPlayQueue = () => {
     if (typeof selectIndex === 'number') {
       if (playQueue.length > 0) {
-        updatePlayQueue([...playQueue, { ...fileNodeToPlaylistItem(listData[selectIndex]), index: Math.max(...playQueue.map(item => item.index)) + 1 }])
+        updatePlayQueue([
+          ...playQueue,
+          {
+            track: fileNodeToTrack(listData[selectIndex]),
+            index: Math.max(...playQueue.map(item => item.index)) + 1
+          }
+        ])
       } else {
-        updatePlayQueue([{ ...fileNodeToPlaylistItem(listData[selectIndex]), index: 0 }])
+        updatePlayQueue([{ track: fileNodeToTrack(listData[selectIndex]), index: 0 }])
       }
     } else if (selectIndexArray && selectIndexArray.length > 0) {
       if (playQueue) {
@@ -116,13 +122,13 @@ const CommonMenu = (
           ...playQueue,
           ...selectIndexArray
             .filter(index => isAudio(listData[index].name) || isVideo(listData[index].name))
-            .map((index, _index) => ({ ...fileNodeToPlaylistItem(listData[index]), index: Math.max(...playQueue.map(item => item.index)) + _index + 1 }))
+            .map((index, _index) => ({ track: fileNodeToTrack(listData[index]), index: Math.max(...playQueue.map(item => item.index)) + _index + 1 }))
         ])
       } else {
         updatePlayQueue(
           selectIndexArray
             .filter(index => isAudio(listData[index].name) || isVideo(listData[index].name))
-            .map((index, _index) => ({ ...fileNodeToPlaylistItem(listData[index]), index: _index }))
+            .map((index, _index) => ({ track: fileNodeToTrack(listData[index]), index: _index }))
         )
       }
     }

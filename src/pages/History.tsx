@@ -25,8 +25,7 @@ const History = () => {
     if (listData) {
       const currentFile = listData[index]
       if (currentFile) {
-        const list = listData
-          .map((item, _index) => ({ ...item, index: _index }))
+        const list = listData.map((item, _index) => ({ track: item, index: _index }))
         if (shuffle) {
           updateShuffle(false)
         }

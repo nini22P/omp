@@ -3,7 +3,7 @@ import useHistoryStore from '@/store/useHistoryStore'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
-import { getNetMetaData, isAudio } from '@/utils'
+import { getNetMetaData, isAudio, remoteItemToTrack } from '@/utils'
 import useGraph from '../graph/useGraph'
 import useUser from '../graph/useUser'
 import { useShallow } from 'zustand/shallow'
@@ -52,7 +52,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
   const playQueue = usePlayQueueStore.use.playQueue()
   const currentIndex = usePlayQueueStore.use.currentIndex()
   const updateCurrentIndex = usePlayQueueStore.use.updateCurrentIndex()
-
+  const updatePlayQueue = usePlayQueueStore.use.updatePlayQueue()
 
   const repeat = useUiStore((state) => state.repeat)
   const [historys, insertHistory] = useHistoryStore(
@@ -61,7 +61,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
 
   const [url, setUrl] = useState('')
 
-  const currentFile = useMemo(() => playQueue?.find(item => item.index === currentIndex), [currentIndex, playQueue])
+  const currentTrack = useMemo(() => playQueue?.find(item => item.index === currentIndex), [currentIndex, playQueue])
 
   // 获取当前播放文件链接
   useMemo(
@@ -70,14 +70,21 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
         if (player) {
           player.src = ''
         }
-        if (playQueue !== null && playQueue.length !== 0 && currentFile && account) {
+        if (playQueue !== null && playQueue.length !== 0 && currentTrack && account) {
           updateIsLoading(true)
           try {
-            const res = await getFileData(currentFile.id, currentFile.path)
-            if (!res['@microsoft.graph.downloadUrl']) {
+            const remoteItem = await getFileData(currentTrack.track.id, currentTrack.track.path)
+            if (!remoteItem || !remoteItem['@microsoft.graph.downloadUrl']) {
               throw new Error('No download url')
             }
-            setUrl(res['@microsoft.graph.downloadUrl'])
+
+            if (remoteItem.cTag !== currentTrack.track.cTag) {
+              console.log(`File ${currentTrack.track.name} has been updated in the cloud. Updating local entry.`)
+              const newTrack = remoteItemToTrack(remoteItem)
+              updatePlayQueue(playQueue.map(item => item.index === currentIndex ? { index: currentIndex, track: newTrack } : item))
+            }
+
+            setUrl(remoteItem['@microsoft.graph.downloadUrl'])
           } catch (error) {
             console.error(error)
             updateAutoPlay(false)
@@ -89,7 +96,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
       })()
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentFile, account]
+    [currentTrack?.track.path.join('/'), account]
   )
 
   useMemo(
@@ -100,8 +107,8 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
         player.onloadedmetadata = () => {
           if (isLoading && autoPlay) {
             player.play()
-            if (historys && currentFile) {
-              insertHistory(currentFile)
+            if (historys && currentTrack) {
+              insertHistory(currentTrack.track)
             }
           }
           updateIsLoading(false)
@@ -149,15 +156,15 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
   useEffect(
     () => {
       (async () => {
-        if (currentFile?.id && db) {
-          const metaData = await db.metadata.get(currentFile.id)
+        if (currentTrack?.track.id && db) {
+          const metaData = await db.metadata.get(currentTrack.track.id)
 
           if (!metaData) {
             updateCover('./cover.svg')
             updateCurrentMetaData(
               {
-                id: currentFile.id,
-                title: currentFile.name || 'Not playing',
+                id: currentTrack.track.id,
+                title: currentTrack.track.name || 'Not playing',
                 artist: '',
               }
             )
@@ -176,18 +183,17 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
         }
       })()
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [metadataUpdate, db, currentFile?.id]
+    [metadataUpdate, db, currentTrack, updateCover, updateCurrentMetaData]
   )
 
   // 获取在线 metadata
   useEffect(
     () => {
       (async () => {
-        if (currentFile && currentFile.id && isAudio(currentFile.name) && db && url) {
-          const localMetaData = await db.metadata.get(currentFile.id)
+        if (currentTrack && currentTrack.track.id && isAudio(currentTrack.track.name) && db && url) {
+          const localMetaData = await db.metadata.get(currentTrack.track.id)
           if (!localMetaData) {
-            const netMetaData = await getNetMetaData(currentFile, url)
+            const netMetaData = await getNetMetaData(currentTrack.track, url)
             if (netMetaData) {
               console.log('Get net metadata: ', netMetaData)
               await db.metadata.put(netMetaData)
@@ -197,8 +203,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
         }
       })()
     },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [url]
+    [currentTrack, db, updateMetadataUpdate, url]
   )
 
   useEffect(() => {

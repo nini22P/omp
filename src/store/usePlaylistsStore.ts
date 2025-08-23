@@ -3,7 +3,7 @@ import { create } from 'zustand'
 import createSelectors from './createSelectors'
 
 const initialState: PlaylistsState = {
-  playlists: [],
+  playlists: null,
 }
 
 const usePlaylistsStoreBase = create<PlaylistsState & PlaylistsActions>(
@@ -14,19 +14,19 @@ const usePlaylistsStoreBase = create<PlaylistsState & PlaylistsActions>(
       set((state) => ({ playlists: (state.playlists) ? [playlist, ...state.playlists] : [playlist] })),
     renamePlaylist: (id, name) =>
       set((state) => ({
-        playlists: state.playlists.map((playlist) =>
+        playlists: state.playlists?.map((playlist) =>
           (playlist.id === id) ? { ...playlist, name } : playlist)
       })),
     removePlaylist: (id) => set((state) =>
-      ({ playlists: state.playlists.filter(playlist => playlist.id !== id) })),
+      ({ playlists: state.playlists?.filter(playlist => playlist.id !== id) })),
     insertFilesToPlaylist: (id, files) =>
       set((state) => ({
-        playlists: state.playlists.map((playlist) =>
+        playlists: state.playlists?.map((playlist) =>
           (playlist.id === id)
             ? {
               ...playlist,
               files: files.concat(playlist.files.filter((item) =>
-                !files.map(item => item.path).includes(item.path)
+                !files.map(item => item.path.join('/')).includes(item.path.join('/'))
               ))
             }
             : playlist

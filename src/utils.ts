@@ -2,8 +2,8 @@ import * as mm from 'music-metadata-browser'
 import { pinyin } from 'pinyin-pro'
 import { toRomaji } from 'wanakana'
 import { franc, francAll, } from 'franc-min'
-import { FileNode, FileType, PlaylistItem, RemoteItem } from './types/file'
-import { PlayQueueItem } from './types/playQueue'
+import { FileNode, FileType, Track, RemoteItem } from './types/file'
+import { QueuedTrack } from './types/playQueue'
 import { Cover, MetaData } from './types/metaData'
 import kanjiRomajiMap from '@/data/kanjiRomajiMap'
 
@@ -40,7 +40,7 @@ export const checkFileType = (name: string): FileType => {
  * @param index 想要排第一的歌曲id
  * @returns 
  */
-export const shufflePlayQueue = (playQueue: PlayQueueItem[], index?: number) => {
+export const shufflePlayQueue = (playQueue: QueuedTrack[], index?: number) => {
   const randomPlayQueue = [...playQueue]
   for (let i = randomPlayQueue.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -101,7 +101,6 @@ export const remoteItemToFileNode = (
   item: RemoteItem,
   options?: { includeVisuals?: boolean }
 ): FileNode => {
-
   const baseNode: FileNode = {
     id: item.id,
     parentId: item.parentReference.id,
@@ -124,13 +123,23 @@ export const remoteItemToFileNode = (
   return baseNode
 }
 
-export const fileNodeToPlaylistItem = (fileNode: FileNode | PlaylistItem): PlaylistItem => {
+export const fileNodeToTrack = (fileNode: FileNode | Track): Track => {
   return {
     id: fileNode.id,
     name: fileNode.name,
     path: fileNode.path,
     size: fileNode.size,
     cTag: fileNode.cTag,
+  }
+}
+
+export const remoteItemToTrack = (item: RemoteItem): Track => {
+  return {
+    id: item.id,
+    name: item.name,
+    path: getRemotePath(item),
+    size: item.size,
+    cTag: item.cTag,
   }
 }
 
@@ -191,7 +200,7 @@ export const compressImage = async (image: mm.IPicture): Promise<Cover> => {
   }
 }
 
-export const getNetMetaData = async (file: FileNode | PlayQueueItem, url: string): Promise<MetaData | null> => {
+export const getNetMetaData = async (file: FileNode | Track, url: string): Promise<MetaData | null> => {
   console.log('Start get net metadata: ', file.name)
   try {
     const metadata = await mm.fetchFromUrl(url)

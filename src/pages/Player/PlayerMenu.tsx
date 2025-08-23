@@ -48,8 +48,8 @@ const PlayerMenu = ({ player }: { player: HTMLVideoElement | null }) => {
   const playQueue = usePlayQueueStore.use.playQueue()
   const currentIndex = usePlayQueueStore.use.currentIndex()
 
-  const currentFile = useMemo(() => playQueue?.find((item) => item.index === currentIndex), [currentIndex, playQueue])
-  const fileType = currentFile && checkFileType(currentFile.name)
+  const currentTrack = useMemo(() => playQueue?.find((item) => item.index === currentIndex), [currentIndex, playQueue])
+  const fileType = currentTrack && checkFileType(currentTrack.track.name)
 
   const [
     audioViewTheme,
@@ -118,8 +118,8 @@ const PlayerMenu = ({ player }: { player: HTMLVideoElement | null }) => {
 
   // 打开所在文件夹
   const handleClickOpenInFolder = () => {
-    if (currentFile) {
-      updateFolderTree(currentFile.path.slice(0, -1))
+    if (currentTrack) {
+      updateFolderTree(currentTrack.track.path.slice(0, -1))
       navigate('/')
       setMenuOpen(false)
       updateAudioViewIsShow(false)
@@ -135,8 +135,8 @@ const PlayerMenu = ({ player }: { player: HTMLVideoElement | null }) => {
 
   // 添加到播放列表
   const addToPlaylist = (id: string) => {
-    if (currentFile) {
-      insertFilesToPlaylist(id, [currentFile])
+    if (currentTrack) {
+      insertFilesToPlaylist(id, [currentTrack.track])
       setAddToPlaylistDialogOpen(false)
     }
   }
@@ -148,8 +148,8 @@ const PlayerMenu = ({ player }: { player: HTMLVideoElement | null }) => {
 
   const reFetchMetadata = async () => {
     handleCloseMenu()
-    if (!currentMetaData?.id || !player?.src || !currentFile || !db) return
-    const netMetaData = await getNetMetaData(currentFile, player.src)
+    if (!currentMetaData?.id || !player?.src || !currentTrack || !db) return
+    const netMetaData = await getNetMetaData(currentTrack.track, player.src)
     if (netMetaData) {
       await db.metadata.bulkPut([netMetaData])
       updateMetadataUpdate()
@@ -204,7 +204,7 @@ const PlayerMenu = ({ player }: { player: HTMLVideoElement | null }) => {
               </MenuItem>
 
               {
-                currentFile &&
+                currentTrack &&
                 <MenuItem onClick={handleClickOpenInFolder}>
                   <ListItemIcon>
                     <FolderOpenRoundedIcon />
@@ -221,7 +221,7 @@ const PlayerMenu = ({ player }: { player: HTMLVideoElement | null }) => {
               </MenuItem>
 
               {
-                currentFile &&
+                currentTrack &&
                 <MenuItem onClick={() => {
                   setAddToPlaylistDialogOpen(true)
                   handleCloseMenu()

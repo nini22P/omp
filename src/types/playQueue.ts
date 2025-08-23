@@ -1,11 +1,12 @@
-import { PlaylistItem } from './file'
+import { Track } from './file'
 
-export interface PlayQueueItem extends PlaylistItem {
+export interface QueuedTrack {
+  track: Track
   index: number
 }
 
 export interface PlayQueueState {
-  playQueue: PlayQueueItem[]
+  playQueue: QueuedTrack[]
   currentIndex: number
 }
 

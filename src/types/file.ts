@@ -116,7 +116,7 @@ export interface FileNode {
   url?: string
 }
 
-export interface PlaylistItem {
+export interface Track {
   id: string
   name: string
   path: string[]

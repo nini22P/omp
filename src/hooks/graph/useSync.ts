@@ -3,7 +3,7 @@ import useSWR from 'swr'
 import usePlaylistsStore from '@/store/usePlaylistsStore'
 import useHistoryStore from '@/store/useHistoryStore'
 import useGraph from './useGraph'
-import { FileItem, PlaylistItem } from '@/types/file'
+import { FileItem, Track } from '@/types/file'
 import { OldPlaylist, Playlist } from '@/types/playlist'
 import { fetchJson } from '@/utils'
 import useUser from './useUser'
@@ -40,7 +40,7 @@ const useSync = () => {
     const appRootFiles = await getAppRootFilesData()
     const historyFile = appRootFiles.value.find((item: { name: string }) => item.name === 'history.json')
     const playlistsFile = appRootFiles.value.find((item: { name: string }) => item.name === 'playlists.json')
-    let remoteHistory: FileItem[] | PlaylistItem[] = []
+    let remoteHistory: FileItem[] | Track[] = []
     let remotePlaylists: OldPlaylist[] | Playlist[] = []
 
     if (historyFile) {
@@ -52,7 +52,7 @@ const useSync = () => {
 
     console.log('Get app data')
 
-    const history: PlaylistItem[] = remoteHistory.map((item) =>
+    const history: Track[] = remoteHistory.map((item) =>
       isFileItem(item)
         ? ({
           id: '',
@@ -84,7 +84,7 @@ const useSync = () => {
     }
   }
 
-  const { data, error, isLoading } = useSWR<{ history: PlaylistItem[], playlists: Playlist[] }>(
+  const { data, error, isLoading } = useSWR<{ history: Track[], playlists: Playlist[] }>(
     account ? `${account.username}/fetchAppData` : null,
     appDatafetcher,
   )
@@ -100,11 +100,10 @@ const useSync = () => {
   )
 
   // 自动上传播放历史
-  // useMemo(
-  //   () => (historys !== null) && uploadAppRootJsonData('history.json', JSON.stringify(historys)),
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  //   [historys]
-  // )
+  useMemo(
+    () => (historys !== null) && uploadAppRootJsonData('history.json', JSON.stringify(historys)),
+    [historys, uploadAppRootJsonData]
+  )
 
   // 自动更新播放列表
   useEffect(
@@ -117,11 +116,10 @@ const useSync = () => {
   )
 
   // 自动上传播放列表
-  // useMemo(
-  //   () => (playlists !== null) && uploadAppRootJsonData('playlists.json', JSON.stringify(playlists)),
-  //   // eslint-disable-next-line react-hooks/exhaustive-deps
-  //   [playlists]
-  // )
+  useMemo(
+    () => (playlists !== null) && uploadAppRootJsonData('playlists.json', JSON.stringify(playlists)),
+    [playlists, uploadAppRootJsonData]
+  )
 
 }
 

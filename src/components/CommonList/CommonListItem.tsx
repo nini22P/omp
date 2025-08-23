@@ -1,4 +1,4 @@
-import { FileNode, PlaylistItem } from '@/types/file'
+import { FileNode, Track } from '@/types/file'
 import { checkFileType, sizeConv } from '@/utils'
 import InsertDriveFileRoundedIcon from '@mui/icons-material/InsertDriveFileRounded'
 import InsertPhotoRoundedIcon from '@mui/icons-material/InsertPhotoRounded'
@@ -18,7 +18,7 @@ const CommonListItem = ({
   handleClickItem,
   handleClickMenu,
 }: {
-  item: FileNode | PlaylistItem,
+  item: FileNode | Track,
   index: number,
   active?: boolean
   selected?: boolean,

@@ -1,4 +1,4 @@
-import { FileItem, PlaylistItem } from './file'
+import { FileItem, Track } from './file'
 
 export interface OldPlaylist {
   id: string
@@ -9,11 +9,11 @@ export interface OldPlaylist {
 export interface Playlist {
   id: string
   name: string
-  files: PlaylistItem[]
+  files: Track[]
 }
 
 export interface PlaylistsState {
-  playlists: Playlist[]
+  playlists: Playlist[] | null
 }
 
 export interface PlaylistsActions {

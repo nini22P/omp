@@ -58,7 +58,7 @@ const PlayQueue = () => {
           {
             playQueue &&
             <CommonList
-              listData={playQueue}
+              listData={playQueue.map(item => item.track)}
               listType='playQueue'
               activeIndex={playQueue?.findIndex((item) => item.index === currentIndex)}
               scrollIndex={playQueue?.findIndex((item) => item.index === currentIndex)}

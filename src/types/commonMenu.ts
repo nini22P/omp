@@ -1,10 +1,10 @@
-import { FileNode, PlaylistItem } from './file'
+import { FileNode, Track } from './file'
 
 export interface CommonMenuState {
   anchorEl: HTMLElement | null
   menuOpen: boolean
   dialogOpen: boolean
-  currentFile: FileNode | PlaylistItem | null
+  currentFile: FileNode | Track | null
   handleClickRemove: ((filePathArray: string[][]) => void) | null
 }
 

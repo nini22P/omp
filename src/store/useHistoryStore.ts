@@ -4,7 +4,7 @@ import createSelectors from './createSelectors'
 
 const useHistoryStoreBase = create<HistoryState & HistoryActions>(
   (set) => ({
-    historys: [],
+    historys: null,
     updateHistoryList: (historys) => set(() => ({ historys })),
     insertHistory: (file) => set(
       (state) => (
@@ -13,7 +13,7 @@ const useHistoryStoreBase = create<HistoryState & HistoryActions>(
             historys:
               [
                 file,
-                ...state.historys.filter((item) => item.path !== file.path)
+                ...state.historys.filter((item) => item.path.join('/') !== file.path.join('/'))
               ].slice(0, 200)
           }
           : { historys: [file] }

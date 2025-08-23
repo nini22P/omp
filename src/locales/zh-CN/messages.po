@@ -44,15 +44,15 @@ msgstr "添加到播放列表"
 
 #: src/pages/Library/Library.tsx:72
 msgid "Album"
-msgstr ""
+msgstr "专辑"
 
 #: src/pages/Library/Library.tsx:84
 msgid "Album Artist"
-msgstr ""
+msgstr "专辑艺术家"
 
 #: src/pages/Library/Library.tsx:78
 msgid "Artist"
-msgstr ""
+msgstr "艺术家"
 
 #: src/pages/Files/FilterMenu.tsx:107
 msgid "Ascending"
@@ -139,15 +139,11 @@ msgstr "文件"
 
 #: src/pages/Library/Library.tsx:96
 msgid "Folder"
-msgstr ""
+msgstr "文件夹"
 
 #: src/pages/Files/FilterMenu.tsx:116
 msgid "Folders first"
 msgstr "文件夹优先"
-
-#: src/pages/Library/FolderView.tsx:16
-#~ msgid "FolderView"
-#~ msgstr ""
 
 #: src/pages/Player/Audio/Modern.tsx:200
 #: src/pages/Player/PlayerControl.tsx:317
@@ -326,12 +322,8 @@ msgid "Set library folder"
 msgstr "设置媒体库文件夹"
 
 #: src/pages/SideBar/SideBar.tsx:23
-#~ msgid "Setting"
-#~ msgstr "设置"
-
-#: src/pages/SideBar/SideBar.tsx:23
 msgid "Settings"
-msgstr ""
+msgstr "设置"
 
 #: src/components/CommonList/ShuffleAll.tsx:29
 #~ msgid "Shuffle all"
@@ -351,7 +343,7 @@ msgstr "大小"
 
 #: src/pages/Library/Library.tsx:90
 msgid "Song"
-msgstr ""
+msgstr "歌曲"
 
 #: src/pages/Player/PlayerMenu.tsx:240
 msgid "Switch fullscreen"

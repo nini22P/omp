@@ -9,7 +9,7 @@ import ShuffleRoundedIcon from '@mui/icons-material/ShuffleRounded'
 import PlayArrowRoundedIcon from '@mui/icons-material/PlayArrowRounded'
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded'
 import { useLingui } from '@lingui/react/macro'
-import { FileNode, PlaylistItem } from '@/types/file'
+import { FileNode, Track } from '@/types/file'
 
 const CommonList = (
   {
@@ -21,7 +21,7 @@ const CommonList = (
     disableFAB,
     func,
   }: {
-    listData: FileNode[] | PlaylistItem[],
+    listData: FileNode[] | Track[],
     listType: 'files' | 'playlist' | 'playQueue',
     display?: 'list' | 'multicolumnList' | 'grid',
     scrollIndex?: number,

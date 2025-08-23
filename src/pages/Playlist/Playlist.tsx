@@ -38,7 +38,7 @@ const Playlist = () => {
     useShallow((state) => [state.playlists, state.renamePlaylist, state.removePlaylist, state.removeFilesFromPlaylist])
   )
 
-  const playlist = playlists?.find(playlistItem => playlistItem.id === id) //当前播放列表
+  const playlist = playlists?.find(item => item.id === id) //当前播放列表
 
   const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null)
   const [menuOpen, setMenuOpen] = useState(false)
@@ -68,7 +68,7 @@ const Playlist = () => {
       const currentFile = listData[index]
       if (currentFile) {
         const list = listData
-          .map((item, _index) => ({ ...item, index: _index }))
+          .map((item, _index) => ({ track: item, index: _index }))
         if (shuffle) {
           updateShuffle(false)
         }
