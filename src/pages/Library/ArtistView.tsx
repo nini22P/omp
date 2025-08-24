@@ -1,7 +1,9 @@
 import useUser from '@/hooks/graph/useUser'
 import useDb from '@/hooks/useDb'
-import { Box, List, ListItem, ListItemButton, ListItemText } from '@mui/material'
+import { List, ListItem, ListItemButton, ListItemText } from '@mui/material'
 import { useLiveQuery } from 'dexie-react-hooks'
+import { AutoSizer } from 'react-virtualized'
+import { FixedSizeList } from 'react-window'
 
 const ArtistView = () => {
 
@@ -20,20 +22,32 @@ const ArtistView = () => {
     [db]
   )
 
+  if (!artists)
+    return <div />
+
   return (
-    <Box sx={{ width: '100%' }}>
-      <List>
-        {artists?.map(artist => (
-          <ListItem key={String(artist)} disablePadding>
-            <ListItemButton onClick={() => console.log(artist)}>
-              <ListItemText
-                primary={String(artist)}
-              />
-            </ListItemButton>
-          </ListItem>
-        ))}
-      </List>
-    </Box>
+    <List sx={{ width: '100%', height: '100%' }}>
+      <AutoSizer>
+        {({ height, width }) => (
+          <FixedSizeList
+            height={height}
+            width={width}
+            itemCount={artists.length}
+            itemSize={48}
+          >
+            {({ index, style }) => (
+              <ListItem key={artists[index]} style={style} disablePadding>
+                <ListItemButton onClick={() => console.log(artists[index])}>
+                  <ListItemText
+                    primary={artists[index]}
+                  />
+                </ListItemButton>
+              </ListItem>
+            )}
+          </FixedSizeList>
+        )}
+      </AutoSizer>
+    </List>
   )
 }
 

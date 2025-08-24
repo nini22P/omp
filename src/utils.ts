@@ -245,7 +245,7 @@ export const getNetMetaData = async (file: FileNode | Track, url: string): Promi
   }
 }
 
-export const getCoverUrl = (cover?: Cover[]): string => {
+export const createCoverUrl = (cover: Cover[]): string => {
   if (cover && cover.length > 0) {
     const blob = new Blob([cover[0].data as unknown as ArrayBuffer], { type: cover[0].format })
     return URL.createObjectURL(blob)

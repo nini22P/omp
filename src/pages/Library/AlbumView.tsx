@@ -1,15 +1,36 @@
 import useUser from '@/hooks/graph/useUser'
 import useDb from '@/hooks/useDb'
-import { Card, CardActionArea, CardMedia, Grid, Typography } from '@mui/material'
+import { Box, Card, CardActionArea, CardMedia, Grid, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { MetaData } from '@/types/metaData'
-import { getCoverUrl } from '@/utils'
 import { useLingui } from '@lingui/react/macro'
+import { CSSProperties, useMemo } from 'react'
+import useCreateCoverUrl from '@/hooks/useCreateCoverUrl'
+import { AutoSizer } from 'react-virtualized'
+import { FixedSizeList } from 'react-window'
+
+const CARD_PADDING = 0.5
 
 const AlbumView = () => {
   const { account } = useUser()
   const db = useDb(account)
   const { t } = useLingui()
+
+  const theme = useTheme()
+  const xs = useMediaQuery(theme.breakpoints.up('xs'))
+  const sm = useMediaQuery(theme.breakpoints.up('sm'))
+  const md = useMediaQuery(theme.breakpoints.up('md'))
+  const lg = useMediaQuery(theme.breakpoints.up('lg'))
+  const xl = useMediaQuery(theme.breakpoints.up('xl'))
+
+  const gridCols = useMemo((): number => {
+    if (xl) return 6
+    if (lg) return 5
+    if (md) return 4
+    if (sm) return 3
+    if (xs) return 2
+    return 2
+  }, [lg, md, sm, xl, xs])
 
   const albums = useLiveQuery(async () => {
     if (!db) return []
@@ -47,35 +68,89 @@ const AlbumView = () => {
     return Array.from(albumMap.values())
   }, [db, t])
 
+  if (!albums)
+    return <div />
+
   return (
-    <Grid container spacing={2} padding={2}>
-      {albums?.map(albumInfo => (
-        <Grid key={`${albumInfo.album}::${albumInfo.artist}`} size={{ xs: 6, sm: 3, md: 3, lg: 2 }}>
-          <Card sx={{ width: '100%' }}>
-            <CardActionArea onClick={() => console.log(albumInfo)}>
-              <CardMedia
-                component='img'
-                sx={{ aspectRatio: '1/1' }}
-                image={getCoverUrl(albumInfo.cover)}
-                alt={albumInfo.album}
-              />
-              <Typography
-                variant="caption"
-                sx={{
-                  padding: 1,
-                  display: 'block',
-                  textAlign: 'center',
-                  textWrap: 'nowrap',
-                  overflow: 'hidden',
-                  textOverflow: 'ellipsis',
-                  whiteSpace: 'nowrap',
-                }}>
-                {albumInfo.album}
-              </Typography>
-            </CardActionArea>
-          </Card>
-        </Grid>
-      ))}
+    <Box sx={{ height: '100%', overflow: 'hidden', padding: CARD_PADDING }}>
+      <AutoSizer>
+        {({ height, width }) => (
+          <FixedSizeList
+            height={height}
+            width={width}
+            itemCount={Math.ceil(albums.length / gridCols)}
+            itemSize={width / gridCols / 4 * 5}
+          >
+            {({ index, style }) => (
+              <Row key={index} index={index} style={style} albums={albums} gridCols={gridCols} />
+            )}
+          </FixedSizeList>
+        )}
+      </AutoSizer>
+    </Box>
+  )
+}
+
+const AlbumCard = ({ item }: { item: MetaData }) => {
+  const coverUrl = useCreateCoverUrl(item)
+  return (
+    <Card sx={{ width: '100%', height: '100%' }}>
+      <CardActionArea sx={{ height: '100%' }} onClick={() => console.log(item)}>
+        <CardMedia
+          component='img'
+          sx={{ aspectRatio: '1/1' }}
+          image={coverUrl}
+          alt={item?.album}
+        />
+        <Typography
+          variant="caption"
+          sx={{
+            padding: 1,
+            display: 'block',
+            textAlign: 'center',
+            textWrap: 'nowrap',
+            overflow: 'hidden',
+            textOverflow: 'ellipsis',
+            whiteSpace: 'nowrap',
+          }}
+        >
+          {item.album}
+        </Typography>
+      </CardActionArea>
+    </Card>
+  )
+}
+
+const Row = ({
+  index,
+  style,
+  albums,
+  gridCols,
+}: {
+  index: number,
+  style: CSSProperties,
+  albums: MetaData[],
+  gridCols: number,
+}) => {
+  return (
+    <Grid container style={style}>
+      {
+        [...Array(gridCols)].map((_, i) => {
+          const itemIndex = index * gridCols + i
+          const item = albums[itemIndex]
+          return (
+            item
+            &&
+            <Grid
+              key={`${item.album}::${item.artist}`}
+              size={12 / gridCols}
+              sx={{ padding: CARD_PADDING }}
+            >
+              <AlbumCard item={item} />
+            </Grid>
+          )
+        })
+      }
     </Grid>
   )
 }

@@ -27,15 +27,15 @@ const SideBar = () => {
 
   const boxRef = useRef<HTMLDivElement | null>(null)
 
-  const showScrollbar = () => {
-    const element = boxRef.current
-    element?.classList.add('show-scrollbar')
-  }
+  // const showScrollbar = () => {
+  //   const element = boxRef.current
+  //   element?.classList.add('show-scrollbar')
+  // }
 
-  const hiddenScrollbar = () => {
-    const element = boxRef.current
-    element?.classList.remove('show-scrollbar')
-  }
+  // const hiddenScrollbar = () => {
+  //   const element = boxRef.current
+  //   element?.classList.remove('show-scrollbar')
+  // }
 
   return (
     <Box
@@ -44,8 +44,8 @@ const SideBar = () => {
         overflow: 'auto',
       }}
       ref={boxRef}
-      onTouchStart={() => showScrollbar()}
-      onTouchEnd={() => hiddenScrollbar()}
+    // onTouchStart={() => showScrollbar()}
+    // onTouchEnd={() => hiddenScrollbar()}
     >
       <List disablePadding>
         {

@@ -3,7 +3,7 @@ import useHistoryStore from '@/store/useHistoryStore'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
-import { getCoverUrl, getNetMetaData, isAudio, remoteItemToTrack } from '@/utils'
+import { createCoverUrl, getNetMetaData, isAudio, remoteItemToTrack } from '@/utils'
 import useGraph from '../graph/useGraph'
 import useUser from '../graph/useUser'
 import { useShallow } from 'zustand/shallow'
@@ -174,7 +174,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
             if (metaData.cover && metaData.cover.length > 0) {
               const cover = metaData.cover[0]
               if (cover && 'data' in cover) {
-                updateCover(getCoverUrl(metaData.cover))
+                updateCover(createCoverUrl(metaData.cover))
               }
             } else {
               updateCover('./cover.svg')

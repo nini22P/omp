@@ -25,32 +25,32 @@ msgstr "账户"
 msgid "Add account"
 msgstr "添加账户"
 
-#: src/components/CommonList/CommonMenu.tsx:259
+#: src/components/CommonList/CommonMenu.tsx:265
 #: src/pages/Player/PlayerMenu.tsx:356
 #: src/pages/SideBar/Playlists.tsx:53
 msgid "Add playlist"
 msgstr "新建播放列表"
 
-#: src/components/CommonList/CommonMenu.tsx:163
+#: src/components/CommonList/CommonMenu.tsx:169
 msgid "Add to play queue"
 msgstr "添加到播放队列"
 
-#: src/components/CommonList/CommonMenu.tsx:158
-#: src/components/CommonList/CommonMenu.tsx:233
+#: src/components/CommonList/CommonMenu.tsx:164
+#: src/components/CommonList/CommonMenu.tsx:239
 #: src/pages/Player/PlayerMenu.tsx:232
 #: src/pages/Player/PlayerMenu.tsx:330
 msgid "Add to playlist"
 msgstr "添加到播放列表"
 
-#: src/pages/Library/Library.tsx:72
+#: src/pages/Library/Library.tsx:71
 msgid "Album"
 msgstr "专辑"
 
 #: src/pages/Library/Library.tsx:84
-msgid "Album Artist"
-msgstr "专辑艺术家"
+#~ msgid "Album Artist"
+#~ msgstr "专辑艺术家"
 
-#: src/pages/Library/Library.tsx:78
+#: src/pages/Library/Library.tsx:77
 msgid "Artist"
 msgstr "艺术家"
 
@@ -66,7 +66,7 @@ msgstr "自动"
 msgid "Build time"
 msgstr "编译日期"
 
-#: src/components/CommonList/CommonMenu.tsx:264
+#: src/components/CommonList/CommonMenu.tsx:270
 #: src/components/Dialog/SetLibraryFolderDialog.tsx:164
 #: src/pages/Player/PlayerMenu.tsx:361
 #: src/pages/Playlist/Playlist.tsx:225
@@ -75,7 +75,7 @@ msgstr "编译日期"
 msgid "Cancel"
 msgstr "取消"
 
-#: src/components/CommonList/CommonMenu.tsx:222
+#: src/components/CommonList/CommonMenu.tsx:228
 msgid "Cancel select"
 msgstr "取消选择"
 
@@ -129,7 +129,7 @@ msgstr "倒序"
 msgid "Enter new title"
 msgstr "输入新标题"
 
-#: src/pages/Library/Library.tsx:119
+#: src/pages/Library/Library.tsx:110
 msgid "Error"
 msgstr "错误"
 
@@ -137,7 +137,7 @@ msgstr "错误"
 msgid "Files"
 msgstr "文件"
 
-#: src/pages/Library/Library.tsx:96
+#: src/pages/Library/Library.tsx:89
 msgid "Folder"
 msgstr "文件夹"
 
@@ -166,7 +166,7 @@ msgstr "高清缩略图"
 msgid "History"
 msgstr "历史"
 
-#: src/pages/Library/Library.tsx:117
+#: src/pages/Library/Library.tsx:108
 msgid "Idle"
 msgstr "空闲"
 
@@ -183,7 +183,7 @@ msgstr "媒体库"
 msgid "Library folder"
 msgstr "媒体库文件夹"
 
-#: src/pages/Library/Library.tsx:130
+#: src/pages/Library/Library.tsx:121
 msgid "Library folder not set"
 msgstr "未设置媒体库文件夹"
 
@@ -254,7 +254,7 @@ msgstr "无歌词"
 msgid "OK"
 msgstr "确定"
 
-#: src/components/CommonList/CommonMenu.tsx:170
+#: src/components/CommonList/CommonMenu.tsx:176
 #: src/pages/Player/PlayerMenu.tsx:212
 msgid "Open in folder"
 msgstr "打开所在文件夹"
@@ -287,7 +287,7 @@ msgstr "请使用微软账户授权登录"
 msgid "Re-fetch metadata"
 msgstr "重新获取元数据"
 
-#: src/components/CommonList/CommonMenu.tsx:188
+#: src/components/CommonList/CommonMenu.tsx:194
 msgid "Remove"
 msgstr "移除"
 
@@ -303,7 +303,7 @@ msgstr "重命名"
 msgid "Search"
 msgstr "搜索"
 
-#: src/components/CommonList/CommonMenu.tsx:201
+#: src/components/CommonList/CommonMenu.tsx:207
 #: src/pages/Settings/Settings.tsx:137
 msgid "Select"
 msgstr "选择"
@@ -312,7 +312,7 @@ msgstr "选择"
 msgid "Select account"
 msgstr "选择账户"
 
-#: src/components/CommonList/CommonMenu.tsx:211
+#: src/components/CommonList/CommonMenu.tsx:217
 msgid "Select all"
 msgstr "全选"
 
@@ -341,7 +341,7 @@ msgstr "注销"
 msgid "Size"
 msgstr "大小"
 
-#: src/pages/Library/Library.tsx:90
+#: src/pages/Library/Library.tsx:83
 msgid "Song"
 msgstr "歌曲"
 
@@ -354,13 +354,17 @@ msgstr "切换全屏"
 msgid "Switch theme"
 msgstr "切换主题"
 
-#: src/pages/Library/Library.tsx:118
+#: src/pages/Library/Library.tsx:109
 msgid "Syncing"
 msgstr "同步中"
 
 #: src/pages/Playlist/Playlist.tsx:245
 msgid "The playlist will be deleted"
 msgstr "播放列表将会被删除"
+
+#: src/pages/Library/AlbumView.tsx:24
+msgid "Unknown Artist"
+msgstr "未知艺术家"
 
 #: src/pages/Settings/Settings.tsx:190
 msgid "Use album cover theme color"

@@ -25,32 +25,32 @@ msgstr "Account"
 msgid "Add account"
 msgstr "Add account"
 
-#: src/components/CommonList/CommonMenu.tsx:259
+#: src/components/CommonList/CommonMenu.tsx:265
 #: src/pages/Player/PlayerMenu.tsx:356
 #: src/pages/SideBar/Playlists.tsx:53
 msgid "Add playlist"
 msgstr "Add playlist"
 
-#: src/components/CommonList/CommonMenu.tsx:163
+#: src/components/CommonList/CommonMenu.tsx:169
 msgid "Add to play queue"
 msgstr "Add to play queue"
 
-#: src/components/CommonList/CommonMenu.tsx:158
-#: src/components/CommonList/CommonMenu.tsx:233
+#: src/components/CommonList/CommonMenu.tsx:164
+#: src/components/CommonList/CommonMenu.tsx:239
 #: src/pages/Player/PlayerMenu.tsx:232
 #: src/pages/Player/PlayerMenu.tsx:330
 msgid "Add to playlist"
 msgstr "Add to playlist"
 
-#: src/pages/Library/Library.tsx:72
+#: src/pages/Library/Library.tsx:71
 msgid "Album"
 msgstr "Album"
 
 #: src/pages/Library/Library.tsx:84
-msgid "Album Artist"
-msgstr "Album Artist"
+#~ msgid "Album Artist"
+#~ msgstr "Album Artist"
 
-#: src/pages/Library/Library.tsx:78
+#: src/pages/Library/Library.tsx:77
 msgid "Artist"
 msgstr "Artist"
 
@@ -66,7 +66,7 @@ msgstr "Auto"
 msgid "Build time"
 msgstr "Build time"
 
-#: src/components/CommonList/CommonMenu.tsx:264
+#: src/components/CommonList/CommonMenu.tsx:270
 #: src/components/Dialog/SetLibraryFolderDialog.tsx:164
 #: src/pages/Player/PlayerMenu.tsx:361
 #: src/pages/Playlist/Playlist.tsx:225
@@ -75,7 +75,7 @@ msgstr "Build time"
 msgid "Cancel"
 msgstr "Cancel"
 
-#: src/components/CommonList/CommonMenu.tsx:222
+#: src/components/CommonList/CommonMenu.tsx:228
 msgid "Cancel select"
 msgstr "Cancel select"
 
@@ -129,7 +129,7 @@ msgstr "Descending"
 msgid "Enter new title"
 msgstr "Enter new title"
 
-#: src/pages/Library/Library.tsx:119
+#: src/pages/Library/Library.tsx:110
 msgid "Error"
 msgstr "Error"
 
@@ -137,7 +137,7 @@ msgstr "Error"
 msgid "Files"
 msgstr "Files"
 
-#: src/pages/Library/Library.tsx:96
+#: src/pages/Library/Library.tsx:89
 msgid "Folder"
 msgstr "Folder"
 
@@ -170,7 +170,7 @@ msgstr "HD thumbnails"
 msgid "History"
 msgstr "History"
 
-#: src/pages/Library/Library.tsx:117
+#: src/pages/Library/Library.tsx:108
 msgid "Idle"
 msgstr "Idle"
 
@@ -187,7 +187,7 @@ msgstr "Library"
 msgid "Library folder"
 msgstr "Library folder"
 
-#: src/pages/Library/Library.tsx:130
+#: src/pages/Library/Library.tsx:121
 msgid "Library folder not set"
 msgstr "Library folder not set"
 
@@ -258,7 +258,7 @@ msgstr "No lyrics"
 msgid "OK"
 msgstr "OK"
 
-#: src/components/CommonList/CommonMenu.tsx:170
+#: src/components/CommonList/CommonMenu.tsx:176
 #: src/pages/Player/PlayerMenu.tsx:212
 msgid "Open in folder"
 msgstr "Open in folder"
@@ -291,7 +291,7 @@ msgstr "Please use Microsoft account authorization to log in"
 msgid "Re-fetch metadata"
 msgstr "Re-fetch metadata"
 
-#: src/components/CommonList/CommonMenu.tsx:188
+#: src/components/CommonList/CommonMenu.tsx:194
 msgid "Remove"
 msgstr "Remove"
 
@@ -307,7 +307,7 @@ msgstr "Rename"
 msgid "Search"
 msgstr "Search"
 
-#: src/components/CommonList/CommonMenu.tsx:201
+#: src/components/CommonList/CommonMenu.tsx:207
 #: src/pages/Settings/Settings.tsx:137
 msgid "Select"
 msgstr "Select"
@@ -316,7 +316,7 @@ msgstr "Select"
 msgid "Select account"
 msgstr "Select account"
 
-#: src/components/CommonList/CommonMenu.tsx:211
+#: src/components/CommonList/CommonMenu.tsx:217
 msgid "Select all"
 msgstr "Select all"
 
@@ -349,7 +349,7 @@ msgstr "Sign out"
 msgid "Size"
 msgstr "Size"
 
-#: src/pages/Library/Library.tsx:90
+#: src/pages/Library/Library.tsx:83
 msgid "Song"
 msgstr "Song"
 
@@ -362,13 +362,17 @@ msgstr "Switch fullscreen"
 msgid "Switch theme"
 msgstr "Switch theme"
 
-#: src/pages/Library/Library.tsx:118
+#: src/pages/Library/Library.tsx:109
 msgid "Syncing"
 msgstr "Syncing"
 
 #: src/pages/Playlist/Playlist.tsx:245
 msgid "The playlist will be deleted"
 msgstr "The playlist will be deleted"
+
+#: src/pages/Library/AlbumView.tsx:24
+msgid "Unknown Artist"
+msgstr "Unknown Artist"
 
 #: src/pages/Settings/Settings.tsx:190
 msgid "Use album cover theme color"

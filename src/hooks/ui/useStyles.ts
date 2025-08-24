@@ -16,11 +16,11 @@ const useStyles = (theme: Theme) => {
       borderRadius: '16px',
       border: '3.5px solid transparent',
       backgroundClip: 'content-box',
-      visibility: 'hidden',
+      // visibility: 'hidden',
     },
-    '& :hover::-webkit-scrollbar-thumb': {
-      visibility: 'visible',
-    },
+    // '& :hover::-webkit-scrollbar-thumb': {
+    //   visibility: 'visible',
+    // },
   }),
     [theme.palette.primary.main]
   )

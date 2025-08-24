@@ -64,6 +64,6 @@ a {
   padding-top: env(titlebar-area-height, 0) !important;
 }
 
-.show-scrollbar::-webkit-scrollbar-thumb {
+/* .show-scrollbar::-webkit-scrollbar-thumb {
   visibility: visible !important;
-}
+} */
