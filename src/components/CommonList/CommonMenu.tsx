@@ -48,10 +48,6 @@ const CommonMenu = (
 
   const navigate = useNavigate()
 
-  const [updateFolderTree] = useUiStore(
-    useShallow((state) => [state.updateFolderTree])
-  )
-
   const playQueue = usePlayQueueStore.use.playQueue()
   const updatePlayQueue = usePlayQueueStore.use.updatePlayQueue()
 
@@ -140,8 +136,7 @@ const CommonMenu = (
   // 打开所在文件夹
   const handleClickOpenInFolder = async () => {
     if (typeof selectIndex === 'number' && listData[selectIndex].path) {
-      updateFolderTree(listData[selectIndex].path.slice(0, -1))
-      navigate('/')
+      navigate(`/files/${listData[selectIndex].path.join('/')}`)
       setMenuOpen(false)
       setSelectIndex(null)
       updateAudioViewIsShow(false)

@@ -38,7 +38,6 @@ const Settings = () => {
     currentAccount,
     CoverThemeColor,
     colorMode,
-    updateFolderTree,
     updateCurrentAccount,
     updateCoverThemeColor,
     updateColorMode,
@@ -48,7 +47,6 @@ const Settings = () => {
         state.currentAccount,
         state.CoverThemeColor,
         state.colorMode,
-        state.updateFolderTree,
         state.updateCurrentAccount,
         state.updateCoverThemeColor,
         state.updateColorMode
@@ -85,7 +83,6 @@ const Settings = () => {
     handleCloseAccountsDialog()
     if (currentAccount === index) return
     updateCurrentAccount(index)
-    updateFolderTree(['/'])
     updateHistoryList([])
     updatePlaylists([])
     resetPlayQueue()
@@ -98,11 +95,9 @@ const Settings = () => {
       resetPlayer()
       updateHistoryList([])
       updatePlaylists([])
-      updateFolderTree(['/'])
     }
     if (currentAccount === accounts.length - 1) {
       updateCurrentAccount((accounts.length - 1) <= 1 ? 0 : (accounts.length - 1))
-      updateFolderTree(['/'])
     }
     logout(account)
   }

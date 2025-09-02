@@ -1,140 +1,124 @@
-import { useMemo, useRef } from 'react'
-import { useMediaQuery, useTheme } from '@mui/material'
+import { useMemo, useRef, useState, useLayoutEffect } from 'react'
+import { useTheme } from '@mui/material'
+import { ILyricsTag } from 'music-metadata'
 import { useSpring, animated } from '@react-spring/web'
-import { useLingui } from '@lingui/react/macro'
 
-const Lyrics = ({ lyrics, currentTime }: { lyrics: string, currentTime: number }) => {
-  const { t } = useLingui()
+interface ProcessedLyricsText {
+  timestamp: number
+  text: string
+  translation: string[]
+}
 
+const Lyrics = ({ lyrics, currentTimestamp }: { lyrics: ILyricsTag[], currentTimestamp: number }) => {
   const theme = useTheme()
-  const lyricsRef = useRef<HTMLDivElement>(null)
 
-  const isMobile = useMediaQuery('(max-height: 600px) or (max-width: 600px)')
+  const viewPortRef = useRef<HTMLDivElement>(null)
+  const lyricRefs = useRef<(HTMLDivElement | null)[]>([])
 
-  const xs = useMediaQuery(theme.breakpoints.up('xs'))
-  const sm = useMediaQuery(theme.breakpoints.up('sm'))
-  const md = useMediaQuery(theme.breakpoints.up('md'))
-  const lg = useMediaQuery(theme.breakpoints.up('lg'))
-  const xl = useMediaQuery(theme.breakpoints.up('xl'))
+  const [lyricOffsets, setLyricOffsets] = useState<number[]>([])
 
-  const lyricLineHeight = xl ? 44 : lg ? 46 : md ? 48 : sm ? 48 : xs ? 48 : 50
-
-  type Lyrics = {
-    time: number,
-    text: string,
-  }[];
-
-  function timeToSeconds(time: string) {
-    const regex = /(\d{2}):(\d{2})\.(\d{2,3})/
-    const match = time.match(regex)
-
-    if (match) {
-      const minutes = parseInt(match[1], 10)
-      const seconds = parseInt(match[2], 10)
-      let milliseconds = parseInt(match[3], 10)
-
-      if (match[3].length === 2) {
-        milliseconds *= 10
+  const processedLyrics: ProcessedLyricsText[] = useMemo(() => {
+    if (!lyrics || lyrics.length === 0 || !lyrics[0].syncText) return []
+    const lyricsMap = new Map<number, ProcessedLyricsText>()
+    const result: ProcessedLyricsText[] = []
+    const sourceSyncText = lyrics[0].syncText.filter(item => typeof item.timestamp === 'number')
+    for (const line of sourceSyncText) {
+      const timestamp = line.timestamp as number
+      if (!lyricsMap.has(timestamp)) {
+        const newLyric = { timestamp, text: line.text, translation: [] }
+        lyricsMap.set(timestamp, newLyric)
+        result.push(newLyric)
+      } else {
+        lyricsMap.get(timestamp)!.translation.push(line.text)
       }
-
-      const totalSeconds = minutes * 60 + seconds + milliseconds / 1000
-      return totalSeconds
-    } else {
-      return -1
     }
-  }
+    return result
+  }, [lyrics])
 
-  const lyricsList: Lyrics = lyrics
-    .split(/\r?\n/)
-    .map(item => (
-      {
-        time: timeToSeconds(item.split(']')[0]),
-        text: item.split(']')[1],
-      }
-    ))
-    .filter(item => item.time !== -1)
+  useLayoutEffect(() => {
+    if (processedLyrics.length > 0) {
+      const viewPort = viewPortRef.current
+      if (!viewPort) return
 
-  const currentLyricIndex = useMemo(
-    () => {
-      if (currentTime < lyricsList[0].time)
-        return -1
-      if (currentTime > lyricsList[lyricsList.length - 1].time)
-        return lyricsList.length - 1
-      return lyricsList.findIndex(item => item.time > currentTime) - 1
-    },
-    [currentTime, lyricsList]
-  )
+      const offsets = lyricRefs.current.map(el => {
+        if (!el) return 0
+        return el.offsetTop - viewPort.clientHeight / 3 + el.clientHeight / 2
+      })
+
+      setLyricOffsets(offsets)
+    }
+  }, [processedLyrics])
+
+  const currentLyricIndex = useMemo(() => {
+    if (processedLyrics.length === 0 || currentTimestamp < processedLyrics[0].timestamp) return -1
+    if (currentTimestamp > processedLyrics[processedLyrics.length - 1].timestamp) return processedLyrics.length - 1
+    return processedLyrics.findIndex(item => item.timestamp > currentTimestamp) - 1
+  }, [currentTimestamp, processedLyrics])
 
   const { scrollY } = useSpring({
-    scrollY: currentLyricIndex >= 0 ? currentLyricIndex * lyricLineHeight : 0,
+    scrollY: lyricOffsets[currentLyricIndex] ?? 0,
     config: { mass: 2, tension: 300, friction: 25 },
   })
 
-  const isHighlight = (time: number) => lyricsList[currentLyricIndex] && time === lyricsList[currentLyricIndex].time
+  const isHighlight = (timestamp: number) => {
+    return processedLyrics[currentLyricIndex] && timestamp === processedLyrics[currentLyricIndex].timestamp
+  }
 
   return (
-    <div key={'lyrics'} style={{ height: '100%', width: '100%', overflow: 'hidden' }}>
-      {
-        lyricsList.length === 0
-          ?
+    <div
+      ref={viewPortRef}
+      style={{ height: '100%', width: '100%', overflow: 'hidden' }}
+    >
+      <animated.div
+        style={{
+          paddingTop: '45vh',
+          paddingBottom: '45vh',
+          transform: scrollY.to(y => `translateY(-${y}px)`),
+        }}
+      >
+        {processedLyrics.map((item, index) => (
           <div
+            ref={el => (lyricRefs.current[index] = el)}
+            key={`${item.timestamp}-${index}`}
             style={{
-              height: '100%',
-              width: '100%',
-              display: 'flex',
-              justifyContent: 'center',
-              alignItems: 'center',
+              padding: '1rem 2rem',
             }}
           >
-            <span>{t`No lyrics`}</span>
-          </div>
-          :
-          <animated.div
-            ref={lyricsRef}
-            style={{
-              height: '100%',
-              transform: scrollY.to(y => `translateY(-${y}px)`),
-            }}
-          >
-            <div style={{ height: '30%' }} />
-            {
-              lyricsList.map((item) =>
-                <div
-                  key={item.time + item.text}
+            <div
+              style={{
+                transform: isHighlight(item.timestamp) ? 'scale(1.05)' : 'scale(1)',
+                transition: 'transform 0.4s ease-out',
+              }}
+            >
+              <p
+                style={{
+                  margin: 0,
+                  fontSize: isHighlight(item.timestamp) ? '1.7rem' : '1.2rem',
+                  color: isHighlight(item.timestamp) ? theme.palette.text.primary : theme.palette.text.secondary,
+                  fontWeight: isHighlight(item.timestamp) ? 'bold' : 'normal',
+                  transition: 'all 0.4s ease-out',
+                  lineHeight: 1.6,
+                }}>
+                {item.text}
+              </p>
+              {item.translation.map((translatedText, tIndex) => (
+                <p
+                  key={tIndex}
                   style={{
-                    display: 'flex',
-                    justifyContent: 'start',
-                    alignItems: 'center',
-                    height: isHighlight(item.time)
-                      ? lyricLineHeight * 1.6
-                      : lyricLineHeight,
-                    paddingLeft: isHighlight(item.time)
-                      ? isMobile ? 0 : '1rem'
-                      : isMobile ? '1rem' : '2rem',
-                  }}
-                >
-                  <p
-                    style={{
-                      fontSize: isHighlight(item.time)
-                        ? isMobile ? '1.5rem' : '1.5rem'
-                        : isMobile ? '1rem' : '1.2rem',
-                      color: isHighlight(item.time)
-                        ? theme.palette.text.primary
-                        : theme.palette.text.secondary,
-                      fontWeight: isHighlight(item.time)
-                        ? 'bold'
-                        : 'normal',
-                      transition: 'font-size 0.3s ease-out, color 0.3s ease, font-weight 0.3s ease',
-                    }}
-                  >
-                    {item.text}
-                  </p>
-                </div>
-              )
-            }
-            <div style={{ height: '100%' }} />
-          </animated.div>
-      }
+                    margin: 0,
+                    marginTop: '0.25rem',
+                    fontSize: isHighlight(item.timestamp) ? '1.1rem' : '0.9rem',
+                    color: isHighlight(item.timestamp) ? theme.palette.text.secondary : theme.palette.text.disabled,
+                    transition: 'all 0.4s ease-out',
+                    lineHeight: 1.5
+                  }}>
+                  {translatedText}
+                </p>
+              ))}
+            </div>
+          </div>
+        ))}
+      </animated.div>
     </div>
   )
 }

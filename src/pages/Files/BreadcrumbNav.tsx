@@ -1,7 +1,6 @@
 import { Breadcrumbs, Button } from '@mui/material'
-import { UiState } from '@/types/ui'
 
-const BreadcrumbNav = ({ folderTree, handleClickNav }: { folderTree: UiState['folderTree'], handleClickNav: (index: number) => void }) => {
+const BreadcrumbNav = ({ folderTree, handleClickNav }: { folderTree: string[], handleClickNav: (index: number) => void }) => {
 
   return (
     <Breadcrumbs

@@ -56,7 +56,6 @@ const PlayerMenu = ({ player }: { player: HTMLVideoElement | null }) => {
     playbackRate,
     audioViewIsShow,
     fullscreen,
-    updateFolderTree,
     updateAudioViewTheme,
     updatePlaybackRate,
     updateAudioViewIsShow,
@@ -69,7 +68,6 @@ const PlayerMenu = ({ player }: { player: HTMLVideoElement | null }) => {
         state.playbackRate,
         state.audioViewIsShow,
         state.fullscreen,
-        state.updateFolderTree,
         state.updateAudioViewTheme,
         state.updatePlaybackRate,
         state.updateAudioViewIsShow,
@@ -118,9 +116,8 @@ const PlayerMenu = ({ player }: { player: HTMLVideoElement | null }) => {
 
   // 打开所在文件夹
   const handleClickOpenInFolder = () => {
-    if (currentTrack) {
-      updateFolderTree(currentTrack.track.path.slice(0, -1))
-      navigate('/')
+    if (currentTrack && currentTrack.track.path) {
+      navigate(`/files/${currentTrack.track.path.join('/')}`)
       setMenuOpen(false)
       updateAudioViewIsShow(false)
       updateVideoViewIsShow(false)
@@ -204,7 +201,7 @@ const PlayerMenu = ({ player }: { player: HTMLVideoElement | null }) => {
               </MenuItem>
 
               {
-                currentTrack &&
+                currentTrack && currentTrack.track.path &&
                 <MenuItem onClick={handleClickOpenInFolder}>
                   <ListItemIcon>
                     <FolderOpenRoundedIcon />

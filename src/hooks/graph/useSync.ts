@@ -102,7 +102,8 @@ const useSync = () => {
   // 自动上传播放历史
   useMemo(
     () => (historys !== null) && uploadAppRootJsonData('history.json', JSON.stringify(historys)),
-    [historys, uploadAppRootJsonData]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [historys]
   )
 
   // 自动更新播放列表
@@ -118,7 +119,8 @@ const useSync = () => {
   // 自动上传播放列表
   useMemo(
     () => (playlists !== null) && uploadAppRootJsonData('playlists.json', JSON.stringify(playlists)),
-    [playlists, uploadAppRootJsonData]
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [playlists]
   )
 
 }

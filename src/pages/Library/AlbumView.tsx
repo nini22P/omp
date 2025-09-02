@@ -3,18 +3,17 @@ import useDb from '@/hooks/useDb'
 import { Box, Card, CardActionArea, CardMedia, Grid, Typography, useMediaQuery, useTheme } from '@mui/material'
 import { useLiveQuery } from 'dexie-react-hooks'
 import { MetaData } from '@/types/metaData'
-import { useLingui } from '@lingui/react/macro'
 import { CSSProperties, useMemo } from 'react'
-import useCreateCoverUrl from '@/hooks/useCreateCoverUrl'
+import useCreateImageUrl from '@/hooks/useCreateImageUrl'
 import { AutoSizer } from 'react-virtualized'
 import { FixedSizeList } from 'react-window'
+import { useNavigate } from 'react-router-dom'
 
 const CARD_PADDING = 0.5
 
 const AlbumView = () => {
   const { account } = useUser()
   const db = useDb(account)
-  const { t } = useLingui()
 
   const theme = useTheme()
   const xs = useMediaQuery(theme.breakpoints.up('xs'))
@@ -35,38 +34,39 @@ const AlbumView = () => {
   const albums = useLiveQuery(async () => {
     if (!db) return []
 
-    const allSongs = await db.metadata.orderBy('album').toArray()
+    const fileNodes = await db.nodes.where('type').equals('audio').toArray()
+    const fileNodeIds = fileNodes.map(node => node.id)
+
+    if (fileNodeIds.length === 0) {
+      return []
+    }
+
+    const allSongs = await db.metadata.where('id').anyOf(fileNodeIds).toArray()
+
     if (!allSongs) return []
 
     const albumMap = new Map<string, MetaData>()
 
     for (const song of allSongs) {
-      if (song.album) {
-        const albumArtist = song.albumArtist || song.artist || t`Unknown Artist`
-        const compositeKey = `${song.album}::${albumArtist}`
+      if (song.common.album) {
+        const albumartist = song.common.albumartist || ''
+        const compositeKey = `${song.common.album}::${albumartist}`
 
         const existingAlbumInfo = albumMap.get(compositeKey)
 
         if (!existingAlbumInfo) {
-          const albumInfo: MetaData = {
-            ...song,
-            artist: albumArtist,
-          }
+          const albumInfo: MetaData = song
           albumMap.set(compositeKey, albumInfo)
         }
-        else if (!existingAlbumInfo.cover && song.cover) {
-          const betterAlbumInfo: MetaData = {
-            ...song,
-            artist: albumArtist,
-          }
+        else if (!existingAlbumInfo.common.picture && song.common.picture) {
+          const betterAlbumInfo: MetaData = song
           albumMap.set(compositeKey, betterAlbumInfo)
         }
-
       }
     }
 
     return Array.from(albumMap.values())
-  }, [db, t])
+  }, [db])
 
   if (!albums)
     return <div />
@@ -92,30 +92,65 @@ const AlbumView = () => {
 }
 
 const AlbumCard = ({ item }: { item: MetaData }) => {
-  const coverUrl = useCreateCoverUrl(item)
+  const navigate = useNavigate()
+  const coverUrl = useCreateImageUrl(item)
+
+  const handleClick = () => {
+    if (item.common.album) {
+      const artistParam = item.common.albumartist || '_NO_ARTIST_'
+      navigate(`/library/albums/${encodeURIComponent(artistParam)}/${encodeURIComponent(item.common.album)}`)
+    }
+  }
+
   return (
     <Card sx={{ width: '100%', height: '100%' }}>
-      <CardActionArea sx={{ height: '100%' }} onClick={() => console.log(item)}>
-        <CardMedia
-          component='img'
-          sx={{ aspectRatio: '1/1' }}
-          image={coverUrl}
-          alt={item?.album}
-        />
-        <Typography
-          variant="caption"
-          sx={{
-            padding: 1,
-            display: 'block',
-            textAlign: 'center',
-            textWrap: 'nowrap',
-            overflow: 'hidden',
-            textOverflow: 'ellipsis',
-            whiteSpace: 'nowrap',
+      <CardActionArea sx={{ height: '100%' }} onClick={handleClick}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+          <CardMedia
+            component='img'
+            sx={{ aspectRatio: '1/1' }}
+            image={coverUrl}
+            alt={item?.common.album}
+          />
+          <Box sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'space-evenly',
+            flexShrink: 1,
+            height: '100%',
+            px: 1,
           }}
-        >
-          {item.album}
-        </Typography>
+          >
+            <Typography
+              variant="caption"
+              sx={{
+                display: 'block',
+                textAlign: 'center',
+                textWrap: 'nowrap',
+                fontSize: '100%',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+              }}
+            >
+              {item.common.album}
+            </Typography>
+            <Typography
+              variant="caption"
+              sx={{
+                display: 'block',
+                textAlign: 'center',
+                textWrap: 'nowrap',
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                lineHeight: 1,
+              }}
+            >
+              {item.common.albumartist}
+            </Typography>
+          </Box>
+        </Box>
       </CardActionArea>
     </Card>
   )
@@ -142,9 +177,9 @@ const Row = ({
             item
             &&
             <Grid
-              key={`${item.album}::${item.artist}`}
+              key={`${item.common.album}::${item.common.artist}`}
               size={12 / gridCols}
-              sx={{ padding: CARD_PADDING }}
+              sx={{ padding: CARD_PADDING, height: '100%' }}
             >
               <AlbumCard item={item} />
             </Grid>

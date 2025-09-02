@@ -37,6 +37,8 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
 
   const playQueue = usePlayQueueStore.use.playQueue()
   const currentIndex = usePlayQueueStore.use.currentIndex()
+  const currentTrack = playQueue?.find(item => item.index === currentIndex)
+  const type = useMemo(() => currentTrack && checkFileType(currentTrack.track.name) === 'video' ? 'video' : 'audio', [currentTrack])
 
   const [
     audioViewIsShow,
@@ -95,9 +97,6 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
   } = usePlayerControl(player)
 
   const { handleClickFullscreen } = useFullscreen()
-
-  const currentTrack = playQueue?.find(item => item.index === currentIndex)
-  const type = useMemo(() => currentTrack && checkFileType(currentTrack.track.name) === 'video' ? 'video' : 'audio', [currentTrack])
 
   const handleClickMediaInfo = () => {
     if (type === 'audio')
@@ -213,13 +212,13 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
                   </Grid>
                   <Grid size='grow' sx={{ pl: 1 }} minWidth={0}>
                     <Typography variant="body1" component="div" noWrap>
-                      {(!playQueue || !currentMetaData) ? 'Not playing' : currentMetaData.title}
+                      {!currentTrack ? 'Not playing' : currentMetaData?.common.title || currentTrack?.track.name}
                     </Typography>
                     <div>
                       {
-                        (!playQueue || !currentMetaData) ||
+                        (!currentTrack || !currentMetaData) ||
                         <Typography variant="subtitle1" color="text.secondary" component="div" noWrap>
-                          {currentMetaData.artist && currentMetaData.artist}{currentMetaData.album && ` • ${currentMetaData.album}`}
+                          {currentMetaData.common.artist && currentMetaData.common.artist}{currentMetaData.common.album && ` • ${currentMetaData.common.album}`}
                         </Typography>
                       }
                     </div>

@@ -59,9 +59,9 @@ const useMediaSession = (player: HTMLVideoElement | null) => {
       if ('mediaSession' in navigator && currentMetaData) {
         console.log('Set MediaSession')
         navigator.mediaSession.metadata = new MediaMetadata({
-          title: currentMetaData?.title,
-          artist: currentMetaData?.artist,
-          album: currentMetaData?.album,
+          title: currentMetaData?.common.title,
+          artist: currentMetaData?.common.artist,
+          album: currentMetaData?.common.album,
           artwork: [{ src: cover }]
         })
         navigator.mediaSession.setActionHandler('play', () => handleClickPlay())

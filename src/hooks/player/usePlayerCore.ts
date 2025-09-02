@@ -3,7 +3,7 @@ import useHistoryStore from '@/store/useHistoryStore'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
-import { createCoverUrl, getNetMetaData, isAudio, remoteItemToTrack } from '@/utils'
+import { createImageUrl, getNetMetaData, isAudio, remoteItemToTrack } from '@/utils'
 import useGraph from '../graph/useGraph'
 import useUser from '../graph/useUser'
 import { useShallow } from 'zustand/shallow'
@@ -62,6 +62,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
   const [url, setUrl] = useState('')
 
   const currentTrack = useMemo(() => playQueue?.find(item => item.index === currentIndex), [currentIndex, playQueue])
+  const currentTrackPath = useMemo(() => currentTrack?.track.path?.join('/'), [currentTrack])
 
   // 获取当前播放文件链接
   useMemo(
@@ -70,7 +71,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
         if (player) {
           player.src = ''
         }
-        if (playQueue !== null && playQueue.length !== 0 && currentTrack && account) {
+        if (playQueue && playQueue.length !== 0 && currentTrack && account) {
           updateIsLoading(true)
           try {
             const remoteItem = await getFileData(currentTrack.track.id, currentTrack.track.path)
@@ -96,7 +97,10 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
       })()
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [currentTrack?.track.path.join('/'), account]
+    [
+      currentTrackPath,
+      account,
+    ]
   )
 
   useMemo(
@@ -161,20 +165,14 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
 
           if (!metaData) {
             updateCover('./cover.svg')
-            updateCurrentMetaData(
-              {
-                id: currentTrack.track.id,
-                title: currentTrack.track.name || 'Not playing',
-                artist: '',
-              }
-            )
+            updateCurrentMetaData(null)
           } else {
             console.log('Update current metaData: ', metaData)
             updateCurrentMetaData(metaData)
-            if (metaData.cover && metaData.cover.length > 0) {
-              const cover = metaData.cover[0]
+            if (metaData.common.picture && metaData.common.picture.length > 0) {
+              const cover = metaData.common.picture[0]
               if (cover && 'data' in cover) {
-                updateCover(createCoverUrl(metaData.cover))
+                updateCover(createImageUrl(metaData.common.picture))
               }
             } else {
               updateCover('./cover.svg')
@@ -196,7 +194,6 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
             console.log('Start get net metadata: ', currentTrack.track)
             const netMetaData = await getNetMetaData(currentTrack.track, url)
             if (netMetaData) {
-              console.log('Get net metadata: ', netMetaData)
               await db.metadata.put(netMetaData)
               updateMetadataUpdate()
             }
@@ -211,7 +208,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
   useEffect(() => {
     let newTitle = 'OMP'
     if (currentMetaData) {
-      newTitle = `${currentMetaData.title}${currentMetaData.artist ? ` - ${currentMetaData.artist}` : ''}`
+      newTitle = `${currentMetaData.common.title}${currentMetaData.common.artist ? ` - ${currentMetaData.common.artist}` : ''}`
     }
 
     document.title = newTitle

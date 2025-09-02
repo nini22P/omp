@@ -3,6 +3,7 @@ import { NavLink } from 'react-router-dom'
 import HistoryRoundedIcon from '@mui/icons-material/HistoryOutlined'
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded'
 import FolderRoundedIcon from '@mui/icons-material/FolderRounded'
+import AlbumIcon from '@mui/icons-material/Album'
 import useUiStore from '../../store/useUiStore'
 import Playlists from './Playlists'
 import { useRef } from 'react'
@@ -17,8 +18,8 @@ const SideBar = () => {
   )
 
   const navData = [
-    { router: '/', icon: <FolderRoundedIcon />, label: t`Files` },
-    { router: '/library', icon: <FolderRoundedIcon />, label: t`Library` },
+    { router: '/library', icon: <AlbumIcon />, label: t`Library` },
+    { router: '/files', icon: <FolderRoundedIcon />, label: t`Files` },
     { router: '/history', icon: <HistoryRoundedIcon />, label: t`History` },
     { router: '/settings', icon: <SettingsRoundedIcon />, label: t`Settings` },
   ]

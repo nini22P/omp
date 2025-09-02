@@ -161,7 +161,7 @@ const CommonList = (
             return (
               item
               &&
-              <Grid key={item.name} size={{ xs: 12 / listCols }}>
+              <Grid key={item.id} size={{ xs: 12 / listCols }}>
                 <CommonListItem
                   active={typeof activeIndex === 'number' ? activeIndex === itemIndex : false}
                   item={item}

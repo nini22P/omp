@@ -3,7 +3,6 @@ import { useState } from 'react'
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 import useGraph from '@/hooks/graph/useGraph'
 import useUser from '@/hooks/graph/useUser'
-import useUiStore from '@/store/useUiStore'
 import { isAudio, isVideo, remoteItemToFileNode } from '@/utils'
 import useSWR from 'swr'
 import useDebounce from '@/hooks/useDebounce'
@@ -11,11 +10,9 @@ import CommonList from '@/components/CommonList/CommonList'
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded'
 import { useNavigate } from 'react-router-dom'
 import { animated, useSpring } from '@react-spring/web'
-import { useShallow } from 'zustand/shallow'
 import useStyles from '@/hooks/ui/useStyles'
 import { useLingui } from '@lingui/react/macro'
 import { useMsal } from '@azure/msal-react'
-import useGetFiles from '@/hooks/useGetFiles'
 
 const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
   const { t } = useLingui()
@@ -25,9 +22,6 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
 
   const [searchQuery, setSearchQuery] = useState('')
   const debouncedSearchQuery = useDebounce(searchQuery, searchQuery.length > 0 ? 1000 : 0)
-  const [folderTree, updateFolderTree] = useUiStore(
-    useShallow(state => [state.folderTree, state.updateFolderTree])
-  )
 
   const navigate = useNavigate()
 
@@ -43,8 +37,6 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
 
   const { getSearchData } = useGraph(instance, account)
 
-  const { data: files } = useGetFiles(folderTree)
-
   const searchFetcher = async (searchQuery: string) => {
     if (!account) return []
     const { value } = await getSearchData(searchQuery)
@@ -56,18 +48,9 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
     () => searchFetcher(debouncedSearchQuery),
   )
 
-  const filteredFilesData = debouncedSearchQuery.length > 0
-    ? files?.filter(item =>
-      item.name.toLocaleLowerCase().includes(debouncedSearchQuery.toLocaleLowerCase())
-      && ((isAudio(item.name) || isVideo(item.name) || item.folder === 1))
-    )
-    : []
-
   const filteredData = [
-    ...filteredFilesData || [],
     ...searchData?.filter(searchItem =>
-      !filteredFilesData?.find(item => (item.id === searchItem.id))
-      && ((isAudio(searchItem.name) || isVideo(searchItem.name) || searchItem.folder === 1))
+      ((isAudio(searchItem.name) || isVideo(searchItem.name) || searchItem.folder === 1))
     )
     || []
   ]
@@ -76,12 +59,10 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
     const currentFile = filteredData[index]
     if (currentFile.folder === 1) {
       handleCloseSearh()
-      updateFolderTree(currentFile.path)
-      navigate('/')
+      navigate(`/files/${currentFile.path.join('/')}`)
     } else {
       handleCloseSearh()
-      updateFolderTree(currentFile.path.slice(0, currentFile.path.length - 1))
-      navigate('/')
+      navigate(`/files/${currentFile.path.join('/')}`)
     }
   }
 

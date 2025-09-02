@@ -36,12 +36,12 @@ export function getDbForUser(userId: string): LibraryDB {
     ].join(', '),
     metadata: [
       '&id',
-      'title',
-      'artist',
-      'albumArtist',
-      'album',
-      '[artist+album]',
-      '*genre',
+      'common.title',
+      'common.artist',
+      'common.albumartist',
+      'common.album',
+      '*common.genre',
+      '[common.albumartist+common.album]',
     ].join(', ')
   })
 

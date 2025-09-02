@@ -1,10 +1,10 @@
-import * as mm from 'music-metadata-browser'
+import { IPicture, parseWebStream } from 'music-metadata'
 import { pinyin } from 'pinyin-pro'
 import { toRomaji } from 'wanakana'
 import { franc, francAll, } from 'franc-min'
 import { FileNode, FileType, Track, RemoteItem } from './types/file'
 import { QueuedTrack } from './types/playQueue'
-import { Cover, MetaData } from './types/metaData'
+import { MetaData } from './types/metaData'
 import kanjiRomajiMap from '@/data/kanjiRomajiMap'
 
 export const isDevelopment = process.env.NODE_ENV === 'development'
@@ -160,7 +160,7 @@ export const getRemotePath = (item: RemoteItem) => item.parentReference.path
   ]
   : []
 
-export const compressImage = async (image: mm.IPicture): Promise<Cover> => {
+export const compressImage = async (image: IPicture): Promise<IPicture> => {
   const blob = new Blob([image.data as unknown as ArrayBuffer], { type: image.format })
   const url = URL.createObjectURL(blob)
   const img = new Image()
@@ -195,11 +195,11 @@ export const compressImage = async (image: mm.IPicture): Promise<Cover> => {
     const buffer = await compressedBlob.arrayBuffer()
 
     return {
-      ...image,
       format: 'image/webp',
       data: new Uint8Array(buffer),
-      width: img.width,
-      height: img.height,
+      description: image.description,
+      type: image.type,
+      name: image.name,
     }
   } finally {
     URL.revokeObjectURL(url)
@@ -208,33 +208,45 @@ export const compressImage = async (image: mm.IPicture): Promise<Cover> => {
 
 export const getNetMetaData = async (file: FileNode | Track, url: string): Promise<MetaData | null> => {
   try {
-    const metadata = await mm.fetchFromUrl(url)
+    const response = await fetch(url)
+
+    if (response.body === null) {
+      return null
+    }
+
+    const contentLength = response.headers.get('Content-Length')
+    const size = contentLength ? parseInt(contentLength, 10) : undefined
+
+    const metadata = await parseWebStream(
+      response.body,
+      {
+        mimeType: response.headers.get('Content-Type') ?? undefined,
+        size
+      },
+    )
+
 
     if (!metadata?.common?.title) {
       return null
     }
 
-    let compressedCovers: Cover[] | undefined = undefined
+    console.log('Get net metadata: ', metadata)
+
+    let compressedPictures: IPicture[] | undefined = undefined
     if (metadata.common.picture) {
-      compressedCovers = await Promise.all(
+      compressedPictures = await Promise.all(
         metadata.common.picture.map((item) => compressImage(item))
       )
     }
 
-    const lyrics = metadata.common.lyrics?.[0]
-      || metadata.native?.['ID3v2.3']?.find(item => item.id.toLocaleLowerCase().includes('lyrics'))?.value
-      || undefined
-
     const metaData: MetaData = {
       id: file.id,
-      title: metadata.common.title,
-      artist: metadata.common.artist,
-      albumArtist: metadata.common.albumartist,
-      album: metadata.common.album,
-      year: metadata.common.year,
-      genre: metadata.common.genre,
-      cover: compressedCovers,
-      lyrics: lyrics,
+      ...metadata,
+      common: {
+        ...metadata.common,
+        title: metadata.common.title.trim(),
+        picture: compressedPictures,
+      }
     }
 
     return metaData
@@ -245,9 +257,9 @@ export const getNetMetaData = async (file: FileNode | Track, url: string): Promi
   }
 }
 
-export const createCoverUrl = (cover: Cover[]): string => {
-  if (cover && cover.length > 0) {
-    const blob = new Blob([cover[0].data as unknown as ArrayBuffer], { type: cover[0].format })
+export const createImageUrl = (image: IPicture[]): string => {
+  if (image && image.length > 0) {
+    const blob = new Blob([image[0].data as unknown as ArrayBuffer], { type: image[0].format })
     return URL.createObjectURL(blob)
   }
   return './cover.svg'

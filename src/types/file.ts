@@ -119,7 +119,7 @@ export interface FileNode {
 export interface Track {
   id: string
   name: string
-  path: string[]
-  size: number
+  path?: string[]
+  size?: number
   cTag?: string
 }

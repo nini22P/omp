@@ -11,14 +11,24 @@ const ArtistView = () => {
   const db = useDb(account)
 
   const artists = useLiveQuery(
-    async () =>
-      db
-        ? (
-          await db.metadata
-            .orderBy('albumArtist')
-            .uniqueKeys()
-        ).filter((artist): artist is string => typeof artist === 'string')
-        : [],
+    async () => {
+      if (!db)
+        return []
+
+      const fileNodes = await db.nodes.where('type').equals('audio').toArray()
+      const fileNodeIds = fileNodes.map(node => node.id)
+
+      if (fileNodeIds.length === 0) {
+        return []
+      }
+
+      return (
+        await db.metadata
+          .orderBy('common.albumartist')
+          .filter(song => fileNodeIds.includes(song.id))
+          .uniqueKeys()
+      ).filter((artist): artist is string => typeof artist === 'string')
+    },
     [db]
   )
 

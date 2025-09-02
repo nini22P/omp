@@ -91,7 +91,7 @@ const CommonListItem = ({
         <ListItemText
           primary={item.name}
           secondary={
-            `${sizeConv(item.size)}
+            `${'size' in item && item.size && sizeConv(item.size)}
             ${'lastModifiedDateTime' in item && item.lastModifiedDateTime
               ? ` • ${new Date(item.lastModifiedDateTime).toLocaleString(undefined, {
                 year: 'numeric',

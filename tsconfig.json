@@ -27,7 +27,9 @@
         "src/*"
       ]
     },
-    "types": []
+    "types": [
+      "@types/node"
+    ]
   },
   "include": [
     "**/*.ts",

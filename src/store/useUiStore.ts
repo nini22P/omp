@@ -5,7 +5,6 @@ import createSelectors from './createSelectors'
 
 const initialState: UiState = {
   currentAccount: 0,
-  folderTree: [],
   audioViewIsShow: false,
   audioViewTheme: 'modern',
   videoViewIsShow: false,
@@ -34,7 +33,6 @@ const useUiStoreBase = create<UiState & UiActions>()(
     (set) => ({
       ...initialState,
       updateCurrentAccount: (currentAccount) => set(() => ({ currentAccount: currentAccount })),
-      updateFolderTree: (folderTree) => set(() => ({ folderTree: folderTree })),
       updateAudioViewIsShow: (audioViewIsShow) => set(() => ({ audioViewIsShow: audioViewIsShow })),
       updateAudioViewTheme: (audioViewTheme) => set(() => ({ audioViewTheme: audioViewTheme })),
       updateVideoViewIsShow: (videoViewIsShow) => set(() => ({ videoViewIsShow: videoViewIsShow })),

@@ -91,7 +91,7 @@ const CommonListItemCard = ({
           </Grid>
           <Grid container size='grow' sx={{ justifyContent: 'center', alignItems: 'center' }} >
             <span style={{ display: 'block', width: '100%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', fontSize: 'smaller', lineHeight: '1.5' }}>{item.name}</span>
-            <span style={{ display: 'block', width: '100%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', fontSize: 'x-small', fontWeight: 'lighter' }}>{sizeConv(item.size)}</span>
+            <span style={{ display: 'block', width: '100%', overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis', fontSize: 'x-small', fontWeight: 'lighter' }}>{'size' in item && item.size && sizeConv(item.size)}</span>
           </Grid>
           <Grid size='auto'>
             {

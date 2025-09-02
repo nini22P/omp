@@ -16,31 +16,31 @@ import usePlayerStore from '@/store/usePlayerStore'
 import { useShallow } from 'zustand/shallow'
 import { useMsal } from '@azure/msal-react'
 import useGetFiles from '@/hooks/useGetFiles'
+import { useParams, useNavigate } from 'react-router-dom'
 
 const Files = () => {
+  const { '*': path = '' } = useParams()
+  const navigate = useNavigate()
+  const folderTree = useMemo(() => path.split('/').filter(Boolean), [path])
 
   const [
     shuffle,
-    folderTree,
     display,
     sortBy,
     orderBy,
     foldersFirst,
     mediaOnly,
-    updateFolderTree,
     updateVideoViewIsShow,
     updateShuffle,
   ] = useUiStore(
     useShallow(
       (state) => [
         state.shuffle,
-        state.folderTree,
         state.display,
         state.sortBy,
         state.orderBy,
         state.foldersFirst,
         state.mediaOnly,
-        state.updateFolderTree,
         state.updateVideoViewIsShow,
         state.updateShuffle,
       ]
@@ -95,7 +95,8 @@ const Files = () => {
   )
 
   const handleClickNav = (index: number) => {
-    updateFolderTree(folderTree.slice(0, index))
+    const newPath = folderTree.slice(0, index).join('/')
+    navigate(`/files${newPath ? `/${newPath}` : ''}`)
   }
 
   const open = async (index: number) => {
@@ -104,7 +105,8 @@ const Files = () => {
 
       if (currentFile && currentFile.folder === 1) {
         setScrollId(currentFile.id)
-        updateFolderTree(currentFile.path)
+        const newPath = currentFile.path.join('/')
+        navigate(`/files/${newPath}`)
       }
 
       if (currentFile && currentFile.type === 'picture') {
@@ -121,7 +123,7 @@ const Files = () => {
           updateShuffle(false)
         }
         updatePlayQueue(list)
-        updateCurrentIndex(list.find(item => item.track.path.join('/') === currentFile.path.join('/'))?.index || 0)
+        updateCurrentIndex(list.find(item => item.track.path?.join('/') === currentFile.path.join('/'))?.index || 0)
         updateAutoPlay(true)
         if (isVideo(currentFile.name)) {
           updateVideoViewIsShow(true)

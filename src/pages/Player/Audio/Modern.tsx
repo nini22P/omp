@@ -34,6 +34,8 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
   const theme = useTheme()
 
   const playQueue = usePlayQueueStore.use.playQueue()
+  const currentIndex = usePlayQueueStore.use.currentIndex()
+  const currentTrack = playQueue?.find(item => item.index === currentIndex)
 
   const [
     audioViewIsShow,
@@ -267,8 +269,8 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
                 }}
               >
                 {
-                  currentMetaData && currentMetaData.lyrics
-                    ? <Lyrics lyrics={currentMetaData.lyrics} currentTime={currentTime} />
+                  currentMetaData && currentMetaData.common.lyrics
+                    ? <Lyrics lyrics={currentMetaData.common.lyrics} currentTimestamp={currentTime * 1000} />
                     : <div
                       style={{
                         height: '100%',
@@ -301,13 +303,13 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
 
                 <Box sx={{ width: '100%', textOverflow: 'ellipsis' }}>
                   <Typography variant="h5" component="div" noWrap>
-                    {(!playQueue || !currentMetaData) ? 'Not playing' : currentMetaData.title}
+                    {!currentTrack ? 'Not playing' : currentMetaData?.common.title || currentTrack.track.name}
                   </Typography>
                   <Typography variant="subtitle2" color={theme.palette.text.secondary} component="div" noWrap sx={{ minHeight: '22px' }}>
-                    {(playQueue && currentMetaData) ? currentMetaData.artist : ''}
+                    {currentTrack ? currentMetaData?.common.artist : ''}
                   </Typography>
                   <Typography variant="subtitle1" color={theme.palette.text.secondary} component="div" noWrap sx={{ minHeight: '28px' }}>
-                    {(playQueue && currentMetaData) ? currentMetaData.album : ''}
+                    {currentTrack ? currentMetaData?.common.album : ''}
                   </Typography>
                 </Box>
 
