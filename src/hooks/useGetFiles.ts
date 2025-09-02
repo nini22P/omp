@@ -2,7 +2,7 @@ import { useMsal } from '@azure/msal-react'
 import useUser from '@/hooks/graph/useUser'
 import useGraph from '@/hooks/graph/useGraph'
 import useSWR from 'swr'
-import { remoteItemToFileNode } from '@/utils'
+import { remoteItemToFileNode } from '@/utils/remote'
 
 const useGetFiles = (folderTree: string[]) => {
   const { instance } = useMsal()

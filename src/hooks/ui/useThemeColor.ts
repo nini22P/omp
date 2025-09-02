@@ -1,8 +1,8 @@
 import { useEffect } from 'react'
 import useUiStore from '../../store/useUiStore'
-import { blendHex } from '@/utils'
 import { Theme, useMediaQuery } from '@mui/material'
 import { useShallow } from 'zustand/shallow'
+import { blendHex } from '@/utils/colors'
 const useThemeColor = (theme: Theme) => {
 
   const [

@@ -3,7 +3,6 @@ import { useState } from 'react'
 import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 import useGraph from '@/hooks/graph/useGraph'
 import useUser from '@/hooks/graph/useUser'
-import { isAudio, isVideo, remoteItemToFileNode } from '@/utils'
 import useSWR from 'swr'
 import useDebounce from '@/hooks/useDebounce'
 import CommonList from '@/components/CommonList/CommonList'
@@ -13,6 +12,8 @@ import { animated, useSpring } from '@react-spring/web'
 import useStyles from '@/hooks/ui/useStyles'
 import { useLingui } from '@lingui/react/macro'
 import { useMsal } from '@azure/msal-react'
+import { remoteItemToFileNode } from '@/utils/remote'
+import { isAudio, isVideo } from '@/utils/checkFileType'
 
 const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
   const { t } = useLingui()

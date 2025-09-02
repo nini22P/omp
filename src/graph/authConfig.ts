@@ -3,10 +3,11 @@
  * Licensed under the MIT License.
  */
 
-import { tauriLocalhost } from '@/tauriUtils'
-import { isDevelopment } from '@/utils'
+import { tauriLocalhost } from '@/utils/tauri'
 import { LogLevel } from '@azure/msal-browser'
 import { isTauri } from '@tauri-apps/api/core'
+
+const isDevelopment = process.env.NODE_ENV === 'development'
 
 /**
  * Configuration object to be passed to MSAL instance on creation. 

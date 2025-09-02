@@ -1,7 +1,7 @@
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
-import { shufflePlayQueue } from '@/utils'
+import shufflePlayQueue from '@/utils/shufflePlayQueue'
 import { useEffect } from 'react'
 import { useShallow } from 'zustand/shallow'
 

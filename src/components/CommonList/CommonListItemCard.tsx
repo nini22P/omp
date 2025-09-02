@@ -7,10 +7,11 @@ import MusicNoteRoundedIcon from '@mui/icons-material/MusicNoteRounded'
 import MovieRoundedIcon from '@mui/icons-material/MovieRounded'
 import MoreVertRoundedIcon from '@mui/icons-material/MoreVertRounded'
 import Grid from '@mui/material/Grid'
-import { checkFileType, sizeConv } from '@/utils'
 import { useLingui } from '@lingui/react/macro'
 import useUiStore from '@/store/useUiStore'
 import { useMemo } from 'react'
+import checkFileType from '@/utils/checkFileType'
+import { sizeConv } from '@/utils/remote'
 
 const CommonListItemCard = ({
   item,

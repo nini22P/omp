@@ -5,10 +5,10 @@ import useHistoryStore from '@/store/useHistoryStore'
 import useGraph from './useGraph'
 import { FileItem, Track } from '@/types/file'
 import { OldPlaylist, Playlist } from '@/types/playlist'
-import { fetchJson } from '@/utils'
 import useUser from './useUser'
 import { useShallow } from 'zustand/shallow'
 import { useMsal } from '@azure/msal-react'
+import { fetchJson } from '@/utils/remote'
 
 const useSync = () => {
   const { instance } = useMsal()

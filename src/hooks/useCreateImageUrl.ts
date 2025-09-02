@@ -1,5 +1,5 @@
 import { MetaData } from '@/types/metaData'
-import { createImageUrl } from '@/utils'
+import createImageUrl from '@/utils/createImageUrl'
 import useSWR from 'swr'
 
 const useCreateImageUrl = (metaData: MetaData | null) => {

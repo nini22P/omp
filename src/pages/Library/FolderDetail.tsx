@@ -3,7 +3,6 @@ import useUser from '@/hooks/graph/useUser'
 import useDb from '@/hooks/useDb'
 import { useLiveQuery } from 'dexie-react-hooks'
 import CommonList from '@/components/CommonList/CommonList'
-import { fileNodeToTrack, isAudio, isVideo, shufflePlayQueue } from '@/utils'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
 import { Box, Typography, IconButton } from '@mui/material'
@@ -11,6 +10,9 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import Loading from '../Loading'
 import { useLingui } from '@lingui/react/macro'
 import useUiStore from '@/store/useUiStore'
+import { isAudio, isVideo } from '@/utils/checkFileType'
+import shufflePlayQueue from '@/utils/shufflePlayQueue'
+import { fileNodeToTrack } from '@/utils/track'
 
 const FolderDetail = () => {
   const { id } = useParams<{ id: string }>()

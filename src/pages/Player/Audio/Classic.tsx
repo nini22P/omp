@@ -3,19 +3,21 @@ import useFullscreen from '@/hooks/ui/useFullscreen'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
-import { timeShift } from '@/utils'
 import { CloseFullscreen, FastForward, FastRewind, KeyboardArrowDownOutlined, OpenInFull, PanoramaOutlined, PauseCircleOutlined, PlayCircleOutlined, QueueMusicOutlined, Repeat, RepeatOne, Shuffle, SkipNext, SkipPrevious } from '@mui/icons-material'
 import { Container, Box, IconButton, Typography, Slider, CircularProgress, useTheme } from '@mui/material'
 import Grid from '@mui/material/Grid'
 import PlayerMenu from '../PlayerMenu'
 import { SpringValue, animated } from '@react-spring/web'
 import { useShallow } from 'zustand/shallow'
+import { timeShift } from '@/utils/time'
 
 const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: { borderRadius: SpringValue<string> } }) => {
 
   const theme = useTheme()
 
   const playQueue = usePlayQueueStore.use.playQueue()
+  const currentIndex = usePlayQueueStore.use.currentIndex()
+  const currentTrack = playQueue?.find(item => item.index === currentIndex)
 
   const [
     audioViewIsShow,
@@ -188,13 +190,13 @@ const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: 
               <Grid size={{ xs: 12, sm: 8 }} pl={{ xs: 0, lg: 5 }} textAlign={'center'}>
                 <Grid size={12} pl={4} pr={4} >
                   <Typography variant="h6" component="div" textAlign={'center'} noWrap>
-                    {(!playQueue || !currentMetaData) ? 'Not playing' : currentMetaData.title}
+                    {!currentTrack ? 'Not playing' : currentMetaData?.common.title || currentTrack.track.name}
                   </Typography>
                   <Typography variant="body1" component="div" textAlign={'center'} noWrap>
-                    {(playQueue && currentMetaData) && currentMetaData.artist}
+                    {currentMetaData?.common.artist || ''}
                   </Typography>
                   <Typography variant="body1" component="div" textAlign={'center'} noWrap>
-                    {(playQueue && currentMetaData) && currentMetaData.album}
+                    {currentMetaData?.common.album || ''}
                   </Typography>
                 </Grid>
 

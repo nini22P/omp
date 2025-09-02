@@ -3,13 +3,16 @@ import useHistoryStore from '@/store/useHistoryStore'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
-import { createImageUrl, getNetMetaData, isAudio, remoteItemToTrack } from '@/utils'
 import useGraph from '../graph/useGraph'
 import useUser from '../graph/useUser'
 import { useShallow } from 'zustand/shallow'
-import { setTitle } from '@/tauriUtils'
+import { setTitle } from '@/utils/tauri'
 import { useMsal } from '@azure/msal-react'
 import useDb from '../useDb'
+import { isAudio } from '@/utils/checkFileType'
+import createImageUrl from '@/utils/createImageUrl'
+import getNetMetaData from '@/utils/getNetMetaData'
+import { remoteItemToTrack } from '@/utils/track'
 
 const usePlayerCore = (player: HTMLVideoElement | null) => {
 

@@ -21,10 +21,11 @@ import shortUUID from 'short-uuid'
 import useFullscreen from '@/hooks/ui/useFullscreen'
 import { useShallow } from 'zustand/shallow'
 import usePlayerStore from '@/store/usePlayerStore'
-import { checkFileType, getNetMetaData } from '@/utils'
 import { useLingui } from '@lingui/react/macro'
 import useUser from '@/hooks/graph/useUser'
 import useDb from '@/hooks/useDb'
+import getNetMetaData from '@/utils/getNetMetaData'
+import checkFileType from '@/utils/checkFileType'
 
 const PlayerMenu = ({ player }: { player: HTMLVideoElement | null }) => {
   const { t } = useLingui()

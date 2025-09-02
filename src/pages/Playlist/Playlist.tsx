@@ -9,11 +9,11 @@ import { MetaData } from '@/types/metaData'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
-import { checkFileType } from '@/utils'
 import { useShallow } from 'zustand/shallow'
 import { useLingui } from '@lingui/react/macro'
 import useUser from '@/hooks/graph/useUser'
 import useDb from '@/hooks/useDb'
+import checkFileType from '@/utils/checkFileType'
 
 const Playlist = () => {
   const { t } = useLingui()
@@ -133,9 +133,9 @@ const Playlist = () => {
               {/* 背景 */}
               <Box sx={{ position: 'absolute', height: '100%', width: '100%' }}>
                 {
-                  metaDatas[0] && metaDatas[0].cover && metaDatas[0].cover.length > 0 && 'data' in metaDatas[0].cover[0] &&
+                  metaDatas[0] && metaDatas[0].common.picture && metaDatas[0].common.picture.length > 0 && 'data' in metaDatas[0].common.picture[0] &&
                   <img
-                    src={URL.createObjectURL(new Blob([new Uint8Array(metaDatas[0].cover[0].data as unknown as ArrayBuffer)], { type: metaDatas[0].cover[0].format }))}
+                    src={URL.createObjectURL(new Blob([new Uint8Array(metaDatas[0].common.picture[0].data as unknown as ArrayBuffer)], { type: metaDatas[0].common.picture[0].format }))}
                     alt='Cover'
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   />

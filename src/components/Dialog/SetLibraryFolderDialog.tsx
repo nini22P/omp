@@ -1,7 +1,6 @@
 import useGraph from '@/hooks/graph/useGraph'
 import useUser from '@/hooks/graph/useUser'
 import useUiStore from '@/store/useUiStore'
-import { fileSorter } from '@/utils'
 import { useMsal } from '@azure/msal-react'
 import { useLingui } from '@lingui/react/macro'
 import { Divider, Grid } from '@mui/material'
@@ -18,6 +17,7 @@ import Loading from '@/pages/Loading'
 import CommonList from '@/components/CommonList/CommonList'
 import useDb from '@/hooks/useDb'
 import useGetFiles from '@/hooks/useGetFiles'
+import { fileSorter } from '@/utils/sorter'
 
 export default function SetLibraryFolderDialog(
   {

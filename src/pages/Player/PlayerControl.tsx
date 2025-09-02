@@ -17,13 +17,14 @@ import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
 import useFullscreen from '@/hooks/ui/useFullscreen'
 import usePlayerControl from '@/hooks/player/usePlayerControl'
-import { checkFileType, timeShift } from '@/utils'
 import PlayerMenu from './PlayerMenu'
 import VolumeControl from './VolumeControl'
 import { useEffect, useMemo } from 'react'
 import useControlHide from '@/hooks/ui/useControlHide'
 import { useShallow } from 'zustand/shallow'
 import { useLingui } from '@lingui/react/macro'
+import { timeShift } from '@/utils/time'
+import checkFileType from '@/utils/checkFileType'
 
 const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
   const { t } = useLingui()

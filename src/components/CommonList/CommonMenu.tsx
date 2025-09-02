@@ -9,7 +9,8 @@ import useUiStore from '@/store/useUiStore'
 import { FileNode, Track } from '@/types/file'
 import { useShallow } from 'zustand/shallow'
 import { useLingui } from '@lingui/react/macro'
-import { fileNodeToTrack, isAudio, isVideo } from '@/utils'
+import { isAudio, isVideo } from '@/utils/checkFileType'
+import { fileNodeToTrack } from '@/utils/track'
 
 const CommonMenu = (
   {

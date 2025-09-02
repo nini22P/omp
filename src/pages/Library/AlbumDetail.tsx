@@ -2,7 +2,6 @@ import { useNavigate, useParams } from 'react-router-dom'
 import useUser from '@/hooks/graph/useUser'
 import useDb from '@/hooks/useDb'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { fileNodeToTrack, shufflePlayQueue } from '@/utils'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
 import { Box, Typography, IconButton, Grid, CardMedia, ListItem, ListItemButton, ListItemAvatar, Avatar, ListItemText } from '@mui/material'
@@ -17,6 +16,8 @@ import { FixedSizeList } from 'react-window'
 import { MetaData } from '@/types/metaData'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import ShuffleIcon from '@mui/icons-material/Shuffle'
+import shufflePlayQueue from '@/utils/shufflePlayQueue'
+import { fileNodeToTrack } from '@/utils/track'
 
 const AlbumDetail = () => {
   const { artist, album } = useParams<{ artist: string, album: string }>()

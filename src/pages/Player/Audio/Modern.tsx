@@ -22,11 +22,11 @@ import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
 import PlayerMenu from '../PlayerMenu'
-import { timeShift } from '@/utils'
 import { useShallow } from 'zustand/shallow'
 import Lyrics from '@/components/Lyrics/Lyrics'
 import VolumeControl from '../VolumeControl'
 import { useLingui } from '@lingui/react/macro'
+import { timeShift } from '@/utils/time'
 
 const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: { borderRadius: SpringValue<string> } }) => {
   const { t } = useLingui()

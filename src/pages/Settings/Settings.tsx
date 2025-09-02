@@ -20,8 +20,8 @@ import { useLiveQuery } from 'dexie-react-hooks'
 import useDb from '@/hooks/useDb'
 import { useMsal } from '@azure/msal-react'
 import useGraph from '@/hooks/graph/useGraph'
-import { getRemotePath } from '@/utils'
 import ListItemTitle from '@/components/ListItemTitle'
+import { getRemotePath } from '@/utils/remote'
 
 const Settings = () => {
   const { t } = useLingui()

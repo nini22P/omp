@@ -4,8 +4,8 @@ import Loading from './Loading'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
-import { isVideo } from '@/utils'
 import { useShallow } from 'zustand/shallow'
+import { isVideo } from '@/utils/checkFileType'
 
 const History = () => {
   const [historys, removeHistory] = useHistoryStore(
