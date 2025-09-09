@@ -11,7 +11,6 @@ const CompressionPlugin = require('compression-webpack-plugin')
 const ReactRefreshPlugin = require('@pmmmwh/react-refresh-webpack-plugin')
 
 const isProduction = process.env.NODE_ENV == 'production'
-const isTauriBuild = process.env.TAURI_ENV_PLATFORM !== undefined
 
 const config = {
   entry: './src/main.tsx',
@@ -124,17 +123,13 @@ const prodConfig = {
     },
   },
   plugins: [
-    ...(
-      isTauriBuild ? [] : [
-        new WorkboxWebpackPlugin.GenerateSW(),
-        new CompressionPlugin(),
-        new BundleAnalyzerPlugin({
-          analyzerMode: 'static',
-          openAnalyzer: true,
-          reportFilename: 'bundle-report.html',
-        }),
-      ]
-    )
+    new WorkboxWebpackPlugin.GenerateSW(),
+    new CompressionPlugin(),
+    new BundleAnalyzerPlugin({
+      analyzerMode: 'static',
+      openAnalyzer: true,
+      reportFilename: 'bundle-report.html',
+    }),
   ]
 }
 

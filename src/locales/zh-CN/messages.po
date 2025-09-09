@@ -99,7 +99,7 @@ msgstr "关闭"
 msgid "Color mode"
 msgstr "颜色模式"
 
-#: src/pages/NavBar.tsx:134
+#: src/pages/NavBar.tsx:126
 msgid "Currently using a development version, please be careful with your data!"
 msgstr "当前正在使用开发版本，请注意数据安全!"
 

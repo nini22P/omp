@@ -137,7 +137,7 @@ const CommonMenu = (
   // 打开所在文件夹
   const handleClickOpenInFolder = async () => {
     if (typeof selectIndex === 'number' && listData[selectIndex].path) {
-      navigate(`/files/${listData[selectIndex].path.join('/')}`)
+      navigate(`/files/${listData[selectIndex].path.splice(0, -1).join('/')}`)
       setMenuOpen(false)
       setSelectIndex(null)
       updateAudioViewIsShow(false)

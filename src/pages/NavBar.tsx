@@ -1,14 +1,9 @@
 import { Box, Typography, Container, IconButton, useMediaQuery, useTheme, Tooltip } from '@mui/material'
 import MenuRoundedIcon from '@mui/icons-material/MenuRounded'
-import RemoveRoundedIcon from '@mui/icons-material/RemoveRounded'
-import CropSquareRoundedIcon from '@mui/icons-material/CropSquareRounded'
-import CloseRoundedIcon from '@mui/icons-material/CloseRounded'
 import useUiStore from '../store/useUiStore'
 import Search from './Search'
 import { useShallow } from 'zustand/shallow'
 import INFO from '@/data/info'
-import { isTauri } from '@tauri-apps/api/core'
-import { getCurrentWindow } from '@tauri-apps/api/window'
 import { useLingui } from '@lingui/react/macro'
 
 const NavBar = () => {
@@ -41,9 +36,6 @@ const NavBar = () => {
         // width: 'env(titlebar-area-width, 100%)',
         right: 0,
         height: 'env(titlebar-area-height, 3.5rem)',
-        '[data-tauri="true"] &': {
-          height: 'var(--titlebar-height)',
-        },
       }}
       className='app-region-drag'
     >
@@ -57,7 +49,7 @@ const NavBar = () => {
           justifyContent: 'space-between',
           alignItems: 'center',
           height: '100%',
-          px: windowControlsOverlayOpen || isTauri() ? '0' : '0.5rem',
+          px: windowControlsOverlayOpen ? '0' : '0.5rem',
           py: 'calc(env(titlebar-area-height, 0.5rem) - env(titlebar-area-height, 0rem) + 0.25rem)',
           gap: '0.5rem',
         }}
@@ -65,7 +57,7 @@ const NavBar = () => {
         {/* 搜索栏 */}
         <Box
           sx={{
-            display: windowControlsOverlayOpen || isTauri() ? 'flex' : { xs: 'flex', sm: 'none' },
+            display: windowControlsOverlayOpen ? 'flex' : { xs: 'flex', sm: 'none' },
             position: 'absolute',
             alignItems: 'center',
             height: '100%',
@@ -74,7 +66,7 @@ const NavBar = () => {
               xs: windowControlsOverlayOpen ? 'env(titlebar-area-width)' : '100%',
               md: '100%',
             },
-            px: windowControlsOverlayOpen || isTauri() ? '0' : '0.5rem',
+            px: windowControlsOverlayOpen ? '0' : '0.5rem',
             justifyContent: { xs: 'flex-end', sm: windowControlsOverlayOpen ? 'flex-end' : 'center', md: 'center' }
           }}
         >
@@ -118,14 +110,14 @@ const NavBar = () => {
             src='./logo.svg'
             alt='logo'
             style={{
-              height: windowControlsOverlayOpen || isTauri() ? 'calc(var(--titlebar-height) - 0.5rem)' : 'var(--titlebar-height)',
+              height: windowControlsOverlayOpen ? 'calc(var(--titlebar-height) - 0.5rem)' : 'var(--titlebar-height)',
               marginLeft: '0.25rem',
-              marginRight: windowControlsOverlayOpen || isTauri() ? '0.125rem' : '0.6125rem',
+              marginRight: windowControlsOverlayOpen ? '0.125rem' : '0.6125rem',
             }}
           />
           <Typography
             component="div"
-            fontSize={windowControlsOverlayOpen || isTauri() ? '100%' : '1.25rem'}
+            fontSize={windowControlsOverlayOpen ? '100%' : '1.25rem'}
             style={{ textAlign: 'center' }}
           >
             OMP
@@ -145,58 +137,6 @@ const NavBar = () => {
               </Tooltip>
             }
           </Typography>
-        </Box>
-
-        <Box>
-          {
-            isTauri() && (
-              <>
-                <IconButton
-                  sx={{
-                    width: 'var(--titlebar-height)',
-                    height: 'var(--titlebar-height)',
-                    borderRadius: '0.2rem',
-                    '.MuiTouchRipple-ripple .MuiTouchRipple-child': {
-                      borderRadius: '0.2rem',
-                    },
-                  }}
-                  className='app-region-no-drag'
-                  onClick={async () => await getCurrentWindow().minimize()}
-                >
-                  <RemoveRoundedIcon />
-                </IconButton>
-                <IconButton
-                  sx={{
-                    width: 'var(--titlebar-height)',
-                    height: 'var(--titlebar-height)',
-                    borderRadius: '0.2rem',
-                    '.MuiTouchRipple-ripple .MuiTouchRipple-child': {
-                      borderRadius: '0.2rem',
-                    },
-                  }}
-                  className='app-region-no-drag'
-                  onClick={async () => await getCurrentWindow().toggleMaximize()}
-                >
-                  <CropSquareRoundedIcon />
-                </IconButton>
-                <IconButton
-                  sx={{
-                    width: 'var(--titlebar-height)',
-                    height: 'var(--titlebar-height)',
-                    borderRadius: '0.2rem',
-                    '.MuiTouchRipple-ripple .MuiTouchRipple-child': {
-                      borderRadius: '0.2rem',
-                    },
-                  }}
-                  className='app-region-no-drag'
-                  onClick={async () => await getCurrentWindow().close()}
-                >
-                  <CloseRoundedIcon />
-                </IconButton>
-              </>
-            )
-          }
-
         </Box>
       </Container >
     </Box >

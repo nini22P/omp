@@ -39,6 +39,7 @@ export async function getFile(
   accessToken: string,
   id: string,
   path?: string[],
+  signal?: AbortSignal,
 ): Promise<RemoteItem> {
   const headers = new Headers()
   const bearer = `Bearer ${accessToken}`
@@ -47,7 +48,8 @@ export async function getFile(
 
   const options = {
     method: 'GET',
-    headers: headers
+    headers: headers,
+    signal: signal,
   }
 
   const queryParams = {

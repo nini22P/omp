@@ -32,10 +32,6 @@ html {
   --content-padding-top: env(titlebar-area-height);
 }
 
-:root[data-tauri="true"] {
-  --content-padding-top: 2rem;
-}
-
 :root[data-theme="light"] {
   color-scheme: light;
   background-color: #f7f7f7;

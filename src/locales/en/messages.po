@@ -99,7 +99,7 @@ msgstr "Close"
 msgid "Color mode"
 msgstr "Color mode"
 
-#: src/pages/NavBar.tsx:134
+#: src/pages/NavBar.tsx:126
 msgid "Currently using a development version, please be careful with your data!"
 msgstr "Currently using a development version, please be careful with your data!"
 

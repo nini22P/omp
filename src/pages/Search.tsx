@@ -63,7 +63,7 @@ const Search = ({ type = 'icon' }: { type?: 'icon' | 'bar' }) => {
       navigate(`/files/${currentFile.path.join('/')}`)
     } else {
       handleCloseSearh()
-      navigate(`/files/${currentFile.path.join('/')}`)
+      navigate(`/files/${currentFile.path.splice(0, -1).join('/')}`)
     }
   }
 

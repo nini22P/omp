@@ -1,51 +1,25 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useMemo, useEffect } from 'react'
 import useHistoryStore from '@/store/useHistoryStore'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
 import useUiStore from '@/store/useUiStore'
-import useGraph from '../graph/useGraph'
-import useUser from '../graph/useUser'
 import { useShallow } from 'zustand/shallow'
-import { setTitle } from '@/utils/tauri'
-import { useMsal } from '@azure/msal-react'
-import useDb from '../useDb'
-import { isAudio } from '@/utils/checkFileType'
-import createImageUrl from '@/utils/createImageUrl'
-import getNetMetaData from '@/utils/getNetMetaData'
-import { remoteItemToTrack } from '@/utils/track'
+import useMetaData from './useMetaData'
+import useUrl from './useUrl'
 
 const usePlayerCore = (player: HTMLVideoElement | null) => {
-
-  const { instance } = useMsal()
-  const { account } = useUser()
-
-  const { getFileData } = useGraph(instance, account)
-  const db = useDb(account)
-
   const [
-    currentMetaData,
-    metadataUpdate,
     autoPlay,
-    isLoading,
-    updateCurrentMetaData,
-    updateMetadataUpdate,
     updateAutoPlay,
     updateIsLoading,
-    updateCover,
     updateCurrentTime,
     updateDuration,
   ] = usePlayerStore(
     useShallow(
       (state) => [
-        state.currentMetaData,
-        state.metadataUpdate,
         state.autoPlay,
-        state.isLoading,
-        state.updateCurrentMetaData,
-        state.updateMetadataUpdate,
         state.updateAutoPlay,
         state.updateIsLoading,
-        state.updateCover,
         state.updateCurrentTime,
         state.updateDuration,
       ]
@@ -55,64 +29,27 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
   const playQueue = usePlayQueueStore.use.playQueue()
   const currentIndex = usePlayQueueStore.use.currentIndex()
   const updateCurrentIndex = usePlayQueueStore.use.updateCurrentIndex()
-  const updatePlayQueue = usePlayQueueStore.use.updatePlayQueue()
 
   const repeat = useUiStore((state) => state.repeat)
   const [historys, insertHistory] = useHistoryStore(
     useShallow((state) => [state.historys, state.insertHistory])
   )
 
-  const [url, setUrl] = useState('')
-
   const currentTrack = useMemo(() => playQueue?.find(item => item.index === currentIndex), [currentIndex, playQueue])
-  const currentTrackPath = useMemo(() => currentTrack?.track.path?.join('/'), [currentTrack])
 
-  // 获取当前播放文件链接
-  useMemo(
-    () => {
-      (async () => {
-        if (player) {
-          player.src = ''
-        }
-        if (playQueue && playQueue.length !== 0 && currentTrack && account) {
-          updateIsLoading(true)
-          try {
-            const remoteItem = await getFileData(currentTrack.track.id, currentTrack.track.path)
-            if (!remoteItem || !remoteItem['@microsoft.graph.downloadUrl']) {
-              throw new Error('No download url')
-            }
+  const url = useUrl(player)
+  useMetaData(url)
 
-            if (remoteItem.cTag !== currentTrack.track.cTag) {
-              console.log(`File ${currentTrack.track.name} has been updated in the cloud. Updating local entry.`)
-              const newTrack = remoteItemToTrack(remoteItem)
-              updatePlayQueue(playQueue.map(item => item.index === currentIndex ? { index: currentIndex, track: newTrack } : item))
-            }
-
-            setUrl(remoteItem['@microsoft.graph.downloadUrl'])
-          } catch (error) {
-            console.error(error)
-            updateAutoPlay(false)
-            updateIsLoading(false)
-            player?.pause()
-          }
-        }
-        return true
-      })()
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [
-      currentTrackPath,
-      account,
-    ]
-  )
-
-  useMemo(
-    () => {
-      if (player !== null && playQueue) {
+  useEffect(() => {
+    if (!url || !currentTrack) {
+      return
+    }
+    (async () => {
+      if (player !== null) {
         updateDuration(0)
         player.load()
         player.onloadedmetadata = () => {
-          if (isLoading && autoPlay) {
+          if (autoPlay) {
             player.play()
             if (historys && currentTrack) {
               insertHistory(currentTrack.track)
@@ -122,11 +59,9 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
           updateDuration(player.duration)
         }
       }
-      return true
-    },
+    })()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [url]
-  )
+  }, [url])
 
   // 设置当前播放进度
   useEffect(
@@ -136,7 +71,7 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
           updateCurrentTime(player.currentTime)
         }
     },
-    [player, updateCurrentTime]
+    [player, updateCurrentTime, updateDuration]
   )
 
   // 播放结束时
@@ -158,71 +93,6 @@ const usePlayerCore = (player: HTMLVideoElement | null) => {
       }
     }
   }
-
-  // 更新当前 metadata
-  useEffect(
-    () => {
-      (async () => {
-        if (currentTrack?.track.id && db) {
-          const metaData = await db.metadata.get(currentTrack.track.id)
-
-          if (!metaData) {
-            updateCover('./cover.svg')
-            updateCurrentMetaData(null)
-          } else {
-            console.log('Update current metaData: ', metaData)
-            updateCurrentMetaData(metaData)
-            if (metaData.common.picture && metaData.common.picture.length > 0) {
-              const cover = metaData.common.picture[0]
-              if (cover && 'data' in cover) {
-                updateCover(createImageUrl(metaData.common.picture))
-              }
-            } else {
-              updateCover('./cover.svg')
-            }
-          }
-        }
-      })()
-    },
-    [metadataUpdate, db, currentTrack, updateCover, updateCurrentMetaData]
-  )
-
-  // 获取在线 metadata
-  useEffect(
-    () => {
-      (async () => {
-        if (currentTrack && currentTrack.track.id && isAudio(currentTrack.track.name) && db && url) {
-          const localMetaData = await db.metadata.get(currentTrack.track.id)
-          if (!localMetaData) {
-            console.log('Start get net metadata: ', currentTrack.track)
-            const netMetaData = await getNetMetaData(currentTrack.track, url)
-            if (netMetaData) {
-              await db.metadata.put(netMetaData)
-              updateMetadataUpdate()
-            }
-          }
-        }
-      })()
-    },
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [url]
-  )
-
-  useEffect(() => {
-    let newTitle = 'OMP'
-    if (currentMetaData) {
-      newTitle = `${currentMetaData.common.title}${currentMetaData.common.artist ? ` - ${currentMetaData.common.artist}` : ''}`
-    }
-
-    document.title = newTitle
-    setTitle(newTitle)
-
-    return () => {
-      const defaultTitle = 'OMP'
-      document.title = defaultTitle
-      setTitle(defaultTitle)
-    }
-  }, [currentMetaData, player?.paused])
 
   return {
     url,

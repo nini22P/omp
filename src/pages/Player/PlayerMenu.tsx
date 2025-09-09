@@ -117,8 +117,8 @@ const PlayerMenu = ({ player }: { player: HTMLVideoElement | null }) => {
 
   // 打开所在文件夹
   const handleClickOpenInFolder = () => {
-    if (currentTrack && currentTrack.track.path) {
-      navigate(`/files/${currentTrack.track.path.join('/')}`)
+    if (currentTrack && currentTrack.track.path && currentTrack.track.path.length > 0) {
+      navigate(`/files/${currentTrack.track.path.splice(0, -1).join('/')}`)
       setMenuOpen(false)
       updateAudioViewIsShow(false)
       updateVideoViewIsShow(false)

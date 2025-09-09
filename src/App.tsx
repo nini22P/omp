@@ -15,17 +15,18 @@ import useCustomTheme from './hooks/ui/useCustomTheme'
 import Search from './pages/Search'
 import useStyles from './hooks/ui/useStyles'
 import useEnvironment from './hooks/ui/useEnvironment'
-import { isTauri } from '@tauri-apps/api/core'
 import useFileNodeSync from './hooks/graph/useFileNodeSync'
 import useFileNodeSyncStore from './store/useFileNodeSyncStore'
 import { useLiveQuery } from 'dexie-react-hooks'
 import useDb from './hooks/useDb'
+import useTitle from './hooks/ui/useTitle'
 
 const App = () => {
   useEnvironment()
   const customTheme = useCustomTheme()
   const styles = useStyles(customTheme)
   useThemeColor(customTheme)
+  useTitle()
   const windowControlsOverlayOpen = useMediaQuery('(display-mode: window-controls-overlay)')
 
   const { account } = useUser()
@@ -98,7 +99,7 @@ const App = () => {
                   <Box sx={{
                     height: '2.5rem',
                     padding: '0.25rem',
-                    display: windowControlsOverlayOpen || isTauri() ? 'none' : 'block',
+                    display: windowControlsOverlayOpen ? 'none' : 'block',
                   }}
                   >
                     <Search type='bar' />

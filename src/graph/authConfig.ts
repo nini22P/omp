@@ -3,11 +3,7 @@
  * Licensed under the MIT License.
  */
 
-import { tauriLocalhost } from '@/utils/tauri'
 import { LogLevel } from '@azure/msal-browser'
-import { isTauri } from '@tauri-apps/api/core'
-
-const isDevelopment = process.env.NODE_ENV === 'development'
 
 /**
  * Configuration object to be passed to MSAL instance on creation. 
@@ -18,7 +14,7 @@ export const msalConfig = {
   auth: {
     clientId: process.env.CLIENT_ID as string,
     authority: process.env.ONEDRIVE_AUTH,
-    redirectUri: isTauri() && !isDevelopment ? tauriLocalhost : process.env.REDIRECT_URI as string,
+    redirectUri: process.env.REDIRECT_URI as string,
   },
   cache: {
     cacheLocation: 'localStorage', // This configures where your cache will be stored
