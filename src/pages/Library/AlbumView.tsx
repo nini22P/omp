@@ -23,8 +23,8 @@ const AlbumView = () => {
   const xl = useMediaQuery(theme.breakpoints.up('xl'))
 
   const gridCols = useMemo((): number => {
-    if (xl) return 6
-    if (lg) return 5
+    if (xl) return 7
+    if (lg) return 6
     if (md) return 4
     if (sm) return 3
     if (xs) return 2

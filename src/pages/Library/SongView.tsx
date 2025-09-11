@@ -1,14 +1,15 @@
+import { LibraryDB } from '@/db'
 import useUser from '@/hooks/graph/useUser'
 import useCreateImageUrl from '@/hooks/useCreateImageUrl'
 import useDb from '@/hooks/useDb'
 import usePlayerStore from '@/store/usePlayerStore'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import useUiStore from '@/store/useUiStore'
-import { MetaData } from '@/types/metaData'
+import { FileNode } from '@/types/file'
 import { fileNodeToTrack } from '@/utils/track'
 import { Avatar, List, ListItem, ListItemAvatar, ListItemButton, ListItemText } from '@mui/material'
 import { useLiveQuery } from 'dexie-react-hooks'
-import { CSSProperties, useMemo } from 'react'
+import { CSSProperties } from 'react'
 import { AutoSizer } from 'react-virtualized'
 import { FixedSizeList } from 'react-window'
 
@@ -22,33 +23,29 @@ const SongView = () => {
   const updateCurrentIndex = usePlayQueueStore.use.updateCurrentIndex()
   const updateAutoPlay = usePlayerStore.use.updateAutoPlay()
 
-  const fileNodes = useLiveQuery(async () => await db?.nodes.where('type').equals('audio').toArray(), [db])
-  const fileNodeIds = useMemo(() => fileNodes?.map(node => node.id), [fileNodes])
-  const songs = useLiveQuery(
-    () => {
-      if (!db || !fileNodeIds || fileNodeIds.length === 0) {
-        return []
-      }
-      return db.metadata
-        .where('id')
-        .anyOf(fileNodeIds)
-        .sortBy('common.title')
-    },
-    [db, fileNodeIds]
+  const sortedMetadataIds = useLiveQuery(
+    async () => await db?.metadata.orderBy('common.title').primaryKeys(),
+    [db]
   )
 
-  if (!songs)
-    return <div />
+  const fileNodes = useLiveQuery(
+    async () => {
+      if (!db || !sortedMetadataIds || sortedMetadataIds.length === 0) {
+        return []
+      }
+
+      const nodes = await db.nodes.where('id').anyOf(sortedMetadataIds).toArray()
+      const nodeMap = new Map(nodes.map(node => [node.id, node]))
+      return sortedMetadataIds.map(id => nodeMap.get(id)).filter((node) => node !== undefined)
+    },
+    [db, sortedMetadataIds]
+  )
+
+  if (!db || !fileNodes) return <div />
 
   const open = (index: number) => {
-    if (songs) {
-      const list = songs
-        .map((item, _index) => {
-          const fileNode = fileNodes?.find(node => node.id === item.id)
-          if (!fileNode) return undefined
-          return { track: fileNodeToTrack(fileNode), index: _index }
-        })
-        .filter((item) => item !== undefined)
+    if (fileNodes) {
+      const list = fileNodes.map((fileNode, _index) => ({ track: fileNodeToTrack(fileNode), index: _index }))
       if (shuffle) {
         updateShuffle(false)
       }
@@ -65,11 +62,18 @@ const SongView = () => {
           <FixedSizeList
             height={height}
             width={width}
-            itemCount={songs.length}
+            itemCount={fileNodes.length}
             itemSize={72}
+            overscanCount={10}
           >
             {({ index, style }) => (
-              <Row key={songs[index]?.id ?? index} index={index} style={style} songs={songs} onPlay={() => open(index)} />
+              <Row
+                key={fileNodes[index].id ?? index}
+                style={style}
+                db={db}
+                fileNode={fileNodes[index]}
+                onPlay={() => open(index)}
+              />
             )}
           </FixedSizeList>
         )}
@@ -79,18 +83,19 @@ const SongView = () => {
 }
 
 const Row = (
-  { index, style, songs, onPlay }
+  { style, db, fileNode, onPlay }
     :
-    { index: number, style: CSSProperties, songs: MetaData[], onPlay: () => void }
+    { style: CSSProperties, db: LibraryDB, fileNode: FileNode, onPlay: () => void }
 ) => {
-  const coverUrl = useCreateImageUrl(songs[index])
+  const song = useLiveQuery(async () => await db?.metadata.get(fileNode.id), [db, fileNode.id])
+  const coverUrl = useCreateImageUrl(song)
   return (
-    <ListItem key={songs[index]?.id ?? index} style={style} disablePadding>
+    <ListItem key={song?.id} style={style} disablePadding>
       <ListItemButton onClick={onPlay}>
         <ListItemAvatar>
           <Avatar
             variant="square"
-            alt={songs[index]?.common.title}
+            alt={song?.common.title}
             src={coverUrl}
             slotProps={{ img: { loading: 'lazy' } }}
             onError={({ currentTarget }) => {
@@ -100,8 +105,8 @@ const Row = (
           />
         </ListItemAvatar>
         <ListItemText
-          primary={songs[index]?.common.title}
-          secondary={[songs[index]?.common.artist, songs[index]?.common.album].filter(Boolean).join(' • ')}
+          primary={song ? song.common.title : fileNode.name}
+          secondary={song ? [song.common.artist, song.common.album].filter(Boolean).join(' • ') : ' '}
         />
       </ListItemButton>
     </ListItem>
