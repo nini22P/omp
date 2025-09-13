@@ -1,7 +1,8 @@
-import { useCallback, useEffect } from 'react'
+import { useCallback, useEffect, useMemo } from 'react'
 import usePlayerControl from './usePlayerControl'
 import usePlayerStore from '@/store/usePlayerStore'
 import { useShallow } from 'zustand/shallow'
+import usePlayQueueStore from '@/store/usePlayQueueStore'
 
 const useMediaSession = (player: HTMLVideoElement | null) => {
 
@@ -26,6 +27,11 @@ const useMediaSession = (player: HTMLVideoElement | null) => {
     handleClickSeekforward,
     handleClickSeekbackward,
   } = usePlayerControl(player)
+
+  const playQueue = usePlayQueueStore.use.playQueue()
+  const currentIndex = usePlayQueueStore.use.currentIndex()
+
+  const currentTrack = useMemo(() => playQueue?.find(item => item.index === currentIndex), [currentIndex, playQueue])
 
   const defaultSkipTime = 10
   // 更新 MediaSession 播放进度
@@ -56,10 +62,10 @@ const useMediaSession = (player: HTMLVideoElement | null) => {
   // 设置 MediaSession
   useEffect(
     () => {
-      if ('mediaSession' in navigator && currentMetaData) {
+      if ('mediaSession' in navigator && (currentMetaData || currentTrack)) {
         console.log('Set MediaSession')
         navigator.mediaSession.metadata = new MediaMetadata({
-          title: currentMetaData?.common.title,
+          title: currentMetaData?.common.title || currentTrack?.track.name,
           artist: currentMetaData?.common.artist,
           album: currentMetaData?.common.album,
           artwork: [{ src: cover }]
@@ -95,7 +101,7 @@ const useMediaSession = (player: HTMLVideoElement | null) => {
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [cover, currentMetaData]
+    [cover, currentMetaData, currentTrack]
   )
 }
 

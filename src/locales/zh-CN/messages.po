@@ -17,7 +17,7 @@ msgstr ""
 #: src/pages/Library/AlbumDetail.tsx:135
 #: src/pages/Library/FolderDetail.tsx:90
 msgid "{0} songs"
-msgstr ""
+msgstr "{0} 首歌曲"
 
 #: src/pages/Settings/Settings.tsx:190
 msgid "About"
