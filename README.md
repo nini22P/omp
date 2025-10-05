@@ -3,12 +3,8 @@
 # OMP - OneDrive Media Player
 
 ![ci](https://github.com/nini22P/omp/actions/workflows/ci.yml/badge.svg)
-<a href="https://apps.microsoft.com/detail/9p6w6x16q7l9?referrer=appbadge&mode=direct">
-	<img src="https://get.microsoft.com/images/en-us%20dark.svg" height="30"/>
-</a>
-<a href="https://afdian.com/a/nini22P">
-  <img alt="Afdaian" style="height: 30px;" src="https://pic1.afdiancdn.com/static/img/welcome/button-sponsorme.png">
-</a>
+<a href="https://apps.microsoft.com/detail/9p6w6x16q7l9?referrer=appbadge&mode=direct"><img src="https://get.microsoft.com/images/en-us%20dark.svg" height="30"/></a>
+<a href="https://afdian.com/a/nini22P"><img alt="Afdaian" style="height: 30px;" src="https://pic1.afdiancdn.com/static/img/welcome/button-sponsorme.png"></a>
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/nini22p)
 
 English | [中文](./README_CN.md)
@@ -21,17 +17,17 @@ English | [中文](./README_CN.md)
 
 ## Features
 
-- [x] OneDrive Files View
-- [x] Music Playback
-- [x] Music Lyrics
-- [x] Video Playback
-- [x] Play Queue
-- [x] Dark Mode
-- [x] Media Session
-- [x] PWA
-- [x] History Sync
-- [x] Playlists Sync
-- [x] Support VNET
+* [x] OneDrive Files View
+* [x] Music Playback
+* [x] Music Lyrics
+* [x] Video Playback
+* [x] Play Queue
+* [x] Dark Mode
+* [x] Media Session
+* [x] PWA
+* [x] History Sync
+* [x] Playlists Sync
+* [x] Support VNET
 
 ## Screenshots
 
@@ -84,14 +80,15 @@ Run `npm i && npm run build`
 
 This project is free, if you think it works, feel free to donate to support it
 
-- [AFDIAN](https://afdian.com/a/nini22P)
-- [Ko-fi](https://ko-fi.com/nini22p)
+* [AFDIAN](https://afdian.com/a/nini22P)
+* [Ko-fi](https://ko-fi.com/nini22p)
 
 ## License
 
 [AGPL 3.0](https://github.com/nini22P/omp/blob/main/LICENSE)
 
 ## Privacy Policy
+
 [Privacy Policy](https://github.com/nini22P/omp/blob/main/PRIVACY.md)
 
 ## Star History

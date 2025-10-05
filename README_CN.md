@@ -3,12 +3,8 @@
 # OMP - OneDrive 媒体播放器
 
 ![ci](https://github.com/nini22P/omp/actions/workflows/ci.yml/badge.svg)
-<a href="https://apps.microsoft.com/detail/9p6w6x16q7l9?referrer=appbadge&mode=direct">
-	<img src="https://get.microsoft.com/images/zh-cn%20dark.svg" height="30"/>
-</a>
-<a href="https://afdian.com/a/nini22P">
-  <img alt="Afdaian" style="height: 30px;" src="https://pic1.afdiancdn.com/static/img/welcome/button-sponsorme.png">
-</a>
+<a href="https://apps.microsoft.com/detail/9p6w6x16q7l9?referrer=appbadge&mode=direct"><img src="https://get.microsoft.com/images/zh-cn%20dark.svg" height="30"/></a>
+<a href="https://afdian.com/a/nini22P"><img alt="Afdaian" style="height: 30px;" src="https://pic1.afdiancdn.com/static/img/welcome/button-sponsorme.png"></a>
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/nini22p)
 
 [English](./README.md) | 中文
@@ -21,17 +17,17 @@
 
 ## 功能
 
-- [x] OneDrive 文件查看
-- [x] 音乐播放
-- [x] 歌词显示
-- [x] 视频播放
-- [x] 播放队列
-- [x] 黑暗模式
-- [x] Media Session
-- [x] PWA
-- [x] 播放历史同步
-- [x] 播放列表同步
-- [x] 支持世纪互联版
+* [x] OneDrive 文件查看
+* [x] 音乐播放
+* [x] 歌词显示
+* [x] 视频播放
+* [x] 播放队列
+* [x] 黑暗模式
+* [x] Media Session
+* [x] PWA
+* [x] 播放历史同步
+* [x] 播放列表同步
+* [x] 支持世纪互联版
 
 ## 截图
 
@@ -84,14 +80,15 @@ REDIRECT_URI=<redirectUri>
 
 这个项目完全免费，如果你觉得好用，欢迎捐赠支持
 
-- [爱发电](https://afdian.com/a/nini22P)
-- [Ko-fi](https://ko-fi.com/nini22p)
+* [爱发电](https://afdian.com/a/nini22P)
+* [Ko-fi](https://ko-fi.com/nini22p)
 
 ## 许可
 
 [AGPL 3.0](https://github.com/nini22P/omp/blob/main/LICENSE)
 
 ## 隐私政策
+
 [隐私政策](https://github.com/nini22P/omp/blob/main/PRIVACY_CN.md)
 
 ## Star History
