@@ -6,6 +6,7 @@ import usePlayerStore from '@/store/usePlayerStore'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import useUiStore from '@/store/useUiStore'
 import { FileNode } from '@/types/file'
+import { MetaData } from '@/types/metaData'
 import { fileNodeToTrack } from '@/utils/track'
 import { Avatar, List, ListItem, ListItemAvatar, ListItemButton, ListItemText } from '@mui/material'
 import { useLiveQuery } from 'dexie-react-hooks'
@@ -28,24 +29,40 @@ const SongView = () => {
     [db]
   )
 
-  const fileNodes = useLiveQuery(
+  const listItems = useLiveQuery(
     async () => {
       if (!db || !sortedMetadataIds || sortedMetadataIds.length === 0) {
         return []
       }
 
-      const nodes = await db.nodes.where('id').anyOf(sortedMetadataIds).toArray()
+      const [nodes, metadata] = await Promise.all([
+        db.nodes.where('id').anyOf(sortedMetadataIds).toArray(),
+        db.metadata.where('id').anyOf(sortedMetadataIds).toArray(),
+      ])
+
       const nodeMap = new Map(nodes.map(node => [node.id, node]))
-      return sortedMetadataIds.map(id => nodeMap.get(id)).filter((node) => node !== undefined)
+      const metaMap = new Map(metadata.map(meta => [meta.id, meta]))
+
+      return sortedMetadataIds
+        .map(id => {
+          const node = nodeMap.get(id)
+          const meta = metaMap.get(id)
+
+          if (node) {
+            return { node, meta }
+          }
+          return undefined
+        })
+        .filter((item): item is { node: FileNode; meta: MetaData | undefined } => item !== undefined)
     },
-    [db, sortedMetadataIds]
+    [db, sortedMetadataIds],
   )
 
-  if (!db || !fileNodes) return <div />
+  if (!db || !listItems) return <div />
 
   const open = (index: number) => {
-    if (fileNodes) {
-      const list = fileNodes.map((fileNode, _index) => ({ track: fileNodeToTrack(fileNode), index: _index }))
+    if (listItems) {
+      const list = listItems.map((item, _index) => ({ track: fileNodeToTrack(item.node), index: _index }))
       if (shuffle) {
         updateShuffle(false)
       }
@@ -62,16 +79,17 @@ const SongView = () => {
           <FixedSizeList
             height={height}
             width={width}
-            itemCount={fileNodes.length}
+            itemCount={listItems.length}
             itemSize={72}
             overscanCount={10}
           >
             {({ index, style }) => (
               <Row
-                key={fileNodes[index].id ?? index}
+                key={listItems[index].node.id ?? index}
                 style={style}
                 db={db}
-                fileNode={fileNodes[index]}
+                fileNode={listItems[index].node}
+                song={listItems[index].meta}
                 onPlay={() => open(index)}
               />
             )}
@@ -87,18 +105,20 @@ const Row = (
     style,
     db,
     fileNode,
+    song,
     onPlay,
   }: {
     style: CSSProperties,
     db: LibraryDB,
     fileNode: FileNode,
+    song: MetaData | undefined,
     onPlay: () => void,
   }
 ) => {
-  const song = useLiveQuery(async () => await db?.metadata.get(fileNode.id), [db, fileNode.id])
   const coverUrl = useCreateImageUrl(db, song)
+
   return (
-    <ListItem key={song?.id} style={style} disablePadding>
+    <ListItem key={song?.id ?? fileNode.id} style={style} disablePadding>
       <ListItemButton onClick={onPlay}>
         <ListItemAvatar>
           <Avatar
