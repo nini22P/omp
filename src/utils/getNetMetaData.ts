@@ -1,5 +1,5 @@
 import { FileNode, Track } from '@/types/file'
-import { MetaData } from '@/types/metaData'
+import { MetaData, Picture, PicutreData } from '@/types/metaData'
 import { IPicture, parseWebStream } from 'music-metadata'
 
 export const compressImage = async (image: IPicture): Promise<IPicture> => {
@@ -48,7 +48,24 @@ export const compressImage = async (image: IPicture): Promise<IPicture> => {
   }
 }
 
-const getNetMetaData = async (file: FileNode | Track, url: string): Promise<MetaData | null> => {
+const arrayBufferToHex = (buffer: ArrayBuffer): string => {
+  return Array.from(new Uint8Array(buffer))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
+}
+
+const getSha256 = async (data: Uint8Array): Promise<string> => {
+  try {
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data as unknown as ArrayBuffer);
+    const hashString = arrayBufferToHex(hashBuffer);
+    return hashString;
+  } catch (error) {
+    console.error('计算 SHA-256 时出错:', error);
+    throw error;
+  }
+}
+
+const getNetMetaData = async (file: FileNode | Track, url: string): Promise<{ metaData: MetaData, pictureData: PicutreData[] } | null> => {
   try {
     const response = await fetch(url)
 
@@ -67,7 +84,6 @@ const getNetMetaData = async (file: FileNode | Track, url: string): Promise<Meta
       },
     )
 
-
     if (!metadata?.common?.title) {
       return null
     }
@@ -75,23 +91,46 @@ const getNetMetaData = async (file: FileNode | Track, url: string): Promise<Meta
     console.log('Get net metadata: ', metadata)
 
     let compressedPictures: IPicture[] | undefined = undefined
-    if (metadata.common.picture) {
+
+    if (metadata.common.picture && metadata.common.picture.length > 0) {
       compressedPictures = await Promise.all(
         metadata.common.picture.map((item) => compressImage(item))
       )
     }
 
+    const picture: Picture[] = []
+    const pictureData: PicutreData[] = []
+
+    if (compressedPictures && compressedPictures.length > 0) {
+      const processingPromises = compressedPictures.map(async (item) => {
+        const sha256 = await getSha256(item.data)
+
+        return {
+          sha256: sha256,
+          item: item,
+        }
+      })
+
+      const results = await Promise.all(processingPromises)
+
+      results.forEach((result) => {
+        const { sha256, item } = result
+        picture.push({ sha256, format: item.format, description: item.description, type: item.type, name: item.name })
+        pictureData.push({ id: sha256, data: item.data })
+      })
+    }
+
     const metaData: MetaData = {
       id: file.id,
-      ...metadata,
       common: {
         ...metadata.common,
         title: metadata.common.title.trim(),
-        picture: compressedPictures,
-      }
+        picture,
+      },
+      format: metadata.format,
     }
 
-    return metaData
+    return { metaData, pictureData }
 
   } catch (error) {
     console.error('Failed to get net metadata', error)

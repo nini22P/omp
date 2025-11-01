@@ -49,8 +49,9 @@ const useMetaData = (url: string) => {
             updateCurrentMetaData(metaData)
             if (metaData.common.picture && metaData.common.picture.length > 0) {
               const cover = metaData.common.picture[0]
-              if (cover && 'data' in cover) {
-                updateCover(createImageUrl(metaData.common.picture))
+              if (cover && 'sha256' in cover) {
+                const coverUrl = await createImageUrl(db, metaData.common.picture)
+                updateCover(coverUrl)
               }
             } else {
               updateCover('./cover.svg')
@@ -70,9 +71,10 @@ const useMetaData = (url: string) => {
           const localMetaData = await db.metadata.get(currentTrack.track.id)
           if (!localMetaData) {
             console.log('Start get net metadata: ', currentTrack.track)
-            const netMetaData = await getNetMetaData(currentTrack.track, url)
-            if (netMetaData) {
-              await db.metadata.put(netMetaData)
+            const result = await getNetMetaData(currentTrack.track, url)
+            if (result) {
+              await db.metadata.put(result.metaData)
+              await db.pictures.bulkPut(result.pictureData)
               updateMetadataUpdate()
             }
           }

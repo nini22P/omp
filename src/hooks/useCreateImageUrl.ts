@@ -1,11 +1,14 @@
+import { LibraryDB } from '@/db'
 import { MetaData } from '@/types/metaData'
 import createImageUrl from '@/utils/createImageUrl'
 import useSWR from 'swr'
 
-const useCreateImageUrl = (metaData: MetaData | null | undefined) => {
+const useCreateImageUrl = (db: LibraryDB | null, metaData: MetaData | null | undefined) => {
+  const sha256 = metaData?.common.picture?.[0]?.sha256
+
   const { data, error, isLoading } = useSWR(
-    metaData?.common.picture ? `createImageUrl/${metaData.id}` : null,
-    () => createImageUrl(metaData?.common.picture ?? []),
+    sha256 ? `createImageUrl/${sha256}` : null,
+    async () => createImageUrl(db, metaData?.common.picture ?? []),
   )
 
   return error || isLoading ? './cover.svg' : data ?? './cover.svg'

@@ -8,6 +8,7 @@ import useCreateImageUrl from '@/hooks/useCreateImageUrl'
 import { AutoSizer } from 'react-virtualized'
 import { FixedSizeList } from 'react-window'
 import { useNavigate } from 'react-router-dom'
+import { LibraryDB } from '@/db'
 
 const CARD_PADDING = 0.5
 
@@ -68,7 +69,7 @@ const AlbumView = () => {
     return Array.from(albumMap.values())
   }, [db])
 
-  if (!albums)
+  if (!albums || !db)
     return <div />
 
   return (
@@ -82,7 +83,7 @@ const AlbumView = () => {
             itemSize={width / gridCols / 4 * 5}
           >
             {({ index, style }) => (
-              <Row key={index} index={index} style={style} albums={albums} gridCols={gridCols} />
+              <Row key={index} index={index} style={style} db={db} albums={albums} gridCols={gridCols} />
             )}
           </FixedSizeList>
         )}
@@ -91,9 +92,9 @@ const AlbumView = () => {
   )
 }
 
-const AlbumCard = ({ item }: { item: MetaData }) => {
+const AlbumCard = ({ db, item }: { db: LibraryDB, item: MetaData }) => {
   const navigate = useNavigate()
-  const coverUrl = useCreateImageUrl(item)
+  const coverUrl = useCreateImageUrl(db, item)
 
   const handleClick = () => {
     if (item.common.album) {
@@ -159,11 +160,13 @@ const AlbumCard = ({ item }: { item: MetaData }) => {
 const Row = ({
   index,
   style,
+  db,
   albums,
   gridCols,
 }: {
   index: number,
   style: CSSProperties,
+  db: LibraryDB,
   albums: MetaData[],
   gridCols: number,
 }) => {
@@ -181,7 +184,7 @@ const Row = ({
               size={12 / gridCols}
               sx={{ padding: CARD_PADDING, height: '100%' }}
             >
-              <AlbumCard item={item} />
+              <AlbumCard db={db} item={item} />
             </Grid>
           )
         })

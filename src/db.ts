@@ -1,12 +1,13 @@
 import { Settings } from '@/types/library'
 import Dexie, { type EntityTable } from 'dexie'
 import { FileNode } from './types/file'
-import { MetaData } from './types/metaData'
+import { MetaData, PicutreData } from './types/metaData'
 
 export type LibraryDB = Dexie & {
   settings: EntityTable<Settings, 'id'>,
   nodes: EntityTable<FileNode, 'id'>,
   metadata: EntityTable<MetaData, 'id'>,
+  pictures: EntityTable<PicutreData, 'id'>,
 }
 
 const dbInstances = new Map<string, LibraryDB>()
@@ -42,6 +43,9 @@ export function getDbForUser(userId: string): LibraryDB {
       'common.album',
       '*common.genre',
       '[common.albumartist+common.album]',
+    ].join(', '),
+    pictures: [
+      '&id',
     ].join(', ')
   })
 

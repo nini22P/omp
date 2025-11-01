@@ -18,6 +18,7 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import ShuffleIcon from '@mui/icons-material/Shuffle'
 import shufflePlayQueue from '@/utils/shufflePlayQueue'
 import { fileNodeToTrack } from '@/utils/track'
+import { LibraryDB } from '@/db'
 
 const AlbumDetail = () => {
   const { artist, album } = useParams<{ artist: string, album: string }>()
@@ -67,7 +68,7 @@ const AlbumDetail = () => {
   )
 
   const albumInfo = useMemo(() => songs?.[0], [songs])
-  const coverUrl = useCreateImageUrl(albumInfo)
+  const coverUrl = useCreateImageUrl(db, albumInfo)
 
   const open = (index: number) => {
     if (songs) {
@@ -108,7 +109,7 @@ const AlbumDetail = () => {
     }
   }
 
-  if (!songs || !albumInfo) {
+  if (!songs || !albumInfo || !db) {
     return <Loading />
   }
 
@@ -150,7 +151,14 @@ const AlbumDetail = () => {
               itemSize={72}
             >
               {({ index, style }) => (
-                <SongRow key={songs[index]?.id ?? index} index={index} style={style} songs={songs} onPlay={() => open(index)} />
+                <SongRow
+                  key={songs[index]?.id ?? index}
+                  index={index}
+                  style={style}
+                  db={db}
+                  songs={songs}
+                  onPlay={() => open(index)}
+                />
               )}
             </FixedSizeList>
           )}
@@ -160,9 +168,23 @@ const AlbumDetail = () => {
   )
 }
 
-const SongRow = ({ index, style, songs, onPlay }: { index: number, style: CSSProperties, songs: MetaData[], onPlay: () => void }) => {
+const SongRow = (
+  {
+    index,
+    style,
+    db,
+    songs,
+    onPlay,
+  }: {
+    index: number,
+    style: CSSProperties,
+    db: LibraryDB,
+    songs: MetaData[],
+    onPlay: () => void,
+  }
+) => {
   const song = songs[index]
-  const coverUrl = useCreateImageUrl(song)
+  const coverUrl = useCreateImageUrl(db, song)
   return (
     <ListItem style={style} disablePadding>
       <ListItemButton onClick={onPlay}>

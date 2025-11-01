@@ -83,12 +83,20 @@ const SongView = () => {
 }
 
 const Row = (
-  { style, db, fileNode, onPlay }
-    :
-    { style: CSSProperties, db: LibraryDB, fileNode: FileNode, onPlay: () => void }
+  {
+    style,
+    db,
+    fileNode,
+    onPlay,
+  }: {
+    style: CSSProperties,
+    db: LibraryDB,
+    fileNode: FileNode,
+    onPlay: () => void,
+  }
 ) => {
   const song = useLiveQuery(async () => await db?.metadata.get(fileNode.id), [db, fileNode.id])
-  const coverUrl = useCreateImageUrl(song)
+  const coverUrl = useCreateImageUrl(db, song)
   return (
     <ListItem key={song?.id} style={style} disablePadding>
       <ListItemButton onClick={onPlay}>
