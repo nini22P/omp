@@ -74,26 +74,14 @@ const CommonMenu = (
   const addToPlaylist = (id: string) => {
     if (typeof selectIndex === 'number') {
       insertFilesToPlaylist(id, [
-        {
-          id: listData[selectIndex].id,
-          name: listData[selectIndex].name,
-          path: listData[selectIndex].path,
-          size: listData[selectIndex].size,
-        }
+        fileNodeToTrack(listData[selectIndex]),
       ])
       setSelectIndex(null)
     } else if (selectIndexArray.length > 0) {
       insertFilesToPlaylist(id,
         selectIndexArray
           .filter(index => isAudio(listData[index].name) || isVideo(listData[index].name))
-          .map(index => (
-            {
-              id: listData[index].id,
-              name: listData[index].name,
-              path: listData[index].path,
-              size: listData[index].size,
-            }
-          )))
+          .map(index => fileNodeToTrack(listData[index])))
       setSelectIndexArray([])
     }
     setDialogOpen(false)
@@ -137,12 +125,12 @@ const CommonMenu = (
   // 打开所在文件夹
   const handleClickOpenInFolder = async () => {
     if (typeof selectIndex === 'number' && listData[selectIndex].path) {
-      navigate(`/files/${listData[selectIndex].path.splice(0, -1).join('/')}`)
       setMenuOpen(false)
       setSelectIndex(null)
       updateAudioViewIsShow(false)
       updateVideoViewIsShow(false)
       updatePlayQueueIsShow(false)
+      navigate(`/files/${listData[selectIndex].path.slice(0, -1).join('/')}`)
     }
   }
 

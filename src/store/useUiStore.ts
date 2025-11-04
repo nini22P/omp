@@ -26,6 +26,7 @@ const initialState: UiState = {
   mediaOnly: true,
   hdThumbnails: false,
   lyricsIsShow: false,
+  lastRoutes: {},
 }
 
 const useUiStoreBase = create<UiState & UiActions>()(
@@ -54,6 +55,7 @@ const useUiStoreBase = create<UiState & UiActions>()(
       updateMediaOnly: (mediaOnly) => set(() => ({ mediaOnly: mediaOnly })),
       updateHDThumbnails: (hdThumbnails) => set(() => ({ hdThumbnails: hdThumbnails })),
       updateLyricsIsShow: (lyricsIsShow) => set(() => ({ lyricsIsShow: lyricsIsShow })),
+      updateLastRoutes: (lastRoutes) => set(() => ({ lastRoutes: lastRoutes })),
     }),
     {
       name: 'ui-store',

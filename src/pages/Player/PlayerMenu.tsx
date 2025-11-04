@@ -117,11 +117,11 @@ const PlayerMenu = ({ player }: { player: HTMLVideoElement | null }) => {
 
   // 打开所在文件夹
   const handleClickOpenInFolder = () => {
-    if (currentTrack && currentTrack.track.path && currentTrack.track.path.length > 0) {
-      navigate(`/files/${currentTrack.track.path.splice(0, -1).join('/')}`)
+    if (currentTrack && currentTrack.track.path.length > 0) {
       setMenuOpen(false)
       updateAudioViewIsShow(false)
       updateVideoViewIsShow(false)
+      navigate(`/files/${currentTrack.track.path.slice(0, -1).join('/')}`)
     }
   }
 
@@ -147,9 +147,10 @@ const PlayerMenu = ({ player }: { player: HTMLVideoElement | null }) => {
   const reFetchMetadata = async () => {
     handleCloseMenu()
     if (!currentMetaData?.id || !player?.src || !currentTrack || !db) return
-    const netMetaData = await getNetMetaData(currentTrack.track, player.src)
-    if (netMetaData) {
-      await db.metadata.bulkPut([netMetaData])
+    const result = await getNetMetaData(currentTrack.track, player.src)
+    if (result) {
+      await db.metadata.put(result.metaData)
+      await db.pictures.bulkPut(result.pictureData)
       updateMetadataUpdate()
     }
   }

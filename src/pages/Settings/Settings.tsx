@@ -1,4 +1,4 @@
-import { Avatar, Button, Checkbox, Dialog, DialogActions, DialogTitle, Divider, FormControl, FormControlLabel, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, MenuItem, Select, SelectChangeEvent, Tooltip } from '@mui/material'
+import { Avatar, Box, Button, Checkbox, Dialog, DialogActions, DialogTitle, Divider, FormControl, FormControlLabel, IconButton, List, ListItem, ListItemAvatar, ListItemButton, ListItemText, MenuItem, Select, SelectChangeEvent, Tooltip } from '@mui/material'
 import useUser from '@/hooks/graph/useUser'
 import { licenses } from '@/data/licenses'
 import useLocalMetaDataStore from '@/store/useLocalMetaDataStore'
@@ -103,7 +103,7 @@ const Settings = () => {
   }
 
   return (
-    <div style={{ width: '100%', height: '100%', overflow: 'auto' }}>
+    <Box style={{ width: '100%', height: '100%', overflow: 'auto' }}>
 
       <List>
         <ListItemTitle title={t`Account`} />
@@ -143,6 +143,7 @@ const Settings = () => {
             <Button onClick={async () => {
               await clearLocalMetaData()
               await db?.metadata.clear()
+              await db?.pictures.clear()
             }}>
               {t`Clear`}
             </Button>
@@ -260,7 +261,7 @@ const Settings = () => {
         </DialogActions>
       </Dialog>
 
-    </div>
+    </Box>
 
   )
 }

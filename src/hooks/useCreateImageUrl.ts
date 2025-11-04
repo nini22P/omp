@@ -1,7 +1,7 @@
 import { LibraryDB } from '@/db'
 import { MetaData } from '@/types/metaData'
 import createImageUrl from '@/utils/createImageUrl'
-import useSWRImmutable from 'swr'
+import useSWRImmutable from 'swr/immutable'
 
 const useCreateImageUrl = (db: LibraryDB | null, metaData: MetaData | null | undefined) => {
   const sha256 = metaData?.common.picture?.[0]?.sha256

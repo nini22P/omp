@@ -21,6 +21,7 @@ export interface UiState {
   mediaOnly: boolean
   hdThumbnails: boolean
   lyricsIsShow: boolean
+  lastRoutes: { [key: string]: string }
 }
 
 export interface UiActions {
@@ -46,4 +47,5 @@ export interface UiActions {
   updateMediaOnly: (mediaOnly: UiState['mediaOnly']) => void
   updateHDThumbnails: (hdThumbnails: UiState['hdThumbnails']) => void
   updateLyricsIsShow: (lyricsIsShow: UiState['lyricsIsShow']) => void
+  updateLastRoutes: (lastRoutes: UiState['lastRoutes']) => void
 }

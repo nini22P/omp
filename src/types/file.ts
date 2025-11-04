@@ -93,11 +93,6 @@ export interface FileItem {
   filePath: string[]
   fileSize: number
   fileType: FileType
-  lastModifiedDateTime?: string
-  id?: string
-  parentId?: string
-  thumbnails?: Thumbnail[]
-  url?: string
 }
 
 export interface FileNode {
@@ -119,7 +114,7 @@ export interface FileNode {
 export interface Track {
   id: string
   name: string
-  path?: string[]
-  size?: number
+  path: string[]
+  size: number
   cTag?: string
 }

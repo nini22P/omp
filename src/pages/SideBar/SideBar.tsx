@@ -1,14 +1,35 @@
 import { Box, List, ListItem, ListItemButton, ListItemIcon, ListItemText } from '@mui/material'
-import { NavLink } from 'react-router-dom'
+import { NavLink, useLocation } from 'react-router-dom'
 import HistoryRoundedIcon from '@mui/icons-material/HistoryOutlined'
 import SettingsRoundedIcon from '@mui/icons-material/SettingsRounded'
 import FolderRoundedIcon from '@mui/icons-material/FolderRounded'
 import AlbumIcon from '@mui/icons-material/Album'
 import useUiStore from '../../store/useUiStore'
 import Playlists from './Playlists'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { useShallow } from 'zustand/shallow'
 import { useLingui } from '@lingui/react/macro'
+
+const useLastRoute = (baseRoutes: string[]) => {
+  const location = useLocation()
+  const [lastRoutes, updateLastRoutes] = useUiStore(
+    useShallow((state) => [state.lastRoutes, state.updateLastRoutes])
+  )
+
+  useEffect(() => {
+    const { pathname } = location
+
+    const baseRoute = baseRoutes.find(route => pathname.startsWith(route))
+
+    if (baseRoute && pathname !== lastRoutes[baseRoute]) {
+      updateLastRoutes({ ...lastRoutes, [baseRoute]: pathname })
+    }
+  }, [location, baseRoutes, lastRoutes])
+
+  const getLastRoute = (baseRoute: string) => lastRoutes[baseRoute] || baseRoute
+
+  return getLastRoute
+}
 
 const SideBar = () => {
   const { t } = useLingui()
@@ -23,6 +44,10 @@ const SideBar = () => {
     { router: '/history', icon: <HistoryRoundedIcon />, label: t`History` },
     { router: '/settings', icon: <SettingsRoundedIcon />, label: t`Settings` },
   ]
+
+  const baseRoutes = navData.map(item => item.router)
+
+  const getLastRoute = useLastRoute(baseRoutes)
 
   const closeSideBar = () => (mobileSideBarOpen) && updateMobileSideBarOpen(false)
 
@@ -58,7 +83,7 @@ const SideBar = () => {
             >
               <ListItemButton
                 component={NavLink}
-                to={item.router}
+                to={getLastRoute(item.router)}
                 onClick={closeSideBar}
               >
                 <ListItemIcon>
