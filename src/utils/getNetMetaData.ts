@@ -125,6 +125,7 @@ const getNetMetaData = async (file: FileNode | Track, url: string): Promise<{ me
       common: {
         ...metadata.common,
         title: metadata.common.title.trim(),
+        albumartists: metadata.native.vorbis.map(item => item.id === 'ALBUMARTIST' ? item.value : null).filter(item => item !== null) as string[],
         picture,
       },
       format: metadata.format,
