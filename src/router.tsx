@@ -13,6 +13,7 @@ import SongView from './pages/Library/SongView'
 import FolderView from './pages/Library/FolderView'
 import FolderDetail from './pages/Library/FolderDetail'
 import AlbumDetail from './pages/Library/AlbumDetail'
+import ArtistDetail from './pages/Library/ArtistDetail'
 
 const router = createHashRouter([
   {
@@ -41,14 +42,24 @@ const router = createHashRouter([
                 element: <AlbumView />
               },
               {
-                path: ':artist/:album',
+                path: ':albumartists/:album',
                 element: <AlbumDetail />
               }
             ]
           },
           {
             path: 'artists',
-            element: <ArtistView />
+            element: <Outlet />,
+            children: [
+              {
+                index: true,
+                element: <ArtistView />
+              },
+              {
+                path: ':artist',
+                element: <ArtistDetail />
+              }
+            ]
           },
           {
             path: 'songs',

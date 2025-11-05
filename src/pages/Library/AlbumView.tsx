@@ -11,6 +11,7 @@ import { useNavigate } from 'react-router-dom'
 import { LibraryDB } from '@/db'
 
 const CARD_PADDING = 0.5
+const SEPARATOR = '\u001f'
 
 const AlbumView = () => {
   const { account } = useUser()
@@ -50,8 +51,9 @@ const AlbumView = () => {
 
     for (const song of allSongs) {
       if (song.common.album) {
-        const albumartist = song.common.albumartist || ''
-        const compositeKey = `${song.common.album}::${albumartist}`
+        const albumartists = song.common.albumartists
+        const artistsKey = albumartists ? albumartists.join(SEPARATOR) : ''
+        const compositeKey = `${artistsKey}::${song.common.album}`
 
         const existingAlbumInfo = albumMap.get(compositeKey)
 
@@ -98,8 +100,8 @@ const AlbumCard = ({ db, item }: { db: LibraryDB, item: MetaData }) => {
 
   const handleClick = () => {
     if (item.common.album) {
-      const artistParam = item.common.albumartist || '_NO_ARTIST_'
-      navigate(`/library/albums/${encodeURIComponent(artistParam)}/${encodeURIComponent(item.common.album)}`)
+      const artistsParam = item.common.albumartists?.join(SEPARATOR) || '_NO_ARTIST_'
+      navigate(`/library/albums/${encodeURIComponent(artistsParam)}/${encodeURIComponent(item.common.album)}`)
     }
   }
 
@@ -146,9 +148,11 @@ const AlbumCard = ({ db, item }: { db: LibraryDB, item: MetaData }) => {
                 textOverflow: 'ellipsis',
                 whiteSpace: 'nowrap',
                 lineHeight: 1,
+                fontSize: '90%',
+                color: 'text.secondary',
               }}
             >
-              {item.common.albumartist}
+              {item.common.albumartists?.join('; ') || ''}
             </Typography>
           </Box>
         </Box>

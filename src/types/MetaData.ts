@@ -14,6 +14,6 @@ export interface MetaData {
   common: Omit<ICommonTagsResult, 'picture'> & {
     albumartists?: string[]
     picture?: Picture[]
-  };
+  }
   format: IAudioMetadata['format']
 }

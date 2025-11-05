@@ -12,8 +12,7 @@ const ArtistView = () => {
 
   const artists = useLiveQuery(
     async () => {
-      if (!db)
-        return []
+      if (!db) return []
 
       const fileNodes = await db.nodes.where('type').equals('audio').toArray()
       const fileNodeIds = fileNodes.map(node => node.id)
@@ -22,12 +21,18 @@ const ArtistView = () => {
         return []
       }
 
-      return (
-        await db.metadata
-          .orderBy('common.albumartist')
-          .filter(song => fileNodeIds.includes(song.id))
-          .uniqueKeys()
-      ).filter((artist): artist is string => typeof artist === 'string')
+      const allSongs = await db.metadata
+        .where('id').anyOf(fileNodeIds)
+        .toArray()
+
+      const allArtistNames = allSongs.flatMap(song => [
+        ...(song.common.artists || []),
+        ...(song.common.albumartists || [])
+      ]);
+
+      const uniqueArtists = new Set(allArtistNames)
+
+      return Array.from(uniqueArtists).sort()
     },
     [db]
   )
@@ -47,7 +52,7 @@ const ArtistView = () => {
           >
             {({ index, style }) => (
               <ListItem key={artists[index]} style={style} disablePadding>
-                <ListItemButton onClick={() => console.log(artists[index])}>
+                <ListItemButton component="a" href={`#/library/artists/${encodeURIComponent(artists[index])}`}>
                   <ListItemText
                     primary={artists[index]}
                   />

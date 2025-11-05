@@ -219,7 +219,7 @@ const PlayerControl = ({ player }: { player: HTMLVideoElement | null }) => {
                       {
                         (!currentTrack || !currentMetaData) ||
                         <Typography variant="subtitle1" color="text.secondary" component="div" noWrap>
-                          {currentMetaData.common.artist && currentMetaData.common.artist}{currentMetaData.common.album && ` • ${currentMetaData.common.album}`}
+                          {currentMetaData.common.artists && currentMetaData.common.artists.join('; ')}{currentMetaData.common.album && ` • ${currentMetaData.common.album}`}
                         </Typography>
                       }
                     </div>

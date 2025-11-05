@@ -306,7 +306,7 @@ const Modern = ({ player, styles }: { player: HTMLVideoElement | null, styles: {
                     {!currentTrack ? 'Not playing' : currentMetaData?.common.title || currentTrack.track.name}
                   </Typography>
                   <Typography variant="subtitle2" color={theme.palette.text.secondary} component="div" noWrap sx={{ minHeight: '22px' }}>
-                    {currentTrack ? currentMetaData?.common.artist : ''}
+                    {currentMetaData?.common.artists && currentMetaData.common.artists.join('; ') || ''}
                   </Typography>
                   <Typography variant="subtitle1" color={theme.palette.text.secondary} component="div" noWrap sx={{ minHeight: '28px' }}>
                     {currentTrack ? currentMetaData?.common.album : ''}

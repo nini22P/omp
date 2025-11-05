@@ -9,8 +9,8 @@ import { QueuedTrack } from '@/types/playQueue'
 const shufflePlayQueue = (playQueue: QueuedTrack[], index?: number) => {
   const randomPlayQueue = [...playQueue]
   for (let i = randomPlayQueue.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [randomPlayQueue[i], randomPlayQueue[j]] = [randomPlayQueue[j], randomPlayQueue[i]]
+    const j = Math.floor(Math.random() * (i + 1))
+      ;[randomPlayQueue[i], randomPlayQueue[j]] = [randomPlayQueue[j], randomPlayQueue[i]]
   }
   if (index !== undefined)
     return randomPlayQueue.filter(item => item.index === index).concat(randomPlayQueue.filter(item => item.index !== index))

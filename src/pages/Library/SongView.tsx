@@ -134,7 +134,7 @@ const Row = (
         </ListItemAvatar>
         <ListItemText
           primary={song ? song.common.title : fileNode.name}
-          secondary={song ? [song.common.artist, song.common.album].filter(Boolean).join(' • ') : ' '}
+          secondary={song ? [song.common.artists?.join('; '), song.common.album].filter(Boolean).join(' • ') : ' '}
         />
       </ListItemButton>
     </ListItem>

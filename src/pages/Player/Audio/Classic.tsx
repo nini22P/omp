@@ -193,7 +193,7 @@ const Classic = ({ player, styles }: { player: HTMLVideoElement | null, styles: 
                     {!currentTrack ? 'Not playing' : currentMetaData?.common.title || currentTrack.track.name}
                   </Typography>
                   <Typography variant="body1" component="div" textAlign={'center'} noWrap>
-                    {currentMetaData?.common.artist || ''}
+                    {currentMetaData?.common.artists && currentMetaData.common.artists.join('; ') || ''}
                   </Typography>
                   <Typography variant="body1" component="div" textAlign={'center'} noWrap>
                     {currentMetaData?.common.album || ''}

@@ -4,7 +4,7 @@ import useDb from '@/hooks/useDb'
 import { useLiveQuery } from 'dexie-react-hooks'
 import usePlayQueueStore from '@/store/usePlayQueueStore'
 import usePlayerStore from '@/store/usePlayerStore'
-import { Box, Typography, IconButton, Grid, CardMedia, ListItem, ListItemButton, ListItemAvatar, Avatar, ListItemText } from '@mui/material'
+import { Box, Typography, IconButton, Grid, CardMedia, ListItem, ListItemButton, ListItemAvatar, Avatar, ListItemText, ListItemIcon } from '@mui/material'
 import ArrowBackIcon from '@mui/icons-material/ArrowBack'
 import Loading from '../Loading'
 import { useLingui } from '@lingui/react/macro'
@@ -18,17 +18,20 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import ShuffleIcon from '@mui/icons-material/Shuffle'
 import shufflePlayQueue from '@/utils/shufflePlayQueue'
 import { fileNodeToTrack } from '@/utils/track'
-import { LibraryDB } from '@/db'
+
+const SEPARATOR = '\u001f'
 
 const AlbumDetail = () => {
-  const { artist, album } = useParams<{ artist: string, album: string }>()
+  const params = useParams<{ albumartists: string, album: string }>()
   const { t } = useLingui()
   const navigate = useNavigate()
   const { account } = useUser()
   const db = useDb(account)
 
-  const decodedArtist = useMemo(() => decodeURIComponent(artist || ''), [artist])
-  const decodedAlbum = useMemo(() => decodeURIComponent(album || ''), [album])
+  const { albumartists, album } = useMemo(() => ({
+    albumartists: decodeURIComponent(params.albumartists || '').split(SEPARATOR),
+    album: decodeURIComponent(params.album || ''),
+  }), [params])
 
   const shuffle = useUiStore.use.shuffle()
   const updateShuffle = useUiStore.use.updateShuffle()
@@ -48,27 +51,53 @@ const AlbumDetail = () => {
         return []
       }
 
-      if (decodedArtist === '_NO_ARTIST_') {
+      if (albumartists[0] === '_NO_ARTIST_') {
         return db.metadata
           .where('common.album')
-          .equals(decodedAlbum)
-          .filter(song => !song.common.albumartist && fileNodeIds.includes(song.id))
+          .equals(album)
+          .filter(song => fileNodeIds.includes(song.id))
           .toArray()
-          .then(songs => songs.sort((a, b) => (a.common.track.no ?? 0) - (b.common.track.no ?? 0)))
+          .then(songs => songs.sort((a, b) => {
+            const diskA = a.common.disk?.no ?? 1
+            const diskB = b.common.disk?.no ?? 1
+
+            if (diskA !== diskB) {
+              return diskA - diskB
+            }
+
+            return (a.common.track.no ?? 0) - (b.common.track.no ?? 0)
+          }))
       }
+
       return db.metadata
-        .where('[common.albumartist+common.album]')
-        .equals([decodedArtist, decodedAlbum])
-        .filter(song => fileNodeIds.includes(song.id))
+        .where('common.album')
+        .equals(album)
+        .filter(song => fileNodeIds.includes(song.id) && albumartists.every(artist => song.common.albumartists?.includes(artist)))
         .toArray()
-        .then(songs => songs.sort((a, b) => (a.common.track.no ?? 0) - (b.common.track.no ?? 0)))
+        .then(songs => songs.sort((a, b) => {
+          const diskA = a.common.disk?.no ?? 1
+          const diskB = b.common.disk?.no ?? 1
+
+          if (diskA !== diskB) {
+            return diskA - diskB
+          }
+
+          return (a.common.track.no ?? 0) - (b.common.track.no ?? 0)
+        }))
     },
-    [db, decodedArtist, decodedAlbum, fileNodeIds],
+    [db, albumartists, album, fileNodeIds],
     []
   )
 
   const albumInfo = useMemo(() => songs?.[0], [songs])
   const coverUrl = useCreateImageUrl(db, albumInfo)
+
+  const totalDiscs = useMemo(() => {
+    if (!songs || songs.length === 0) return 1
+    return Math.max(...songs.map(s => s.common.disk?.no ?? 1))
+  }, [songs])
+
+  const isMultiDisc = totalDiscs > 1
 
   const open = (index: number) => {
     if (songs) {
@@ -119,7 +148,7 @@ const AlbumDetail = () => {
         <IconButton onClick={() => navigate('/library/albums')}>
           <ArrowBackIcon />
         </IconButton>
-        <Typography variant="h5" sx={{ wordBreak: 'break-word' }}>{decodedAlbum}</Typography>
+        <Typography variant="h5" sx={{ wordBreak: 'break-word' }}>{album}</Typography>
       </Box>
       <Grid container sx={{ px: 2, pb: 2 }}>
         <Grid>
@@ -127,11 +156,11 @@ const AlbumDetail = () => {
             component="img"
             sx={{ width: '100%', aspectRatio: '1/1', borderRadius: 1, height: 96 }}
             image={coverUrl}
-            alt={decodedAlbum}
+            alt={album}
           />
         </Grid>
         <Grid sx={{ pl: 2, display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-          <Typography variant="body1" color="text.secondary">{decodedArtist}</Typography>
+          <Typography variant="body1" color="text.secondary">{albumartists.join('; ')}</Typography>
           <Typography variant="body2" color="text.secondary">
             {t`${songs.length} songs`}
           </Typography>
@@ -155,8 +184,8 @@ const AlbumDetail = () => {
                   key={songs[index]?.id ?? index}
                   index={index}
                   style={style}
-                  db={db}
                   songs={songs}
+                  isMultiDisc={isMultiDisc}
                   onPlay={() => open(index)}
                 />
               )}
@@ -172,33 +201,42 @@ const SongRow = (
   {
     index,
     style,
-    db,
     songs,
+    isMultiDisc,
     onPlay,
   }: {
     index: number,
     style: CSSProperties,
-    db: LibraryDB,
     songs: MetaData[],
+    isMultiDisc: boolean,
     onPlay: () => void,
   }
 ) => {
   const song = songs[index]
-  const coverUrl = useCreateImageUrl(db, song)
+
+  const trackDisplay = useMemo(() => {
+    const track = song.common.track.no ?? 0
+    if (!isMultiDisc) {
+      return track
+    }
+
+    const disc = song.common.disk?.no ?? 1
+    const paddedTrack = String(track).padStart(2, '0')
+
+    return `${disc}. ${paddedTrack}`
+  }, [song, isMultiDisc])
+
   return (
     <ListItem style={style} disablePadding>
       <ListItemButton onClick={onPlay}>
-        <ListItemAvatar>
-          <Avatar
-            variant="square"
-            alt={song?.common.title}
-            src={coverUrl}
-            slotProps={{ img: { loading: 'lazy' } }}
-          />
-        </ListItemAvatar>
+        <ListItemIcon sx={{ minWidth: 40, justifyContent: 'center' }}>
+          <Typography variant="body2" color="text.secondary">
+            {trackDisplay}
+          </Typography>
+        </ListItemIcon>
         <ListItemText
           primary={song?.common.title}
-          secondary={song?.common.artist}
+          secondary={song?.common.artists?.join('; ')}
         />
       </ListItemButton>
     </ListItem>
