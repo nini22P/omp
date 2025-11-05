@@ -1,5 +1,5 @@
-import { LibraryDB } from "@/db"
-import { Picture } from "@/types/metaData"
+import { LibraryDB } from '@/db'
+import { Picture } from '@/types/metaData'
 
 const createImageUrl = async (db: LibraryDB | null, image: Picture[]) => {
   if (!db) return './cover.svg'

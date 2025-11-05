@@ -99,7 +99,7 @@ const Library = () => {
         </Box>
         :
         <Grid container direction='column' justifyContent='center' alignItems='center' style={{ height: '100%' }} gap={2}>
-          <CircularProgress />
+          {status === 'syncing' && <CircularProgress />}
           <Typography variant='body1'>
             {
               (() => {
@@ -112,7 +112,7 @@ const Library = () => {
             }
           </Typography>
           {
-            error && <Typography variant='body1'>{error}</Typography>
+            error && <Typography variant='body1' color='error' padding={4}>{error}</Typography>
           }
         </Grid>
       :

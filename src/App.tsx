@@ -65,7 +65,7 @@ const App = () => {
 
   const location = useLocation()
   const needLogin = useMemo(
-    () => (['/', '/history', '/library'].includes(location.pathname)) && !account,
+    () => (['/', '/files', '/history', '/library'].includes(location.pathname)) && !account,
     [location, account]
   )
 

@@ -24,7 +24,7 @@ const useLastRoute = (baseRoutes: string[]) => {
     if (baseRoute && pathname !== lastRoutes[baseRoute]) {
       updateLastRoutes({ ...lastRoutes, [baseRoute]: pathname })
     }
-  }, [location, baseRoutes, lastRoutes])
+  }, [location, baseRoutes, lastRoutes, updateLastRoutes])
 
   const getLastRoute = (baseRoute: string) => lastRoutes[baseRoute] || baseRoute
 

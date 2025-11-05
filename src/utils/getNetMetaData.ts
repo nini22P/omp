@@ -51,17 +51,17 @@ export const compressImage = async (image: IPicture): Promise<IPicture> => {
 const arrayBufferToHex = (buffer: ArrayBuffer): string => {
   return Array.from(new Uint8Array(buffer))
     .map(b => b.toString(16).padStart(2, '0'))
-    .join('');
+    .join('')
 }
 
 const getSha256 = async (data: Uint8Array): Promise<string> => {
   try {
-    const hashBuffer = await crypto.subtle.digest('SHA-256', data as unknown as ArrayBuffer);
-    const hashString = arrayBufferToHex(hashBuffer);
-    return hashString;
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data as unknown as ArrayBuffer)
+    const hashString = arrayBufferToHex(hashBuffer)
+    return hashString
   } catch (error) {
-    console.error('计算 SHA-256 时出错:', error);
-    throw error;
+    console.error('计算 SHA-256 时出错:', error)
+    throw error
   }
 }
 

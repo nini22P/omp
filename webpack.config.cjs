@@ -38,7 +38,7 @@ const config = {
         exclude: /(node_modules)/,
         use: [
           {
-            loader: require.resolve('swc-loader'),
+            loader: 'swc-loader',
             options: {
               jsc: {
                 transform: {
