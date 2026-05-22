@@ -30,6 +30,10 @@ const useSync = () => {
     return typeof playlist === 'object' && playlist !== null && 'title' in playlist && 'fileList' in playlist
   }
 
+  function isTrack(item: unknown): item is Track {
+    return typeof item === 'object' && item !== null && 'id' in item && typeof item.id === 'string' && 'name' in item && typeof item.name === 'string'
+  }
+
   // 自动从 OneDrive 获取应用数据
   const appDatafetcher = async () => {
     if (!account) return {
@@ -61,7 +65,7 @@ const useSync = () => {
           size: item.fileSize,
         })
         : item
-    )
+    ).filter(isTrack)
 
     const playlists: Playlist[] = remotePlaylists.map((playlist) =>
       isOldPlaylist(playlist)
@@ -75,7 +79,10 @@ const useSync = () => {
             size: item.fileSize,
           })),
         })
-        : playlist
+        : {
+          ...playlist,
+          files: playlist.files.filter(isTrack),
+        }
     )
 
     return {
