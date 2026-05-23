@@ -149,7 +149,8 @@ export const getDelta = async (
 
   const queryParams = {
     $top: '2147483647',
-    $select: 'id,name,parentReference,folder,cTag,deleted,size,lastModifiedDateTime,audio'
+    // 目前 /delta 接口不会返回 audio 字段
+    $select: 'id,name,parentReference,folder,cTag,deleted,size,lastModifiedDateTime'
   }
 
   const param = new URLSearchParams(queryParams)
