@@ -1,3 +1,5 @@
+import pLimit from 'p-limit'
+
 export type GraphRequestPriority = 'high' | 'low'
 
 export interface GraphFetchOptions {
@@ -24,10 +26,11 @@ const THROTTLED_STATUS_CODES = new Set([429, 503])
 // https://learn.microsoft.com/en-us/dotnet/api/microsoft.graph.retryhandleroption.delay
 const FALLBACK_RETRY_BASE_DELAY_MS = 3_000
 const FALLBACK_RETRY_MAX_DELAY_MS = 180_000
+const LOW_PRIORITY_CONCURRENCY = 2
 
 let globalBackoffUntil = 0
 let lowPriorityBackoffUntil = 0
-let lowPriorityQueue: Promise<void> = Promise.resolve()
+const lowPriorityLimit = pLimit(LOW_PRIORITY_CONCURRENCY)
 
 export const parseRetryAfterMs = (retryAfter: string | null): number | undefined => {
   if (!retryAfter) return undefined
@@ -219,24 +222,7 @@ const enqueueLowPriorityFetch = (
   input: RequestInfo | URL,
   init: RequestInit | undefined,
   options: ResolvedGraphFetchOptions,
-): Promise<Response> => {
-  const previousQueue = lowPriorityQueue.catch(() => undefined)
-  let releaseQueue: () => void = () => undefined
-
-  lowPriorityQueue = previousQueue.then(
-    () => new Promise<void>((resolve) => {
-      releaseQueue = resolve
-    })
-  )
-
-  return previousQueue.then(async () => {
-    try {
-      return await runGraphFetch(input, init, options)
-    } finally {
-      releaseQueue()
-    }
-  })
-}
+): Promise<Response> => lowPriorityLimit(() => runGraphFetch(input, init, options))
 
 export const graphFetch = (
   input: RequestInfo | URL,
