@@ -14,7 +14,7 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. placeholder {0}: songs.length
-#: src/pages/Library/AlbumDetail.tsx:136
+#: src/pages/Library/AlbumDetail.tsx:165
 #: src/pages/Library/FolderDetail.tsx:90
 msgid "{0} songs"
 msgstr "{0} songs"
