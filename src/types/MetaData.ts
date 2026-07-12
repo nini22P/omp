@@ -11,6 +11,7 @@ export interface PicutreData {
 
 export interface MetaData {
   id: string
+  source?: 'graph' | 'range' | 'filename' | 'stream'
   common: Omit<ICommonTagsResult, 'picture'> & {
     albumartists?: string[]
     picture?: Picture[]

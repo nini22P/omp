@@ -36,9 +36,15 @@ const useGraph = (
     return { value: remoteItems }
   }
 
-  const getFileData = async (id: string, path?: string[], signal?: AbortSignal, priority?: GraphRequestPriority) => {
+  const getFileData = async (
+    id: string,
+    path?: string[],
+    signal?: AbortSignal,
+    priority?: GraphRequestPriority,
+    includeThumbnails = true,
+  ) => {
     const accessToken = await getAccessToken()
-    const response = await getFile(accessToken, id, path, signal, priority)
+    const response = await getFile(accessToken, id, path, signal, priority, includeThumbnails)
     return response
   }
 
@@ -81,7 +87,6 @@ const useGraph = (
       value: remoteItems,
     }
   }
-
 
   return {
     getFilesData,

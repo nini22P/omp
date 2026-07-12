@@ -37,37 +37,44 @@ export async function getFiles(
     .catch(error => console.log(error))
 }
 
+const parseGraphResponse = async <T>(response: Response): Promise<T> => {
+  if (!response.ok) {
+    throw new Error(`Graph request failed with status ${response.status}.`)
+  }
+
+  return response.json() as Promise<T>
+}
+
+const requestDriveItem = async (
+  accessToken: string,
+  id: string,
+  path?: string[],
+  signal?: AbortSignal,
+  priority?: GraphRequestPriority,
+  includeThumbnails = false,
+): Promise<RemoteItem> => {
+  const headers = new Headers({ Authorization: `Bearer ${accessToken}` })
+  const query = includeThumbnails
+    ? `?${new URLSearchParams({ $expand: 'thumbnails' }).toString()}`
+    : ''
+
+  const url = path
+    ? `${graphConfig.graphMeEndpoint}/me/drive/root:/${encodeURIComponent(path.join('/'))}${query}`
+    : `${graphConfig.graphMeEndpoint}/me/drive/items/${id}${query}`
+  const response = await graphFetch(url, { method: 'GET', headers, signal }, { priority })
+
+  return parseGraphResponse<RemoteItem>(response)
+}
+
 export async function getFile(
   accessToken: string,
   id: string,
   path?: string[],
   signal?: AbortSignal,
   priority?: GraphRequestPriority,
+  includeThumbnails = true,
 ): Promise<RemoteItem> {
-  const headers = new Headers()
-  const bearer = `Bearer ${accessToken}`
-
-  headers.append('Authorization', bearer)
-
-  const options = {
-    method: 'GET',
-    headers: headers,
-    signal: signal,
-  }
-
-  const queryParams = {
-    $expand: 'thumbnails'
-  }
-
-  const params = new URLSearchParams(queryParams)
-
-  const url = path
-    ? `${graphConfig.graphMeEndpoint}/me/drive/root:/${encodeURIComponent(path.join('/'))}?${params.toString()}`
-    : `${graphConfig.graphMeEndpoint}/me/drive/items/${id}?${params.toString()}`
-
-  return graphFetch(url, options, { priority })
-    .then(response => response.json())
-    .catch(error => console.log(error))
+  return requestDriveItem(accessToken, id, path, signal, priority, includeThumbnails)
 }
 
 export const getAppRootFiles = async (

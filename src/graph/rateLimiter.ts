@@ -1,20 +1,32 @@
 import pLimit from 'p-limit'
 
-export type GraphRequestPriority = 'high' | 'low'
+export type RequestPriority = 'high' | 'low'
+export type GraphRequestPriority = RequestPriority
 
 export interface GraphFetchOptions {
   priority?: GraphRequestPriority
   maxRetries?: number
 }
 
-type ResolvedGraphFetchOptions = Required<GraphFetchOptions>
+export interface RateLimitedFetchOptions {
+  priority?: RequestPriority
+  maxRetries?: number
+  scope?: string
+  addPriorityHeader?: boolean
+  retryNetworkErrors?: boolean
+  globalBackoff?: boolean
+}
 
-interface GraphRateLimitContext {
+type ResolvedRateLimitedFetchOptions = Required<RateLimitedFetchOptions>
+
+interface RateLimitContext {
   input: RequestInfo | URL
   method?: string
-  priority: GraphRequestPriority
+  priority: RequestPriority
   retry: number
   maxRetries: number
+  scope: string
+  globalBackoff: boolean
 }
 
 const DEFAULT_MAX_RETRIES = 2
@@ -29,6 +41,7 @@ const FALLBACK_RETRY_MAX_DELAY_MS = 180_000
 const LOW_PRIORITY_CONCURRENCY = 2
 
 let globalBackoffUntil = 0
+let highPriorityBackoffUntil = 0
 let lowPriorityBackoffUntil = 0
 const lowPriorityLimit = pLimit(LOW_PRIORITY_CONCURRENCY)
 
@@ -80,14 +93,14 @@ const getRequestUrl = (input: RequestInfo | URL) => {
   return input.url
 }
 
-const logGraphRateLimit = (
+const logRateLimit = (
   message: string,
-  context: GraphRateLimitContext,
+  context: RateLimitContext,
   headers: Headers,
   status: number,
   delayMs: number,
 ) => {
-  console.warn(`[Graph] ${message}`, {
+  console.warn(`[${context.scope}] ${message}`, {
     status,
     method: context.method ?? 'GET',
     url: getRequestUrl(context.input),
@@ -112,13 +125,13 @@ const sleep = (ms: number, signal?: AbortSignal): Promise<void> => {
       return
     }
 
-    const timeout = window.setTimeout(() => {
+    const timeout = globalThis.setTimeout(() => {
       signal?.removeEventListener('abort', handleAbort)
       resolve()
     }, ms)
 
     const handleAbort = () => {
-      window.clearTimeout(timeout)
+      globalThis.clearTimeout(timeout)
       reject(signal?.reason ?? new DOMException('Aborted', 'AbortError'))
     }
 
@@ -126,16 +139,16 @@ const sleep = (ms: number, signal?: AbortSignal): Promise<void> => {
   })
 }
 
-const waitForBackoff = async (priority: GraphRequestPriority, signal?: AbortSignal) => {
+const waitForBackoff = async (priority: RequestPriority, signal?: AbortSignal) => {
   const now = Date.now()
   const backoffUntil = priority === 'low'
     ? Math.max(globalBackoffUntil, lowPriorityBackoffUntil)
-    : globalBackoffUntil
+    : Math.max(globalBackoffUntil, highPriorityBackoffUntil)
 
   await sleep(backoffUntil - now, signal)
 }
 
-const updateBackoffFromHeaders = (headers: Headers, status: number, context: GraphRateLimitContext) => {
+const updateBackoffFromHeaders = (headers: Headers, status: number, context: RateLimitContext) => {
   const now = Date.now()
   const retryDelayMs = getGraphRetryDelayMs(headers)
   const rateLimitRemainingHeader = headers.get('RateLimit-Remaining')
@@ -147,8 +160,14 @@ const updateBackoffFromHeaders = (headers: Headers, status: number, context: Gra
 
   if (isGlobalBackoffTriggered) {
     const delayMs = retryDelayMs ?? getFallbackRetryDelayMs(context.retry)
-    globalBackoffUntil = Math.max(globalBackoffUntil, now + delayMs)
-    logGraphRateLimit('Rate limit triggered; backing off Graph requests.', context, headers, status, delayMs)
+    if (context.globalBackoff) {
+      globalBackoffUntil = Math.max(globalBackoffUntil, now + delayMs)
+    } else if (context.priority === 'low') {
+      lowPriorityBackoffUntil = Math.max(lowPriorityBackoffUntil, now + delayMs)
+    } else {
+      highPriorityBackoffUntil = Math.max(highPriorityBackoffUntil, now + delayMs)
+    }
+    logRateLimit('Rate limit triggered; backing off requests.', context, headers, status, delayMs)
   }
 
   // Microsoft Graph files/lists resources (drive, driveItem, etc.) use SharePoint limits:
@@ -166,7 +185,7 @@ const updateBackoffFromHeaders = (headers: Headers, status: number, context: Gra
     const delayMs = retryDelayMs ?? FALLBACK_RETRY_BASE_DELAY_MS
     lowPriorityBackoffUntil = Math.max(lowPriorityBackoffUntil, now + delayMs)
     if (!isGlobalBackoffTriggered) {
-      logGraphRateLimit('Rate limit quota is low; backing off low-priority Graph requests.', context, headers, status, delayMs)
+      logRateLimit('Rate limit quota is low; backing off low-priority requests.', context, headers, status, delayMs)
       hasLoggedLowPriorityBackoff = true
     }
   }
@@ -176,53 +195,93 @@ const updateBackoffFromHeaders = (headers: Headers, status: number, context: Gra
     const delayMs = retryDelayMs ?? FALLBACK_RETRY_BASE_DELAY_MS
     lowPriorityBackoffUntil = Math.max(lowPriorityBackoffUntil, now + delayMs)
     if (!isGlobalBackoffTriggered && !hasLoggedLowPriorityBackoff) {
-      logGraphRateLimit('Throttle limit is high; backing off low-priority Graph requests.', context, headers, status, delayMs)
+      logRateLimit('Throttle limit is high; backing off low-priority requests.', context, headers, status, delayMs)
     }
   }
 }
 
-const runGraphFetch = async (
+const runRateLimitedFetch = async (
   input: RequestInfo | URL,
   init: RequestInit | undefined,
-  options: ResolvedGraphFetchOptions,
+  options: ResolvedRateLimitedFetchOptions,
 ): Promise<Response> => {
   const signal = init?.signal ?? undefined
 
   for (let retry = 0; retry <= options.maxRetries; retry += 1) {
     await waitForBackoff(options.priority, signal)
 
-    const headers = new Headers(init?.headers)
+    const requestInit = options.addPriorityHeader
+      ? (() => {
+          const headers = new Headers(init?.headers)
+          // https://learn.microsoft.com/en-us/graph/throttling-limits
+          headers.set('x-ms-throttle-priority', options.priority === 'low' ? 'Low' : 'High')
+          return { ...init, headers }
+        })()
+      : init
 
-    // Priority header docs:
-    // https://learn.microsoft.com/en-us/graph/throttling-limits
-    headers.set('x-ms-throttle-priority', options.priority === 'low' ? 'Low' : 'High')
+    try {
+      const response = await fetch(input, requestInit)
+      updateBackoffFromHeaders(response.headers, response.status, {
+        input,
+        method: init?.method,
+        priority: options.priority,
+        retry,
+        maxRetries: options.maxRetries,
+        scope: options.scope,
+        globalBackoff: options.globalBackoff,
+      })
 
-    const response = await fetch(input, {
-      ...init,
-      headers,
-    })
-
-    updateBackoffFromHeaders(response.headers, response.status, {
-      input,
-      method: init?.method,
-      priority: options.priority,
-      retry,
-      maxRetries: options.maxRetries,
-    })
-
-    if (!THROTTLED_STATUS_CODES.has(response.status) || retry >= options.maxRetries) {
-      return response
+      if (!THROTTLED_STATUS_CODES.has(response.status) || retry >= options.maxRetries) return response
+    } catch (error) {
+      if (signal?.aborted || !options.retryNetworkErrors || retry >= options.maxRetries) throw error
+      const delayMs = getFallbackRetryDelayMs(retry)
+      if (options.globalBackoff) {
+        globalBackoffUntil = Math.max(globalBackoffUntil, Date.now() + delayMs)
+      } else if (options.priority === 'low') {
+        lowPriorityBackoffUntil = Math.max(lowPriorityBackoffUntil, Date.now() + delayMs)
+      } else {
+        highPriorityBackoffUntil = Math.max(highPriorityBackoffUntil, Date.now() + delayMs)
+      }
+      console.warn(`[${options.scope}] Request failed; backing off requests.`, {
+        url: getRequestUrl(input),
+        priority: options.priority,
+        retry,
+        maxRetries: options.maxRetries,
+        delayMs,
+        error,
+      })
     }
   }
 
-  throw new Error('Unexpected Graph fetch retry state.')
+  throw new Error('Unexpected rate-limited fetch retry state.')
 }
 
 const enqueueLowPriorityFetch = (
   input: RequestInfo | URL,
   init: RequestInit | undefined,
-  options: ResolvedGraphFetchOptions,
-): Promise<Response> => lowPriorityLimit(() => runGraphFetch(input, init, options))
+  options: ResolvedRateLimitedFetchOptions,
+): Promise<Response> => lowPriorityLimit(() => runRateLimitedFetch(input, init, options))
+
+export const rateLimitedFetch = (
+  input: RequestInfo | URL,
+  init?: RequestInit,
+  options: RateLimitedFetchOptions = {},
+): Promise<Response> => {
+  const resolvedOptions: ResolvedRateLimitedFetchOptions = {
+    priority: options.priority ?? 'high',
+    maxRetries: options.maxRetries ?? DEFAULT_MAX_RETRIES,
+    scope: options.scope ?? 'External',
+    addPriorityHeader: options.addPriorityHeader ?? false,
+    retryNetworkErrors: options.retryNetworkErrors ?? false,
+    globalBackoff: options.globalBackoff ?? false,
+  }
+
+  if (resolvedOptions.priority === 'low') {
+    return enqueueLowPriorityFetch(input, init, resolvedOptions)
+  }
+
+  return runRateLimitedFetch(input, init, resolvedOptions)
+}
 
 export const graphFetch = (
   input: RequestInfo | URL,
@@ -232,11 +291,11 @@ export const graphFetch = (
     maxRetries = DEFAULT_MAX_RETRIES,
   }: GraphFetchOptions = {},
 ): Promise<Response> => {
-  const options = { priority, maxRetries }
-
-  if (priority === 'low') {
-    return enqueueLowPriorityFetch(input, init, options)
-  }
-
-  return runGraphFetch(input, init, options)
+  return rateLimitedFetch(input, init, {
+    priority,
+    maxRetries,
+    scope: 'Graph',
+    addPriorityHeader: true,
+    globalBackoff: true,
+  })
 }

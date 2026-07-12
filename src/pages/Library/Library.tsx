@@ -11,6 +11,7 @@ import Loading from '../Loading'
 import { useMemo } from 'react'
 import { Link, Outlet, useLocation } from 'react-router-dom'
 import useFileNodeSyncStore from '@/store/useFileNodeSyncStore'
+import useMetadataSyncStore from '@/store/useMetadataSyncStore'
 import SetLibraryFolderDialog from '@/components/Dialog/SetLibraryFolderDialog'
 
 const Library = () => {
@@ -25,6 +26,7 @@ const Library = () => {
 
   const status = useFileNodeSyncStore.use.status()
   const error = useFileNodeSyncStore.use.error()
+  const metadataStatus = useMetadataSyncStore.use.status()
 
   const isLoadingSettings = settings === undefined
 
@@ -51,9 +53,10 @@ const Library = () => {
       status === 'success'
         ?
         <Box sx={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
-          <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
+          <Box sx={{ borderBottom: 1, borderColor: 'divider', display: 'flex', alignItems: 'center' }}>
             <Tabs
               value={`/library/${location.pathname.split('/')[2] ?? 'albums'}`}
+              sx={{ flexGrow: 1, minWidth: 0 }}
             >
               <Tab
                 icon={<AlbumIcon />}
@@ -92,6 +95,9 @@ const Library = () => {
                 value="/library/folders"
               />
             </Tabs>
+            <Box sx={{ width: 40, flexShrink: 0, display: 'flex', justifyContent: 'center' }}>
+              {metadataStatus === 'fetching' && <CircularProgress size={20} />}
+            </Box>
           </Box>
           <Box sx={{ flexGrow: 1, overflow: 'auto' }}>
             <Outlet />
