@@ -1,7 +1,7 @@
 import { afterEach, describe, it } from 'node:test'
 import assert from 'node:assert/strict'
 import { getRangeMetadata } from './rangeMetadata.ts'
-import { HttpRangeReader, RangeBudgetExceededError, RangeNotSupportedError } from './rangeReader.ts'
+import { HttpRangeReader, RangeBudgetExceededError, RangeNotSupportedError, RangeRequestError } from './rangeReader.ts'
 import type { FileNode } from '@/types/file'
 
 const originalFetch = globalThis.fetch
@@ -90,6 +90,37 @@ describe('HttpRangeReader', () => {
     const reader = new HttpRangeReader('test')
     assert.deepEqual(await reader.read(0, 4), file)
     assert.equal(reader.bytesTransferred, 4)
+  })
+
+  it('does not issue a request when already aborted', async () => {
+    let requests = 0
+    globalThis.fetch = async () => {
+      requests += 1
+      return new Response(new Uint8Array(4), { status: 206 })
+    }
+    const controller = new AbortController()
+    controller.abort()
+
+    await assert.rejects(() => new HttpRangeReader('test', undefined, controller.signal).read(0, 4), {
+      name: 'AbortError',
+    })
+    assert.equal(requests, 0)
+  })
+
+  it('passes cancellation to an in-flight range request', async () => {
+    let notifyStarted!: () => void
+    const started = new Promise<void>(resolve => { notifyStarted = resolve })
+    globalThis.fetch = async (_input, init) => new Promise<Response>((_resolve, reject) => {
+      notifyStarted()
+      init?.signal?.addEventListener('abort', () => reject(init.signal?.reason), { once: true })
+    })
+    const controller = new AbortController()
+    const reading = new HttpRangeReader('test', undefined, controller.signal).read(0, 4)
+
+    await started
+    controller.abort()
+
+    await assert.rejects(() => reading, RangeRequestError)
   })
 })
 

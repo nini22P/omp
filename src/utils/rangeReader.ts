@@ -25,10 +25,12 @@ export class HttpRangeReader {
   private readonly cache: Array<{ start: number, end: number, bytes: Uint8Array }> = []
   private readonly url: string
   private readonly budget: number
+  private readonly signal?: AbortSignal
 
-  constructor(url: string, budget = 1024 * 1024) {
+  constructor(url: string, budget = 1024 * 1024, signal?: AbortSignal) {
     this.url = url
     this.budget = budget
+    this.signal = signal
   }
 
   get bytesTransferred() {
@@ -36,6 +38,8 @@ export class HttpRangeReader {
   }
 
   async read(offset: number, length: number): Promise<Uint8Array> {
+    this.throwIfAborted()
+
     if (offset < 0 || length < 0 || !Number.isSafeInteger(offset) || !Number.isSafeInteger(length)) {
       throw new RangeError('Invalid byte range.')
     }
@@ -44,6 +48,7 @@ export class HttpRangeReader {
     let written = 0
 
     while (written < length) {
+      this.throwIfAborted()
       const chunkLength = Math.min(MAX_REQUEST_SIZE, length - written)
       const start = offset + written
       const end = start + chunkLength - 1
@@ -107,11 +112,17 @@ export class HttpRangeReader {
     try {
       return await rateLimitedFetch(
         this.url,
-        { headers: { Range: `bytes=${start}-${end}` } },
+        { headers: { Range: `bytes=${start}-${end}` }, signal: this.signal },
         { priority: 'low', scope: 'Content', retryNetworkErrors: true },
       )
     } catch (error) {
       throw new RangeRequestError(error)
+    }
+  }
+
+  private throwIfAborted() {
+    if (this.signal?.aborted) {
+      throw this.signal.reason ?? new DOMException('Aborted', 'AbortError')
     }
   }
 }

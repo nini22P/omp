@@ -55,12 +55,14 @@ const applyTag = (tags: TextTags, key: string, value: string) => {
   else if (['TCOP', 'TCR', 'COPYRIGHT', 'ICOP'].includes(normalized)) tags.copyright = value
 }
 
-const parseId3 = async (reader: HttpRangeReader, base = 0): Promise<TextTags> => {
+const parseId3 = async (reader: HttpRangeReader, base = 0, maxEnd = Number.POSITIVE_INFINITY): Promise<TextTags> => {
   const tags: TextTags = {}
+  if (base + 10 > maxEnd) return tags
   const header = await reader.read(base, 10)
   if (ascii(header.subarray(0, 3)) !== 'ID3') return tags
   const version = header[3]
   const end = base + 10 + syncSafe(header, 6)
+  if (end > maxEnd) return tags
   let offset = base + 10
 
   while (offset + 6 <= end) {
@@ -320,12 +322,12 @@ const parseOgg = async (reader: HttpRangeReader, fileSize: number): Promise<Text
 
 const filenameTitle = (name: string) => name.replace(/\.[^.]+$/, '').trim() || name
 
-export const getRangeMetadata = async (file: FileNode, url: string): Promise<MetaData> => {
-  const reader = new HttpRangeReader(url)
+export const getRangeMetadata = async (file: FileNode, url: string, signal?: AbortSignal): Promise<MetaData> => {
+  const reader = new HttpRangeReader(url, undefined, signal)
   const signature = await reader.read(0, Math.min(4, file.size))
   let tags: TextTags = {}
 
-  if (ascii(signature.subarray(0, 3)) === 'ID3') tags = await parseId3(reader)
+  if (ascii(signature.subarray(0, 3)) === 'ID3') tags = await parseId3(reader, 0, file.size)
   else if (ascii(signature.subarray(0, 4)) === 'fLaC') tags = await parseFlac(reader)
   else if (ascii(signature.subarray(0, 4)) === 'OggS') tags = await parseOgg(reader, file.size)
   else if (file.size >= 12) {
