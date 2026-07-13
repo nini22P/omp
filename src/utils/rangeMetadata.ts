@@ -211,17 +211,22 @@ const parseWav = async (reader: HttpRangeReader, fileSize: number): Promise<Text
     const id = ascii(header.subarray(0, 4))
     const size = u32le(header, 4)
     const dataStart = offset + 8
-    if (id === 'ID3 ' || id === 'id3 ') Object.assign(tags, await parseId3(reader, dataStart))
+    const dataEnd = dataStart + size
+    if (dataEnd > fileSize) break
+    if (id === 'ID3 ' || id === 'id3 ') Object.assign(tags, await parseId3(reader, dataStart, dataEnd))
     if (id === 'LIST' && size >= 4 && ascii(await reader.read(dataStart, 4)) === 'INFO') {
       let itemOffset = dataStart + 4
-      while (itemOffset + 8 <= dataStart + size) {
+      while (itemOffset + 8 <= dataEnd) {
         const itemHeader = await reader.read(itemOffset, 8)
         const itemSize = u32le(itemHeader, 4)
-        applyTag(tags, ascii(itemHeader.subarray(0, 4)), trim(decoder.decode(await reader.read(itemOffset + 8, itemSize))))
-        itemOffset += 8 + itemSize + (itemSize % 2)
+        const itemDataStart = itemOffset + 8
+        const itemDataEnd = itemDataStart + itemSize
+        if (itemDataEnd > dataEnd) break
+        applyTag(tags, ascii(itemHeader.subarray(0, 4)), trim(decoder.decode(await reader.read(itemDataStart, itemSize))))
+        itemOffset = itemDataEnd + (itemSize % 2)
       }
     }
-    offset = dataStart + size + (size % 2)
+    offset = dataEnd + (size % 2)
   }
   return tags
 }

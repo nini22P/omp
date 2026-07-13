@@ -24,6 +24,16 @@ const flacBlock = (type: number, payload: Uint8Array, last = false) => concat(
   new Uint8Array([(last ? 0x80 : 0) | type, (payload.length >>> 16) & 255, (payload.length >>> 8) & 255, payload.length & 255]),
   payload,
 )
+const wavChunk = (id: string, payload: Uint8Array) => concat(
+  ascii(id),
+  u32le(payload.length),
+  payload,
+  payload.length % 2 === 0 ? new Uint8Array() : new Uint8Array(1),
+)
+const wavFile = (...chunks: Uint8Array[]) => {
+  const body = concat(ascii('WAVE'), ...chunks)
+  return concat(ascii('RIFF'), u32le(body.length), body)
+}
 
 const mockRanges = (file: Uint8Array, status = 206) => {
   const requested: Array<[number, number]> = []
@@ -159,5 +169,53 @@ describe('getRangeMetadata', () => {
 
     assert.equal(metadata.common.title, 'FLAC title')
     assert.equal(requested.some(([start, end]) => start <= pictureEnd && end >= pictureStart), false)
+  })
+
+  it('extracts a title from a valid WAV LIST INFO chunk', async () => {
+    const title = ascii('WAV title\0')
+    const info = concat(ascii('INFO'), wavChunk('INAM', title))
+    const file = wavFile(wavChunk('LIST', info))
+    mockRanges(file)
+    const node = { id: '3', name: 'song.wav', size: file.length } as FileNode
+
+    const metadata = await getRangeMetadata(node, 'test')
+
+    assert.equal(metadata.common.title, 'WAV title')
+    assert.equal(metadata.source, 'range')
+  })
+
+  it('does not read beyond a truncated outer WAV chunk', async () => {
+    const file = concat(ascii('RIFF'), u32le(16), ascii('WAVE'), ascii('LIST'), u32le(64))
+    const requested = mockRanges(file)
+    const node = { id: '4', name: 'truncated.wav', size: file.length } as FileNode
+
+    const metadata = await getRangeMetadata(node, 'test')
+
+    assert.equal(metadata.common.title, 'truncated')
+    assert.equal(requested.every(([, end]) => end < file.length), true)
+  })
+
+  it('does not read an INFO item payload beyond its LIST chunk', async () => {
+    const invalidItem = concat(ascii('INAM'), u32le(100))
+    const file = wavFile(wavChunk('LIST', concat(ascii('INFO'), invalidItem)))
+    const requested = mockRanges(file)
+    const node = { id: '5', name: 'invalid-info.wav', size: file.length } as FileNode
+
+    const metadata = await getRangeMetadata(node, 'test')
+
+    assert.equal(metadata.common.title, 'invalid-info')
+    assert.equal(requested.every(([, end]) => end < file.length), true)
+  })
+
+  it('bounds an embedded ID3 tag to its WAV chunk', async () => {
+    const oversizedId3 = concat(ascii('ID3'), new Uint8Array([3, 0, 0]), syncSafe(100))
+    const file = wavFile(wavChunk('ID3 ', oversizedId3))
+    const requested = mockRanges(file)
+    const node = { id: '6', name: 'invalid-id3.wav', size: file.length } as FileNode
+
+    const metadata = await getRangeMetadata(node, 'test')
+
+    assert.equal(metadata.common.title, 'invalid-id3')
+    assert.equal(requested.every(([, end]) => end < file.length), true)
   })
 })
