@@ -64,14 +64,14 @@ const parseId3 = async (reader: HttpRangeReader, base = 0, maxEnd = Number.POSIT
   const end = base + 10 + syncSafe(header, 6)
   if (end > maxEnd) return tags
   let offset = base + 10
+  const frameHeaderLength = version === 2 ? 6 : 10
+  const idLength = version === 2 ? 3 : 4
+  const idPattern = version === 2 ? /^[A-Z0-9]{3}$/ : /^[A-Z0-9]{4}$/
 
-  while (offset + 6 <= end) {
-    const frameHeaderLength = version === 2 ? 6 : 10
-    if (offset + frameHeaderLength > end) break
+  while (offset + frameHeaderLength <= end) {
     const frameHeader = await reader.read(offset, frameHeaderLength)
-    const idLength = version === 2 ? 3 : 4
     const id = ascii(frameHeader.subarray(0, idLength))
-    if (!new RegExp(`^[A-Z0-9]{${idLength}}$`).test(id)) break
+    if (!idPattern.test(id)) break
     const size = version === 2
       ? (frameHeader[3] << 16) | (frameHeader[4] << 8) | frameHeader[5]
       : version === 4 ? syncSafe(frameHeader, 4) : u32be(frameHeader, 4)
@@ -317,7 +317,7 @@ const parseOgg = async (reader: HttpRangeReader, fileSize: number): Promise<Text
     }
 
     const rest = remaining > 0 ? await packet.read(remaining) : new Uint8Array()
-    const value = decoder.decode(new Uint8Array([...prefix, ...rest]))
+    const value = decoder.decode(concatBytes(prefix, rest))
     const valueSeparator = value.indexOf('=')
     if (valueSeparator > 0) applyTag(tags, value.slice(0, valueSeparator), trim(value.slice(valueSeparator + 1)))
   }
