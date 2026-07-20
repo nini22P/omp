@@ -1,7 +1,40 @@
 import { getAppRootFiles, getFile, getFiles, search, uploadAppRootJson, getDelta } from '@/graph/graph'
 import { loginRequest } from '@/graph/authConfig'
-import { AccountInfo, IPublicClientApplication } from '@azure/msal-browser'
+import {
+  AccountInfo,
+  BrowserAuthError,
+  BrowserAuthErrorCodes,
+  InteractionRequiredAuthError,
+  IPublicClientApplication,
+} from '@azure/msal-browser'
 import { GraphRequestPriority } from '@/graph/rateLimiter'
+
+let interactiveRedirectPromise: Promise<void> | null = null
+
+const requiresInteractiveTokenAcquisition = (error: unknown) => (
+  error instanceof InteractionRequiredAuthError
+  || (
+    error instanceof BrowserAuthError
+    && error.errorCode === BrowserAuthErrorCodes.monitorWindowTimeout
+  )
+)
+
+const acquireTokenWithRedirect = (
+  instance: IPublicClientApplication,
+  account: AccountInfo,
+) => {
+  if (!interactiveRedirectPromise) {
+    interactiveRedirectPromise = instance.acquireTokenRedirect({
+      ...loginRequest,
+      account,
+    }).catch(error => {
+      interactiveRedirectPromise = null
+      throw error
+    })
+  }
+
+  return interactiveRedirectPromise
+}
 
 const useGraph = (
   instance: IPublicClientApplication,
@@ -13,12 +46,20 @@ const useGraph = (
       throw new Error('User account is not available. Please log in.')
     }
 
-    await instance.initialize()
-    const tokenResponse = await instance.acquireTokenSilent({
-      ...loginRequest,
-      account: account,
-    })
-    return tokenResponse.accessToken
+    try {
+      await instance.initialize()
+      const tokenResponse = await instance.acquireTokenSilent({
+        ...loginRequest,
+        account: account,
+      })
+      return tokenResponse.accessToken
+    } catch (error) {
+      if (requiresInteractiveTokenAcquisition(error)) {
+        await acquireTokenWithRedirect(instance, account)
+      }
+
+      throw error
+    }
   }
 
   const getFilesData = async (id: string, path?: string[], priority?: GraphRequestPriority) => {
