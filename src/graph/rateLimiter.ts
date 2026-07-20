@@ -38,7 +38,11 @@ const THROTTLED_STATUS_CODES = new Set([429, 503])
 // https://learn.microsoft.com/en-us/dotnet/api/microsoft.graph.retryhandleroption.delay
 const FALLBACK_RETRY_BASE_DELAY_MS = 3_000
 const FALLBACK_RETRY_MAX_DELAY_MS = 180_000
-const LOW_PRIORITY_CONCURRENCY = 2
+const DEFAULT_LOW_PRIORITY_CONCURRENCY = 2
+const lowPriorityConcurrency = Number(process.env.LOW_PRIORITY_CONCURRENCY)
+const LOW_PRIORITY_CONCURRENCY = Number.isInteger(lowPriorityConcurrency) && lowPriorityConcurrency > 0
+  ? lowPriorityConcurrency
+  : DEFAULT_LOW_PRIORITY_CONCURRENCY
 
 let globalBackoffUntil = 0
 let highPriorityBackoffUntil = 0
