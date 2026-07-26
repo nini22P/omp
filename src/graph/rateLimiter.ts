@@ -238,20 +238,11 @@ const runRateLimitedFetch = async (
       if (!THROTTLED_STATUS_CODES.has(response.status) || retry >= options.maxRetries) return response
     } catch (error) {
       if (signal?.aborted || !options.retryNetworkErrors || retry >= options.maxRetries) throw error
-      const delayMs = getFallbackRetryDelayMs(retry)
-      if (options.globalBackoff) {
-        globalBackoffUntil = Math.max(globalBackoffUntil, Date.now() + delayMs)
-      } else if (options.priority === 'low') {
-        lowPriorityBackoffUntil = Math.max(lowPriorityBackoffUntil, Date.now() + delayMs)
-      } else {
-        highPriorityBackoffUntil = Math.max(highPriorityBackoffUntil, Date.now() + delayMs)
-      }
-      console.warn(`[${options.scope}] Request failed; backing off requests.`, {
+      console.warn(`[${options.scope}] Request failed; retrying request.`, {
         url: getRequestUrl(input),
         priority: options.priority,
         retry,
         maxRetries: options.maxRetries,
-        delayMs,
         error,
       })
     }
