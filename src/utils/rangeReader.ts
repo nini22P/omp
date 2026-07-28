@@ -13,8 +13,11 @@ export class RangeNotSupportedError extends Error {
 }
 
 export class RangeRequestError extends Error {
-  constructor(cause: unknown) {
-    super('Range request failed.', { cause })
+  readonly reason: string
+
+  constructor(reason: string) {
+    super('Range request failed.')
+    this.reason = reason
   }
 }
 
@@ -113,10 +116,15 @@ export class HttpRangeReader {
       return await rateLimitedFetch(
         this.url,
         { headers: { Range: `bytes=${start}-${end}` }, signal: this.signal },
-        { priority: 'low', scope: 'Content', retryNetworkErrors: true },
+        {
+          priority: 'low',
+          scope: 'Content',
+          retryNetworkErrors: true,
+          redactUrl: true,
+        },
       )
     } catch (error) {
-      throw new RangeRequestError(error)
+      throw new RangeRequestError(error instanceof Error ? error.name : typeof error)
     }
   }
 

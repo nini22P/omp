@@ -130,7 +130,10 @@ describe('HttpRangeReader', () => {
     await started
     controller.abort()
 
-    await assert.rejects(() => reading, RangeRequestError)
+    await assert.rejects(
+      () => reading,
+      error => error instanceof RangeRequestError && error.reason === 'AbortError',
+    )
   })
 })
 

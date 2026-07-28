@@ -15,6 +15,7 @@ export interface RateLimitedFetchOptions {
   addPriorityHeader?: boolean
   retryNetworkErrors?: boolean
   globalBackoff?: boolean
+  redactUrl?: boolean
 }
 
 type ResolvedRateLimitedFetchOptions = Required<RateLimitedFetchOptions>
@@ -27,6 +28,7 @@ interface RateLimitContext {
   maxRetries: number
   scope: string
   globalBackoff: boolean
+  redactUrl: boolean
 }
 
 const DEFAULT_MAX_RETRIES = 2
@@ -107,7 +109,7 @@ const logRateLimit = (
   console.warn(`[${context.scope}] ${message}`, {
     status,
     method: context.method ?? 'GET',
-    url: getRequestUrl(context.input),
+    ...(context.redactUrl ? {} : { url: getRequestUrl(context.input) }),
     priority: context.priority,
     retry: context.retry,
     maxRetries: context.maxRetries,
@@ -233,17 +235,27 @@ const runRateLimitedFetch = async (
         maxRetries: options.maxRetries,
         scope: options.scope,
         globalBackoff: options.globalBackoff,
+        redactUrl: options.redactUrl,
       })
 
       if (!THROTTLED_STATUS_CODES.has(response.status) || retry >= options.maxRetries) return response
     } catch (error) {
-      if (signal?.aborted || !options.retryNetworkErrors || retry >= options.maxRetries) throw error
+      if (signal?.aborted) throw error
+      if (!options.retryNetworkErrors || retry >= options.maxRetries) {
+        if (options.redactUrl) {
+          const safeError = new Error(`${options.scope} request failed.`)
+          safeError.name = error instanceof Error ? error.name : 'Error'
+          throw safeError
+        }
+        throw error
+      }
       console.warn(`[${options.scope}] Request failed; retrying request.`, {
-        url: getRequestUrl(input),
+        ...(options.redactUrl
+          ? { errorName: error instanceof Error ? error.name : typeof error }
+          : { url: getRequestUrl(input), error }),
         priority: options.priority,
         retry,
         maxRetries: options.maxRetries,
-        error,
       })
     }
   }
@@ -269,6 +281,7 @@ export const rateLimitedFetch = (
     addPriorityHeader: options.addPriorityHeader ?? false,
     retryNetworkErrors: options.retryNetworkErrors ?? false,
     globalBackoff: options.globalBackoff ?? false,
+    redactUrl: options.redactUrl ?? false,
   }
 
   if (resolvedOptions.priority === 'low') {

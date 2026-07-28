@@ -37,4 +37,37 @@ describe('rateLimitedFetch', () => {
     assert.equal(attempts, 2)
     assert.deepEqual(scheduledDelays, [])
   })
+
+  it('redacts sensitive content URLs and error objects from retry logs', async () => {
+    const sensitiveUrl = 'https://media.files.1drv.com/file.mp3?authKey=sensitive'
+    const warnings: unknown[][] = []
+    let attempts = 0
+    globalThis.fetch = async () => {
+      attempts += 1
+      if (attempts === 1) throw new TypeError(`Failed to fetch ${sensitiveUrl}`)
+      return new Response(null, { status: 200 })
+    }
+    console.warn = (...args: unknown[]) => warnings.push(args)
+
+    await rateLimitedFetch(sensitiveUrl, undefined, {
+      retryNetworkErrors: true,
+      maxRetries: 1,
+      redactUrl: true,
+    })
+
+    assert.equal(JSON.stringify(warnings).includes(sensitiveUrl), false)
+    assert.equal(JSON.stringify(warnings).includes('TypeError'), true)
+
+    globalThis.fetch = async () => {
+      throw new TypeError(`Failed to fetch ${sensitiveUrl}`)
+    }
+    await assert.rejects(
+      rateLimitedFetch(sensitiveUrl, undefined, { redactUrl: true }),
+      error => (
+        error instanceof Error
+        && error.name === 'TypeError'
+        && !error.message.includes(sensitiveUrl)
+      ),
+    )
+  })
 })
