@@ -9,6 +9,27 @@ export interface DeltaResponse {
   value: RemoteItem[]
 }
 
+// The audio facet is populated by Microsoft Graph only for OneDrive Personal.
+// https://learn.microsoft.com/en-us/graph/api/resources/audio?view=graph-rest-1.0
+export interface AudioDetails {
+  album?: string
+  albumArtist?: string
+  artist?: string
+  bitrate?: number
+  composers?: string
+  copyright?: string
+  disc?: number
+  discCount?: number
+  duration?: number
+  genre?: string
+  hasDrm?: boolean
+  isVariableBitrate?: boolean
+  title?: string
+  track?: number
+  trackCount?: number
+  year?: number
+}
+
 export interface FileDetails {
   mimeType: string
   hashes?: {
@@ -74,6 +95,7 @@ export interface RemoteItem {
 
   file?: FileDetails
   folder?: FolderDetails
+  audio?: AudioDetails
 
   parentReference: ParentReference
 

@@ -59,6 +59,7 @@ ONEDRIVE_AUTH=https://login.microsoftonline.com/common #世纪互联(https://log
 ONEDRIVE_GME=https://graph.microsoft.com #世纪互联(https://microsoftgraph.chinacloudapi.cn)
 CLIENT_ID=<clientId>
 REDIRECT_URI=http://localhost:8760
+LOW_PRIORITY_CONCURRENCY=2 # 可选，默认值为 2
 ```
 
 运行 `npm i && npm run dev`
@@ -72,6 +73,7 @@ ONEDRIVE_AUTH=https://login.microsoftonline.com/common #世纪互联(https://log
 ONEDRIVE_GME=https://graph.microsoft.com #世纪互联(https://microsoftgraph.chinacloudapi.cn)
 CLIENT_ID=<clientId>
 REDIRECT_URI=<redirectUri>
+LOW_PRIORITY_CONCURRENCY=2 # 可选，默认值为 2
 ```
 
 运行 `npm i && npm run build`

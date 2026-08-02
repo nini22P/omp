@@ -69,12 +69,15 @@ const useMetaData = (url: string) => {
       (async () => {
         if (currentTrack && currentTrack.track.id && isAudio(currentTrack.track.name) && db && url) {
           const localMetaData = await db.metadata.get(currentTrack.track.id)
-          if (!localMetaData) {
+          if (!localMetaData || localMetaData.source !== 'stream') {
             console.log('Start get net metadata: ', currentTrack.track)
             const result = await getNetMetaData(currentTrack.track, url)
             if (result) {
-              await db.metadata.put(result.metaData)
-              await db.pictures.bulkPut(result.pictureData)
+              await db.transaction('rw', db.metadata, db.pictures, db.nodes, async () => {
+                await db.metadata.put(result.metaData)
+                await db.pictures.bulkPut(result.pictureData)
+                await db.nodes.update(currentTrack.track.id, { metadataState: 'completed' })
+              })
               updateMetadataUpdate()
             }
           }

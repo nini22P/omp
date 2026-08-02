@@ -14,7 +14,7 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. placeholder {0}: songs.length
-#: src/pages/Library/AlbumDetail.tsx:136
+#: src/pages/Library/AlbumDetail.tsx:165
 #: src/pages/Library/FolderDetail.tsx:90
 msgid "{0} songs"
 msgstr "{0} songs"
@@ -48,11 +48,11 @@ msgstr "Add to play queue"
 msgid "Add to playlist"
 msgstr "Add to playlist"
 
-#: src/pages/Library/Library.tsx:61
+#: src/pages/Library/Library.tsx:64
 msgid "Album"
 msgstr "Album"
 
-#: src/pages/Library/Library.tsx:70
+#: src/pages/Library/Library.tsx:73
 msgid "Artist"
 msgstr "Artist"
 
@@ -127,7 +127,7 @@ msgstr "Descending"
 msgid "Enter new title"
 msgstr "Enter new title"
 
-#: src/pages/Library/Library.tsx:109
+#: src/pages/Library/Library.tsx:115
 msgid "Error"
 msgstr "Error"
 
@@ -135,7 +135,7 @@ msgstr "Error"
 msgid "Files"
 msgstr "Files"
 
-#: src/pages/Library/Library.tsx:88
+#: src/pages/Library/Library.tsx:91
 msgid "Folder"
 msgstr "Folder"
 
@@ -160,7 +160,7 @@ msgstr "HD thumbnails"
 msgid "History"
 msgstr "History"
 
-#: src/pages/Library/Library.tsx:107
+#: src/pages/Library/Library.tsx:113
 msgid "Idle"
 msgstr "Idle"
 
@@ -177,7 +177,7 @@ msgstr "Library"
 msgid "Library folder"
 msgstr "Library folder"
 
-#: src/pages/Library/Library.tsx:120
+#: src/pages/Library/Library.tsx:126
 msgid "Library folder not set"
 msgstr "Library folder not set"
 
@@ -326,7 +326,7 @@ msgstr "Sign out"
 msgid "Size"
 msgstr "Size"
 
-#: src/pages/Library/Library.tsx:79
+#: src/pages/Library/Library.tsx:82
 msgid "Song"
 msgstr "Song"
 
@@ -339,7 +339,7 @@ msgstr "Switch fullscreen"
 msgid "Switch theme"
 msgstr "Switch theme"
 
-#: src/pages/Library/Library.tsx:108
+#: src/pages/Library/Library.tsx:114
 msgid "Syncing"
 msgstr "Syncing"
 

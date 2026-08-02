@@ -59,6 +59,7 @@ ONEDRIVE_AUTH=https://login.microsoftonline.com/common #VNET(https://login.partn
 ONEDRIVE_GME=https://graph.microsoft.com #VNET(https://microsoftgraph.chinacloudapi.cn)
 CLIENT_ID=<clientId>
 REDIRECT_URI=http://localhost:8760
+LOW_PRIORITY_CONCURRENCY=2 # Optional; defaults to 2
 ```
 
 Run `npm i && npm run dev`
@@ -72,6 +73,7 @@ ONEDRIVE_AUTH=https://login.microsoftonline.com/common #VNET(https://login.partn
 ONEDRIVE_GME=https://graph.microsoft.com #VNET(https://microsoftgraph.chinacloudapi.cn)
 CLIENT_ID=<clientId>
 REDIRECT_URI=<redirectUri>
+LOW_PRIORITY_CONCURRENCY=2 # Optional; defaults to 2
 ```
 
 Run `npm i && npm run build`

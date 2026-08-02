@@ -20,6 +20,7 @@ import useFileNodeSyncStore from './store/useFileNodeSyncStore'
 import { useLiveQuery } from 'dexie-react-hooks'
 import useDb from './hooks/useDb'
 import useTitle from './hooks/ui/useTitle'
+import useMetadataSync from './hooks/graph/useMetadataSync'
 
 const App = () => {
   useEnvironment()
@@ -32,6 +33,7 @@ const App = () => {
   const { account } = useUser()
   useSync()
   useFileNodeSync()
+  useMetadataSync()
 
   const db = useDb(account)
   const libraryRootId = useLiveQuery(async () => (await db?.settings.get('settings'))?.libraryRootId, [db])

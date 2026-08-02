@@ -1,6 +1,40 @@
 import { getAppRootFiles, getFile, getFiles, search, uploadAppRootJson, getDelta } from '@/graph/graph'
 import { loginRequest } from '@/graph/authConfig'
-import { AccountInfo, IPublicClientApplication } from '@azure/msal-browser'
+import {
+  AccountInfo,
+  BrowserAuthError,
+  BrowserAuthErrorCodes,
+  InteractionRequiredAuthError,
+  IPublicClientApplication,
+} from '@azure/msal-browser'
+import { GraphRequestPriority } from '@/graph/rateLimiter'
+
+let interactiveRedirectPromise: Promise<void> | null = null
+
+const requiresInteractiveTokenAcquisition = (error: unknown) => (
+  error instanceof InteractionRequiredAuthError
+  || (
+    error instanceof BrowserAuthError
+    && error.errorCode === BrowserAuthErrorCodes.monitorWindowTimeout
+  )
+)
+
+const acquireTokenWithRedirect = (
+  instance: IPublicClientApplication,
+  account: AccountInfo,
+) => {
+  if (!interactiveRedirectPromise) {
+    interactiveRedirectPromise = instance.acquireTokenRedirect({
+      ...loginRequest,
+      account,
+    }).catch(error => {
+      interactiveRedirectPromise = null
+      throw error
+    })
+  }
+
+  return interactiveRedirectPromise
+}
 
 const useGraph = (
   instance: IPublicClientApplication,
@@ -12,62 +46,76 @@ const useGraph = (
       throw new Error('User account is not available. Please log in.')
     }
 
-    await instance.initialize()
-    const tokenResponse = await instance.acquireTokenSilent({
-      ...loginRequest,
-      account: account,
-    })
-    return tokenResponse.accessToken
+    try {
+      await instance.initialize()
+      const tokenResponse = await instance.acquireTokenSilent({
+        ...loginRequest,
+        account: account,
+      })
+      return tokenResponse.accessToken
+    } catch (error) {
+      if (requiresInteractiveTokenAcquisition(error)) {
+        await acquireTokenWithRedirect(instance, account)
+      }
+
+      throw error
+    }
   }
 
-  const getFilesData = async (id: string, path?: string[]) => {
+  const getFilesData = async (id: string, path?: string[], priority?: GraphRequestPriority) => {
     const accessToken = await getAccessToken()
 
-    let response = await getFiles(accessToken, id, path,)
+    let response = await getFiles(accessToken, id, path, undefined, priority)
 
     const remoteItems = [...response.value]
 
     while (response['@odata.nextLink']) {
-      response = await getFiles(accessToken, id, path, response['@odata.nextLink'])
+      response = await getFiles(accessToken, id, path, response['@odata.nextLink'], priority)
       remoteItems.push(...response.value)
     }
 
     return { value: remoteItems }
   }
 
-  const getFileData = async (id: string, path?: string[], signal?: AbortSignal) => {
+  const getFileData = async (
+    id: string,
+    path?: string[],
+    signal?: AbortSignal,
+    priority?: GraphRequestPriority,
+    includeThumbnails = true,
+  ) => {
     const accessToken = await getAccessToken()
-    const response = await getFile(accessToken, id, path, signal)
+    const response = await getFile(accessToken, id, path, signal, priority, includeThumbnails)
     return response
   }
 
-  const getAppRootFilesData = async () => {
+  const getAppRootFilesData = async (priority?: GraphRequestPriority) => {
     const accessToken = await getAccessToken()
-    const response = await getAppRootFiles(accessToken)
+    const response = await getAppRootFiles(accessToken, priority)
     return response
   }
 
-  const uploadAppRootJsonData = async (fileName: string, fileContent: BodyInit) => {
+  const uploadAppRootJsonData = async (fileName: string, fileContent: BodyInit, priority?: GraphRequestPriority) => {
     const accessToken = await getAccessToken()
-    const response = await uploadAppRootJson(accessToken, fileName, fileContent)
+    const response = await uploadAppRootJson(accessToken, fileName, fileContent, priority)
     return response
   }
 
-  const getSearchData = async (searchQuery: string) => {
+  const getSearchData = async (searchQuery: string, priority?: GraphRequestPriority) => {
     const accessToken = await getAccessToken()
-    const response = await search(accessToken, searchQuery)
+    const response = await search(accessToken, searchQuery, priority)
     return response
   }
 
-  const getDeltaData = async (id: string, deltaLink?: string) => {
+  const getDeltaData = async (id: string, deltaLink?: string, priority?: GraphRequestPriority) => {
     const accessToken = await getAccessToken()
 
-    let response = await getDelta(accessToken, id, deltaLink)
+    let response = await getDelta(accessToken, id, deltaLink, priority)
 
     const remoteItems = [...response.value]
 
     while (response['@odata.nextLink']) {
-      response = await getDelta(accessToken, id, response['@odata.nextLink'])
+      response = await getDelta(accessToken, id, response['@odata.nextLink'], priority)
       remoteItems.push(...response.value)
     }
 
@@ -80,7 +128,6 @@ const useGraph = (
       value: remoteItems,
     }
   }
-
 
   return {
     getFilesData,

@@ -1,5 +1,6 @@
 import { RemoteItem, FileNode } from '@/types/file'
 import checkFileType from './checkFileType'
+import { rateLimitedFetch } from '@/graph/rateLimiter'
 
 /**
  * 根据 url 解析 json
@@ -8,7 +9,10 @@ import checkFileType from './checkFileType'
  */
 export const fetchJson = async (url: string) => {
   try {
-    const response = await fetch(url)
+    const response = await rateLimitedFetch(url, undefined, {
+      scope: 'External',
+      retryNetworkErrors: true,
+    })
     const json = response.json()
     return json
   } catch (error) {

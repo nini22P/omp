@@ -11,6 +11,7 @@
     "dev": "npm run generate:dev && webpack serve",
     "lint": "npm run generate && eslint src --report-unused-disable-directives --max-warnings 0",
     "lint:dev": "npm run generate:dev && eslint src --report-unused-disable-directives --max-warnings 0",
+    "test": "node --experimental-strip-types --test test/*.test.ts",
     "lingui": "lingui extract && lingui compile --typescript",
     "generate": "node generate-version-info.mjs && npm run lingui",
     "generate:dev": "node generate-version-info.mjs --dev && npm run lingui"
@@ -34,6 +35,7 @@
     "franc-min": "^6.2.0",
     "idb-keyval": "^6.2.1",
     "music-metadata": "^11.9.0",
+    "p-limit": "^7.3.0",
     "pinyin-pro": "^3.27.0",
     "process": "^0.11.10",
     "react": "^18.3.1",

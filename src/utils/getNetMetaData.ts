@@ -1,6 +1,7 @@
 import { FileNode, Track } from '@/types/file'
 import { MetaData, Picture, PicutreData } from '@/types/metaData'
 import { IPicture, parseWebStream } from 'music-metadata'
+import { rateLimitedFetch } from '@/graph/rateLimiter'
 
 export const compressImage = async (image: IPicture): Promise<IPicture> => {
   const blob = new Blob([image.data as unknown as ArrayBuffer], { type: image.format })
@@ -67,7 +68,10 @@ const getSha256 = async (data: Uint8Array): Promise<string> => {
 
 const getNetMetaData = async (file: FileNode | Track, url: string): Promise<{ metaData: MetaData, pictureData: PicutreData[] } | null> => {
   try {
-    const response = await fetch(url)
+    const response = await rateLimitedFetch(url, undefined, {
+      scope: 'Content',
+      retryNetworkErrors: true,
+    })
 
     if (response.body === null) {
       return null
@@ -122,6 +126,7 @@ const getNetMetaData = async (file: FileNode | Track, url: string): Promise<{ me
 
     const metaData: MetaData = {
       id: file.id,
+      source: 'stream',
       common: {
         ...metadata.common,
         title: metadata.common.title.trim(),
